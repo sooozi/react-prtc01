@@ -1,0 +1,30 @@
+// HighlightText.scss - 검색어 하이라이트 스타일
+
+.highlight {
+  background-color: #fef08a;
+  color: #1e293b;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+// 다른 스타일 변형이 필요한 경우 추가
+.highlight-blue {
+  background-color: #dbeafe;
+  color: #1e40af;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+.highlight-green {
+  background-color: #dcfce7;
+  color: #166534;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+.highlight-pink {
+  background-color: #fce7f3;
+  color: #9d174d;
+  padding: 0 2px;
+  border-radius: 2px;
+}

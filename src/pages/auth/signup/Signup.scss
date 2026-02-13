@@ -1,0 +1,145 @@
+// Signup.scss - 회원가입 페이지 고유 스타일
+@use "@/styles/auth.scss" as *;
+
+// 회원가입 컨테이너 (공통 스타일 상속)
+.signup-container {
+  @extend %auth-container;
+}
+
+// 회원가입 카드 (공통 스타일 상속)
+.signup-card {
+  @extend %auth-card;
+}
+
+// 회원가입 헤더 (공통 스타일 상속)
+.signup-header {
+  @extend %auth-header;
+}
+
+// 회원가입 폼
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+// 회원가입 전용: form-group에 position 추가 (message-area 위치용)
+.signup-form .form-group {
+  position: relative;
+}
+
+// 메시지 (성공/에러 알림)
+.message {
+  padding: 0.875rem 1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+
+  &.success {
+    background: #ecfdf5;
+    color: #6366f1;
+    border: 1px solid #adafff;
+  }
+
+  &.error {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+  }
+}
+
+// 라벨 + 힌트 한 줄 배치
+.label-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// 힌트 텍스트
+.hint-text {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #9ca3af;
+}
+
+// 인풋 + 버튼 한 줄 배치
+.input-with-button {
+  display: flex;
+  gap: 0.5rem;
+
+  .input {
+    flex: 1;
+  }
+}
+
+// 중복확인 버튼
+.check-button {
+  padding: 0 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $primary-color;
+  background: #ffffff;
+  border: 2px solid $primary-color;
+  border-radius: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: $primary-color;
+    color: #ffffff;
+  }
+
+  &:disabled {
+    color: #9ca3af;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+  }
+
+  &.completed {
+    background: $primary-color;
+    color: #ffffff;
+    border-color: $primary-color;
+    cursor: not-allowed;
+  }
+}
+
+// 메시지 영역 (에러/중복확인 결과)
+.message-area {
+  position: absolute;
+  bottom: -23px;
+}
+
+// 중복확인 결과 메시지
+.check-message {
+  font-size: 0.75rem;
+  font-weight: 500;
+
+  &.사용가능 {
+    color: $primary-color;
+  }
+
+  &.사용불가 {
+    color: $error-dark;
+  }
+}
+
+// 회원가입 푸터
+.signup-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: $text-secondary;
+
+  .login-link {
+    color: $primary-color;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 0.5rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

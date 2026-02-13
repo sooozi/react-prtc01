@@ -1,0 +1,229 @@
+// About.scss - About 페이지 스타일
+@use "@/styles/common.scss" as *;
+
+.about-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+// 히어로 섹션
+.hero-section {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+// .badge는 common.scss에서 정의됨
+
+.about-page .title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: #0f172a;
+}
+
+// .gradient-text는 common.scss에서 정의됨
+
+.subtitle {
+  font-size: 1.1rem;
+  color: $text-secondary;
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+// 미션 섹션
+.mission-section {
+  margin-bottom: 4rem;
+}
+
+.mission-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.mission-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid $border-color;
+  text-align: center;
+}
+
+.mission-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.mission-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+}
+
+.mission-text {
+  font-size: 0.95rem;
+  color: $text-secondary;
+  line-height: 1.7;
+}
+
+// 기술 스택 섹션
+.tech-section {
+  margin-bottom: 4rem;
+}
+
+// .section-title은 common.scss에서 정의됨
+
+.tech-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.tech-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0.75rem 1.25rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  border: 1px solid $border-color;
+}
+
+.tech-icon {
+  font-size: 1.25rem;
+}
+
+.tech-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+// 팀 섹션
+.team-section {
+  margin-bottom: 4rem;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.team-card {
+  @extend %card-base;
+  text-align: center;
+}
+
+.team-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin: 0 auto 1rem;
+}
+
+.team-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.25rem;
+}
+
+.team-role {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+  color: #ffffff;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.team-desc {
+  font-size: 0.9rem;
+  color: $text-secondary;
+  line-height: 1.5;
+}
+
+// CTA 섹션
+.cta-section {
+  margin-bottom: 2rem;
+}
+
+.cta-card {
+  background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba($primary-color, 0.3);
+}
+
+.cta-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+
+.cta-text {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1.5rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-primary-button {
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: #ffffff;
+  color: $primary-color;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.cta-secondary-button {
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}

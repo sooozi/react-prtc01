@@ -1,0 +1,245 @@
+// common.scss - 프로젝트 공통 스타일
+
+// ========================================
+// 변수
+// ========================================
+$primary-color: #6366f1;
+$primary-dark: #8b5cf6;
+$secondary-color: #ec4899;
+$text-primary: #1e293b;
+$text-secondary: #64748b;
+$text-muted: #94a3b8;
+$background-light: #f8fafc;
+$background-lighter: #f1f5f9;
+$border-color: rgba(226, 232, 240, 0.8);
+$error-color: #ef4444;
+$error-dark: #dc2626;
+
+$font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, sans-serif;
+
+// ========================================
+// 공통 배경 그라데이션
+// ========================================
+%base-container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #ffffff 0%, $background-light 50%, $background-lighter 100%);
+  font-family: $font-family;
+  color: $text-primary;
+  position: relative;
+  overflow: hidden;
+}
+
+// ========================================
+// 배경 장식 (Layout에서 사용)
+// ========================================
+%bg-decoration-base {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.bg-decoration-1 {
+  @extend %bg-decoration-base;
+  top: -200px;
+  right: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba($primary-color, 0.08) 0%, transparent 70%);
+}
+
+.bg-decoration-2 {
+  @extend %bg-decoration-base;
+  bottom: -300px;
+  left: -200px;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba($secondary-color, 0.06) 0%, transparent 70%);
+}
+
+// ========================================
+// 로고 스타일
+// ========================================
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+.logo-icon {
+  font-size: 1.8rem;
+  color: $primary-color;
+}
+
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+// ========================================
+// 배지 스타일
+// ========================================
+.badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+  border-radius: 50px;
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: $primary-color;
+  margin-bottom: 1rem;
+  border: 1px solid rgba($primary-color, 0.1);
+}
+
+// ========================================
+// 그라데이션 텍스트
+// ========================================
+.gradient-text {
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  // 에러 버전 (Forbidden 페이지용)
+  &.error {
+    background: linear-gradient(135deg, $error-color 0%, $error-dark 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+// ========================================
+// 섹션 타이틀
+// ========================================
+.section-title {
+  text-align: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 2rem;
+}
+
+// ========================================
+// 버튼 스타일
+// ========================================
+.primary-button {
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba($primary-color, 0.35);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba($primary-color, 0.45);
+  }
+
+  &:disabled {
+    background: $text-muted;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+.secondary-button {
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: #ffffff;
+  color: $text-secondary;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: $primary-color;
+    color: $primary-color;
+  }
+}
+
+// ========================================
+// 카드 스타일
+// ========================================
+%card-base {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid $border-color;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// ========================================
+// 폼 요소 (auth 페이지용)
+// ========================================
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.input {
+  padding: 0.875rem 1rem;
+  font-size: 0.95rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f9fafb;
+  color: $text-primary;
+  transition: all 0.2s ease;
+  outline: none;
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+
+  &:focus {
+    border-color: $primary-color;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
+  }
+
+  &.error {
+    border-color: $error-color;
+    background: #fef2f2;
+
+    &:focus {
+      box-shadow: 0 0 0 4px rgba($error-color, 0.1);
+    }
+  }
+}
+
+.error-message {
+  font-size: 0.75rem;
+  color: $error-color;
+}
+
+.submit-button {
+  @extend .primary-button;
+  margin-top: 0.5rem;
+  padding: 1rem;
+  width: 100%;
+}

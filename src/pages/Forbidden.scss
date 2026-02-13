@@ -1,0 +1,77 @@
+// Forbidden.scss - 403 페이지 스타일
+@use "@/styles/common.scss" as *;
+
+.forbidden-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+// 콘텐츠
+.content {
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+  z-index: 10;
+  max-width: 500px;
+}
+
+.icon-wrapper {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 10px 40px rgba($error-color, 0.15);
+}
+
+.icon {
+  font-size: 3.5rem;
+}
+
+.error-code {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $error-dark;
+  margin-bottom: 1rem;
+  border: 1px solid rgba($error-color, 0.2);
+  letter-spacing: 0.1em;
+}
+
+.forbidden-container .title {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 1rem;
+  color: #0f172a;
+}
+
+.description {
+  font-size: 1.05rem;
+  color: $text-secondary;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+// .primary-button, .secondary-button은 common.scss에서 정의됨
+
+.help-text {
+  font-size: 0.85rem;
+  color: $text-muted;
+}

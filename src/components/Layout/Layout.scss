@@ -1,0 +1,16 @@
+// Layout.scss - 공통 레이아웃 스타일
+@use "@/styles/common.scss" as *;
+
+.layout-container {
+  @extend %base-container;
+}
+
+// bg-decoration-1, bg-decoration-2는 common.scss에서 정의됨
+
+.layout-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+  position: relative;
+  z-index: 10;
+}

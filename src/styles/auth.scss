@@ -1,0 +1,59 @@
+// auth.scss - 로그인/회원가입 공통 스타일
+@use "@/styles/common.scss" as *;
+@forward "@/styles/common.scss";
+
+// 공통 컨테이너 (각 페이지에서 상속)
+// Layout이 전체 페이지를 감싸므로 min-height 불필요
+%auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+// 공통 카드 (각 페이지에서 상속)
+%auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+// 공통 헤더 (각 페이지에서 상속)
+%auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+// 로고 (auth 페이지 전용 - 가운데 정렬)
+.auth-logo {
+  @extend .logo;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-logo .logo-icon {
+  background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// 제목
+.auth-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: $text-primary;
+  margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+  font-size: 0.95rem;
+  color: $text-secondary;
+}
+
+// .form-group, .label, .input, .error-message, .submit-button은 common.scss에서 정의됨

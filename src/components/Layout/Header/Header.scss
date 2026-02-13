@@ -1,0 +1,43 @@
+// Header.scss - 공통 헤더 스타일
+@use "@/styles/common.scss" as *;
+
+.header {
+  padding: 1.5rem 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+.nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// .logo, .logo-icon, .logo-text는 common.scss에서 정의됨
+
+// 네비게이션 링크
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  color: $text-secondary;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $primary-color;
+  }
+
+  // Sign Up (포인트 컬러)
+  &.accent {
+    color: $primary-color;
+    font-weight: 600;
+  }
+}

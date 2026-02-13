@@ -1,0 +1,81 @@
+// Home.scss - 홈 페이지 스타일
+@use "@/styles/common.scss" as *;
+
+// 히어로 섹션
+.hero {
+  text-align: center;
+  padding: 4rem 2rem 6rem;
+  position: relative;
+  z-index: 10;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+// .badge는 common.scss에서 정의됨
+
+.hero-title {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: #0f172a;
+}
+
+// .gradient-text는 common.scss에서 정의됨
+
+.hero-description {
+  font-size: 1.1rem;
+  color: $text-secondary;
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+}
+
+// .primary-button은 common.scss에서 정의됨
+
+// 피처 섹션
+.features-section {
+  padding: 4rem 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+// .section-title은 common.scss에서 정의됨 (Home용으로 약간 수정)
+.features-section .section-title {
+  font-size: 2rem;
+  margin-bottom: 3rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  @extend %card-base;
+  text-align: center;
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.feature-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $text-primary;
+  margin-bottom: 0.75rem;
+}
+
+.feature-description {
+  font-size: 0.95rem;
+  color: $text-secondary;
+  line-height: 1.6;
+}

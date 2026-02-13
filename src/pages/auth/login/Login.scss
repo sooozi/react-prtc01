@@ -1,0 +1,43 @@
+// Login.scss - 로그인 페이지 고유 스타일
+@use "@/styles/auth.scss" as *;
+
+// 로그인 컨테이너 (공통 스타일 상속)
+.login-container {
+  @extend %auth-container;
+}
+
+// 로그인 카드 (공통 스타일 상속)
+.login-card {
+  @extend %auth-card;
+}
+
+// 로그인 헤더 (공통 스타일 상속)
+.login-header {
+  @extend %auth-header;
+}
+
+// 로그인 폼
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+// 로그인 푸터
+.login-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: $text-secondary;
+
+  .signup-link {
+    color: $primary-color;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 0.5rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
