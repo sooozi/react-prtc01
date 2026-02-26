@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { isLoginSuccess, login } from "../../../api/login";
+import { useAuth } from "@/contexts/AuthContext";
 import "./Login.scss";
 
 interface LoginFormData {
@@ -23,11 +24,14 @@ export default function Login() {
     formState: { errors }, // errors: 에러 정보
   } = useForm<LoginFormData>();
 
-  // 아이디/비밀번호 현재 값 (watch로 구독 → 입력할 때마다 갱신)
+  // 아이디/비밀번호 현재 값 (watch → 입력할 때마다 갱신)
   const userId = watch("userId");
   const password = watch("password");
-  // 둘 다 한 글자 이상 입력됐을 때만 로그인 버튼 활성화 (공백만 있으면 비활성)
+  // 둘 다 한 글자 이상 입력 시 로그인 버튼 활성화 (공백만 있으면 비활성)
   const isFormFilled = Boolean(userId?.trim() && password?.trim());
+
+  // 인증 컨텍스트 사용
+  const { setToken, setUserName } = useAuth();
 
   const onSubmit = async (data: LoginFormData) => {
     setApiAlert(null);
@@ -40,7 +44,13 @@ export default function Login() {
         setApiAlert({
           type: "success",
           message: res.resultMessage ?? res.resultDetailMessage ?? "로그인되었습니다.",
-        });
+        });  
+        // 토큰·이름 저장 (전역 + 로컬 스토리지)
+        setToken(res.data.accessToken);
+        setUserName(res.data.userName);
+        localStorage.setItem("token", res.data.accessToken);
+        localStorage.setItem("userName", res.data.userName);
+        // 홈 페이지로 이동
         navigate("/user/search");
       } else {
         setApiAlert({
@@ -48,8 +58,9 @@ export default function Login() {
           message: res.resultMessage ?? res.resultDetailMessage ?? "로그인에 실패했습니다.",
         });
       }
-    } catch (e: unknown) {
+    } catch (e: unknown) {//api 호출 실패 시 에러 처리
       const message =
+      //e가 있고, 객체이고, response 속성이 있는지 확인
         e && typeof e === "object" && "response" in e
           ? (e as { response?: { data?: { resultMessage?: string }; status?: number } }).response?.data?.resultMessage
           : null;

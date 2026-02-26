@@ -1,10 +1,19 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import "./Header.scss";
 
-/**
- * 공통 헤더 컴포넌트
- */
 export default function Header() {
+  const { token, setToken, userName, setUserName } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setToken(null);
+    setUserName(null);
+    localStorage.removeItem("token");
+    localStorage.removeItem("userName");
+    navigate("/auth/login");
+  };
+
   return (
     <header className="header">
       <nav className="nav">
@@ -14,12 +23,23 @@ export default function Header() {
           <span className="logo-text">MyViteProject</span>
         </Link>
 
-        {/* 오른쪽: 네비게이션 링크 */}
+        {/* 오른쪽: 네비게이션 / 로그인 상태 */}
         <div className="nav-links">
           <Link to="/about" className="nav-link">About</Link>
           <Link to="/user/search" className="nav-link">Search</Link>
-          <Link to="/auth/login" className="nav-link">Login</Link>
-          <Link to="/auth/signup" className="nav-link accent">Sign Up</Link>
+          {token ? (
+            <>
+              <span className="nav-link is-logged-in">{ '🧑🏻‍💻 ' + (userName ?? "로그인됨")}</span>
+              <button type="button" className="nav-link logout-btn" onClick={handleLogout}>
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/auth/login" className="nav-link">Login</Link>
+              <Link to="/auth/signup" className="nav-link accent">Sign Up</Link>
+            </>
+          )}
         </div>
       </nav>
     </header>

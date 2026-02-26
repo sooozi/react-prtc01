@@ -1,4 +1,5 @@
 // Login.scss - 로그인 페이지 고유 스타일
+@use "sass:color";
 @use "@/styles/auth.scss" as *;
 
 // 로그인 컨테이너 (공통 스타일 상속)
@@ -30,7 +31,7 @@ $success-color: #16a34a;
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 500;
-  color: darken($success-color, 12%);
+  color: color.adjust($success-color, $lightness: -12%);
 
   &__icon {
     flex-shrink: 0;
@@ -63,7 +64,7 @@ $success-color: #16a34a;
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 500;
-  color: darken($error-color, 8%);
+  color: color.adjust($error-color, $lightness: -8%);
 
   &__icon {
     flex-shrink: 0;

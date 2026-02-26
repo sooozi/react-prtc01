@@ -14,16 +14,21 @@ export type ApiResponse<T = unknown> = {
   data: T;
 };
 
-/** API 응답만 보고 성공 여부 판단 (성공 코드는 여기서만 관리) */
-const LOGIN_SUCCESS_CODES = ["SUCCESS", "BPLTE200", "0000", "200", "0"];
+/** 로그인 성공 시 data 안에 오는 값 */
+export type LoginResponseData = {
+  userId: string;
+  userName: string;
+  accessToken: string;
+};
 
+/** 응답이 로그인 성공인지 (백엔드 성공 코드: BPLTE200) */
 export function isLoginSuccess(res: ApiResponse<unknown>): boolean {
-  if (LOGIN_SUCCESS_CODES.includes(res.resultCode)) return true;
-  return false;
+  return res.resultCode === "BPLTE200";
 }
 
+// 로그인 요청
 export async function login(body: LoginRequest) {
-  const res = await axios.post<ApiResponse<number>>(
+  const res = await axios.post<ApiResponse<LoginResponseData>>(
     "http://localhost:8081/bplte/core/auth/login",
     body,
     {

@@ -40,4 +40,19 @@
     color: $primary-color;
     font-weight: 600;
   }
+
+  // 로그인됨 문구
+  &.is-logged-in {
+    color: $text-secondary;
+    cursor: default;
+  }
+
+  // 로그아웃 버튼 (링크처럼 보이게)
+  &.logout-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+  }
 }
