@@ -1,14 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
 import "./Header.scss";
 
 export default function Header() {
-  const { token, setToken, userName, setUserName } = useAuth();
   const navigate = useNavigate();
+  const userName = localStorage.getItem("userName");
 
   const handleLogout = () => {
-    setToken(null);
-    setUserName(null);
     localStorage.removeItem("token");
     localStorage.removeItem("userName");
     navigate("/auth/login");
@@ -27,9 +24,9 @@ export default function Header() {
         <div className="nav-links">
           <Link to="/about" className="nav-link">About</Link>
           <Link to="/user/search" className="nav-link">Search</Link>
-          {token ? (
+          {userName ? (
             <>
-              <span className="nav-link is-logged-in">{ '🧑🏻‍💻 ' + (userName ?? "로그인됨")}</span>
+              <span className="nav-link is-logged-in">{ "🧑🏻‍💻 " + (userName ?? "로그인됨") }</span>
               <button type="button" className="nav-link logout-btn" onClick={handleLogout}>
                 로그아웃
               </button>
