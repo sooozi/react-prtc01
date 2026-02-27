@@ -5,7 +5,8 @@ import Footer from "./Footer/Footer";
 import CatHover from "@/components/CatHover/CatHover";
 import "./Layout.scss";
 
-const HEADER_HEIGHT_PX = 72;
+/** 헤더 실제 높이(padding 1.5rem×2 + nav 콘텐츠)에 맞춤 — 72px보다 작으면 메인과 겹침 */
+const HEADER_HEIGHT_PX = 84;
 const SCROLL_THRESHOLD_PX = 80;
 const BOTTOM_BUFFER_PX = 120; // 맨 아래 근처에서는 헤더 항상 표시 (버벅임 방지)
 

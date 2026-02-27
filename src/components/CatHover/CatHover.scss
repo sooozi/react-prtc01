@@ -20,6 +20,43 @@ $cat-cursor-url: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.
   cursor: $cat-cursor-url 16 16, pointer;
 }
 
+// 떠오르는 하트 컨테이너
+.cat-hover__hearts {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+// 개별 하트 — 크기·시작 위치는 인라인 변수로 각각 다르게
+.cat-hover__heart {
+  position: absolute;
+  left: calc(50% + var(--heart-offset-x, 0));
+  bottom: var(--heart-start-bottom, 20%);
+  font-size: var(--heart-size, 1.25rem);
+  animation: cat-heart-float 1.8s ease-out forwards;
+  transform: translate(-50%, 0);
+}
+
+@keyframes cat-heart-float {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -100px) scale(0.6);
+  }
+}
+
+.cat-hover__img-wrap {
+  position: relative;
+  display: block;
+}
+
 .cat-hover__img {
   width: 120px;
   max-width: 100%;
@@ -27,6 +64,44 @@ $cat-cursor-url: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.
   cursor: $cat-cursor-url 16 16, pointer;
   transition: opacity 0.15s ease;
   display: block;
+}
+
+// 입 영역 — 들어가면 커서 숨기고, 같은 위치에서 물고기가 작아지며 사라지는 연출
+.cat-hover__mouth-zone {
+  position: absolute;
+  left: 60%;
+  top: 52%;
+  width: 28%;
+  height: 20%;
+  transform: translate(-50%, -50%);
+  cursor: none;
+  z-index: 2;
+}
+
+// 입에 들어갔을 때 — 커서와 동일한 물고기가 작아지며 사라짐
+.cat-hover__fish-shrink {
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  transform: translate(-50%, -50%);
+  background-image: $cat-cursor-url;
+  background-size: 32px 32px;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+  z-index: 9999;
+  animation: cat-fish-shrink 0.5s ease-in forwards;
+}
+
+@keyframes cat-fish-shrink {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
 }
 
 .cat-hover__btn-img {
@@ -38,6 +113,13 @@ $cat-cursor-url: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.
   border: none;
   cursor: $cat-cursor-url 16 16, pointer;
   padding: 0;
+  outline: none;
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
 
   img {
     width: 64px;

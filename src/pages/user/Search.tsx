@@ -52,7 +52,7 @@ export default function UserSearch() {
   const startIndex = (currentPage - 1) * USER_LIST_SIZE;
 
   return (
-    <>
+    <div className="search-page">
       <div className="title-section">
         <span className="badge">👥 User List</span>
         <h1 className="title">사용자 목록</h1>
@@ -109,6 +109,6 @@ export default function UserSearch() {
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
-    </>
+    </div>
   );
 }
