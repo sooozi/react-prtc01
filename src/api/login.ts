@@ -40,4 +40,3 @@ export async function login(body: LoginRequest) {
 
   return res.data;
 }
-

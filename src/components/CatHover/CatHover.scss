@@ -1,0 +1,47 @@
+@use "@/styles/common.scss" as *;
+
+// 커스텀 커서
+$cat-cursor-url: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext x='16' y='24' font-size='24' text-anchor='middle'%3E%F0%9F%90%A0%3C/text%3E%3C/svg%3E");
+
+.cat-hover {
+  position: fixed;
+  left: 0;
+  bottom: 10px;
+  z-index: 500;
+  padding: 0.5rem;
+  pointer-events: none; // 클릭은 컨테이너/이미지에만
+}
+
+.cat-hover__container {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  pointer-events: auto;
+  cursor: $cat-cursor-url 16 16, pointer;
+}
+
+.cat-hover__img {
+  width: 120px;
+  max-width: 100%;
+  height: auto;
+  cursor: $cat-cursor-url 16 16, pointer;
+  transition: opacity 0.15s ease;
+  display: block;
+}
+
+.cat-hover__btn-img {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  cursor: $cat-cursor-url 16 16, pointer;
+  padding: 0;
+
+  img {
+    width: 64px;
+    height: auto;
+    display: block;
+  }
+}

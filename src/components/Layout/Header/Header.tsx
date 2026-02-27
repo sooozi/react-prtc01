@@ -8,6 +8,8 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userName");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("lastLoginAt");
     navigate("/auth/login");
   };
 
@@ -16,7 +18,7 @@ export default function Header() {
       <nav className="nav">
         {/* 왼쪽: 로고 */}
         <Link to="/home" className="logo">
-          <span className="logo-icon">◈</span>
+          <span className="logo-icon">🐱</span>
           <span className="logo-text">MyViteProject</span>
         </Link>
 
@@ -26,7 +28,10 @@ export default function Header() {
           <Link to="/user/search" className="nav-link">Search</Link>
           {userName ? (
             <>
-              <span className="nav-link is-logged-in">{ "🧑🏻‍💻 " + (userName ?? "로그인됨") }</span>
+              <Link to="/user/mypage" className="nav-link is-logged-in" title="마이페이지">
+                <span className="nav-link__text">🧑🏻‍💻 {userName ?? "로그인됨"}</span>
+                <span className="nav-link__tooltip" aria-hidden>마이페이지</span>
+              </Link>
               <button type="button" className="nav-link logout-btn" onClick={handleLogout}>
                 로그아웃
               </button>

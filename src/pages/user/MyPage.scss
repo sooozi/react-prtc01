@@ -1,0 +1,137 @@
+// MyPage.scss - 마이페이지 스타일
+
+.mypage-page {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.mypage-section {
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #6366f1;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.title {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+
+  .highlight {
+    color: #6366f1;
+  }
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #64748b;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.mypage-page .login-link {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: #6366f1;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #4f46e5;
+  }
+}
+
+.mypage-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.mypage-card__title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6366f1;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.mypage-card__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #f1f5f9;
+  }
+}
+
+.mypage-card__label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.mypage-card__value {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.mypage-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mypage-btn {
+  display: inline-block;
+  padding: 0.65rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: opacity 0.2s, background 0.2s;
+
+  &--primary {
+    background: #6366f1;
+    color: #fff;
+
+    &:hover {
+      background: #4f46e5;
+    }
+  }
+
+  &--secondary {
+    background: #fff;
+    color: #6366f1;
+    border: 1px solid #6366f1;
+
+    &:hover {
+      background: #eef2ff;
+    }
+  }
+}

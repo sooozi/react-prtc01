@@ -43,6 +43,8 @@ export default function Login() {
         });
         localStorage.setItem("token", res.data.accessToken);
         localStorage.setItem("userName", res.data.userName);
+        localStorage.setItem("userId", res.data.userId);
+        localStorage.setItem("lastLoginAt", new Date().toISOString());
         navigate("/user/search");
       } else {
         setApiAlert({

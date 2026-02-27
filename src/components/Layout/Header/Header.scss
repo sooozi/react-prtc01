@@ -2,9 +2,21 @@
 @use "@/styles/common.scss" as *;
 
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   padding: 1.5rem 2rem;
-  position: relative;
-  z-index: 10;
+  z-index: 999;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease;
+}
+
+.layout-container--header-hidden .header {
+  transform: translateY(-100%);
 }
 
 .nav {
@@ -41,10 +53,36 @@
     font-weight: 600;
   }
 
-  // 로그인됨 문구
+  // 로그인됨 문구 (마이페이지 링크) + 호버 툴팁
   &.is-logged-in {
+    position: relative;
     color: $text-secondary;
-    cursor: default;
+    cursor: pointer;
+
+    .nav-link__tooltip {
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      transform: translate(-50%, -0.25rem);
+      padding: 0.3rem 0.6rem;
+      background: rgba(51, 65, 85, 0.92);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 500;
+      white-space: nowrap;
+      border-radius: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      pointer-events: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    &:hover .nav-link__tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, 0.5rem);
+    }
   }
 
   // 로그아웃 버튼 (링크처럼 보이게)

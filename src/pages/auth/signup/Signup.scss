@@ -133,13 +133,17 @@
   color: $text-secondary;
 
   .login-link {
+    display: inline;
     color: $primary-color;
     font-weight: 600;
     text-decoration: none;
     margin-left: 0.5rem;
+    background: transparent;
+    padding: 0;
 
     &:hover {
       text-decoration: underline;
+      color: $primary-dark;
     }
   }
 }

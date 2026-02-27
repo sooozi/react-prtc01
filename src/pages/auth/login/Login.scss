@@ -19,6 +19,10 @@
 
 $success-color: #16a34a;
 
+.layout-main {
+  justify-content: center;
+}
+
 // 로그인 API 성공 알림 (헤더 바로 아래, 폼 위)
 .login-success-alert {
   display: flex;
