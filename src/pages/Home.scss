@@ -79,3 +79,250 @@
   color: $text-secondary;
   line-height: 1.6;
 }
+
+// 기술 스택
+.tech-section {
+  padding: 4rem 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+.tech-section .section-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.tech-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.tech-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: #ffffff;
+  border: 1px solid $border-color;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: $primary-color;
+    box-shadow: 0 4px 12px rgba($primary-color, 0.15);
+  }
+}
+
+.tech-name {
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.tech-desc {
+  color: $text-muted;
+  font-size: 0.8rem;
+}
+
+// 사이트맵 - Apple 스타일
+.sitemap-section {
+  padding: 5rem 1.5rem 5rem;
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sitemap-headline {
+  font-size: clamp(2.5rem, 5vw, 3.25rem);
+  font-weight: 700;
+  color: #0f172a;
+  text-align: center;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.sitemap-subline {
+  font-size: 1.25rem;
+  color: $text-secondary;
+  text-align: center;
+  margin: 0 0 3.5rem;
+  font-weight: 400;
+}
+
+.sitemap-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.sitemap-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.35s ease;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12);
+
+    .sitemap-card-arrow {
+      transform: translateX(4px);
+    }
+  }
+}
+
+.sitemap-card-inner {
+  padding: 2.5rem 2rem;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  border-radius: 20px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.03),
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 8px 24px -8px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.sitemap-card--default .sitemap-card-inner {
+  background: #f8fafc;
+}
+
+.sitemap-card--primary .sitemap-card-inner {
+  background: linear-gradient(145deg, #f5f3ff 0%, #ede9fe 100%);
+}
+
+.sitemap-card--secondary .sitemap-card-inner {
+  background: linear-gradient(145deg, #fdf2f8 0%, #fce7f3 100%);
+}
+
+.sitemap-card--accent .sitemap-card-inner {
+  background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.sitemap-card:hover .sitemap-card-inner {
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.04),
+    0 4px 8px rgba(0, 0, 0, 0.04),
+    0 20px 40px -12px rgba(0, 0, 0, 0.12);
+}
+
+.sitemap-card-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.sitemap-card-subtitle {
+  font-size: 1rem;
+  color: $text-secondary;
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.sitemap-card-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $primary-color;
+  background: rgba($primary-color, 0.08);
+  border: 1px solid rgba($primary-color, 0.2);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  width: fit-content;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.sitemap-card:hover .sitemap-card-link {
+  background: rgba($primary-color, 0.12);
+  border-color: rgba($primary-color, 0.35);
+  color: $primary-dark;
+}
+
+.sitemap-card-arrow {
+  font-size: 1.1rem;
+  transition: transform 0.25s ease;
+}
+
+@media (max-width: 768px) {
+  .sitemap-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .sitemap-card-inner {
+    min-height: 160px;
+    padding: 2rem 1.5rem;
+  }
+
+  .sitemap-card-title {
+    font-size: 1.5rem;
+  }
+}
+
+// 바로가기
+.links-section {
+  padding: 4rem 2rem 5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.links-section .section-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.link-card {
+  @extend %card-base;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+
+  &:hover {
+    border-color: rgba($primary-color, 0.3);
+    color: $primary-color;
+  }
+}
+
+.link-icon {
+  font-size: 2rem;
+}
+
+.link-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: inherit;
+}

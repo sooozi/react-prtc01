@@ -26,6 +26,7 @@ export default function Header() {
         <div className="nav-links">
           <Link to="/about" className="nav-link">About</Link>
           <Link to="/user/search" className="nav-link">Search</Link>
+          <Link to="/user/board" className="nav-link">Board</Link>
           {userName ? (
             <>
               <Link to="/user/mypage" className="nav-link is-logged-in" title="마이페이지">
