@@ -1,52 +1,27 @@
 import axios from "axios";
 import { apiClient } from "./client";
 import type { ApiResponse } from "./types";
+import type {
+  BoardPostItem,
+  CreatePostRequest,
+  PostDetailDto,
+  PostDetailItem,
+  PostDto,
+  PostsResponseData,
+  SelectBoardListParams,
+  UpdatePostRequest,
+} from "./boardApi.types";
 
-// 화면에서 사용하는 게시글 아이템 타입 (GET /posts API 응답 기준)
-export type BoardPostItem = {
-  id: number;
-  title: string;
-  author: string;
-  createdAt: string;
-};
-
-// GET /posts API 응답의 게시글 한 건
-type PostDto = {
-  postNumber: number;
-  ownerUserId?: string;
-  title: string;
-  regDt: string;
-  rgtrId?: string;
-  rgtrName?: string;
-  rgtrInfo?: string;
-  mdfcnDt?: string;
-  mdfrId?: string;
-  mdfrName?: string;
-  mdfrInfo?: string;
-};
-
-// GET /posts API 응답 데이터 타입
-type PostsResponseData = {
-  itemSize: number;
-  pageSize: number;
-  totalItemSize: number;
-  data: PostDto[];
-};
-
-// 포스트 목록 조회 요청 파라미터 타입
-type SelectBoardListParams = {
-  page: number;
-  size: number;
-};
+export type { BoardPostItem, CreatePostRequest, PostDetailItem, UpdatePostRequest } from "./boardApi.types";
 
 // PostDto를 BoardPostItem(화면용 한 건)으로 변환
-// 등록자: API 필드 rgtrInfo 사용
 function mapPostToItem(dto: PostDto): BoardPostItem {
   return {
     id: dto.postNumber,
     title: dto.title,
     author: dto.rgtrInfo ?? "-",
     createdAt: dto.regDt,
+    viewCount: dto.inqCnt ?? 0,
   };
 }
 
@@ -61,6 +36,23 @@ export class BoardApiError extends Error {
   }
 }
 
+// 로그인 토큰 가져오기 (없으면 null)
+function getAuthToken(): string | null {
+  return typeof window !== "undefined" ? localStorage.getItem("token") : null;
+}
+
+// 인증 필수 API용: 토큰 없으면 BoardApiError(401) throw
+function getAuthTokenOrThrow(): string {
+  const token = getAuthToken();
+  if (!token) {
+    throw new BoardApiError(
+      "인증이 필요합니다. 로그인 후 다시 시도해주세요.",
+      401
+    );
+  }
+  return token;
+}
+
 /**
  * 포스트 목록 조회
  * [GET] /posts
@@ -68,8 +60,7 @@ export class BoardApiError extends Error {
  */
 export async function selectBoardList({ page, size }: SelectBoardListParams) {
   try {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     const res = await apiClient.get<ApiResponse<PostsResponseData>>("/posts", {
       params: { page, size },
       headers: {
@@ -99,41 +90,6 @@ export async function selectBoardList({ page, size }: SelectBoardListParams) {
   }
 }
 
-/** POST /posts 요청 body */
-export type CreatePostRequest = {
-  title: string;
-  content: string;
-};
-
-// GET /posts/{id} 상세 조회 응답 데이터 (Swagger 스펙 기준)
-type PostDetailDto = {
-  postNumber: number;
-  ownerUserId?: string;
-  title: string;
-  content?: string;
-  searchContent?: string;
-  ingCnt?: number;
-  regDt: string;
-  rgtrId?: string;
-  rgtrName?: string;
-  rgtrInfo?: string;
-  mdfcnDt?: string;
-  mdfcrId?: string;
-  mdfcrName?: string;
-  mdfcrInfo?: string;
-};
-
-/** 화면에서 사용하는 포스트 상세 타입 */
-export type PostDetailItem = {
-  id: number;
-  title: string;
-  content: string;
-  author: string;
-  createdAt: string;
-  /** 작성자 사용자 ID (수정 버튼 노출 여부 판단용) */
-  ownerUserId?: string;
-};
-
 /**
  * 포스트 상세 조회
  * [GET] /posts/{postNumber}
@@ -141,8 +97,7 @@ export type PostDetailItem = {
  */
 export async function getPostDetail(postNumber: number): Promise<PostDetailItem> {
   try {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     const res = await apiClient.get<ApiResponse<PostDetailDto>>(
       `/posts/${postNumber}`,
       {
@@ -158,6 +113,7 @@ export async function getPostDetail(postNumber: number): Promise<PostDetailItem>
       content: d.content ?? "",
       author: d.rgtrInfo ?? "-",
       createdAt: d.regDt,
+      viewCount: d.inqCnt ?? 0,
       ownerUserId: d.ownerUserId,
     };
   } catch (e) {
@@ -177,15 +133,7 @@ export async function getPostDetail(postNumber: number): Promise<PostDetailItem>
  * 인증 토큰 필수. 401 시 BoardApiError(status: 401) throw.
  */
 export async function createPost(body: CreatePostRequest) {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  if (!token) {
-    throw new BoardApiError(
-      "인증이 필요합니다. 로그인 후 다시 시도해주세요.",
-      401
-    );
-  }
-
+  const token = getAuthTokenOrThrow();
   try {
     const res = await apiClient.post<ApiResponse<number>>("/posts", body, {
       headers: {
@@ -204,12 +152,6 @@ export async function createPost(body: CreatePostRequest) {
   }
 }
 
-/** PUT /posts/{postNumber} 요청 body (수정 가능 항목: title, content) */
-export type UpdatePostRequest = {
-  title: string;
-  content: string;
-};
-
 /**
  * 포스트 수정
  * [PUT] /posts/{postNumber}
@@ -219,15 +161,7 @@ export async function updatePost(
   postNumber: number, // 게시글 번호
   body: UpdatePostRequest // 수정 요청 바디
 ): Promise<void> {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  if (!token) {
-    throw new BoardApiError(
-      "인증이 필요합니다. 로그인 후 다시 시도해주세요.",
-      401
-    );
-  }
-
+  const token = getAuthTokenOrThrow();
   try {
     await apiClient.put<ApiResponse<unknown>>(`/posts/${postNumber}`, body, {
       headers: {
@@ -244,29 +178,46 @@ export async function updatePost(
     throw e;
   }
 }
-
-
 /**
  * 포스트 삭제
  * [DELETE] /posts/{postNumber}
  * 인증 토큰 필수. 401 시 BoardApiError(status: 401) throw.
  */
 export async function deletePost(postNumber: number): Promise<void> {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  if (!token) {
-    throw new BoardApiError(
-      "인증이 필요합니다. 로그인 후 다시 시도해주세요.",
-      401
-    );
-  }
-
+  const token = getAuthTokenOrThrow();
   try {
     await apiClient.delete<ApiResponse<unknown>>(`/posts/${postNumber}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response?.status === 401) {
+      const msg =
+        (e.response?.data as { resultMessage?: string })?.resultMessage ?? "인증이 필요합니다. 로그인 후 다시 시도해주세요.";
+      throw new BoardApiError(msg, 401);
+    }
+    throw e;
+  }
+}
+
+/**
+ * 포스트 조회수 증가
+ * [PATCH] /posts/{postNumber}/view_count
+ * 인증 토큰 필수. 401 시 BoardApiError(status: 401) throw.
+ */
+export async function viewCountUp(postNumber: number): Promise<void> {
+  const token = getAuthTokenOrThrow();
+  try {
+    await apiClient.patch<ApiResponse<unknown>>(
+      `/posts/${postNumber}/view_count`,
+      undefined,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   } catch (e) {
     if (axios.isAxiosError(e) && e.response?.status === 401) {
       const msg =

@@ -33,7 +33,7 @@ export default function Home() {
   const quickLinks = [
     { to: '/auth/signup', label: '회원가입', icon: '📝' },
     { to: '/auth/login', label: '로그인', icon: '🔑' },
-    { to: '/user/search', label: '사용자 검색', icon: '🔍' },
+    { to: '/user/search', label: '사용자 목록', icon: '🔍' },
     { to: '/user/mypage', label: '마이페이지', icon: '👤' }
   ];
 
@@ -41,7 +41,7 @@ export default function Home() {
     { to: '/about', title: '소개', subtitle: '프로젝트와 기술 스택을 소개합니다.', theme: 'default' },
     { to: '/auth/login', title: '로그인', subtitle: '계정으로 로그인하세요.', theme: 'primary' },
     { to: '/auth/signup', title: '회원가입', subtitle: '새 계정을 만드세요.', theme: 'secondary' },
-    { to: '/user/search', title: '사용자 검색', subtitle: '멤버를 검색해보세요.', theme: 'accent' },
+    { to: '/user/search', title: '사용자 목록', subtitle: '멤버를 검색해보세요.', theme: 'accent' },
     { to: '/user/mypage', title: '마이페이지', subtitle: '나의 정보를 확인하세요.', theme: 'default' }
   ];
 

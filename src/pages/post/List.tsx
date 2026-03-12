@@ -149,6 +149,7 @@ export default function List() {
                   <th className="th th-number">번호</th>
                   <th className="th th-title">제목</th>
                   <th className="th">등록자</th>
+                  <th className="th th-view">조회</th>
                   <th className="th th-date">등록일시</th>
                 </tr>
               </thead>
@@ -175,6 +176,7 @@ export default function List() {
                       </Tooltip>
                     </td>
                     <td className="td">{post.author}</td>
+                    <td className="td td-view">{post.viewCount ?? 0}</td>
                     <td className="td td-date">{post.createdAt}</td>
                   </tr>
                 ))}

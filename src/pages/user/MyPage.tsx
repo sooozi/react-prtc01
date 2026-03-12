@@ -1,30 +1,27 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./MyPage.scss";
 
 export default function MyPage() {
+  const navigate = useNavigate();
   const userName = localStorage.getItem("userName");
   const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token");
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/auth/login", { state: { toast: "로그인이 필요합니다" }, replace: true });
+    }
+  }, [token, navigate]);
 
   if (!token) {
-    return (
-      <div className="mypage-page">
-        <section className="mypage-section">
-          <span className="badge">🔐</span>
-          <h1 className="title">마이페이지</h1>
-          <p className="subtitle">로그인한 회원만 이용할 수 있습니다.</p>
-          <Link to="/auth/login" className="login-link">
-            로그인하기
-          </Link>
-        </section>
-      </div>
-    );
+    return null;
   }
 
   return (
     <div className="mypage-page">
       <section className="mypage-section">
-        <span className="badge">👤 마이페이지</span>
+        <span className="badge">👤 MyPage</span>
         <h1 className="title">
           안녕하세요, <span className="highlight">{userName ?? "회원"}</span>님
         </h1>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getPostDetail, deletePost, BoardApiError } from "@/api/boardApi";
+import { getPostDetail, deletePost, BoardApiError, viewCountUp } from "@/api/boardApi";
 import type { PostDetailItem } from "@/api/boardApi";
 import "./Detail.scss";
 
@@ -20,31 +20,44 @@ export default function Detail() {
 
   // [게시글 상세 조회]
   useEffect(() => {
-    if (invalidId) return; // 게시글 번호가 유효하지 않으면 조회하지 않음
+    if (invalidId) return;
 
-    // 로그인 토큰 확인
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (!token) {
       navigate("/auth/login", { state: { toast: "로그인이 필요합니다" }, replace: true });
       return;
     }
 
-    // 게시글 상세 조회(api에 요청 보내기)
-    getPostDetail(postNumber)
-      .then((data) => {
-        setPost(data);
-      })
-      .catch((e: unknown) => {
+    let cancelled = false;
+
+    // 1) 조회수 증가 먼저 호출 후, 2) 상세 조회 (둘 다 서버 값 사용해 목록·상세 조회수 일치)
+    (async () => {
+      try {
+        await viewCountUp(postNumber);
+      } catch (e) {
+        if (import.meta.env.DEV) console.warn("조회수 증가 API 실패:", e);
+      }
+      if (cancelled) return;
+
+      try {
+        const data = await getPostDetail(postNumber);
+        if (!cancelled) setPost(data);
+      } catch (e: unknown) {
+        if (cancelled) return;
         if (e instanceof BoardApiError && e.status === 401) {
           setError(e.message);
           setIsUnauthorized(true);
         } else {
           setError(e instanceof Error ? e.message : "게시글을 불러오지 못했습니다.");
         }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [postNumber, invalidId, navigate]);
 
   // 로딩 상태 확인
@@ -150,6 +163,7 @@ export default function Detail() {
               <span className="detail-id">#{post.id}</span>
               <span className="detail-author">{post.author}</span>
               <span className="detail-date">{post.createdAt}</span>
+              <span className="detail-view">조회 {post.viewCount ?? 0}</span>
             </div>
             <h2 className="detail-title">{post.title}</h2>
             <div className="detail-content">{post.content || "내용 없음"}</div>

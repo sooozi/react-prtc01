@@ -34,11 +34,12 @@
 
 .post-detail-card {
   background: #ffffff;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(226, 232, 240, 0.9);
   margin-bottom: 2rem;
+  overflow: hidden;
 }
 
 .detail-loading {
@@ -93,43 +94,69 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
-  font-size: 0.9rem;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  font-size: 0.875rem;
   color: #64748b;
+  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .detail-id {
-  font-weight: 600;
+  font-weight: 700;
   color: #6366f1;
+  padding: 0.2rem 0.5rem;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 6px;
 }
 
 .detail-author::before {
   content: "·";
-  margin-right: 1rem;
+  margin-right: 0.75rem;
   color: #cbd5e1;
+  font-weight: 700;
 }
 
 .detail-date::before {
   content: "·";
-  margin-right: 1rem;
+  margin-right: 0.75rem;
   color: #cbd5e1;
+  font-weight: 700;
+}
+
+.detail-view::before {
+  content: "·";
+  margin-right: 0.75rem;
+  color: #cbd5e1;
+  font-weight: 700;
 }
 
 .detail-title {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.625rem;
+  font-weight: 800;
   color: #0f172a;
-  margin-bottom: 1.5rem;
-  line-height: 1.4;
+  margin-bottom: 1.75rem;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid #e2e8f0;
 }
 
 .detail-content {
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: 1.0625rem;
+  line-height: 1.85;
   color: #334155;
   white-space: pre-wrap;
   word-break: break-word;
+  min-height: 2em;
+}
+
+.detail-content:empty::before {
+  content: "내용 없음";
+  color: #94a3b8;
+  font-style: italic;
 }
 
 .post-detail-actions {
@@ -169,10 +196,12 @@
   color: #fff;
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   border: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .post-detail-actions .danger-button:hover:not(:disabled) {
-  filter: brightness(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.45);
 }
 
 .post-detail-actions .danger-button:disabled {

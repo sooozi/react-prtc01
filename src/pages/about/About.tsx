@@ -109,7 +109,7 @@ export default function About() {
               className="cta-primary-button"
               onClick={() => navigate("/user/search")}
             >
-              사용자 검색 →
+              사용자 목록 →
             </button>
             <button
               className="cta-secondary-button"
