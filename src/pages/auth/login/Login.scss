@@ -2,9 +2,36 @@
 @use "sass:color";
 @use "@/styles/auth.scss" as *;
 
-// 로그인 컨테이너 (공통 스타일 상속)
 .login-container {
   @extend %auth-container;
+}
+
+// 보드 등에서 리다이렉트 시 표시하는 토스트 (헤더 높이 84px 아래에 배치)
+.login-toast {
+  position: fixed;
+  top: calc(var(--header-height, 84px) + 1rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 0.75rem 1.5rem;
+  background: #1e293b;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  animation: login-toast-in 0.3s ease;
+}
+
+@keyframes login-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 // 로그인 카드 (공통 스타일 상속)

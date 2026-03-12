@@ -1,55 +1,64 @@
-// src/pages/user/Search.tsx
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { selectUserList } from "@/api/userApi";
 import type { UserItem } from "@/api/userApi";
 import Pagination from "@/components/Pagination/Pagination";
 import { usePagination } from "@/hooks/usePagination";
 import "./Search.scss";
 
-const USER_LIST_SIZE = 10;
-
 export default function UserSearch() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const { currentPage, setCurrentPage, totalItems, setTotalItems, totalPages } =
-    usePagination(USER_LIST_SIZE);
+  const { currentPage, setCurrentPage, totalItems, setTotalItems, totalPages, pageSize } =
+    usePagination();
 
+  // 로그인 토큰 확인
   useEffect(() => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (!token) {
+      navigate("/auth/login", { state: { toast: "로그인이 필요합니다" }, replace: true });
+      return;
+    }
+
     const fetchData = async () => {
       try {
         setLoading(true);
         setError("");
 
+        // 사용자 목록 조회
         const res = await selectUserList({
           page: currentPage,
-          size: USER_LIST_SIZE,
+          size: pageSize,
         });
 
-        // res.data 안에 { itemSize, pageSize, totalItemSize, data }
+        // 응답 데이터 파싱
         const payload = res?.data;
 
+        // 사용자 목록 설정
         setUsers(payload?.data ?? []);
         const total = payload?.totalItemSize ?? 0;
+        // 전체 사용자 수 설정
         setTotalItems(total);
 
-        // (안전장치, 선택) totalItems가 줄어서 currentPage가 범위를 넘는 상황 방어
-        const computedTotalPages = Math.max(1, Math.ceil(total / USER_LIST_SIZE));
+        // 전체 페이지 수 계산
+        const computedTotalPages = Math.max(1, Math.ceil(total / pageSize));
+        // 현재 페이지가 전체 페이지 수보다 크면 마지막 페이지로 이동
         if (currentPage > computedTotalPages) setCurrentPage(computedTotalPages);
-
-      } catch (e: unknown) { // 실패 처리
+      } catch (e: unknown) {
         const message = e instanceof Error ? e.message : "사용자 목록 조회 실패";
         setError(message);
-      } finally { // 로딩 상태 종료
+      } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [currentPage, setCurrentPage, setTotalItems]);
+  }, [currentPage, pageSize, setCurrentPage, setTotalItems, navigate]);
 
-  const startIndex = (currentPage - 1) * USER_LIST_SIZE;
+  const startIndex = (currentPage - 1) * pageSize;
 
   return (
     <div className="search-page">

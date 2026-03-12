@@ -60,6 +60,30 @@
   color: #6366f1;
 }
 
+// 현재 페이지 입력 필드 (페이지 번호 직접 입력)
+.page-current-input {
+  width: 2.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #6366f1;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.35rem 0.25rem;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  }
+
+  &::placeholder {
+    color: #cbd5e1;
+  }
+}
+
 .page-divider {
   font-size: 1rem;
   font-weight: 400;

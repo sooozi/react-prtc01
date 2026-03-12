@@ -17,7 +17,7 @@ export default function Header() {
     <header className="header">
       <nav className="nav">
         {/* 왼쪽: 로고 */}
-        <Link to="/home" className="logo">
+        <Link to="/home" className="logo"> 
           <span className="logo-icon">🐱</span>
           <span className="logo-text">MyViteProject</span>
         </Link>
@@ -26,7 +26,7 @@ export default function Header() {
         <div className="nav-links">
           <Link to="/about" className="nav-link">About</Link>
           <Link to="/user/search" className="nav-link">Search</Link>
-          <Link to="/user/board" className="nav-link">Board</Link>
+          <Link to="/post/list" className="nav-link">Board</Link>
           {userName ? (
             <>
               <Link to="/user/mypage" className="nav-link is-logged-in" title="마이페이지">

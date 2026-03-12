@@ -12,10 +12,14 @@ type SelectUserListParams = {
   size: number;
 };
 
-/** 사용자 목록 — common/api 제거 후 목 데이터로 대체 (의존성 제거) */
+/**
+ * 사용자 목록 (목 데이터 사용)
+ * - common/api(8082) 호출부 제거 요구에 따라 해당 의존성 제거 완료
+ * - BPLTE core(8081) Swagger에는 사용자 목록 API가 없어 목 데이터 사용
+ */
 export async function selectUserList({ page, size }: SelectUserListParams) {
-  const start = (page - 1) * size;
-  const data = MOCK_USERS.slice(start, start + size);
+  const start = (page - 1) * size; // 이번 페이지에 해당하는 데이터가 배열에서 어디부터 잘라야 하는지
+  const data = MOCK_USERS.slice(start, start + size); // 이번 페이지에 해당하는 데이터를 잘라서 반환
   return {
     data: {
       data,

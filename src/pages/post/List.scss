@@ -1,4 +1,4 @@
-// Board.scss - 게시판 페이지 스타일 (Search 페이지 토대)
+// List.scss - 게시글 목록 페이지 스타일
 @use "@/styles/common.scss" as *;
 
 .board-page {
@@ -18,8 +18,17 @@
 }
 
 .title-section {
-  text-align: center;
   margin-bottom: 2.5rem;
+  gap: 1.5rem;
+}
+
+.title-block {
+  flex: 1;
+}
+
+.board-write-btn-block {
+  text-align: right;
+  margin-bottom: 1rem;
 }
 
 .badge {
@@ -45,6 +54,26 @@
   font-size: 1.05rem;
   color: #64748b;
   line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.board-write-btn {
+  flex-shrink: 0;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+  }
 }
 
 .table-card {
@@ -99,6 +128,23 @@
   text-align: center;
 }
 
+.board-login-btn {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -139,19 +185,13 @@
   white-space: nowrap;
 }
 
-.th-category {
-  width: 88px;
-  min-width: 88px;
-  text-align: center;
-}
-
 .th-title {
   min-width: 200px;
 }
 
-.th-date {
-  width: 110px;
-  min-width: 110px;
+.board-page .th-date {
+  width: 250px;
+  min-width: 250px;
   text-align: center;
 }
 
@@ -164,18 +204,22 @@
   white-space: nowrap;
 }
 
-.td-category {
-  text-align: center;
-}
-
 .td-title {
   font-weight: 500;
   color: #0f172a;
+  max-width: 280px;
+
+  .list-title-text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
-.td-date {
-  width: 110px;
-  min-width: 110px;
+.board-page .td-date {
+  width: 250px;
+  min-width: 250px;
   text-align: center;
   color: #64748b;
   font-size: 0.9rem;
@@ -189,19 +233,13 @@
   }
 }
 
+.tr-clickable {
+  cursor: pointer;
+}
+
 .td {
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid #f1f5f9;
   color: #1e293b;
   font-size: 0.95rem;
-}
-
-.category-badge {
-  display: inline-block;
-  padding: 0.35rem 0.75rem;
-  background: #f1f5f9;
-  color: #64748b;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
 }

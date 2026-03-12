@@ -1,0 +1,98 @@
+@use "@/styles/common.scss" as *;
+
+.board-write-page {
+  padding: 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+.board-write-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #6366f1;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.title {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #64748b;
+}
+
+.board-write-form {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.board-write-error {
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  background: #fef2f2;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #dc2626;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group .label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group .input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 0.95rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f9fafb;
+  color: $text-primary;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus {
+    border-color: $primary-color;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
+  }
+
+  &.textarea {
+    min-height: 200px;
+    resize: vertical;
+  }
+}
+
+.board-write-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f1f5f9;
+}

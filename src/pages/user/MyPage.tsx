@@ -1,29 +1,9 @@
 import { Link } from "react-router-dom";
 import "./MyPage.scss";
 
-/** 최근 로그인 시각을 "n분 전" 또는 "YYYY.MM.DD HH:mm" 형태로 반환 */
-function formatLastLogin(isoString: string | null): string {
-  if (!isoString) return "-";
-  const date = new Date(isoString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMin = Math.floor(diffMs / 60_000);
-  if (diffMin < 1) return "방금 전";
-  if (diffMin < 60) return `${diffMin}분 전`;
-  const diffHour = Math.floor(diffMin / 60);
-  if (diffHour < 24) return `${diffHour}시간 전`;
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  const h = String(date.getHours()).padStart(2, "0");
-  const min = String(date.getMinutes()).padStart(2, "0");
-  return `${y}.${m}.${d} ${h}:${min}`;
-}
-
 export default function MyPage() {
   const userName = localStorage.getItem("userName");
   const userId = localStorage.getItem("userId");
-  const lastLoginAt = localStorage.getItem("lastLoginAt");
   const token = localStorage.getItem("token");
 
   if (!token) {
@@ -63,16 +43,20 @@ export default function MyPage() {
         </div>
 
         <div className="mypage-card">
-          <h2 className="mypage-card__title">로그인 정보</h2>
+          <h2 className="mypage-card__title">계정 정보</h2>
           <div className="mypage-card__row">
-            <span className="mypage-card__label">최근 로그인</span>
-            <span className="mypage-card__value">{formatLastLogin(lastLoginAt)}</span>
+            <span className="mypage-card__label">회원 유형</span>
+            <span className="mypage-card__value">일반 회원</span>
+          </div>
+          <div className="mypage-card__row">
+            <span className="mypage-card__label">계정 상태</span>
+            <span className="mypage-card__value">정상</span>
           </div>
         </div>
 
         <div className="mypage-actions">
           <Link to="/user/search" className="mypage-btn mypage-btn--secondary">
-            사용자 검색
+            사용자 목록
           </Link>
           <Link to="/home" className="mypage-btn mypage-btn--primary">
             홈으로

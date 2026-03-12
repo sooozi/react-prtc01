@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import "./Pagination.scss";
 
@@ -57,6 +58,14 @@ export default function Pagination({
   totalPages,
   onPageChange,
 }: PaginationProps) {
+  // 현재 페이지 번호 입력 필드 값
+  const [inputValue, setInputValue] = useState(String(currentPage));
+
+  // 현재 페이지 번호 변경 시 입력 필드 값 업데이트
+  useEffect(() => {
+    setInputValue(String(currentPage));
+  }, [currentPage]);
+
   // 총 페이지가 1개 이하면 렌더링하지 않음
   if (totalPages <= 1) return null;
 
@@ -69,6 +78,31 @@ export default function Pagination({
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       onPageChange(currentPage + 1);
+    }
+  };
+
+  // 페이지 번호 입력 필드 값 변경 시 페이지 번호 적용
+  const applyPageInput = () => {
+    // 페이지 번호 입력 필드 값 파싱 (공백 제거, 10진수로 파싱)
+    const num = parseInt(inputValue.trim(), 10);
+    // 페이지 번호 입력 필드 값이 숫자가 아니거나 1보다 작으면 현재 페이지로 설정
+    if (Number.isNaN(num) || num < 1) {
+      setInputValue(String(currentPage));
+      return;
+    }
+    // 페이지 번호 입력 필드 값이 전체 페이지 수보다 크면 전체 페이지 수로 설정
+    const page = Math.min(num, totalPages);
+    // 페이지 번호 변경
+    onPageChange(page);
+    // 페이지 번호 입력 필드 값 업데이트
+    setInputValue(String(page));
+  };
+
+  // 페이지 번호 입력 필드 값 변경 시 페이지 번호 적용
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      applyPageInput();
     }
   };
 
@@ -85,9 +119,17 @@ export default function Pagination({
         disabled={currentPage === 1}
       />
 
-      {/* 페이지 번호 */}
+      {/* 페이지 번호 (입력 가능) */}
       <div className="page-numbers">
-        <span className="page-current">{currentPage}</span>
+        <input
+          type="text"
+          className="page-current-input"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value.replace(/\D/g, ""))} // 숫자가 아닌 문자 제거
+          onBlur={applyPageInput} // 페이지 번호 입력 필드 값 변경 시 페이지 번호 적용
+          onKeyDown={handleKeyDown} // 페이지 번호 입력 필드 값 변경 시 페이지 번호 적용
+          aria-label="페이지 번호"
+        />
         <span className="page-divider">/</span>
         <span className="page-total">{totalPages}</span>
       </div>

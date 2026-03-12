@@ -1,0 +1,24 @@
+// Tooltip - 공통 툴팁 컴포넌트
+
+.tooltip-trigger {
+  display: inline-block;
+  max-width: 100%;
+  cursor: default;
+}
+
+.tooltip-bubble {
+  transform: translate(-50%, -100%);
+  margin-top: -8px;
+  padding: 0.5rem 0.75rem;
+  max-width: 320px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #fff;
+  background: #1e293b;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  white-space: normal;
+  word-break: break-word;
+  z-index: 9999;
+  pointer-events: none;
+}

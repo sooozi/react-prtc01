@@ -14,8 +14,6 @@
   margin: 0 auto;
 }
 
-// .badge는 common.scss에서 정의됨
-
 .hero-title {
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 800;
@@ -24,16 +22,12 @@
   color: #0f172a;
 }
 
-// .gradient-text는 common.scss에서 정의됨
-
 .hero-description {
   font-size: 1.1rem;
   color: $text-secondary;
   line-height: 1.8;
   margin-bottom: 2.5rem;
 }
-
-// .primary-button은 common.scss에서 정의됨
 
 // 피처 섹션
 .features-section {
@@ -42,7 +36,6 @@
   z-index: 10;
 }
 
-// .section-title은 common.scss에서 정의됨 (Home용으로 약간 수정)
 .features-section .section-title {
   font-size: 2rem;
   margin-bottom: 3rem;

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { isLoginSuccess, login } from "../../../api/login";
+import { useLocation, useNavigate } from "react-router-dom";
+import { LOGIN_SUCCESS_CODE, login } from "../../../api/login";
 import "./Login.scss";
 
 interface LoginFormData {
@@ -10,11 +10,28 @@ interface LoginFormData {
 }
 
 export default function Login() {
-  const navigate = useNavigate(); 
-  // 로딩 상태
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
-  // API 응답 알림
   const [apiAlert, setApiAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  /** 보드 등에서 리다이렉트 시 전달한 "로그인이 필요합니다" 토스트 */
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // 보드 등에서 리다이렉트 시 전달한 "로그인이 필요합니다" 토스트
+  useEffect(() => {
+    const msg = (location.state as { toast?: string } | null)?.toast;
+    if (msg) {
+      setToastMessage(msg);
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.pathname, location.state, navigate]);
+
+  // 토스트 메시지 3초 후 사라지도록
+  useEffect(() => {
+    if (!toastMessage) return;
+    const t = setTimeout(() => setToastMessage(null), 3000);
+    return () => clearTimeout(t);
+  }, [toastMessage]);
   // React Hook Form 설정
   const {
     register, // input과 RHF 연결
@@ -36,7 +53,7 @@ export default function Login() {
       // 로그인 요청
       const res = await login(data);
       // 로그인 성공 여부 확인
-      if (isLoginSuccess(res)) {
+      if (res.resultCode === LOGIN_SUCCESS_CODE) {
         setApiAlert({
           type: "success",
           message: res.resultMessage ?? res.resultDetailMessage ?? "로그인되었습니다.",
@@ -44,7 +61,7 @@ export default function Login() {
         localStorage.setItem("token", res.data.accessToken);
         localStorage.setItem("userName", res.data.userName);
         localStorage.setItem("userId", res.data.userId);
-        localStorage.setItem("lastLoginAt", new Date().toISOString());
+        // localStorage.setItem("lastLoginAt", new Date().toISOString());
         navigate("/user/search");
       } else {
         setApiAlert({
@@ -53,6 +70,7 @@ export default function Login() {
         });
       }
     } catch (e: unknown) {//api 호출 실패 시 에러 처리
+      // axios 파일에서 try catch 한번에 처리하는 방법 찾아보기! (에러바운더리 참고!)
       const message =
       //e가 있고, 객체이고, response 속성이 있는지 확인
         e && typeof e === "object" && "response" in e
@@ -66,9 +84,14 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      {/* 배경 장식 */}
       <div className="bg-decoration-1" />
       <div className="bg-decoration-2" />
+
+      {toastMessage && (
+        <div className="login-toast" role="status" aria-live="polite">
+          {toastMessage}
+        </div>
+      )}
 
       <div className="login-card">
         <div className="login-header">

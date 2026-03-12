@@ -1,6 +1,8 @@
 import { useState } from "react";
 
-export function usePagination(pageSize: number) {
+export const DEFAULT_PAGE_SIZE = 10;
+
+export function usePagination(pageSize: number = DEFAULT_PAGE_SIZE) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
