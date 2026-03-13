@@ -4,7 +4,7 @@ import { selectBoardList, BoardApiError } from "@/api/boardApi";
 import type { BoardPostItem } from "@/api/boardApi";
 import { Pagination, Tooltip } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
-import "./List.scss";
+import "@/pages/post/List.scss";
 
 const PAGE_PARAM = "page";
 
@@ -37,7 +37,7 @@ export default function List() {
     [setSearchParams] // setSearchParams 함수 의존성 배열
   );
 
-  // 첫 진입 시 URL에 ?page=1 반영
+  // 첫 진입 시 URL에 page=1 반영
   useEffect(() => {
     if (searchParams.get(PAGE_PARAM) === null) { // 현재 URL에 page 파라미터가 없으면 1로 설정
       setSearchParams({ [PAGE_PARAM]: "1" }); // 현재 URL에 page=1 반영

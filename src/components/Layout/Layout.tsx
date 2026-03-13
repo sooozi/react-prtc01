@@ -1,9 +1,9 @@
 import { Outlet } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import Header from "./Header/Header";
-import Footer from "./Footer/Footer";
+import Header from "@/components/Layout/Header/Header";
+import Footer from "@/components/Layout/Footer/Footer";
 import CatHover from "@/components/CatHover/CatHover";
-import "./Layout.scss";
+import "@/components/Layout/Layout.scss";
 
 /** 헤더 실제 높이(padding 1.5rem×2 + nav 콘텐츠)에 맞춤 — 72px보다 작으면 메인과 겹침 */
 const HEADER_HEIGHT_PX = 84;

@@ -4,7 +4,7 @@ import { selectUserList } from "@/api/userApi";
 import type { UserItem } from "@/api/userApi";
 import Pagination from "@/components/Pagination/Pagination";
 import { usePagination } from "@/hooks/usePagination";
-import "./Search.scss";
+import "@/pages/user/Search.scss";
 
 export default function UserSearch() {
   const navigate = useNavigate();

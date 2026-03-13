@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { createPortal } from "react-dom";
-import "./Tooltip.scss";
+import "@/components/Tooltip/Tooltip.scss";
 
 interface TooltipProps {
   /** 툴팁에 표시할 내용 */
@@ -42,12 +42,13 @@ export default function Tooltip({
   const show = () => {
     // 툴팁 비활성화 또는 내용이 없으면 툴팁 표시하지 않음
     if (disabled || !content?.trim()) return;
+    // 툴팁 트리거 요소 참조
     const el = triggerRef.current;
     // 말줄임 여부 확인 (onlyWhenTruncated가 true이고 자식 요소가 말줄임 없으면 툴팁 표시하지 않음)
     if (onlyWhenTruncated && !isTruncated(el)) return;
     // 자식 요소가 있으면 툴팁 표시
     if (el) {
-      // 자식 요소의 바운딩 클라이언트 너비 찾기
+      // 트리거 요소가 화면에서 차지하는 위치와 크기 (툴팁 위치 계산용)
       const rect = el.getBoundingClientRect();
       // 툴팁 상태 업데이트
       setState({

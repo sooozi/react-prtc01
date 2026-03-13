@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import "./CatHover.scss";
+import "@/components/CatHover/CatHover.scss";
 
 const IMG_CAT_NORMAL =
   "https://i.postimg.cc/Ghm8C7jf/cute-cat-smiling-pixel-art-600nw-2414664891-removebg-preview.png";

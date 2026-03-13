@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, deletePost, BoardApiError, viewCountUp } from "@/api/boardApi";
 import type { PostDetailItem } from "@/api/boardApi";
-import "./Detail.scss";
+import "@/pages/post/Detail.scss";
 
 export default function Detail() {
   const navigate = useNavigate();
@@ -22,6 +22,7 @@ export default function Detail() {
   useEffect(() => {
     if (invalidId) return;
 
+    // 로그인 토큰 확인
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (!token) {
       navigate("/auth/login", { state: { toast: "로그인이 필요합니다" }, replace: true });
@@ -32,18 +33,22 @@ export default function Detail() {
 
     // 1) 조회수 증가 먼저 호출 후, 2) 상세 조회 (둘 다 서버 값 사용해 목록·상세 조회수 일치)
     (async () => {
+      // 조회수 증가
       try {
         await viewCountUp(postNumber);
       } catch (e) {
         if (import.meta.env.DEV) console.warn("조회수 증가 API 실패:", e);
       }
+      // 조회수 증가 실패 시 취소 플래그 확인
       if (cancelled) return;
 
+      // 게시글 상세 조회
       try {
         const data = await getPostDetail(postNumber);
         if (!cancelled) setPost(data);
       } catch (e: unknown) {
         if (cancelled) return;
+        // 게시글 상세 조회 실패 시 에러 처리
         if (e instanceof BoardApiError && e.status === 401) {
           setError(e.message);
           setIsUnauthorized(true);
@@ -51,6 +56,7 @@ export default function Detail() {
           setError(e instanceof Error ? e.message : "게시글을 불러오지 못했습니다.");
         }
       } finally {
+        // 게시글 상세 조회 완료 시 로딩 상태 초기화
         if (!cancelled) setLoading(false);
       }
     })();
@@ -79,6 +85,7 @@ export default function Detail() {
   const handleDelete = async () => {
     if (!window.confirm("삭제하시겠습니까?")) return;
     setDeleteLoading(true);
+    // 게시글 삭제
     try {
       await deletePost(postNumber);
       navigate("/post/list?page=1", { replace: true });
@@ -91,6 +98,7 @@ export default function Detail() {
         setError(e instanceof Error ? e.message : "삭제에 실패했습니다.");
       }
     } finally {
+      // 게시글 삭제 완료 시 삭제 로딩 상태 초기화
       setDeleteLoading(false);
     }
   };
@@ -135,7 +143,7 @@ export default function Detail() {
         )}
       </div>
 
-      {/* 게시글 상세 카드 */}
+      {/* 게시글 상세 콘텐츠 */}
       <div className="post-detail-card">
         {/* 로딩 상태 표시 */}
         {showLoading ? (

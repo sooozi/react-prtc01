@@ -1,4 +1,4 @@
-import "./Footer.scss";
+import "@/components/Layout/Footer/Footer.scss";
 
 interface FooterProps {
   /** 저작권 연도 */

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import { LOGIN_SUCCESS_CODE, login } from "../../../api/login";
-import "./Login.scss";
+import { LOGIN_SUCCESS_CODE, login } from "@/api/login";
+import "@/pages/auth/login/Login.scss";
 
 interface LoginFormData {
   userId: string;

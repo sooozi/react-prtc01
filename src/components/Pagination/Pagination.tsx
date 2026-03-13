@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import clsx from "clsx";
-import "./Pagination.scss";
+import "@/components/Pagination/Pagination.scss";
 
 /** 페이지 이동 버튼 액션 타입 */
 type PageAction = "first" | "prev" | "next" | "last";
@@ -69,12 +69,14 @@ export default function Pagination({
   // 총 페이지가 1개 이하면 렌더링하지 않음
   if (totalPages <= 1) return null;
 
+  // 이전 페이지 이동 핸들러
   const handlePrevPage = () => {
     if (currentPage > 1) {
       onPageChange(currentPage - 1);
     }
   };
 
+  // 다음 페이지 이동 핸들러
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       onPageChange(currentPage + 1);

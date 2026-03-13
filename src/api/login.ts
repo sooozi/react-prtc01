@@ -1,5 +1,5 @@
-import { apiClient } from "./client";
-import type { ApiResponse } from "./types";
+import { apiClient } from "@/api/client";
+import type { ApiResponse } from "@/api/types";
 
 //프론트 → 서버
 export type LoginRequest = {
@@ -18,6 +18,7 @@ export type LoginResponseData = {
 export const LOGIN_SUCCESS_CODE = "BPLTE200" as const;
 
 // 로그인 요청
+// [POST] /auth/login
 export async function login(body: LoginRequest) {
   const res = await apiClient.post<ApiResponse<LoginResponseData>>(
     "/auth/login",

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "./About.scss";
+import "@/pages/about/About.scss";
 
 export default function About() {
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import axios from "axios";
-import { apiClient } from "./client";
-import type { ApiResponse } from "./types";
+import { apiClient } from "@/api/client";
+import type { ApiResponse } from "@/api/types";
 import type {
   BoardPostItem,
   CreatePostRequest,
@@ -10,9 +10,9 @@ import type {
   PostsResponseData,
   SelectBoardListParams,
   UpdatePostRequest,
-} from "./boardApi.types";
+} from "@/api/boardApi.types";
 
-export type { BoardPostItem, CreatePostRequest, PostDetailItem, UpdatePostRequest } from "./boardApi.types";
+export type { BoardPostItem, CreatePostRequest, PostDetailItem, UpdatePostRequest } from "@/api/boardApi.types";
 
 // PostDto를 BoardPostItem(화면용 한 건)으로 변환
 function mapPostToItem(dto: PostDto): BoardPostItem {

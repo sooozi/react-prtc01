@@ -1,4 +1,4 @@
-import "./HighlightText.scss";
+import "@/components/HighlightText/HighlightText.scss";
 
 interface HighlightTextProps {
   /** 표시할 텍스트 */

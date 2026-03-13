@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, updatePost, BoardApiError } from "@/api/boardApi";
 import type { PostDetailItem } from "@/api/boardApi";
-import "./Detail.scss";
-import "./Update.scss";
+import "@/pages/post/Detail.scss";
+import "@/pages/post/Update.scss";
 
 export default function Update() {
   const navigate = useNavigate();
@@ -36,11 +36,13 @@ export default function Update() {
 
     // 게시글 상세 조회(api에 요청 보내기)
     getPostDetail(postNumber)
+      // 게시글 상세 조회 성공 시 폼 초기화
       .then((data) => {
         setPost(data);
         setTitle(data.title);
         setContent(data.content ?? "");
       })
+      // 게시글 상세 조회 실패 시 에러 처리
       .catch((e: unknown) => {
         if (e instanceof BoardApiError && e.status === 401) {
           navigate("/auth/login", { state: { toast: e.message }, replace: true });
@@ -48,12 +50,14 @@ export default function Update() {
           setError(e instanceof Error ? e.message : "게시글을 불러오지 못했습니다.");
         }
       })
+      // 게시글 상세 조회 완료 시 로딩 상태 초기화
       .finally(() => setLoading(false));
   }, [postNumber, invalidId, navigate]);
 
   // [저장 버튼 클릭 시] 게시글 수정(api에 요청 보내기)
   const handleSave = async () => {
     if (!window.confirm("저장하시겠습니까?")) return;
+    // 제목이 비어있으면 에러 메시지 설정
     if (!title.trim()) {
       setError("제목을 입력해주세요.");
       return;
@@ -61,15 +65,18 @@ export default function Update() {
     setError("");
     setSubmitLoading(true);
     try {
+      // 게시글 수정(api에 요청 보내기)
       await updatePost(postNumber, { title: title.trim(), content: content.trim() });
       navigate(`/post/detail?id=${postNumber}`, { replace: true });
     } catch (e) {
+      // 게시글 수정 실패 시 에러 처리
       if (e instanceof BoardApiError && e.status === 401) {
         navigate("/auth/login", { state: { toast: e.message }, replace: true });
       } else {
         setError(e instanceof Error ? e.message : "수정에 실패했습니다.");
       }
     } finally {
+      // 게시글 수정 완료 시 제출 로딩 상태 초기화
       setSubmitLoading(false);
     }
   };

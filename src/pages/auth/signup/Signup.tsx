@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { signup, checkUserId } from "@/api/auth";
-import "./Signup.scss";
+import "@/pages/auth/signup/Signup.scss";
 
 interface SignupData {
   userId: string;

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./MyPage.scss";
+import "@/pages/user/MyPage.scss";
 
 export default function MyPage() {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 // 공통 컴포넌트 export
-export { default as HighlightText } from "./HighlightText/HighlightText";
-export { default as Header } from "./Layout/Header/Header";
-export { default as Footer } from "./Layout/Footer/Footer";
-export { default as Layout } from "./Layout/Layout";
-export { default as Pagination } from "./Pagination/Pagination";
-export { default as Tooltip } from "./Tooltip/Tooltip";
+export { default as HighlightText } from "@/components/HighlightText/HighlightText";
+export { default as Header } from "@/components/Layout/Header/Header";
+export { default as Footer } from "@/components/Layout/Footer/Footer";
+export { default as Layout } from "@/components/Layout/Layout";
+export { default as Pagination } from "@/components/Pagination/Pagination";
+export { default as Tooltip } from "@/components/Tooltip/Tooltip";

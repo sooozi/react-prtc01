@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPost, BoardApiError } from "@/api/boardApi";
-import "./Write.scss";
+import "@/pages/post/Write.scss";
 
 export default function Write() {
   const navigate = useNavigate();
