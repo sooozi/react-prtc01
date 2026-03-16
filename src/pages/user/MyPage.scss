@@ -21,25 +21,29 @@
   border-radius: 50px;
   font-size: 0.85rem;
   font-weight: 500;
-  color: #6366f1;
+  color: var(--color-primary);
   margin-bottom: 1rem;
-  border: 1px solid rgba(99, 102, 241, 0.1);
+  border: 1px solid var(--color-primary-muted);
+}
+
+[data-theme="dark"] .mypage-section .badge {
+  background: linear-gradient(135deg, rgba(129, 140, 248, 0.2) 0%, rgba(244, 114, 182, 0.15) 100%);
 }
 
 .title {
   font-size: clamp(1.75rem, 4vw, 2.25rem);
   font-weight: 800;
-  color: #0f172a;
+  color: var(--color-text-heading);
   margin-bottom: 0.5rem;
 
   .highlight {
-    color: #6366f1;
+    color: var(--color-primary);
   }
 }
 
 .subtitle {
   font-size: 1rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
   margin-bottom: 1.5rem;
   line-height: 1.5;
 }
@@ -47,7 +51,7 @@
 .mypage-page .login-link {
   display: inline-block;
   padding: 0.75rem 1.5rem;
-  background: #6366f1;
+  background: var(--color-primary);
   color: #fff;
   border-radius: 8px;
   font-weight: 600;
@@ -55,26 +59,30 @@
   transition: background 0.2s;
 
   &:hover {
-    background: #4f46e5;
+    background: var(--color-primary-hover);
   }
 }
 
 .mypage-card {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 1.25rem 1.5rem;
   margin-bottom: 1rem;
   text-align: left;
 }
 
+[data-theme="dark"] .mypage-card {
+  background: var(--color-bg-subtle-2);
+}
+
 .mypage-card__title {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #6366f1;
+  color: var(--color-primary);
   margin: 0 0 1rem 0;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .mypage-card__row {
@@ -84,20 +92,20 @@
   padding: 0.5rem 0;
 
   &:not(:last-child) {
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--color-table-cell-border);
   }
 }
 
 .mypage-card__label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 .mypage-card__value {
   font-size: 1rem;
   font-weight: 500;
-  color: #0f172a;
+  color: var(--color-text);
 }
 
 .mypage-actions {
@@ -117,21 +125,21 @@
   transition: opacity 0.2s, background 0.2s;
 
   &--primary {
-    background: #6366f1;
+    background: var(--color-primary);
     color: #fff;
 
     &:hover {
-      background: #4f46e5;
+      background: var(--color-primary-hover);
     }
   }
 
   &--secondary {
-    background: #fff;
-    color: #6366f1;
-    border: 1px solid #6366f1;
+    background: var(--color-card);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
 
     &:hover {
-      background: #eef2ff;
+      background: var(--color-button-bg-hover);
     }
   }
 }

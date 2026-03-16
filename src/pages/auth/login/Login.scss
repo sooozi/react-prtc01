@@ -83,19 +83,19 @@ $success-color: #16a34a;
   }
 }
 
-// 로그인 API 에러 알림 (헤더 바로 아래, 폼 위)
+// 로그인 API 에러 알림 (헤더 바로 아래, 폼 위) - 테마 변수 사용
 .login-error-alert {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
-  background: rgba($error-color, 0.1);
-  border: 1px solid rgba($error-color, 0.35);
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 500;
-  color: color.adjust($error-color, $lightness: -8%);
+  color: var(--color-error-dark);
 
   &__icon {
     flex-shrink: 0;
@@ -104,7 +104,7 @@ $success-color: #16a34a;
     justify-content: center;
     width: 1.25rem;
     height: 1.25rem;
-    background: $error-color;
+    background: var(--color-error);
     color: #fff;
     border-radius: 50%;
     font-size: 0.75rem;

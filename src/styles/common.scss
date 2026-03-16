@@ -1,30 +1,24 @@
-// common.scss - 프로젝트 공통 스타일
-
-// ========================================
-// 변수
-// ========================================
-$primary-color: #6366f1;
-$primary-dark: #8b5cf6;
-$secondary-color: #ec4899;
-$text-primary: #1e293b;
-$text-secondary: #64748b;
-$text-muted: #94a3b8;
-$background-light: #f8fafc;
-$background-lighter: #f1f5f9;
-$border-color: rgba(226, 232, 240, 0.8);
-$error-color: #ef4444;
-$error-dark: #dc2626;
+// common.scss - 프로젝트 공통 스타일 (테마 변수 사용)
+// 아래 변수는 CSS 변수(var)를 가리켜 다크 모드 시 자동 전환됩니다.
 
 $font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, sans-serif;
+$primary-color: var(--color-primary);
+$primary-dark: var(--color-primary-hover);
+$text-primary: var(--color-text);
+$text-secondary: var(--color-text-secondary);
+$text-muted: var(--color-text-muted);
+$border-color: var(--color-border);
+$error-color: var(--color-error);
+$error-dark: var(--color-error-dark);
 
 // ========================================
 // 공통 배경 그라데이션
 // ========================================
 %base-container {
   min-height: 100vh;
-  background: linear-gradient(180deg, #ffffff 0%, $background-light 50%, $background-lighter 100%);
+  background: var(--color-bg-body);
   font-family: $font-family;
-  color: $text-primary;
+  color: var(--color-text);
   position: relative;
   overflow: hidden;
 }
@@ -44,7 +38,7 @@ $font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, s
   right: -200px;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba($primary-color, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--decoration-primary) 0%, transparent 70%);
 }
 
 .bg-decoration-2 {
@@ -53,7 +47,7 @@ $font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, s
   left: -200px;
   width: 800px;
   height: 800px;
-  background: radial-gradient(circle, rgba($secondary-color, 0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--decoration-secondary) 0%, transparent 70%);
 }
 
 // ========================================
@@ -73,13 +67,13 @@ $font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, s
 
 .logo-icon {
   font-size: 1.8rem;
-  color: $primary-color;
+  color: var(--color-primary);
 }
 
 .logo-text {
   font-size: 1.25rem;
   font-weight: 700;
-  color: $text-primary;
+  color: var(--color-text-heading);
 }
 
 // ========================================
@@ -92,23 +86,26 @@ $font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, s
   border-radius: 50px;
   font-size: 0.6rem;
   font-weight: 500;
-  color: $primary-color;
+  color: var(--color-primary);
   margin-bottom: 1rem;
-  border: 1px solid rgba($primary-color, 0.1);
+  border: 1px solid var(--color-primary-muted);
+}
+
+[data-theme="dark"] .badge {
+  background: linear-gradient(135deg, rgba(129, 140, 248, 0.2) 0%, rgba(244, 114, 182, 0.15) 100%);
 }
 
 // ========================================
 // 그라데이션 텍스트
 // ========================================
 .gradient-text {
-  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 
-  // 에러 버전 (Forbidden 페이지용)
   &.error {
-    background: linear-gradient(135deg, $error-color 0%, $error-dark 100%);
+    background: linear-gradient(135deg, var(--color-error) 0%, var(--color-error-dark) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -122,7 +119,7 @@ $font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, s
   text-align: center;
   font-size: 1.75rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-heading);
   margin-bottom: 2rem;
 }
 
@@ -133,21 +130,21 @@ $font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, s
   padding: 0.9rem 2rem;
   font-size: 1rem;
   font-weight: 600;
-  background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   color: #ffffff;
   border: none;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba($primary-color, 0.35);
+  box-shadow: 0 4px 15px var(--color-primary-shadow);
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba($primary-color, 0.45);
+    box-shadow: 0 6px 20px var(--color-primary-shadow);
   }
 
   &:disabled {
-    background: $text-muted;
+    background: var(--color-text-muted);
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
@@ -158,16 +155,16 @@ $font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, s
   padding: 0.9rem 2rem;
   font-size: 1rem;
   font-weight: 600;
-  background: #ffffff;
-  color: $text-secondary;
-  border: 2px solid #e2e8f0;
+  background: var(--color-card);
+  color: var(--color-text-secondary);
+  border: 2px solid var(--color-border);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: $primary-color;
-    color: $primary-color;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
   }
 }
 
@@ -175,15 +172,15 @@ $font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, s
 // 카드 스타일
 // ========================================
 %card-base {
-  background: #ffffff;
+  background: var(--color-card);
   border-radius: 20px;
   padding: 2rem;
-  border: 1px solid $border-color;
+  border: 1px solid var(--color-card-border);
   transition: all 0.3s ease;
 
   &:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 40px var(--color-shadow-md);
   }
 }
 
@@ -200,42 +197,46 @@ $font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, s
 .label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-text-secondary);
 }
 
 .input {
   padding: 0.875rem 1rem;
   font-size: 0.95rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--color-input-border);
   border-radius: 12px;
-  background: #f9fafb;
-  color: $text-primary;
+  background: var(--color-input-bg);
+  color: var(--color-text);
   transition: all 0.2s ease;
   outline: none;
 
   &::placeholder {
-    color: #9ca3af;
+    color: var(--color-input-placeholder);
   }
 
   &:focus {
-    border-color: $primary-color;
-    background: #ffffff;
-    box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
+    border-color: var(--color-primary);
+    background: var(--color-input-focus-bg);
+    box-shadow: 0 0 0 4px var(--color-primary-muted);
   }
 
   &.error {
-    border-color: $error-color;
-    background: #fef2f2;
+    border-color: var(--color-error);
+    background: rgba(248, 113, 113, 0.08);
 
     &:focus {
-      box-shadow: 0 0 0 4px rgba($error-color, 0.1);
+      box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.15);
     }
   }
 }
 
+[data-theme="light"] .input.error {
+  background: #fef2f2;
+}
+
 .error-message {
   font-size: 0.75rem;
-  color: $error-color;
+  color: var(--color-error);
 }
 
 .submit-button {

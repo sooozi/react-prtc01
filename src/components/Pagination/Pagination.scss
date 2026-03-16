@@ -16,22 +16,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   border-radius: 12px;
-  background: #ffffff;
-  color: #64748b;
+  background: var(--color-card);
+  color: var(--color-text-secondary);
   font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px var(--color-shadow-sm);
 
   &:hover:not(:disabled) {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
     color: #ffffff;
     border-color: transparent;
     transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+    box-shadow: 0 8px 20px var(--color-primary-shadow);
   }
 
   &:active:not(:disabled) {
@@ -42,7 +42,7 @@
   &.disabled {
     opacity: 0.35;
     cursor: not-allowed;
-    background: #f8fafc;
+    background: var(--color-bg-subtle);
   }
 }
 
@@ -57,7 +57,7 @@
 .page-current {
   font-size: 1rem;
   font-weight: 700;
-  color: #6366f1;
+  color: var(--color-primary);
 }
 
 // 현재 페이지 입력 필드 (페이지 번호 직접 입력)
@@ -65,34 +65,34 @@
   width: 2.5rem;
   font-size: 1rem;
   font-weight: 700;
-  color: #6366f1;
+  color: var(--color-primary);
   text-align: center;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 0.35rem 0.25rem;
-  background: #ffffff;
+  background: var(--color-card);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 
   &:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-muted);
   }
 
   &::placeholder {
-    color: #cbd5e1;
+    color: var(--color-text-muted);
   }
 }
 
 .page-divider {
   font-size: 1rem;
   font-weight: 400;
-  color: #cbd5e1;
+  color: var(--color-text-muted);
   margin: 0 0.25rem;
 }
 
 .page-total {
   font-size: 1rem;
   font-weight: 600;
-  color: #94a3b8;
+  color: var(--color-text-muted);
 }

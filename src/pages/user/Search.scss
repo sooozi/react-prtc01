@@ -24,37 +24,41 @@
   margin-bottom: 2.5rem;
 }
 
-.badge {
+.search-page .badge {
   display: inline-block;
   padding: 0.5rem 1rem;
   background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
   border-radius: 50px;
   font-size: 0.85rem;
   font-weight: 500;
-  color: #6366f1;
+  color: var(--color-primary);
   margin-bottom: 1rem;
-  border: 1px solid rgba(99, 102, 241, 0.1);
+  border: 1px solid var(--color-primary-muted);
 }
 
-.title {
+[data-theme="dark"] .search-page .badge {
+  background: linear-gradient(135deg, rgba(129, 140, 248, 0.2) 0%, rgba(244, 114, 182, 0.15) 100%);
+}
+
+.search-page .title {
   font-size: clamp(2rem, 4vw, 2.5rem);
   font-weight: 800;
-  color: #0f172a;
+  color: var(--color-text-heading);
   margin-bottom: 0.75rem;
 }
 
-.subtitle {
+.search-page .subtitle {
   font-size: 1.05rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
   line-height: 1.6;
 }
 
 .search-card {
-  background: #ffffff;
+  background: var(--color-card);
   border-radius: 20px;
   padding: 1.5rem;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 25px var(--color-shadow-card);
+  border: 1px solid var(--color-card-border);
   margin-bottom: 1.5rem;
 }
 
@@ -72,10 +76,10 @@
 .select {
   padding: 0.85rem 2.5rem 0.85rem 1rem;
   font-size: 0.95rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--color-border);
   border-radius: 12px;
-  background: #f8fafc;
-  color: #1e293b;
+  background: var(--color-bg-subtle);
+  color: var(--color-text);
   font-weight: 500;
   cursor: pointer;
   outline: none;
@@ -85,7 +89,7 @@
   background-position: right 1rem center;
 
   &:focus {
-    border-color: #6366f1;
+    border-color: var(--color-primary);
   }
 }
 
@@ -108,15 +112,15 @@
   width: 100%;
   padding: 0.85rem 1rem 0.85rem 2.75rem;
   font-size: 0.95rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--color-border);
   border-radius: 12px;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  background: #ffffff;
+  background: var(--color-card);
 
   &:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-muted);
   }
 }
 
@@ -124,17 +128,17 @@
   padding: 0.85rem 1.75rem;
   font-size: 0.95rem;
   font-weight: 600;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   color: #ffffff;
   border: none;
   border-radius: 12px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 15px var(--color-primary-shadow);
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 6px 20px var(--color-primary-shadow);
   }
 }
 
@@ -142,16 +146,16 @@
   padding: 0.85rem 1.5rem;
   font-size: 0.95rem;
   font-weight: 600;
-  background: #ffffff;
-  color: #64748b;
-  border: 2px solid #e2e8f0;
+  background: var(--color-card);
+  color: var(--color-text-secondary);
+  border: 2px solid var(--color-border);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: #6366f1;
-    color: #6366f1;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
   }
 }
 
@@ -162,37 +166,37 @@
 
 .result-text {
   font-size: 0.95rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
-.table-card {
-  background: #ffffff;
+.search-page .table-card {
+  background: var(--color-card);
   border-radius: 20px;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 25px var(--color-shadow-card);
   overflow: hidden;
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid var(--color-card-border);
 }
 
-.loading-state {
+.search-page .loading-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
   gap: 1rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
-.spinner {
+.search-page .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #e2e8f0;
-  border-top-color: #6366f1;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
-.error-state {
+.search-page .error-state {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -201,26 +205,22 @@
   gap: 0.75rem;
 }
 
-.error-icon {
-  font-size: 3rem;
-}
-
-.error-title {
+.search-page .error-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #dc2626;
+  color: var(--color-error-dark);
 }
 
-.error-message {
+.search-page .error-message {
   font-size: 0.95rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
   text-align: center;
 }
 
-.retry-button {
+.search-page .retry-button {
   margin-top: 1rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   color: #ffffff;
   border: none;
   border-radius: 10px;
@@ -234,7 +234,7 @@
   }
 }
 
-.empty-state {
+.search-page .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -243,20 +243,20 @@
   gap: 1rem;
 }
 
-.empty-icon {
+.search-page .empty-icon {
   font-size: 3rem;
 }
 
-.empty-text {
+.search-page .empty-text {
   font-size: 1rem;
-  color: #94a3b8;
+  color: var(--color-text-muted);
 }
 
-.reset-button-small {
+.search-page .reset-button-small {
   margin-top: 0.5rem;
   padding: 0.6rem 1.2rem;
-  background: #f1f5f9;
-  color: #6366f1;
+  background: var(--color-bg-subtle);
+  color: var(--color-primary);
   border: none;
   border-radius: 8px;
   font-size: 0.9rem;
@@ -264,53 +264,54 @@
   cursor: pointer;
 
   &:hover {
-    background: #e2e8f0;
+    background: var(--color-border);
   }
 }
 
-.table {
+// 테이블 - 테마 변수 사용 (다크 모드 텍스트 가독성)
+.search-page .table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.th {
+.search-page .th {
   padding: 1.25rem 1.5rem;
   text-align: left;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-  color: #475569;
+  background: var(--color-table-header-bg);
+  color: var(--color-text-secondary);
   font-weight: 600;
   font-size: 0.9rem;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid var(--color-border);
 }
 
-.th-number {
+.search-page .th-number {
   width: 80px;
   min-width: 80px;
   text-align: center;
   white-space: nowrap;
 }
 
-.td-number {
+.search-page .td-number {
   width: 80px;
   min-width: 80px;
   text-align: center;
-  color: #94a3b8;
+  color: var(--color-text-muted);
   font-weight: 500;
   white-space: nowrap;
 }
 
-.tr {
+.search-page .tr {
   transition: background 0.2s ease;
 
   &:hover {
-    background-color: #f8fafc;
+    background-color: var(--color-table-row-hover);
   }
 }
 
-.td {
+.search-page .td {
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #f1f5f9;
-  color: #1e293b;
+  border-bottom: 1px solid var(--color-table-cell-border);
+  color: var(--color-text);
   font-size: 0.95rem;
 }
 
@@ -320,11 +321,11 @@
   gap: 0.75rem;
 }
 
-.avatar {
+.search-page .avatar {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -333,30 +334,30 @@
   font-size: 0.9rem;
 }
 
-.user-name {
+.search-page .user-name {
   font-weight: 600;
-  color: #0f172a;
+  color: var(--color-text-heading);
 }
 
-.email {
-  color: #64748b;
+.search-page .email {
+  color: var(--color-text-secondary);
 }
 
-.admin-badge {
+.search-page .admin-badge {
   display: inline-block;
   padding: 0.35rem 0.85rem;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   color: #ffffff;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
 }
 
-.user-badge {
+.search-page .user-badge {
   display: inline-block;
   padding: 0.35rem 0.85rem;
-  background: #f1f5f9;
-  color: #64748b;
+  background: var(--color-bg-subtle);
+  color: var(--color-text-secondary);
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 500;

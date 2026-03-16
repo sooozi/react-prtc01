@@ -19,12 +19,12 @@
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 1.5rem;
-  color: #0f172a;
+  color: var(--color-text-heading);
 }
 
 .hero-description {
   font-size: 1.1rem;
-  color: $text-secondary;
+  color: var(--color-text-secondary);
   line-height: 1.8;
   margin-bottom: 2.5rem;
 }
@@ -63,13 +63,13 @@
 .feature-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: $text-primary;
+  color: var(--color-text-heading);
   margin-bottom: 0.75rem;
 }
 
 .feature-description {
   font-size: 0.95rem;
-  color: $text-secondary;
+  color: var(--color-text-secondary);
   line-height: 1.6;
 }
 
@@ -100,25 +100,25 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.6rem 1rem;
-  background: #ffffff;
-  border: 1px solid $border-color;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
   border-radius: 50px;
   font-size: 0.9rem;
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: $primary-color;
-    box-shadow: 0 4px 12px rgba($primary-color, 0.15);
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px var(--color-primary-muted);
   }
 }
 
 .tech-name {
   font-weight: 600;
-  color: $text-primary;
+  color: var(--color-text);
 }
 
 .tech-desc {
-  color: $text-muted;
+  color: var(--color-text-muted);
   font-size: 0.8rem;
 }
 
@@ -134,7 +134,7 @@
 .sitemap-headline {
   font-size: clamp(2.5rem, 5vw, 3.25rem);
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-heading);
   text-align: center;
   margin: 0 0 0.5rem;
   letter-spacing: -0.02em;
@@ -142,7 +142,7 @@
 
 .sitemap-subline {
   font-size: 1.25rem;
-  color: $text-secondary;
+  color: var(--color-text-secondary);
   text-align: center;
   margin: 0 0 3.5rem;
   font-weight: 400;
@@ -185,28 +185,41 @@
   justify-content: space-between;
   position: relative;
   border-radius: 20px;
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.03),
-    0 2px 4px rgba(0, 0, 0, 0.04),
-    0 8px 24px -8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 0 0 1px var(--color-shadow-sm), 0 2px 4px var(--color-shadow-sm), 0 8px 24px -8px var(--color-shadow-md);
   transition: box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .sitemap-card--default .sitemap-card-inner {
-  background: #f8fafc;
+  background: var(--color-bg-subtle);
+}
+
+[data-theme="dark"] .sitemap-card--default .sitemap-card-inner {
+  background: var(--color-bg-subtle-2);
 }
 
 .sitemap-card--primary .sitemap-card-inner {
   background: linear-gradient(145deg, #f5f3ff 0%, #ede9fe 100%);
 }
 
+[data-theme="dark"] .sitemap-card--primary .sitemap-card-inner {
+  background: linear-gradient(145deg, rgba(129, 140, 248, 0.2) 0%, rgba(129, 140, 248, 0.08) 100%);
+}
+
 .sitemap-card--secondary .sitemap-card-inner {
   background: linear-gradient(145deg, #fdf2f8 0%, #fce7f3 100%);
 }
 
+[data-theme="dark"] .sitemap-card--secondary .sitemap-card-inner {
+  background: linear-gradient(145deg, rgba(244, 114, 182, 0.15) 0%, rgba(244, 114, 182, 0.06) 100%);
+}
+
 .sitemap-card--accent .sitemap-card-inner {
   background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+[data-theme="dark"] .sitemap-card--accent .sitemap-card-inner {
+  background: linear-gradient(145deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.06) 100%);
 }
 
 .sitemap-card:hover .sitemap-card-inner {
@@ -226,7 +239,7 @@
 
 .sitemap-card-subtitle {
   font-size: 1rem;
-  color: $text-secondary;
+  color: var(--color-text-secondary);
   margin: 0 0 1.5rem;
   line-height: 1.5;
   font-weight: 400;
@@ -235,9 +248,9 @@
 .sitemap-card-link {
   font-size: 0.875rem;
   font-weight: 500;
-  color: $primary-color;
-  background: rgba($primary-color, 0.08);
-  border: 1px solid rgba($primary-color, 0.2);
+  color: var(--color-primary);
+  background: var(--color-primary-muted);
+  border: 1px solid var(--color-primary-muted);
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -248,9 +261,9 @@
 }
 
 .sitemap-card:hover .sitemap-card-link {
-  background: rgba($primary-color, 0.12);
-  border-color: rgba($primary-color, 0.35);
-  color: $primary-dark;
+  background: var(--color-primary-muted);
+  border-color: var(--color-primary);
+  color: var(--color-primary-hover);
 }
 
 .sitemap-card-arrow {
@@ -305,8 +318,8 @@
   text-align: center;
 
   &:hover {
-    border-color: rgba($primary-color, 0.3);
-    color: $primary-color;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
   }
 }
 
