@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client'
-import "@/index.css";
+import "@/index.scss";
 import App from "@/App";
 
 // 저장된 테마를 적용 (다크 모드 플래시 방지)

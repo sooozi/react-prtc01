@@ -1,12 +1,14 @@
 // Home.scss - 홈 페이지 스타일
 @use "@/styles/common.scss" as *;
 
+// ========================================
 // 히어로 섹션
+// ========================================
 .hero {
-  text-align: center;
-  padding: 4rem 2rem 6rem;
   position: relative;
   z-index: 10;
+  padding: 4rem 2rem 6rem;
+  text-align: center;
 }
 
 .hero-content {
@@ -15,30 +17,32 @@
 }
 
 .hero-title {
+  margin-bottom: 1.5rem;
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   font-weight: 800;
   line-height: 1.2;
-  margin-bottom: 1.5rem;
   color: var(--color-text-heading);
 }
 
 .hero-description {
-  font-size: 1.1rem;
-  color: var(--color-text-secondary);
-  line-height: 1.8;
   margin-bottom: 2.5rem;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
 }
 
+// ========================================
 // 피처 섹션
+// ========================================
 .features-section {
-  padding: 4rem 2rem;
   position: relative;
   z-index: 10;
-}
+  padding: 4rem 2rem;
 
-.features-section .section-title {
-  font-size: 2rem;
-  margin-bottom: 3rem;
+  .section-title {
+    margin-bottom: 3rem;
+    font-size: 2rem;
+  }
 }
 
 .features-grid {
@@ -55,34 +59,36 @@
 }
 
 .feature-icon {
-  font-size: 2.5rem;
   display: block;
   margin-bottom: 1rem;
+  font-size: 2.5rem;
 }
 
 .feature-title {
+  margin-bottom: 0.75rem;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--color-text-heading);
-  margin-bottom: 0.75rem;
 }
 
 .feature-description {
   font-size: 0.95rem;
-  color: var(--color-text-secondary);
   line-height: 1.6;
+  color: var(--color-text-secondary);
 }
 
+// ========================================
 // 기술 스택
+// ========================================
 .tech-section {
-  padding: 4rem 2rem;
   position: relative;
   z-index: 10;
-}
+  padding: 4rem 2rem;
 
-.tech-section .section-title {
-  font-size: 2rem;
-  margin-bottom: 2rem;
+  .section-title {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+  }
 }
 
 .tech-grid {
@@ -100,10 +106,10 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.6rem 1rem;
-  background: var(--color-card);
   border: 1px solid var(--color-border);
   border-radius: 50px;
   font-size: 0.9rem;
+  background: var(--color-card);
   transition: all 0.2s ease;
 
   &:hover {
@@ -118,152 +124,192 @@
 }
 
 .tech-desc {
-  color: var(--color-text-muted);
   font-size: 0.8rem;
+  color: var(--color-text-muted);
 }
 
-// 사이트맵 - Apple 스타일
+// ========================================
+// 사이트맵 (Apple 스타일)
+// ========================================
 .sitemap-section {
-  padding: 5rem 1.5rem 5rem;
   position: relative;
   z-index: 10;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 5rem 1.5rem 5rem;
 }
 
 .sitemap-headline {
+  margin: 0 0 0.5rem;
   font-size: clamp(2.5rem, 5vw, 3.25rem);
   font-weight: 700;
-  color: var(--color-text-heading);
-  text-align: center;
-  margin: 0 0 0.5rem;
   letter-spacing: -0.02em;
+  text-align: center;
+  color: var(--color-text-heading);
 }
 
 .sitemap-subline {
-  font-size: 1.25rem;
-  color: var(--color-text-secondary);
-  text-align: center;
   margin: 0 0 3.5rem;
+  font-size: 1.25rem;
   font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--color-text-secondary);
 }
 
 .sitemap-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.25rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
 
 .sitemap-card {
   display: block;
   width: 100%;
-  text-align: left;
-  border: none;
-  border-radius: 24px;
-  cursor: pointer;
-  font-family: inherit;
   padding: 0;
   overflow: hidden;
-  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+  border: none;
+  border-radius: 24px;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     box-shadow 0.35s ease;
 
   &:hover {
     transform: scale(1.02);
-    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 24px 48px var(--color-shadow-md);
 
     .sitemap-card-arrow {
       transform: translateX(4px);
+    }
+
+    .sitemap-card-inner {
+      box-shadow:
+        0 0 0 1px var(--color-shadow-sm),
+        0 4px 8px var(--color-shadow-sm),
+        0 20px 40px -12px var(--color-shadow-card);
+    }
+
+    .sitemap-card-link {
+      border-color: var(--color-primary);
+      background: var(--color-primary-muted);
+      color: var(--color-primary-hover);
     }
   }
 }
 
 .sitemap-card-inner {
-  padding: 2.5rem 2rem;
+  position: relative;
   min-height: 200px;
+  padding: 2.5rem 2rem;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative;
-  border-radius: 20px;
-  box-shadow: 0 0 0 1px var(--color-shadow-sm), 0 2px 4px var(--color-shadow-sm), 0 8px 24px -8px var(--color-shadow-md);
-  transition: box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.sitemap-card--default .sitemap-card-inner {
-  background: var(--color-bg-subtle);
-}
-
-[data-theme="dark"] .sitemap-card--default .sitemap-card-inner {
-  background: var(--color-bg-subtle-2);
-}
-
-.sitemap-card--primary .sitemap-card-inner {
-  background: linear-gradient(145deg, #f5f3ff 0%, #ede9fe 100%);
-}
-
-[data-theme="dark"] .sitemap-card--primary .sitemap-card-inner {
-  background: linear-gradient(145deg, rgba(129, 140, 248, 0.2) 0%, rgba(129, 140, 248, 0.08) 100%);
-}
-
-.sitemap-card--secondary .sitemap-card-inner {
-  background: linear-gradient(145deg, #fdf2f8 0%, #fce7f3 100%);
-}
-
-[data-theme="dark"] .sitemap-card--secondary .sitemap-card-inner {
-  background: linear-gradient(145deg, rgba(244, 114, 182, 0.15) 0%, rgba(244, 114, 182, 0.06) 100%);
-}
-
-.sitemap-card--accent .sitemap-card-inner {
-  background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%);
-}
-
-[data-theme="dark"] .sitemap-card--accent .sitemap-card-inner {
-  background: linear-gradient(145deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.06) 100%);
-}
-
-.sitemap-card:hover .sitemap-card-inner {
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.04),
-    0 4px 8px rgba(0, 0, 0, 0.04),
-    0 20px 40px -12px rgba(0, 0, 0, 0.12);
+    0 0 0 1px var(--color-shadow-sm),
+    0 2px 4px var(--color-shadow-sm),
+    0 8px 24px -8px var(--color-shadow-md);
+  transition:
+    box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  @media (max-width: 768px) {
+    min-height: 160px;
+    padding: 2rem 1.5rem;
+  }
+}
+
+.sitemap-card--default {
+  .sitemap-card-inner {
+    background: var(--color-bg-subtle);
+  }
+}
+
+.sitemap-card--primary {
+  .sitemap-card-inner {
+    background: linear-gradient(145deg, #f5f3ff 0%, #ede9fe 100%);
+  }
+}
+
+.sitemap-card--secondary {
+  .sitemap-card-inner {
+    background: linear-gradient(145deg, #fdf2f8 0%, #fce7f3 100%);
+  }
+}
+
+.sitemap-card--accent {
+  .sitemap-card-inner {
+    background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%);
+  }
+}
+
+[data-theme="dark"] {
+  .sitemap-card--default {
+    .sitemap-card-inner {
+      background: var(--color-bg-subtle-2);
+    }
+  }
+
+  .sitemap-card--primary {
+    .sitemap-card-inner {
+      background: linear-gradient(145deg, rgba(129, 140, 248, 0.2) 0%, rgba(129, 140, 248, 0.08) 100%);
+    }
+  }
+
+  .sitemap-card--secondary {
+    .sitemap-card-inner {
+      background: linear-gradient(145deg, rgba(244, 114, 182, 0.15) 0%, rgba(244, 114, 182, 0.06) 100%);
+    }
+  }
+
+  .sitemap-card--accent {
+    .sitemap-card-inner {
+      background: linear-gradient(145deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.06) 100%);
+    }
+  }
 }
 
 .sitemap-card-title {
+  margin: 0 0 0.5rem;
   font-size: 1.75rem;
   font-weight: 700;
-  margin: 0 0 0.5rem;
-  letter-spacing: -0.02em;
   line-height: 1.2;
+  letter-spacing: -0.02em;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 }
 
 .sitemap-card-subtitle {
-  font-size: 1rem;
-  color: var(--color-text-secondary);
   margin: 0 0 1.5rem;
-  line-height: 1.5;
+  font-size: 1rem;
   font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
 }
 
 .sitemap-card-link {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-primary);
-  background: var(--color-primary-muted);
-  border: 1px solid var(--color-primary-muted);
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   padding: 0.45rem 0.9rem;
+  border: 1px solid var(--color-primary-muted);
   border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 500;
   width: fit-content;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
-
-.sitemap-card:hover .sitemap-card-link {
   background: var(--color-primary-muted);
-  border-color: var(--color-primary);
-  color: var(--color-primary-hover);
+  color: var(--color-primary);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .sitemap-card-arrow {
@@ -271,32 +317,18 @@
   transition: transform 0.25s ease;
 }
 
-@media (max-width: 768px) {
-  .sitemap-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .sitemap-card-inner {
-    min-height: 160px;
-    padding: 2rem 1.5rem;
-  }
-
-  .sitemap-card-title {
-    font-size: 1.5rem;
-  }
-}
-
+// ========================================
 // 바로가기
+// ========================================
 .links-section {
-  padding: 4rem 2rem 5rem;
   position: relative;
   z-index: 10;
-}
+  padding: 4rem 2rem 5rem;
 
-.links-section .section-title {
-  font-size: 2rem;
-  margin-bottom: 2rem;
+  .section-title {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+  }
 }
 
 .links-grid {
@@ -313,9 +345,9 @@
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
-  cursor: pointer;
   font-family: inherit;
   text-align: center;
+  cursor: pointer;
 
   &:hover {
     border-color: var(--color-primary);
