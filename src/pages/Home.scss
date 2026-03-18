@@ -4,6 +4,17 @@
 // ========================================
 // 히어로 섹션
 // ========================================
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .hero {
   position: relative;
   z-index: 10;
@@ -14,6 +25,7 @@
 .hero-content {
   max-width: 800px;
   margin: 0 auto;
+  animation: hero-fade-in 0.7s ease-out both;
 }
 
 .hero-title {
@@ -34,6 +46,17 @@
 // ========================================
 // 피처 섹션
 // ========================================
+@keyframes section-title-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .features-section {
   position: relative;
   z-index: 10;
@@ -42,6 +65,7 @@
   .section-title {
     margin-bottom: 3rem;
     font-size: 2rem;
+    animation: section-title-in 0.5s ease-out 0.15s both;
   }
 }
 
@@ -53,9 +77,27 @@
   margin: 0 auto;
 }
 
+@keyframes card-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .feature-card {
   @extend %card-base;
   text-align: center;
+  animation: card-fade-in 0.5s ease-out both;
+
+  @for $i from 1 through 6 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{(($i - 1) * 0.08)}s;
+    }
+  }
 }
 
 .feature-icon {
@@ -88,6 +130,7 @@
   .section-title {
     margin-bottom: 2rem;
     font-size: 2rem;
+    animation: section-title-in 0.5s ease-out 0.2s both;
   }
 }
 
@@ -146,6 +189,7 @@
   letter-spacing: -0.02em;
   text-align: center;
   color: var(--color-text-heading);
+  animation: section-title-in 0.5s ease-out 0.2s both;
 }
 
 .sitemap-subline {
@@ -155,6 +199,7 @@
   line-height: 1.5;
   text-align: center;
   color: var(--color-text-secondary);
+  animation: section-title-in 0.5s ease-out 0.28s both;
 }
 
 .sitemap-grid {
@@ -328,6 +373,7 @@
   .section-title {
     margin-bottom: 2rem;
     font-size: 2rem;
+    animation: section-title-in 0.5s ease-out 0.25s both;
   }
 }
 
@@ -348,6 +394,7 @@
   font-family: inherit;
   text-align: center;
   cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.25s ease, color 0.25s ease;
 
   &:hover {
     border-color: var(--color-primary);
