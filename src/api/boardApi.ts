@@ -107,6 +107,9 @@ export async function getPostDetail(postNumber: number): Promise<PostDetailItem>
       }
     );
     const d = res.data.data;
+    if (d == null) {
+      throw new Error("게시글을 찾을 수 없습니다.");
+    }
     return {
       id: d.postNumber,
       title: d.title,

@@ -9,36 +9,12 @@
   z-index: 10;
 }
 
-// 스피너 애니메이션
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .title-section {
   text-align: center;
   margin-bottom: 2.5rem;
 }
 
-.search-page .badge {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--color-primary);
-  margin-bottom: 1rem;
-  border: 1px solid var(--color-primary-muted);
-}
-
-[data-theme="dark"] .search-page .badge {
-  background: linear-gradient(135deg, rgba(129, 140, 248, 0.2) 0%, rgba(244, 114, 182, 0.15) 100%);
-}
+// .badge는 common.scss에서 정의
 
 .search-page .title {
   font-size: clamp(2rem, 4vw, 2.5rem);
@@ -177,24 +153,7 @@
   border: 1px solid var(--color-card-border);
 }
 
-.search-page .loading-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  gap: 1rem;
-  color: var(--color-text-secondary);
-}
-
-.search-page .spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--color-border);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
+// .loading-state, .spinner는 LoadingState 컴포넌트에서 정의
 
 .search-page .error-state {
   display: flex;

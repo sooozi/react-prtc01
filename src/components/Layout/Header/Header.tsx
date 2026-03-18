@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components";
 import "@/components/Layout/Header/Header.scss";
 
 const THEME_KEY = "theme";
@@ -59,9 +60,9 @@ export default function Header() {
                 <span className="nav-link__text">🧑🏻‍💻 {userName ?? "로그인됨"}</span>
                 <span className="nav-link__tooltip" aria-hidden>마이페이지</span>
               </Link>
-              <button type="button" className="nav-link logout-btn" onClick={handleLogout}>
+              <Button variant="ghost" className="nav-link logout-btn" onClick={handleLogout}>
                 로그아웃
-              </button>
+              </Button>
             </>
           ) : (
             <>

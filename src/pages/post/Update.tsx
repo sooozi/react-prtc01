@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, updatePost, BoardApiError } from "@/api/boardApi";
 import type { PostDetailItem } from "@/api/boardApi";
+import { Button, LoadingState } from "@/components";
 import "@/pages/post/Detail.scss";
 import "@/pages/post/Update.scss";
 
@@ -99,29 +100,26 @@ export default function Update() {
         <h1 className="title">게시글 수정</h1>
       </div>
       <div className="post-detail-actions">
-        <button
-          type="button"
-          className="secondary-button"
+        <Button
+          variant="secondary"
+          size="sm"
           onClick={handleCancel}
           disabled={submitLoading}
         >
           취소
-        </button>
-        <button
-          type="button"
-          className="primary-button"
+        </Button>
+        <Button
+          variant="primary"
+          size="sm"
           onClick={handleSave}
           disabled={submitLoading || loading}
         >
           {submitLoading ? "저장 중..." : "저장"}
-        </button>
+        </Button>
       </div>
       <div className="post-detail-card">
         {showLoading ? (
-          <div className="detail-loading">
-            <div className="spinner" />
-            <span>불러오는 중...</span>
-          </div>
+          <LoadingState message="불러오는 중..." variant="compact" />
         ) : showErrorSection ? (
           <div className="detail-error">
             <span className="error-icon">⚠️</span>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { signup, checkUserId } from "@/api/auth";
+import { Button } from "@/components";
 import "@/pages/auth/signup/Signup.scss";
 
 interface SignupData {
@@ -17,6 +18,8 @@ export default function Signup() {
   const [idCheckStatus, setIdCheckStatus] = useState<"대기" | "확인중" | "사용가능" | "사용불가">("대기");
   // 결과 메시지
   const [idCheckMessage, setIdCheckMessage] = useState("");
+  /** 비밀번호 보기/숨기기 */
+  const [showPassword, setShowPassword] = useState(false);
 
   // React Hook Form 설정 / mode: "onChange" - 입력할 때마다 유효성 검사 실행 (실시간 검사)
   const {
@@ -118,16 +121,18 @@ export default function Signup() {
                   },
                 })}
               />
-              <button
+              <Button
                 type="button"
-                className={`check-button ${idCheckStatus === "사용가능" ? "completed" : ""}`}
+                variant="outlinePrimary"
+                size="sm"
+                className={idCheckStatus === "사용가능" ? "completed" : ""}
                 onClick={handleCheckId}
                 disabled={isIdCheckDisabled}
               >
                 {idCheckStatus === "확인중" && "확인 중..."}
                 {idCheckStatus === "사용가능" && "✓ 확인 완료"}
                 {(idCheckStatus === "대기" || idCheckStatus === "사용불가") && "중복 확인"}
-              </button>
+              </Button>
             </div>
             <div className="message-area">
               {errors.userId && ( //유효성 검사 에러 메시지
@@ -205,21 +210,32 @@ export default function Signup() {
               <label className="label" htmlFor="password">비밀번호</label>
               <span className="hint-text">1~30자/영문, 대문자, 숫자, 특수문자 조합</span>
             </div>
-            <input
-              type="password"
-              id="password"
-              className={`input ${errors.password ? "error" : ""}`}
-              placeholder="비밀번호를 입력하세요"
-              maxLength={30}
-              aria-invalid={!!errors.password}
-              {...register("password", {
-                required: "비밀번호를 입력해주세요.",
-                pattern: {
-                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9!@.]{5,30}$/,
-                  message: "영문, 숫자 포함 5~30자 (특수문자 !@. 허용)",
-                },
-              })}
-            />
+            <div className="password-field">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                className={`input ${errors.password ? "error" : ""}`}
+                placeholder="비밀번호를 입력하세요"
+                maxLength={30}
+                aria-invalid={!!errors.password}
+                {...register("password", {
+                  required: "비밀번호를 입력해주세요.",
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9!@.]{5,30}$/,
+                    message: "영문, 숫자 포함 5~30자 (특수문자 !@. 허용)",
+                  },
+                })}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+                title={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
             <div className="message-area">
               {errors.password && (
                 <span className="error-message">{errors.password.message}</span>
@@ -228,13 +244,14 @@ export default function Signup() {
           </div>
 
           {/* 회원가입 버튼: isSubmitDisabled가 true면 클릭 불가 */}
-          <button 
-            type="submit" 
+          <Button
+            type="submit"
+            variant="primary"
             className="submit-button"
             disabled={isSubmitDisabled}
           >
             회원가입
-          </button>
+          </Button>
         </form>
 
         <div className="signup-footer">

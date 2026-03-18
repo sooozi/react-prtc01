@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components";
 import "@/pages/user/MyPage.scss";
 
 export default function MyPage() {
@@ -52,12 +53,12 @@ export default function MyPage() {
         </div>
 
         <div className="mypage-actions">
-          <Link to="/user/search" className="mypage-btn mypage-btn--secondary">
+          <Button variant="secondary" to="/user/search">
             사용자 목록
-          </Link>
-          <Link to="/home" className="mypage-btn mypage-btn--primary">
+          </Button>
+          <Button variant="primary" to="/home">
             홈으로
-          </Link>
+          </Button>
         </div>
       </section>
     </div>

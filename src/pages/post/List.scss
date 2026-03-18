@@ -8,15 +8,6 @@
   z-index: 10;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .title-section {
   margin-bottom: 2.5rem;
   gap: 1.5rem;
@@ -31,14 +22,7 @@
   margin-bottom: 1rem;
 }
 
-.board-page .badge {
-  color: var(--color-primary);
-  border-color: var(--color-primary-muted);
-}
-
-[data-theme="dark"] .board-page .badge {
-  background: linear-gradient(135deg, rgba(129, 140, 248, 0.2) 0%, rgba(244, 114, 182, 0.15) 100%);
-}
+// .badge는 common.scss에서 정의
 
 .board-page .title {
   color: var(--color-text-heading);
@@ -46,15 +30,6 @@
 
 .board-page .subtitle {
   color: var(--color-text-secondary);
-}
-
-.board-page .board-write-btn {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
-  box-shadow: 0 2px 10px var(--color-primary-shadow);
-
-  &:hover {
-    box-shadow: 0 4px 14px var(--color-primary-shadow);
-  }
 }
 
 .board-page .table-card {
@@ -65,14 +40,7 @@
   border: 1px solid var(--color-card-border);
 }
 
-.board-page .loading-state {
-  color: var(--color-text-secondary);
-}
-
-.board-page .spinner {
-  border-color: var(--color-border);
-  border-top-color: var(--color-primary);
-}
+// .loading-state, .spinner는 LoadingState 컴포넌트에서 정의
 
 .error-state {
   display: flex;
@@ -95,21 +63,8 @@
   color: var(--color-text-secondary);
 }
 
-.board-login-btn {
+.error-state .btn {
   margin-top: 1rem;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
 }
 
 .empty-state {

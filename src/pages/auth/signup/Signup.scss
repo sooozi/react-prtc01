@@ -73,37 +73,7 @@
   }
 }
 
-// 중복확인 버튼
-.check-button {
-  padding: 0 1rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: $primary-color;
-  background: #ffffff;
-  border: 2px solid $primary-color;
-  border-radius: 12px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-
-  &:hover:not(:disabled) {
-    background: $primary-color;
-    color: #ffffff;
-  }
-
-  &:disabled {
-    color: #9ca3af;
-    border-color: #e5e7eb;
-    cursor: not-allowed;
-  }
-
-  &.completed {
-    background: $primary-color;
-    color: #ffffff;
-    border-color: $primary-color;
-    cursor: not-allowed;
-  }
-}
+// 중복확인 버튼은 공통 Button (variant outlinePrimary, size sm) 사용
 
 // 메시지 영역 (에러/중복확인 결과)
 .message-area {

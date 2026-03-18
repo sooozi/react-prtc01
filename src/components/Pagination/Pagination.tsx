@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import clsx from "clsx";
+import { Button } from "@/components";
 import "@/components/Pagination/Pagination.scss";
 
 /** 페이지 이동 버튼 액션 타입 */
@@ -34,15 +35,16 @@ function PageMoveButton({
   ...rest
 }: PageMoveButtonProps) {
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
       className={clsx("page-move-btn", `page-${action}`, disabled && "disabled", className)}
       disabled={disabled}
       title={ACTION_TITLES[action]}
       {...rest}
     >
       {ACTION_ICONS[action]}
-    </button>
+    </Button>
   );
 }
 

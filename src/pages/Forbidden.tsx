@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components";
 import "@/pages/Forbidden.scss";
 
 export default function Forbidden() {
@@ -30,18 +31,12 @@ export default function Forbidden() {
 
         {/* 버튼 그룹 */}
         <div className="button-group">
-          <button
-            className="primary-button"
-            onClick={() => navigate("/home")}
-          >
+          <Button variant="primary" onClick={() => navigate("/home")}>
             홈으로 돌아가기 →
-          </button>
-          <button
-            className="secondary-button"
-            onClick={() => navigate(-1)}
-          >
+          </Button>
+          <Button variant="secondary" onClick={() => navigate(-1)}>
             이전 페이지
-          </button>
+          </Button>
         </div>
 
         {/* 추가 도움말 */}

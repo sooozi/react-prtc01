@@ -1,5 +1,4 @@
 // common.scss - 프로젝트 공통 스타일 (테마 변수 사용)
-// 아래 변수는 CSS 변수(var)를 가리켜 다크 모드 시 자동 전환됩니다.
 
 $font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, sans-serif;
 $primary-color: var(--color-primary);
@@ -77,14 +76,14 @@ $error-dark: var(--color-error-dark);
 }
 
 // ========================================
-// 배지 스타일
+// 배지 스타일 (공통 - 페이지별 중복 제거)
 // ========================================
 .badge {
   display: inline-block;
-  padding: 0.35rem 0.75rem;
+  padding: 0.5rem 1rem;
   background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
   border-radius: 50px;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 500;
   color: var(--color-primary);
   margin-bottom: 1rem;
@@ -121,51 +120,6 @@ $error-dark: var(--color-error-dark);
   font-weight: 700;
   color: var(--color-text-heading);
   margin-bottom: 2rem;
-}
-
-// ========================================
-// 버튼 스타일
-// ========================================
-.primary-button {
-  padding: 0.9rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
-  color: #ffffff;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px var(--color-primary-shadow);
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px var(--color-primary-shadow);
-  }
-
-  &:disabled {
-    background: var(--color-text-muted);
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-  }
-}
-
-.secondary-button {
-  padding: 0.9rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  background: var(--color-card);
-  color: var(--color-text-secondary);
-  border: 2px solid var(--color-border);
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-  }
 }
 
 // ========================================
@@ -239,9 +193,3 @@ $error-dark: var(--color-error-dark);
   color: var(--color-error);
 }
 
-.submit-button {
-  @extend .primary-button;
-  margin-top: 0.5rem;
-  padding: 1rem;
-  width: 100%;
-}

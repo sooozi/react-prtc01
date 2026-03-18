@@ -1,0 +1,152 @@
+// ========================================
+// Button 컴포넌트 스타일 (컴포넌트와 함께 관리)
+// ========================================
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 1.2;
+  text-decoration: none;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  // 링크로 쓸 때 전역 a 스타일 덮어쓰기
+  color: inherit;
+  &:hover {
+    color: inherit;
+  }
+}
+
+.btn--sm {
+  padding: 0.6rem 1.25rem;
+  font-size: 0.9rem;
+  border-radius: 10px;
+}
+
+// Primary: 그라데이션 + 흰 글자 (글쓰기, 홈으로, 제출 등)
+.btn--primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  box-shadow: 0 2px 10px var(--color-primary-shadow);
+
+  &:hover:not(:disabled) {
+    color: #fff;
+    box-shadow: 0 4px 14px var(--color-primary-shadow);
+  }
+
+  &:disabled {
+    background: var(--color-text-muted);
+    box-shadow: none;
+  }
+}
+
+// Secondary: 테두리 + 배경 (목록, 사용자 목록 등)
+.btn--secondary {
+  color: var(--color-text-secondary);
+  background: var(--color-card);
+  border: 2px solid var(--color-border);
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+}
+
+// Danger: 빨간 그라데이션 (삭제 등)
+.btn--danger {
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-error-dark) 0%, #b91c1c 100%);
+  box-shadow: 0 2px 10px var(--color-error-border);
+
+  &:hover:not(:disabled) {
+    color: #fff;
+    box-shadow: 0 4px 14px var(--color-error-border);
+  }
+
+  &:disabled {
+    box-shadow: none;
+  }
+}
+
+// Primary Inverse: 어두운 배경용 (흰 배경 + primary 글자, About CTA 등)
+.btn--primaryInverse {
+  color: var(--color-primary);
+  background: #fff;
+  box-shadow: 0 2px 10px var(--color-shadow-sm);
+
+  &:hover:not(:disabled) {
+    color: var(--color-primary-hover);
+    box-shadow: 0 4px 15px var(--color-shadow-md);
+  }
+}
+
+// Secondary Inverse: 어두운 배경용 (투명 + 흰 테두리, About CTA 등)
+.btn--secondaryInverse {
+  color: #fff;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+
+  &:hover:not(:disabled) {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+}
+
+// Outline Primary: 테두리/글자 primary, 호버 시 채움 (중복확인 등)
+.btn--outlinePrimary {
+  color: var(--color-primary);
+  background: var(--color-card);
+  border: 2px solid var(--color-primary);
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary);
+    color: #fff;
+  }
+
+  &:disabled {
+    color: var(--color-text-muted);
+    border-color: var(--color-border);
+  }
+
+  &.completed {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+    cursor: default;
+  }
+}
+
+// Ghost: 배경/테두리 없음, 링크처럼 (로그아웃, Pagination, 아이콘 버튼 등)
+.btn--ghost {
+  padding: 0.35rem 0.5rem;
+  color: inherit;
+  background: none;
+  border: none;
+  box-shadow: none;
+
+  &:hover:not(:disabled) {
+    background: transparent;
+    color: inherit;
+  }
+}
+
+// 폼 제출용 풀너비 (로그인/회원가입에서 className="submit-button" 사용)
+.submit-button {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  width: 100%;
+}

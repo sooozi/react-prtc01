@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components";
 import "@/pages/about/About.scss";
 
 export default function About() {
@@ -105,18 +106,18 @@ export default function About() {
             지금 바로 MyViteProject의 강력한 기능들을 경험해보세요.
           </p>
           <div className="cta-buttons">
-            <button
-              className="cta-primary-button"
+            <Button
+              variant="primaryInverse"
               onClick={() => navigate("/user/search")}
             >
               사용자 목록 →
-            </button>
-            <button
-              className="cta-secondary-button"
+            </Button>
+            <Button
+              variant="secondaryInverse"
               onClick={() => navigate("/home")}
             >
               홈으로 돌아가기
-            </button>
+            </Button>
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPost, BoardApiError } from "@/api/boardApi";
+import { Button } from "@/components";
 import "@/pages/post/Write.scss";
 
 export default function Write() {
@@ -87,17 +88,17 @@ export default function Write() {
         </div>
 
         <div className="board-write-actions">
-          <button
+          <Button
             type="button"
-            className="secondary-button"
+            variant="secondary"
             onClick={() => navigate("/post/list")}
             disabled={loading}
           >
             목록
-          </button>
-          <button type="submit" className="primary-button" disabled={loading}>
+          </Button>
+          <Button type="submit" variant="primary" disabled={loading}>
             {loading ? "등록 중..." : "등록"}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

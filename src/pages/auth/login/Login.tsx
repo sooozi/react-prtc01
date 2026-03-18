@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LOGIN_SUCCESS_CODE, login } from "@/api/login";
+import { Button } from "@/components";
 import "@/pages/auth/login/Login.scss";
 
 interface LoginFormData {
@@ -16,6 +17,8 @@ export default function Login() {
   const [apiAlert, setApiAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   /** 보드 등에서 리다이렉트 시 전달한 "로그인이 필요합니다" 토스트 */
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  /** 비밀번호 보기/숨기기 */
+  const [showPassword, setShowPassword] = useState(false);
 
   // 보드 등에서 리다이렉트 시 전달한 "로그인이 필요합니다" 토스트
   useEffect(() => {
@@ -140,15 +143,26 @@ export default function Login() {
             <label className="label" htmlFor="password">
               비밀번호
             </label>
-            <input
-              type="password"
-              id="password"
-              className={`input ${errors.password ? "error" : ""}`}
-              placeholder="비밀번호를 입력하세요"
-              {...register("password", {
-                required: "비밀번호를 입력해주세요.",
-              })}
-            />
+            <div className="password-field">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                className={`input ${errors.password ? "error" : ""}`}
+                placeholder="비밀번호를 입력하세요"
+                {...register("password", {
+                  required: "비밀번호를 입력해주세요.",
+                })}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+                title={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
             <div className="message-area">
               {errors.password && (
                 <span className="error-message">{errors.password.message}</span>
@@ -156,13 +170,14 @@ export default function Login() {
             </div>
           </div>
 
-          <button
+          <Button
             type="submit"
+            variant="primary"
             className="submit-button"
             disabled={isLoading || !isFormFilled}
           >
             {isLoading ? "로그인 중..." : "로그인"}
-          </button>
+          </Button>
         </form>
 
         <div className="login-footer">

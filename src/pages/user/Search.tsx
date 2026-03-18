@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { selectUserList } from "@/api/userApi";
 import type { UserItem } from "@/api/userApi";
-import Pagination from "@/components/Pagination/Pagination";
+import { LoadingState, Pagination } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import "@/pages/user/Search.scss";
 
@@ -72,10 +72,7 @@ export default function UserSearch() {
 
       <div className="table-card">
         {loading ? (
-          <div className="loading-state">
-            <div className="spinner" />
-            <span>데이터를 불러오는 중...</span>
-          </div>
+          <LoadingState />
         ) : error ? (
           <div className="error-state">
             <span className="error-icon">⚠️</span>

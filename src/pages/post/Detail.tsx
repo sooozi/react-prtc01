@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, deletePost, BoardApiError, viewCountUp } from "@/api/boardApi";
 import type { PostDetailItem } from "@/api/boardApi";
+import { Button, LoadingState } from "@/components";
 import "@/pages/post/Detail.scss";
 
 export default function Detail() {
@@ -73,7 +74,6 @@ export default function Detail() {
   // 에러 섹션 확인
   const showErrorSection = invalidId || error;
 
-
   // [수정 버튼 노출] 해당 포스트 작성자와 로그인 사용자가 같을 때
   const currentUserId =
     typeof window !== "undefined" ? localStorage.getItem("userId") : null;
@@ -113,32 +113,32 @@ export default function Detail() {
       </div>
 
       <div className="post-detail-actions">
-        <button
-          type="button"
-          className="secondary-button"
+        <Button
+          variant="secondary"
+          size="sm"
           onClick={() => navigate("/post/list")}
           disabled={deleteLoading}
         >
           목록
-        </button>
+        </Button>
         {canEdit && (
           <>
-            <button
-              type="button"
-              className="primary-button"
+            <Button
+              variant="primary"
+              size="sm"
               onClick={() => navigate(`/post/update?id=${postNumber}`)}
               disabled={deleteLoading}
             >
               수정
-            </button>
-            <button
-              type="button"
-              className="danger-button"
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
               onClick={handleDelete}
               disabled={deleteLoading}
             >
               {deleteLoading ? "삭제 중..." : "삭제"}
-            </button>
+            </Button>
           </>
         )}
       </div>
@@ -147,22 +147,19 @@ export default function Detail() {
       <div className="post-detail-card">
         {/* 로딩 상태 표시 */}
         {showLoading ? (
-          <div className="detail-loading">
-            <div className="spinner" />
-            <span>불러오는 중...</span>
-          </div>
+          <LoadingState message="불러오는 중..." variant="compact" />
         ) : showErrorSection ? (
           <div className="detail-error">
             <span className="error-icon">⚠️</span>
             <span className="error-message">{displayError}</span>
             {isUnauthorized && (
-              <button
-                type="button"
-                className="detail-login-btn"
+              <Button
+                variant="primary"
+                size="sm"
                 onClick={() => navigate("/auth/login")}
               >
                 로그인하기
-              </button>
+              </Button>
             )}
           </div>
         ) : post ? (

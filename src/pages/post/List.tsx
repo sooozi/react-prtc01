@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { selectBoardList, BoardApiError } from "@/api/boardApi";
 import type { BoardPostItem } from "@/api/boardApi";
-import { Pagination, Tooltip } from "@/components";
+import { Button, LoadingState, Pagination, Tooltip } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import "@/pages/post/List.scss";
 
@@ -37,10 +37,13 @@ export default function List() {
     [setSearchParams] // setSearchParams 함수 의존성 배열
   );
 
-  // 첫 진입 시 URL에 page=1 반영
+  // URL의 page가 없거나 유효하지 않으면(음수, 0, NaN) page=1로 정리
   useEffect(() => {
-    if (searchParams.get(PAGE_PARAM) === null) { // 현재 URL에 page 파라미터가 없으면 1로 설정
-      setSearchParams({ [PAGE_PARAM]: "1" }); // 현재 URL에 page=1 반영
+    const raw = searchParams.get(PAGE_PARAM);
+    const num = raw !== null ? parseInt(raw, 10) : NaN; // 문자열을 10진수로 파싱
+    const isValid = !Number.isNaN(num) && num >= 1; // 숫자가 아니거나 1보다 작으면 false
+    if (!isValid) { // 유효하지 않으면 page=1로 설정
+      setSearchParams({ [PAGE_PARAM]: "1" });
     }
   }, [searchParams, setSearchParams]);
 
@@ -107,34 +110,26 @@ export default function List() {
 
       <div className="board-write-btn-container">
         <div className="board-write-btn-block">
-          <button
-            type="button"
-            className="board-write-btn"
-            onClick={() => navigate("/post/write")}
-          >
+          <Button variant="primary" size="sm" onClick={() => navigate("/post/write")}>
             글쓰기
-          </button>
+          </Button>
         </div>
 
         <div className="table-card">
           {loading ? (
-            <div className="loading-state">
-              <div className="spinner" />
-              <span>데이터를 불러오는 중...</span>
-            </div>
+            <LoadingState />
           ) : error ? (
             <div className="error-state">
               <span className="error-icon">⚠️</span>
               <span className="error-title">{isUnauthorized ? "인증 필요" : "연결 오류"}</span>
               <span className="error-message">{error}</span>
               {isUnauthorized && (
-                <button
-                  type="button"
-                  className="board-login-btn"
-                  onClick={() => navigate("/auth/login")}
+                <Button
+                  variant="primary"
+                  onClick={() => navigate("/auth/login", { state: { toast: "로그인이 필요합니다" }, replace: true })}
                 >
                   로그인하기
-                </button>
+                </Button>
               )}
             </div>
           ) : posts.length === 0 ? (

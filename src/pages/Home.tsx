@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components";
 import "@/pages/Home.scss";
 
 export default function Home() {
@@ -61,12 +62,9 @@ export default function Home() {
             <br />
             직관적인 UI와 뛰어난 성능을 경험해보세요.
           </p>
-          <button
-            className="primary-button"
-            onClick={() => navigate("/auth/signup")}
-          >
+          <Button variant="primary" onClick={() => navigate("/auth/signup")}>
             회원가입하기 →
-          </button>
+          </Button>
         </div>
       </section>
 

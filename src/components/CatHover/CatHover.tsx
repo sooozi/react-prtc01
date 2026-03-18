@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { Button } from "@/components";
 import "@/components/CatHover/CatHover.scss";
 
 const IMG_CAT_NORMAL =
@@ -79,9 +80,9 @@ export default function CatHover() {
           ))}
         </div>
 
-        <button type="button" className="cat-hover__btn-img" aria-label="버튼">
+        <Button type="button" variant="ghost" className="cat-hover__btn-img" aria-label="버튼">
           <img src={IMG_BUTTON} alt="" draggable={false} />
-        </button>
+        </Button>
         <div
           className="cat-hover__img-wrap"
           onMouseEnter={() => setIsHovered(true)}

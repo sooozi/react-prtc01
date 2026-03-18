@@ -2,6 +2,16 @@
 // 색상 변수는 _color.scss에서 관리
 @use "@/styles/color";
 
+// 공통 로딩 스피너 애니메이션 (게시판, 사용자 검색 등에서 사용)
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
