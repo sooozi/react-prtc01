@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { signup, checkUserId } from "@/api/auth";
-import { Button } from "@/components";
+import { Badge, Button } from "@/components";
 import "@/pages/auth/signup/Signup.scss";
 
 interface SignupData {
@@ -89,7 +89,7 @@ export default function Signup() {
 
       <div className="signup-card">
         <div className="signup-header">
-          <span className="badge">✨ Sign Up</span>
+          <Badge>✨ Sign Up</Badge>
           <h1 className="title">회원가입</h1>
           <p className="subtitle">새로운 계정을 만들어보세요</p>
         </div>

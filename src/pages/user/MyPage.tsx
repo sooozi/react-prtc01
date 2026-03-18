@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components";
+import { Badge, Button } from "@/components";
 import "@/pages/user/MyPage.scss";
 
 export default function MyPage() {
@@ -22,7 +22,7 @@ export default function MyPage() {
   return (
     <div className="mypage-page">
       <section className="mypage-section">
-        <span className="badge">👤 MyPage</span>
+        <Badge>👤 MyPage</Badge>
         <h1 className="title">
           안녕하세요, <span className="highlight">{userName ?? "회원"}</span>님
         </h1>

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components";
+import { Badge, Button } from "@/components";
 import "@/pages/Home.scss";
 
 export default function Home() {
@@ -51,7 +51,7 @@ export default function Home() {
       {/* 히어로 섹션 */}
       <section className="hero">
         <div className="hero-content">
-          <span className="badge">🚀 새로운 버전 출시</span>
+          <Badge>🚀 새로운 버전 출시</Badge>
           <h1 className="hero-title">
             더 빠르고, 더 아름다운
             <br />

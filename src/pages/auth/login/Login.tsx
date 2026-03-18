@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LOGIN_SUCCESS_CODE, login } from "@/api/login";
-import { Button } from "@/components";
+import { Badge, Button } from "@/components";
 import "@/pages/auth/login/Login.scss";
 
 interface LoginFormData {
@@ -98,7 +98,7 @@ export default function Login() {
 
       <div className="login-card">
         <div className="login-header">
-          <span className="badge">🔐</span>
+          <Badge>🔐</Badge>
           <h1 className="title">로그인</h1>
         </div>
 

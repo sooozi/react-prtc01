@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, updatePost, BoardApiError } from "@/api/boardApi";
 import type { PostDetailItem } from "@/api/boardApi";
-import { Button, LoadingState } from "@/components";
+import { Badge, Button, Confirm, LoadingState } from "@/components";
 import "@/pages/post/Detail.scss";
 import "@/pages/post/Update.scss";
 
@@ -19,6 +19,8 @@ export default function Update() {
   const [error, setError] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   // 상세 조회 후 폼 초기화
   useEffect(() => {
@@ -55,10 +57,9 @@ export default function Update() {
       .finally(() => setLoading(false));
   }, [postNumber, invalidId, navigate]);
 
-  // [저장 버튼 클릭 시] 게시글 수정(api에 요청 보내기)
-  const handleSave = async () => {
-    if (!window.confirm("저장하시겠습니까?")) return;
-    // 제목이 비어있으면 에러 메시지 설정
+  // [저장 버튼 클릭 시] 컨펌 후 게시글 수정
+  const handleSaveConfirm = async () => {
+    setShowSaveConfirm(false);
     if (!title.trim()) {
       setError("제목을 입력해주세요.");
       return;
@@ -66,25 +67,22 @@ export default function Update() {
     setError("");
     setSubmitLoading(true);
     try {
-      // 게시글 수정(api에 요청 보내기)
       await updatePost(postNumber, { title: title.trim(), content: content.trim() });
       navigate(`/post/detail?id=${postNumber}`, { replace: true });
     } catch (e) {
-      // 게시글 수정 실패 시 에러 처리
       if (e instanceof BoardApiError && e.status === 401) {
         navigate("/auth/login", { state: { toast: e.message }, replace: true });
       } else {
         setError(e instanceof Error ? e.message : "수정에 실패했습니다.");
       }
     } finally {
-      // 게시글 수정 완료 시 제출 로딩 상태 초기화
       setSubmitLoading(false);
     }
   };
 
-  // [취소 버튼 클릭 시] 게시글 상세 페이지로 이동
-  const handleCancel = () => {
-    if (!window.confirm("취소하시겠습니까?")) return;
+  // [취소 버튼 클릭 시] 컨펌 후 상세로 이동
+  const handleCancelConfirm = () => {
+    setShowCancelConfirm(false);
     navigate(`/post/detail?id=${postNumber}`, { replace: true });
   };
 
@@ -96,14 +94,14 @@ export default function Update() {
   return (
     <div className="post-detail-page">
       <div className="post-detail-header">
-        <span className="badge">✏️ Edit</span>
+        <Badge>✏️ Edit</Badge>
         <h1 className="title">게시글 수정</h1>
       </div>
       <div className="post-detail-actions">
         <Button
           variant="secondary"
           size="sm"
-          onClick={handleCancel}
+          onClick={() => setShowCancelConfirm(true)}
           disabled={submitLoading}
         >
           취소
@@ -111,7 +109,7 @@ export default function Update() {
         <Button
           variant="primary"
           size="sm"
-          onClick={handleSave}
+          onClick={() => setShowSaveConfirm(true)}
           disabled={submitLoading || loading}
         >
           {submitLoading ? "저장 중..." : "저장"}
@@ -168,6 +166,19 @@ export default function Update() {
           </div>
         ) : null}
       </div>
+
+      <Confirm
+        open={showSaveConfirm}
+        message="저장하시겠습니까?"
+        onConfirm={handleSaveConfirm}
+        onCancel={() => setShowSaveConfirm(false)}
+      />
+      <Confirm
+        open={showCancelConfirm}
+        message="취소하시겠습니까?"
+        onConfirm={handleCancelConfirm}
+        onCancel={() => setShowCancelConfirm(false)}
+      />
     </div>
   );
 }

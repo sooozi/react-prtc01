@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { selectUserList } from "@/api/userApi";
 import type { UserItem } from "@/api/userApi";
-import { LoadingState, Pagination } from "@/components";
+import { Badge, LoadingState, Pagination } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import "@/pages/user/Search.scss";
 
@@ -63,7 +63,7 @@ export default function UserSearch() {
   return (
     <div className="search-page">
       <div className="title-section">
-        <span className="badge">👥 User List</span>
+        <Badge>👥 User List</Badge>
         <h1 className="title">사용자 목록</h1>
         <p className="subtitle">
           전체 <strong>{totalItems}</strong>명의 사용자

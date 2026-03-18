@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPost, BoardApiError } from "@/api/boardApi";
-import { Button } from "@/components";
+import { Badge, Button } from "@/components";
 import "@/pages/post/Write.scss";
 
 export default function Write() {
@@ -46,7 +46,7 @@ export default function Write() {
   return (
     <div className="board-write-page">
       <div className="board-write-header">
-        <span className="badge">✏️ 글쓰기</span>
+        <Badge>✏️ 글쓰기</Badge>
         <h1 className="title">게시글 등록</h1>
         <p className="subtitle">제목과 내용을 입력한 뒤 등록해주세요.</p>
       </div>

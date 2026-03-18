@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, deletePost, BoardApiError, viewCountUp } from "@/api/boardApi";
 import type { PostDetailItem } from "@/api/boardApi";
-import { Button, LoadingState } from "@/components";
+import { Badge, Button, Confirm, LoadingState } from "@/components";
 import "@/pages/post/Detail.scss";
 
 export default function Detail() {
@@ -13,6 +13,7 @@ export default function Detail() {
   const [error, setError] = useState("");
   const [isUnauthorized, setIsUnauthorized] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const idRaw = searchParams.get("id");
   const postNumber = idRaw ? parseInt(idRaw, 10) : NaN;
@@ -81,24 +82,20 @@ export default function Detail() {
   const canEdit =
     !!post && !!currentUserId && post.ownerUserId === currentUserId;
 
-  // [삭제 버튼 클릭 시] 게시글 삭제 후 목록 첫 페이지로 이동
-  const handleDelete = async () => {
-    if (!window.confirm("삭제하시겠습니까?")) return;
+  // [삭제 버튼 클릭 시] 컨펌 후 게시글 삭제
+  const handleDeleteConfirm = async () => {
+    setShowDeleteConfirm(false);
     setDeleteLoading(true);
-    // 게시글 삭제
     try {
       await deletePost(postNumber);
       navigate("/post/list?page=1", { replace: true });
     } catch (e) {
-      // 삭제 시점에 요청이 깨진 경우
       if (e instanceof BoardApiError && e.status === 401) {
         navigate("/auth/login", { state: { toast: e.message }, replace: true });
       } else {
-        // 다른 오류 처리
         setError(e instanceof Error ? e.message : "삭제에 실패했습니다.");
       }
     } finally {
-      // 게시글 삭제 완료 시 삭제 로딩 상태 초기화
       setDeleteLoading(false);
     }
   };
@@ -108,7 +105,7 @@ export default function Detail() {
     <div className="post-detail-page">
       {/* 게시글 상세 헤더 */}
       <div className="post-detail-header">
-        <span className="badge">📄 Detail</span>
+        <Badge>📄 Detail</Badge>
         <h1 className="title">게시글 상세</h1>
       </div>
 
@@ -134,7 +131,7 @@ export default function Detail() {
             <Button
               variant="danger"
               size="sm"
-              onClick={handleDelete}
+              onClick={() => setShowDeleteConfirm(true)}
               disabled={deleteLoading}
             >
               {deleteLoading ? "삭제 중..." : "삭제"}
@@ -175,6 +172,15 @@ export default function Detail() {
           </>
         ) : null}
       </div>
+
+      <Confirm
+        open={showDeleteConfirm}
+        message="삭제하시겠습니까?"
+        variant="danger"
+        confirmLabel="삭제"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
     </div>
   );
 }

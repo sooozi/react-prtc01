@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components";
+import { Badge, Button } from "@/components";
 import "@/pages/about/About.scss";
 
 export default function About() {
@@ -37,7 +37,7 @@ export default function About() {
     <div className="about-page">
       {/* 히어로 섹션 */}
       <section className="hero-section">
-        <span className="badge">ℹ️ About Us</span>
+        <Badge>ℹ️ About Us</Badge>
         <h1 className="title">
           우리는 <span className="gradient-text">혁신</span>을 만듭니다
         </h1>

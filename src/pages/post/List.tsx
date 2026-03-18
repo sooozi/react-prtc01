@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { selectBoardList, BoardApiError } from "@/api/boardApi";
 import type { BoardPostItem } from "@/api/boardApi";
-import { Button, LoadingState, Pagination, Tooltip } from "@/components";
+import { Badge, Button, LoadingState, Pagination, Tooltip } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import "@/pages/post/List.scss";
 
@@ -100,7 +100,7 @@ export default function List() {
     <div className="board-page">
       <div className="title-section">
         <div className="title-block">
-          <span className="badge">📋 Board</span>
+          <Badge>📋 Board</Badge>
           <h1 className="title">게시판</h1>
           <p className="subtitle">
             전체 <strong>{totalItems}</strong>개의 게시글
