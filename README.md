@@ -76,10 +76,12 @@ src/
 │   ├── boardApi.types.ts    # 게시판 DTO·요청 타입
 │   └── userApi.ts          # 사용자 목록 조회
 ├── components/             # 공통 컴포넌트
+│   ├── Badge/
 │   ├── Button/             # 버튼 (variant: primary, secondary, danger, ghost 등)
-│   ├── LoadingState/       # 로딩 스피너 + 문구
+│   ├── Confirm/            # 확인 다이얼로그
 │   ├── HighlightText/
 │   ├── Layout/             # Layout, Header, Footer
+│   ├── LoadingState/       # 로딩 스피너 + 문구
 │   ├── Pagination/
 │   ├── Tooltip/
 │   ├── CatHover/
@@ -171,7 +173,7 @@ src/
 
 ### 게시판
 
-- **목록 (`/post/list`)**: 로그인 필수. 목록 조회 + 페이지네이션. URL `page` 파라미터 유효성 보정(음수·초과 시 1 또는 마지막 페이지로 정리). 로딩/에러/빈 목록 처리.
+- **목록 (`/post/list`)**: 로그인 필수. 목록 조회 + 페이지네이션 + 정렬. URL 쿼리 `page`, `sort`(정렬 기준), `order`(ASC/DESC)를 사용하며, 정렬 선택 시 URL이 바뀌고 해당 값이 API의 `sortColumnName`, `sortType`으로 전달됨. 정렬 옵션: 최신순(regDt), 제목순(title), 조회순(inqCnt). URL `page` 파라미터 유효성 보정(음수·초과 시 1 또는 마지막 페이지로 정리). 로딩/에러/빈 목록 처리.
 - **상세 (`/post/detail?id=`)**: 조회수 증가 API 후 상세 조회. 수정/삭제 버튼은 작성자만 노출. 잘못된 id 또는 `data: null` 응답 시 “게시글을 찾을 수 없습니다.” 등 메시지 표시.
 - **글쓰기 (`/post/write`)**: 제목·내용 입력 후 등록, 성공 시 목록으로 이동.
 - **수정 (`/post/update?id=`)**: 상세와 동일 id로 조회 후 제목·내용 수정, 저장 시 상세로 이동.
@@ -186,8 +188,10 @@ src/
 
 | 컴포넌트 | 설명 |
 |----------|------|
+| **Badge** | 작은 라벨/뱃지 (예: 게시판 타이틀 옆 "📋 Board") |
 | **Button** | `variant`: primary, secondary, danger, primaryInverse, secondaryInverse, outlinePrimary, ghost. `size`: sm, md. `to` 주면 Link, `href` 주면 `<a>`, 아니면 `<button>`. 스타일: `components/Button/Button.scss` |
-| **LoadingState** | 로딩 스피너 + 문구. `message`, `variant`(default | compact). 목록/검색/상세/수정에서 사용 |
+| **Confirm** | 확인/취소 다이얼로그 (예: 게시글 삭제 전 확인) |
+| **LoadingState** | 로딩 스피너 + 문구. `message`, `variant`(default \| compact). 목록/검색/상세/수정에서 사용 |
 | **Pagination** | 페이지네이션. 현재 페이지, 총 페이지, `onPageChange` |
 | **Tooltip** | 말풍선 툴팁 (예: 게시글 제목 말줄임 시) |
 | **Layout, Header, Footer** | 레이아웃과 헤더(로고, 테마 토글, 네비, 로그인/로그아웃), 푸터 |
@@ -201,7 +205,7 @@ src/
 - **베이스 URL**: `.env`의 `VITE_API_BASE_URL`. `api/client.ts`에서 axios `baseURL`로 사용.
 - **주요 경로 예시**:  
   `POST /auth/login`, `POST /auth/join`, `GET /auth/available/user_id`,  
-  `GET /posts`, `GET /posts/:postNumber`, `POST /posts`, `PUT /posts/:postNumber`, `DELETE /posts/:postNumber`, `PATCH /posts/:postNumber/view_count`,  
+  `GET /posts` (쿼리: `page`, `size`, `sortColumnName`, `sortType`), `GET /posts/:postNumber`, `POST /posts`, `PUT /posts/:postNumber`, `DELETE /posts/:postNumber`, `PATCH /posts/:postNumber/view_count`,  
   사용자 목록 API(경로는 `userApi.ts` 참고).
 - **공통 응답**: `resultCode`, `resultMessage`, `resultDetailMessage`, `data`.
 - **로그인 성공 코드**: `resultCode === "BPLTE200"` (`api/login.ts`의 `LOGIN_SUCCESS_CODE`).
@@ -238,4 +242,4 @@ src/
 
 - **ESLint**: React + TypeScript 규칙 사용.
 - **Mock**: `src/mocks/user.ts`, `src/mocks/board.ts` (참고용).
-- **컴포넌트 export**: `src/components/index.ts`에서 Button, LoadingState, Pagination, Tooltip, Layout, Header, Footer, HighlightText export.
+- **컴포넌트 export**: `src/components/index.ts`에서 Badge, Button, Confirm, HighlightText, LoadingState, Header, Footer, Layout, Pagination, Tooltip export.
