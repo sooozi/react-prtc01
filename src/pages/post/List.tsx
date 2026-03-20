@@ -32,6 +32,7 @@ function getPageFromSearchParams(searchParams: URLSearchParams): number {
 /** URL에서 정렬 컬럼 (기본: regDt) */
 function getSortFromSearchParams(searchParams: URLSearchParams): string {
   const v = searchParams.get(SORT_PARAM);
+  // 정렬 컬럼이 SORT_OPTIONS에 있는지 확인
   return v && SORT_OPTIONS.some((o) => o.value === v) ? v : "regDt";
 }
 

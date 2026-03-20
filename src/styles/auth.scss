@@ -1,4 +1,8 @@
-// auth.scss - 로그인/회원가입 공통 스타일
+// ========================================
+// 로그인·회원가입 공통 스타일 (컨테이너, 카드, 폼)
+// common.scss를 @use → Login/Signup 등 페이지에서 불러옴
+// ========================================
+
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
 @forward "@/styles/common.scss";

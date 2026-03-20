@@ -1,4 +1,8 @@
-// common.scss - 프로젝트 공통 스타일 (테마 변수 사용)
+// ========================================
+// 프로젝트 공통 스타일 (폰트, 테마 변수, 플레이스홀더, 유틸)
+// 테마는 CSS 변수(--color-*) 기준 → auth·페이지에서 @use
+// ========================================
+
 @use "@/styles/breakpoints" as bp;
 
 $font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, sans-serif;
