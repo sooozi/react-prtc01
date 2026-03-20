@@ -1,9 +1,14 @@
 @use "@/styles/common.scss" as *;
+@use "@/styles/breakpoints" as bp;
 
 .board-write-page {
   padding: 2rem;
   position: relative;
   z-index: 10;
+
+  @include bp.below(bp.$md) {
+    padding: 1rem;
+  }
 }
 
 .board-write-header {
@@ -26,11 +31,15 @@
 }
 
 .board-write-form {
-  background: #ffffff;
+  background: var(--color-card);
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 25px var(--color-shadow-card);
+  border: 1px solid var(--color-card-border);
+
+  @include bp.below(bp.$md) {
+    padding: 1.25rem;
+  }
 }
 
 .board-write-error {

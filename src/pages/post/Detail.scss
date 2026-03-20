@@ -1,4 +1,5 @@
 @use "@/styles/common.scss" as *;
+@use "@/styles/breakpoints" as bp;
 
 .post-detail-page {
   width: 100%;
@@ -7,24 +8,16 @@
   position: relative;
   z-index: 10;
   margin: 0 auto;
+
+  @include bp.below(bp.$md) {
+    padding: 1rem;
+  }
 }
 
 .post-detail-header {
   margin-bottom: 2rem;
   text-align: center;
 }
-
-// .post-detail-header .badge {
-//   display: inline-block;
-//   padding: 0.5rem 1rem;
-//   background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
-//   border-radius: 50px;
-//   font-size: 0.85rem;
-//   font-weight: 500;
-//   color: #6366f1;
-//   margin-bottom: 1rem;
-//   border: 1px solid rgba(99, 102, 241, 0.1);
-// }
 
 .post-detail-header .title {
   font-size: clamp(1.75rem, 3vw, 2.25rem);
@@ -40,16 +33,17 @@
   border: 1px solid var(--color-card-border);
   margin-bottom: 2rem;
   overflow: hidden;
+
+  @include bp.below(bp.$md) {
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
 }
 
-// .detail-loading, .spinner는 LoadingState 컴포넌트(variant="compact")에서 정의
-
 .detail-error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+  @extend %error-state-base;
   padding: 3rem;
+  gap: 1rem;
   color: var(--color-error-dark);
 }
 

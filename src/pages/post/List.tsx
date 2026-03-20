@@ -7,6 +7,19 @@ import { usePagination } from "@/hooks/usePagination";
 import "@/pages/post/List.scss";
 
 const PAGE_PARAM = "page";
+const SORT_PARAM = "sort";
+const ORDER_PARAM = "order";
+
+const SORT_OPTIONS: { value: string; label: string }[] = [
+  { value: "regDt", label: "최신순" },
+  { value: "title", label: "제목순" },
+  { value: "inqCnt", label: "조회순" },
+];
+
+const ORDER_OPTIONS: { value: "ASC" | "DESC"; label: string }[] = [
+  { value: "DESC", label: "내림차순" },
+  { value: "ASC", label: "오름차순" },
+];
 
 /** URL searchParams에서 현재 페이지 번호 추출 (없거나 잘못되면 1) */
 function getPageFromSearchParams(searchParams: URLSearchParams): number {
@@ -14,6 +27,18 @@ function getPageFromSearchParams(searchParams: URLSearchParams): number {
   const n = parseInt(raw ?? "1", 10);
   if (Number.isNaN(n) || n < 1) return 1;
   return n;
+}
+
+/** URL에서 정렬 컬럼 (기본: regDt) */
+function getSortFromSearchParams(searchParams: URLSearchParams): string {
+  const v = searchParams.get(SORT_PARAM);
+  return v && SORT_OPTIONS.some((o) => o.value === v) ? v : "regDt";
+}
+
+/** URL에서 정렬 타입 (기본: DESC) */
+function getOrderFromSearchParams(searchParams: URLSearchParams): "ASC" | "DESC" {
+  const v = searchParams.get(ORDER_PARAM);
+  return v === "ASC" || v === "DESC" ? v : "DESC";
 }
 
 export default function List() {
@@ -24,29 +49,42 @@ export default function List() {
   const [error, setError] = useState("");
   const [isUnauthorized, setIsUnauthorized] = useState(false);
 
-  // 현재 페이지 번호 추출(현재 페이지 번호는 url에서만 정함!)
   const currentPage = getPageFromSearchParams(searchParams);
+  const sort = getSortFromSearchParams(searchParams);
+  const order = getOrderFromSearchParams(searchParams);
   const { totalItems, setTotalItems, totalPages, pageSize } = usePagination();
 
-  // 페이지 번호 변경 핸들러
   const setCurrentPage = useCallback(
     (page: number) => {
-      // URL 파라미터 업데이트
-      setSearchParams({ [PAGE_PARAM]: String(page) });
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        next.set(PAGE_PARAM, String(page));
+        return next;
+      });
     },
-    [setSearchParams] // setSearchParams 함수 의존성 배열
+    [setSearchParams]
   );
 
-  // URL의 page가 없거나 유효하지 않으면(음수, 0, NaN) page=1로 정리
+  // 정렬 변경 핸들러
+  const handleSortChange = (newSort: string, newOrder: "ASC" | "DESC") => {
+    setSearchParams({ [PAGE_PARAM]: "1", [SORT_PARAM]: newSort, [ORDER_PARAM]: newOrder });
+  };
+
+  // 현재 페이지 번호 유효성 검사
   useEffect(() => {
     const raw = searchParams.get(PAGE_PARAM);
-    const num = raw !== null ? parseInt(raw, 10) : NaN; // 문자열을 10진수로 파싱
-    const isValid = !Number.isNaN(num) && num >= 1; // 숫자가 아니거나 1보다 작으면 false
-    if (!isValid) { // 유효하지 않으면 page=1로 설정
-      setSearchParams({ [PAGE_PARAM]: "1" });
+    const num = raw !== null ? parseInt(raw, 10) : NaN;
+    const isValid = !Number.isNaN(num) && num >= 1;
+    if (!isValid) {
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        next.set(PAGE_PARAM, "1");
+        return next;
+      });
     }
   }, [searchParams, setSearchParams]);
 
+  // 게시글 목록 조회
   useEffect(() => {
     // 로그인 토큰 확인
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -62,16 +100,16 @@ export default function List() {
         setError("");
         setIsUnauthorized(false);
 
-        // 게시글 목록 조회(api에 요청 보내기)
         const res = await selectBoardList({
           page: currentPage,
           size: pageSize,
+          sortColumnName: sort,
+          sortType: order,
         });
 
         // 응답 데이터 파싱
         const payload = res?.data;
 
-        // 게시글 목록 설정
         setPosts(payload?.data ?? []);
         const total = payload?.totalItemSize ?? 0;
         // 전체 게시글 수 설정
@@ -93,8 +131,8 @@ export default function List() {
     };
 
     // 게시글 목록 조회
-    fetchData(); // selectBoardList 호출하는 부분
-  }, [currentPage, pageSize, setCurrentPage, setTotalItems, navigate]);
+    fetchData();
+  }, [currentPage, pageSize, sort, order, setCurrentPage, setTotalItems, navigate]);
 
   return (
     <div className="board-page">
@@ -110,6 +148,38 @@ export default function List() {
 
       <div className="board-write-btn-container">
         <div className="board-write-btn-block">
+          <div className="board-list-controls">
+            <label className="board-sort-label">
+              정렬
+              <select
+                className="board-sort-select"
+                value={sort}
+                onChange={(e) => handleSortChange(e.target.value, order)}
+                aria-label="정렬 기준"
+              >
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="board-sort-label">
+              순서
+              <select
+                className="board-sort-select"
+                value={order}
+                onChange={(e) => handleSortChange(sort, e.target.value as "ASC" | "DESC")}
+                aria-label="정렬 순서"
+              >
+                {ORDER_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
           <Button variant="primary" size="sm" onClick={() => navigate("/post/write")}>
             글쓰기
           </Button>

@@ -1,11 +1,16 @@
 // Forbidden.scss - 403 페이지 스타일
 @use "@/styles/common.scss" as *;
+@use "@/styles/breakpoints" as bp;
 
 .forbidden-container {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
+
+  @include bp.below(bp.$md) {
+    padding: 1rem;
+  }
 }
 
 // 콘텐츠

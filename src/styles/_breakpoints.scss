@@ -1,0 +1,19 @@
+// 반응형 브레이크포인트 (모바일 우선)
+$sm: 480px;
+$md: 768px;
+$lg: 1024px;
+$xl: 1280px;
+
+// 최대 브레이크포인트(이하)
+@mixin below($max) {
+  @media (max-width: $max) {
+    @content;
+  }
+}
+
+// 최소 브레이크포인트(이상)
+@mixin above($min) {
+  @media (min-width: $min) {
+    @content;
+  }
+}

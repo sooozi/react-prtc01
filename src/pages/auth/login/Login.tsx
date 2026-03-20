@@ -98,7 +98,7 @@ export default function Login() {
 
       <div className="login-card">
         <div className="login-header">
-          <Badge>🔐</Badge>
+          <Badge>🔐 Login</Badge>
           <h1 className="title">로그인</h1>
         </div>
 

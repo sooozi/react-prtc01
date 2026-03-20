@@ -67,10 +67,12 @@ export type PostsResponseData = {
   data: PostDto[];
 };
 
-/** 목록 조회 요청 파라미터 */
+/** 목록 조회 요청 파라미터 (PostListRequest) */
 export type SelectBoardListParams = {
   page: number;
   size: number;
+  sortColumnName?: string;
+  sortType?: "ASC" | "DESC";
 };
 
 /** GET /posts/{id} 상세 조회 응답 (조회수: inqCnt) */

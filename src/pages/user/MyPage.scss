@@ -1,4 +1,5 @@
 // MyPage.scss - 마이페이지 스타일
+@use "@/styles/common.scss" as *;
 
 .mypage-page {
   min-height: 60vh;
@@ -14,9 +15,7 @@
   text-align: center;
 }
 
-// .badge는 common.scss에서 정의
-
-.title {
+.mypage-page .title {
   font-size: clamp(1.75rem, 4vw, 2.25rem);
   font-weight: 800;
   color: var(--color-text-heading);
@@ -27,7 +26,7 @@
   }
 }
 
-.subtitle {
+.mypage-page .subtitle {
   font-size: 1rem;
   color: var(--color-text-secondary);
   margin-bottom: 1.5rem;
@@ -71,6 +70,10 @@
   border-bottom: 1px solid var(--color-border);
 }
 
+[data-theme="dark"] .mypage-card__title {
+  border-bottom-color: rgba(248, 250, 252, 0.15);
+}
+
 .mypage-card__row {
   display: flex;
   justify-content: space-between;
@@ -80,6 +83,10 @@
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-table-cell-border);
   }
+}
+
+[data-theme="dark"] .mypage-card__row:not(:last-child) {
+  border-bottom-color: rgba(248, 250, 252, 0.1);
 }
 
 .mypage-card__label {

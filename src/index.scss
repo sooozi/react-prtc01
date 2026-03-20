@@ -33,10 +33,11 @@ body {
   min-height: 100vh;
   background: var(--color-bg-body);
   color: var(--color-text);
+  word-break: keep-all;
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: clamp(1.75rem, 5vw, 3.2em);
   line-height: 1.1;
   color: var(--color-text-heading);
 }

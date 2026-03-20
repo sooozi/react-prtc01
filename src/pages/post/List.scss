@@ -1,16 +1,18 @@
 // List.scss - 게시글 목록 페이지 스타일
 @use "@/styles/common.scss" as *;
+@use "@/styles/breakpoints" as bp;
 
 .board-page {
-  max-width: 1100px;
-  padding: 2rem;
-  position: relative;
-  z-index: 10;
+  @extend %page-container;
 }
 
 .title-section {
   margin-bottom: 2.5rem;
   gap: 1.5rem;
+
+  @include bp.below(bp.$md) {
+    margin-bottom: 1.5rem;
+  }
 }
 
 .title-block {
@@ -18,11 +20,54 @@
 }
 
 .board-write-btn-block {
-  text-align: right;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 1rem;
+
+  @include bp.below(bp.$md) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
 }
 
-// .badge는 common.scss에서 정의
+.board-list-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.board-sort-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.board-sort-select {
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-input-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748B' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+
+  &:focus {
+    border-color: var(--color-primary);
+  }
+}
 
 .board-page .title {
   color: var(--color-text-heading);
@@ -33,22 +78,20 @@
 }
 
 .board-page .table-card {
-  background: var(--color-card);
-  border-radius: 20px;
-  box-shadow: 0 4px 25px var(--color-shadow-card);
-  overflow: hidden;
-  border: 1px solid var(--color-card-border);
+  @extend %table-card-base;
+
+  // 모바일: 테이블 가로 스크롤
+  @include bp.below(bp.$md) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 // .loading-state, .spinner는 LoadingState 컴포넌트에서 정의
+// .error-state, .empty-state 레이아웃은 common %error-state-base, %empty-state-base 사용
 
 .error-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  gap: 0.75rem;
+  @extend %error-state-base;
 }
 
 .error-icon {
@@ -68,12 +111,7 @@
 }
 
 .empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  gap: 1rem;
+  @extend %empty-state-base;
 }
 
 .empty-icon {
@@ -84,20 +122,8 @@
   color: var(--color-text-muted);
 }
 
-.board-page .table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.board-page .th {
-  padding: 1.25rem 1.5rem;
-  text-align: left;
-  background: var(--color-table-header-bg);
-  color: var(--color-text-secondary);
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-bottom: 2px solid var(--color-border);
-}
+// 테이블 공통은 common mixin 사용, 아래는 목록 전용 컬럼/너비
+@include table-base(".board-page");
 
 .board-page .th-number {
   width: 72px;
@@ -123,13 +149,27 @@
   text-align: center;
 }
 
+// 모바일: 테이블 셀 패딩·폰트 축소
+@include bp.below(bp.$md) {
+  .board-page .th,
+  .board-page .td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.85rem;
+  }
+  .board-page .th-date,
+  .board-page .td-date {
+    min-width: 120px;
+    width: 120px;
+  }
+  .board-page .td-title {
+    max-width: 160px;
+  }
+}
+
 .board-page .td-number {
   width: 72px;
   min-width: 72px;
   text-align: center;
-  color: var(--color-text-muted);
-  font-weight: 500;
-  white-space: nowrap;
 }
 
 .board-page .td-title {
@@ -161,21 +201,6 @@
   font-size: 0.9rem;
 }
 
-.board-page .tr {
-  transition: background 0.2s ease;
-
-  &:hover {
-    background-color: var(--color-table-row-hover);
-  }
-}
-
 .board-page .tr-clickable {
   cursor: pointer;
-}
-
-.board-page .td {
-  padding: 1.25rem 1rem;
-  border-bottom: 1px solid var(--color-table-cell-border);
-  color: var(--color-text);
-  font-size: 0.95rem;
 }

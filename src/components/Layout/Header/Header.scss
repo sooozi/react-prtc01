@@ -1,18 +1,32 @@
 // Header.scss - 공통 헤더 스타일
 @use "@/styles/common.scss" as *;
+@use "@/styles/breakpoints" as bp;
 
 .header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  padding: 1.5rem 2rem;
+  padding: 1rem 1.25rem;
   z-index: 999;
+  background: transparent;
+  box-shadow: 0 1px 0 var(--color-header-border);
+  transition: transform 0.3s ease;
+
+  @include bp.above(bp.$md) {
+    padding: 1.5rem 2rem;
+  }
+}
+
+// 헤더 블러/반투명 배경 — .header에 두면 모바일 fixed 드로어가 뷰포트가 아닌 헤더 높이에만 잡히는 브라우저 이슈가 있음
+.header__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
   background: var(--color-header-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 1px 0 var(--color-header-border);
-  transition: transform 0.3s ease;
 }
 
 .layout-container--header-hidden .header {
@@ -20,6 +34,8 @@
 }
 
 .nav {
+  position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
@@ -29,11 +45,109 @@
 
 // .logo, .logo-icon, .logo-text는 common.scss에서 정의됨
 
+// 모바일: 햄버거 버튼 (768px 미만에서만 표시)
+.nav-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  background: var(--color-bg-subtle);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: var(--color-primary-muted);
+  }
+
+  @include bp.above(bp.$md) {
+    display: none;
+  }
+}
+
+.nav-toggle-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--color-text);
+  margin: 0 auto;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.header.is-menu-open .nav-toggle-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.header.is-menu-open .nav-toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+.header.is-menu-open .nav-toggle-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
 // 네비게이션 링크
 .nav-links {
   display: flex;
   align-items: center;
   gap: 1.5rem;
+
+  @include bp.below(bp.$md) {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(280px, 85vw);
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0;
+    padding: 5rem 1.25rem 2rem;
+    background: #fff;
+    box-shadow: -4px 0 24px var(--color-shadow-md);
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform 0.3s ease, visibility 0.3s ease;
+    overflow-y: auto;
+    z-index: 2;
+  }
+}
+
+.header.is-menu-open .nav-links {
+  @include bp.below(bp.$md) {
+    transform: translateX(0);
+    visibility: visible;
+  }
+}
+
+// 모바일 드로어 배경 딤 (클릭 시 메뉴 닫기)
+.nav-overlay {
+  display: none;
+
+  @include bp.below(bp.$md) {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+}
+
+.header.is-menu-open .nav-overlay {
+  @include bp.below(bp.$md) {
+    display: block;
+    z-index: 1;
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 .theme-toggle {
@@ -107,5 +221,29 @@
     padding: 0;
     cursor: pointer;
     font: inherit;
+  }
+}
+
+// 모바일 드로어 안에서 링크/버튼 블록 스타일
+@include bp.below(bp.$md) {
+  .nav-links .nav-link,
+  .nav-links .theme-toggle,
+  .nav-links .logout-btn {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .nav-links .theme-toggle {
+    justify-content: center;
+    border-bottom: none;
+  }
+
+  .nav-links .logout-btn {
+    justify-content: flex-start;
+    width: 100%;
   }
 }

@@ -56,13 +56,19 @@ function getAuthTokenOrThrow(): string {
 /**
  * 포스트 목록 조회
  * [GET] /posts
+ * 쿼리: page, size, sortColumnName(regDt, title, inqCnt 등), sortType(ASC/DESC)
  * 로그인 토큰이 있으면 Authorization 헤더로 전달. 401 시 BoardApiError(status: 401) throw.
  */
-export async function selectBoardList({ page, size }: SelectBoardListParams) {
+export async function selectBoardList({
+  page,
+  size,
+  sortColumnName,
+  sortType,
+}: SelectBoardListParams) {
   try {
     const token = getAuthToken();
     const res = await apiClient.get<ApiResponse<PostsResponseData>>("/posts", {
-      params: { page, size },
+      params: { page, size, sortColumnName, sortType },
       headers: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
@@ -71,6 +77,7 @@ export async function selectBoardList({ page, size }: SelectBoardListParams) {
     const raw = res.data.data;
     const data: BoardPostItem[] = (raw?.data ?? []).map(mapPostToItem);
 
+    // 응답 데이터 반환
     return {
       data: {
         data,
@@ -80,6 +87,7 @@ export async function selectBoardList({ page, size }: SelectBoardListParams) {
       },
     };
   } catch (e) {
+    // 401 에러 처리
     if (axios.isAxiosError(e) && e.response?.status === 401) {
       const msg =
         (e.response?.data as { resultMessage?: string })?.resultMessage ??

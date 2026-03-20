@@ -1,5 +1,5 @@
-// Layout.scss - 공통 레이아웃 스타일
 @use "@/styles/common.scss" as *;
+@use "@/styles/breakpoints" as bp;
 
 .layout-container {
   @extend %base-container;
@@ -9,12 +9,14 @@
   padding-top: var(--header-height, 90px);
   transition: padding-top 0.3s ease;
 
+  @include bp.below(bp.$md) {
+    padding-top: 64px; // 모바일 헤더 높이에 맞춤
+  }
+
   &.layout-container--header-hidden {
     padding-top: 0;
   }
 }
-
-// bg-decoration-1, bg-decoration-2는 common.scss에서 정의됨
 
 .layout-main {
   flex: 1;
@@ -26,4 +28,8 @@
   padding: 2rem;
   position: relative;
   z-index: 10;
+
+  @include bp.below(bp.$md) {
+    padding: 1rem;
+  }
 }
