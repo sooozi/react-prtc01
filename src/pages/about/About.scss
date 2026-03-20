@@ -1,4 +1,3 @@
-// About.scss - About 페이지 스타일
 @use "@/styles/common.scss" as *;
 
 .about-page {
@@ -71,8 +70,6 @@
 .tech-section {
   margin-bottom: 4rem;
 }
-
-// .section-title은 common.scss에서 정의됨
 
 .tech-grid {
   display: flex;
@@ -190,5 +187,3 @@
   justify-content: center;
   flex-wrap: wrap;
 }
-
-// CTA 버튼은 공통 Button (variant primaryInverse, secondaryInverse) 사용

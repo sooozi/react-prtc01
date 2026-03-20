@@ -1,9 +1,5 @@
-// Home.scss - 홈 페이지 스타일
 @use "@/styles/common.scss" as *;
 
-// ========================================
-// 히어로 섹션
-// ========================================
 @keyframes hero-fade-in {
   from {
     opacity: 0;
@@ -43,9 +39,6 @@
   color: var(--color-text-secondary);
 }
 
-// ========================================
-// 피처 섹션
-// ========================================
 @keyframes section-title-in {
   from {
     opacity: 0;
@@ -119,9 +112,6 @@
   color: var(--color-text-secondary);
 }
 
-// ========================================
-// 기술 스택
-// ========================================
 .tech-section {
   position: relative;
   z-index: 10;
@@ -171,9 +161,6 @@
   color: var(--color-text-muted);
 }
 
-// ========================================
-// 사이트맵 (Apple 스타일)
-// ========================================
 .sitemap-section {
   position: relative;
   z-index: 10;
