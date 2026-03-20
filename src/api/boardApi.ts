@@ -189,6 +189,7 @@ export async function updatePost(
     throw e;
   }
 }
+
 /**
  * 포스트 삭제
  * [DELETE] /posts/{postNumber}

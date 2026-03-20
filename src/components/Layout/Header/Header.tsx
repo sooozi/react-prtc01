@@ -1,9 +1,30 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components";
 import "@/components/Layout/Header/Header.scss";
 
 const THEME_KEY = "theme";
+
+const iconProps = {
+  width: 18,
+  height: 18,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.55,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+};
+
+function DrawerNavIcon({ children }: { children: ReactNode }) {
+  return (
+    <span className="nav-link__icon" aria-hidden>
+      <svg {...iconProps} className="nav-link__icon-svg">
+        {children}
+      </svg>
+    </span>
+  );
+}
 
 export default function Header() {
   const navigate = useNavigate();
@@ -13,14 +34,14 @@ export default function Header() {
   );
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+  }, []);
+
   const toggleTheme = () => {
-    // 현재 테마가 다크면 다음은 라이트, 라이트면 다음은 다크로 바꿀 값 정하기
     const next = theme === "dark" ? "light" : "dark";
-    // <html>에 data-theme 속성을 넣어서 CSS에서 [data-theme="dark"] 등으로 색이 바뀌게 함
     document.documentElement.setAttribute("data-theme", next);
-    // 다음에 페이지 열었을 때도 같은 테마가 적용되도록 localStorage에 저장
     localStorage.setItem(THEME_KEY, next);
-    // React state를 갱신해서 버튼 아이콘(🌙/☀️)이 바로 바뀌게 함
     setTheme(next);
   };
 
@@ -30,44 +51,31 @@ export default function Header() {
     localStorage.removeItem("userId");
     localStorage.removeItem("lastLoginAt");
     navigate("/auth/login");
-    setMenuOpen(false);
+    closeMenu();
   };
 
-  // 모바일 메뉴 열림 시 body 스크롤 잠금, 768px 이상으로 리사이즈 시 메뉴 닫기
   useEffect(() => {
-    // 메뉴가 닫혀있으면 return
     if (!menuOpen) return;
     document.body.style.overflow = "hidden";
-    // 창 크기 변경 시 메뉴 닫기
     const onResize = () => {
-      if (window.innerWidth >= 768) setMenuOpen(false);
+      if (window.innerWidth >= 768) closeMenu();
     };
     window.addEventListener("resize", onResize);
     return () => {
       document.body.style.overflow = "";
       window.removeEventListener("resize", onResize);
     };
-  }, [menuOpen]);
+  }, [menuOpen, closeMenu]);
 
   return (
     <header className={`header ${menuOpen ? "is-menu-open" : ""}`}>
       <div className="header__bg" aria-hidden />
-      {/* 모바일: 메뉴 열림 시 배경 클릭으로 닫기 */}
-      <button
-        type="button"
-        className="nav-overlay"
-        aria-label="메뉴 닫기"
-        onClick={() => setMenuOpen(false)}
-        tabIndex={menuOpen ? 0 : -1}
-      />
       <nav className="nav">
-        {/* 왼쪽: 로고 */}
-        <Link to="/home" className="logo" onClick={() => setMenuOpen(false)}>
+        <Link to="/home" className="logo" onClick={closeMenu}>
           <span className="logo-icon">🐱</span>
           <span className="logo-text">MyViteProject</span>
         </Link>
 
-        {/* 모바일: 햄버거 버튼 */}
         <button
           type="button"
           className="nav-toggle"
@@ -80,36 +88,133 @@ export default function Header() {
           <span className="nav-toggle-bar" />
         </button>
 
-        {/* 오른쪽: 네비게이션 / 로그인 상태 */}
-        <div className="nav-links" onClick={() => setMenuOpen(false)}>
+        <button
+          type="button"
+          className="nav-overlay"
+          aria-label="메뉴 닫기"
+          onClick={(e) => {
+            e.preventDefault();
+            closeMenu();
+          }}
+          tabIndex={menuOpen ? 0 : -1}
+        />
+
+        <div className="nav-links" onClick={closeMenu}>
           <button
             type="button"
-            className="theme-toggle"
-            onClick={toggleTheme}
-            title={theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
-            aria-label={theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
+            className="nav-drawer-close"
+            aria-label="메뉴 닫기"
+            tabIndex={menuOpen ? 0 : -1}
+            onClick={(e) => {
+              e.stopPropagation();
+              closeMenu();
+            }}
           >
-            {theme === "dark" ? "☀️" : "🌙"}
+            <svg
+              className="nav-drawer-close__icon"
+              width={14}
+              height={14}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.25}
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
           </button>
-          <Link to="/about" className="nav-link">About</Link>
-          <Link to="/user/search" className="nav-link">Search</Link>
-          <Link to="/post/list" className="nav-link">Board</Link>
-          {userName ? (
-            <>
-              <Link to="/user/mypage" className="nav-link is-logged-in" title="마이페이지">
-                <span className="nav-link__text">🧑🏻‍💻 {userName ?? "로그인됨"}</span>
-                <span className="nav-link__tooltip" aria-hidden>My Page</span>
-              </Link>
-              <Button variant="ghost" className="nav-link logout-btn" onClick={handleLogout}>
-                Logout
+          <div
+            className={`nav-links__top${userName ? "" : " nav-links__top--guest"}`}
+            role="group"
+            aria-label={userName ? "Account and theme" : "Display theme"}
+          >
+            <div className="nav-links__top-bar">
+              <button
+                type="button"
+                className="theme-toggle"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleTheme();
+                }}
+                title={theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
+                aria-label={theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
+              >
+                {theme === "dark" ? "☀️" : "🌙"}
+              </button>
+              {userName ? (
+                <Link
+                  to="/user/mypage"
+                  className="nav-links__profile nav-link is-logged-in"
+                  title="마이페이지"
+                >
+                  <span className="nav-links__avatar" aria-hidden>
+                    🧑🏻‍💻
+                  </span>
+                  <span className="nav-links__profile-body">
+                    <span className="nav-links__profile-name">{userName}</span>
+                    <span className="nav-links__profile-hint">My page</span>
+                  </span>
+                  <span className="nav-links__profile-desktop nav-link__text">
+                    🧑🏻‍💻 {userName}
+                  </span>
+                  <span className="nav-link__tooltip" aria-hidden>
+                    My Page
+                  </span>
+                </Link>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="nav-links__list" role="presentation">
+            <p className="nav-links__section-label">Menu</p>
+            <Link to="/about" className="nav-link nav-link--drawer">
+              <DrawerNavIcon>
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4M12 8h.01" />
+              </DrawerNavIcon>
+              <span className="nav-link__label">About</span>
+            </Link>
+            <Link to="/user/search" className="nav-link nav-link--drawer">
+              <DrawerNavIcon>
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-4-4" />
+              </DrawerNavIcon>
+              <span className="nav-link__label">Search</span>
+            </Link>
+            <Link to="/post/list" className="nav-link nav-link--drawer">
+              <DrawerNavIcon>
+                <path d="M8 6h13M8 12h13M8 18h13" />
+                <path d="M3 6h.01M3 12h.01M3 18h.01" />
+              </DrawerNavIcon>
+              <span className="nav-link__label">Board</span>
+            </Link>
+
+            {userName ? (
+              <Button variant="ghost" className="nav-link nav-link--drawer logout-btn" onClick={handleLogout}>
+                <DrawerNavIcon>
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" x2="9" y1="12" y2="12" />
+                </DrawerNavIcon>
+                <span className="nav-link__label">Logout</span>
               </Button>
-            </>
-          ) : (
-            <>
-              <Link to="/auth/login" className="nav-link">Login</Link>
-              <Link to="/auth/signup" className="nav-link accent">Sign Up</Link>
-            </>
-          )}
+            ) : (
+              <>
+                <Link to="/auth/login" className="nav-link nav-link--drawer">
+                  <DrawerNavIcon>
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                    <polyline points="10 17 15 12 10 7" />
+                    <line x1="15" x2="3" y1="12" y2="12" />
+                  </DrawerNavIcon>
+                  <span className="nav-link__label">Login</span>
+                </Link>
+                <Link to="/auth/signup" className="nav-link nav-link--drawer-cta accent">
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </nav>
     </header>
