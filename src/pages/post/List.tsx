@@ -66,6 +66,13 @@ export default function List() {
     [setSearchParams]
   );
 
+  const openPostDetail = useCallback(
+    (id: number) => {
+      navigate(`/post/detail?id=${id}`);
+    },
+    [navigate]
+  );
+
   // 정렬 변경 핸들러
   const handleSortChange = (newSort: string, newOrder: "ASC" | "DESC") => {
     setSearchParams({ [PAGE_PARAM]: "1", [SORT_PARAM]: newSort, [ORDER_PARAM]: newOrder });
@@ -137,7 +144,7 @@ export default function List() {
 
   return (
     <div className="board-page">
-      <div className="title-section">
+      <div className="list-page-head">
         <div className="title-block">
           <Badge>📋 Board</Badge>
           <h1 className="title">게시판</h1>
@@ -209,45 +216,83 @@ export default function List() {
               <span className="empty-text">등록된 게시글이 없습니다.</span>
             </div>
           ) : (
-            <table className="table">
-              <thead>
-                <tr>
-                  <th className="th th-number">번호</th>
-                  <th className="th th-title">제목</th>
-                  <th className="th">등록자</th>
-                  <th className="th th-view">조회</th>
-                  <th className="th th-date">등록일시</th>
-                </tr>
-              </thead>
-              <tbody>
+            <>
+              <table className="table board-page__table-desktop">
+                <thead>
+                  <tr>
+                    <th className="th th-number">번호</th>
+                    <th className="th th-title">제목</th>
+                    <th className="th">등록자</th>
+                    <th className="th th-view">조회</th>
+                    <th className="th th-date">등록일시</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {posts.map((post) => (
+                    <tr
+                      key={post.id}
+                      className="tr tr-clickable"
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => openPostDetail(post.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          openPostDetail(post.id);
+                        }
+                      }}
+                    >
+                      <td className="td td-number">{post.id}</td>
+                      <td className="td td-title">
+                        <Tooltip content={post.title} onlyWhenTruncated>
+                          <span className="list-title-text">{post.title}</span>
+                        </Tooltip>
+                      </td>
+                      <td className="td">{post.author}</td>
+                      <td className="td td-view">{post.viewCount ?? 0}</td>
+                      <td className="td td-date">{post.createdAt}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <ul className="post-list-cards" aria-label="게시글 목록">
                 {posts.map((post) => (
-                  <tr
-                    key={post.id}
-                    className="tr tr-clickable"
+                  <li
+                    key={`card-${post.id}`}
+                    className="post-list-card"
                     role="button"
                     tabIndex={0}
-                    onClick={() => navigate(`/post/detail?id=${post.id}`)}
-                    // 키보드 접근성을 위한 이벤트 핸들러
+                    onClick={() => openPostDetail(post.id)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
-                        navigate(`/post/detail?id=${post.id}`);
+                        openPostDetail(post.id);
                       }
                     }}
                   >
-                    <td className="td td-number">{post.id}</td>
-                    <td className="td td-title">
-                      <Tooltip content={post.title} onlyWhenTruncated>
-                        <span className="list-title-text">{post.title}</span>
-                      </Tooltip>
-                    </td>
-                    <td className="td">{post.author}</td>
-                    <td className="td td-view">{post.viewCount ?? 0}</td>
-                    <td className="td td-date">{post.createdAt}</td>
-                  </tr>
+                    <div className="post-list-card__head">
+                      <span className="post-list-card__number">{post.id}</span>
+                      <span className="post-list-card__title">{post.title}</span>
+                    </div>
+                    <dl className="post-list-card__meta">
+                      <div className="post-list-card__row">
+                        <dt>등록자</dt>
+                        <dd>{post.author}</dd>
+                      </div>
+                      <div className="post-list-card__row">
+                        <dt>조회</dt>
+                        <dd>{post.viewCount ?? 0}</dd>
+                      </div>
+                      <div className="post-list-card__row">
+                        <dt>등록일시</dt>
+                        <dd className="post-list-card__date">{post.createdAt}</dd>
+                      </div>
+                    </dl>
+                  </li>
                 ))}
-              </tbody>
-            </table>
+              </ul>
+            </>
           )}
         </div>
 

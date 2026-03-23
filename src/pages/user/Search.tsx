@@ -62,7 +62,7 @@ export default function UserSearch() {
 
   return (
     <div className="search-page">
-      <div className="title-section">
+      <div className="list-page-head">
         <div className="title-block">
           <Badge>👥 User List</Badge>
           <h1 className="title">사용자 목록</h1>

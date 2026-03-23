@@ -245,19 +245,18 @@ $error-dark: var(--color-error-dark);
 
 // ========================================
 // 목록형 페이지 상단 (게시판·사용자 목록 등)
-// — 각 페이지 SCSS에서 @include page-list-heading(".board-page"); 형태로 사용
+// — Write/로그인 등 다른 화면의 .title 과 구분하려면 페이지 루트가 아니라
+//   이 블록 클래스(.list-page-head)만 마크업에 붙이면 됨
 // ========================================
-@mixin page-list-heading($page-root) {
-  #{$page-root} .title-section {
-    text-align: center;
-    margin-bottom: 2.5rem;
+.list-page-head {
+  text-align: center;
+  margin-bottom: 2.5rem;
 
-    @include bp.below(bp.$md) {
-      margin-bottom: 1.5rem;
-    }
+  @include bp.below(bp.$md) {
+    margin-bottom: 1.5rem;
   }
 
-  #{$page-root} .title-section .title-block {
+  .title-block {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -266,7 +265,7 @@ $error-dark: var(--color-error-dark);
     min-width: 0;
   }
 
-  #{$page-root} .title-section .title {
+  .title {
     font-size: clamp(2rem, 4vw, 2.5rem);
     font-weight: 800;
     line-height: 1.15;
@@ -274,7 +273,7 @@ $error-dark: var(--color-error-dark);
     margin: 0 0 0.75rem;
   }
 
-  #{$page-root} .title-section .subtitle {
+  .subtitle {
     margin: 0;
     font-size: 1.05rem;
     color: var(--color-text-secondary);
