@@ -85,28 +85,61 @@ export default function UserSearch() {
             <span className="empty-text">등록된 사용자가 없습니다.</span>
           </div>
         ) : (
-          <table className="table">
-            <thead>
-              <tr>
-                <th className="th th-number">번호</th>
-                <th className="th">이름</th>
-                <th className="th">직급</th>
-                <th className="th">이메일</th>
-                <th className="th">구분</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user, index) => (
-                <tr key={`${user.eml}-${index}`} className="tr">
-                  <td className="td td-number">{startIndex + index + 1}</td>
-                  <td className="td">{user.userFlnm}</td>
-                  <td className="td">{user.userJbgdNm}</td>
-                  <td className="td">{user.eml}</td>
-                  <td className="td">{user.userSe}</td>
+          <>
+            <table className="table search-page__table-desktop">
+              <thead>
+                <tr>
+                  <th className="th th-number">번호</th>
+                  <th className="th">이름</th>
+                  <th className="th">직급</th>
+                  <th className="th">이메일</th>
+                  <th className="th">구분</th>
                 </tr>
+              </thead>
+              <tbody>
+                {users.map((user, index) => (
+                  <tr key={`${user.eml}-${index}`} className="tr">
+                    <td className="td td-number">{startIndex + index + 1}</td>
+                    <td className="td">{user.userFlnm}</td>
+                    <td className="td">{user.userJbgdNm}</td>
+                    <td className="td">{user.eml}</td>
+                    <td className="td">{user.userSe}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <ul className="search-user-cards">
+              {users.map((user, index) => (
+                <li key={`card-${user.eml}-${index}`} className="search-user-card">
+                  <div className="search-user-card__head">
+                    <span className="search-user-card__index">{startIndex + index + 1}</span>
+                    <span className="search-user-card__name">{user.userFlnm}</span>
+                  </div>
+                  <dl className="search-user-card__meta">
+                    <div className="search-user-card__row">
+                      <dt>직급</dt>
+                      <dd>{user.userJbgdNm}</dd>
+                    </div>
+                    <div className="search-user-card__row">
+                      <dt>이메일</dt>
+                      <dd className="search-user-card__email">{user.eml}</dd>
+                    </div>
+                    <div className="search-user-card__row">
+                      <dt>구분</dt>
+                      <dd>
+                        <span
+                          className={user.userSe === "관리자" ? "admin-badge" : "user-badge"}
+                        >
+                          {user.userSe}
+                        </span>
+                      </dd>
+                    </div>
+                  </dl>
+                </li>
               ))}
-            </tbody>
-          </table>
+            </ul>
+          </>
         )}
       </div>
 

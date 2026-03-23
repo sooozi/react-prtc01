@@ -100,30 +100,6 @@ export default function Header() {
         />
 
         <div className="nav-links" onClick={closeMenu}>
-          <button
-            type="button"
-            className="nav-drawer-close"
-            aria-label="메뉴 닫기"
-            tabIndex={menuOpen ? 0 : -1}
-            onClick={(e) => {
-              e.stopPropagation();
-              closeMenu();
-            }}
-          >
-            <svg
-              className="nav-drawer-close__icon"
-              width={14}
-              height={14}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2.25}
-              strokeLinecap="round"
-              aria-hidden="true"
-            >
-              <path d="M18 6 6 18M6 6l12 12" />
-            </svg>
-          </button>
           <div
             className={`nav-links__top${userName ? "" : " nav-links__top--guest"}`}
             role="group"
