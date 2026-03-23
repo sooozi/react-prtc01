@@ -5,18 +5,7 @@
   @extend %page-container;
 }
 
-.title-section {
-  margin-bottom: 2.5rem;
-  gap: 1.5rem;
-
-  @include bp.below(bp.$md) {
-    margin-bottom: 1.5rem;
-  }
-}
-
-.title-block {
-  flex: 1;
-}
+@include page-list-heading(".board-page");
 
 .board-write-btn-block {
   display: flex;
@@ -66,14 +55,6 @@
   &:focus {
     border-color: var(--color-primary);
   }
-}
-
-.board-page .title {
-  color: var(--color-text-heading);
-}
-
-.board-page .subtitle {
-  color: var(--color-text-secondary);
 }
 
 .board-page .table-card {

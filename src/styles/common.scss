@@ -244,6 +244,50 @@ $error-dark: var(--color-error-dark);
 }
 
 // ========================================
+// 목록형 페이지 상단 (게시판·사용자 목록 등)
+// — 각 페이지 SCSS에서 @include page-list-heading(".board-page"); 형태로 사용
+// ========================================
+@mixin page-list-heading($page-root) {
+  #{$page-root} .title-section {
+    text-align: center;
+    margin-bottom: 2.5rem;
+
+    @include bp.below(bp.$md) {
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  #{$page-root} .title-section .title-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 1;
+    min-width: 0;
+  }
+
+  #{$page-root} .title-section .title {
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--color-text-heading);
+    margin: 0 0 0.75rem;
+  }
+
+  #{$page-root} .title-section .subtitle {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+
+    strong {
+      font-weight: 700;
+      color: var(--color-text-heading);
+    }
+  }
+}
+
+// ========================================
 // 테이블 카드 래퍼 (목록/검색 공통)
 // ========================================
 %table-card-base {

@@ -63,11 +63,13 @@ export default function UserSearch() {
   return (
     <div className="search-page">
       <div className="title-section">
-        <Badge>👥 User List</Badge>
-        <h1 className="title">사용자 목록</h1>
-        <p className="subtitle">
-          전체 <strong>{totalItems}</strong>명의 사용자
-        </p>
+        <div className="title-block">
+          <Badge>👥 User List</Badge>
+          <h1 className="title">사용자 목록</h1>
+          <p className="subtitle">
+            전체 <strong>{totalItems}</strong>명의 사용자
+          </p>
+        </div>
       </div>
 
       <div className="table-card">
