@@ -67,12 +67,18 @@ export type PostsResponseData = {
   data: PostDto[];
 };
 
-/** 목록 조회 요청 파라미터 (PostListRequest) */
+/** 목록 정렬 방향 (쿼리 sortType: ASC / DESC) */
+export type SortOrder = "ASC" | "DESC";
+
+/** 목록 조회 요청 파라미터 (GET /posts 쿼리, Swagger와 동일한 필드명) */
 export type SelectBoardListParams = {
   page: number;
   size: number;
   sortColumnName?: string;
-  sortType?: "ASC" | "DESC";
+  sortType?: SortOrder;
+  titleSearchKeyword?: string;
+  rgtrIdSearchKeyword?: string;
+  rgtrNameSearchKeyword?: string;
 };
 
 /** GET /posts/{id} 상세 조회 응답 (조회수: inqCnt) */

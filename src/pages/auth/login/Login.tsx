@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ApiError } from "@/api/errors";
 import { LOGIN_SUCCESS_CODE, login } from "@/api/login";
 import { Badge, Button } from "@/components";
 import "@/pages/auth/login/Login.scss";
@@ -72,14 +73,14 @@ export default function Login() {
           message: res.resultMessage ?? res.resultDetailMessage ?? "로그인에 실패했습니다.",
         });
       }
-    } catch (e: unknown) {//api 호출 실패 시 에러 처리
-      // axios 파일에서 try catch 한번에 처리하는 방법 찾아보기! (에러바운더리 참고!)
+    } catch (e: unknown) {
       const message =
-      //e가 있고, 객체이고, response 속성이 있는지 확인
-        e && typeof e === "object" && "response" in e
-          ? (e as { response?: { data?: { resultMessage?: string }; status?: number } }).response?.data?.resultMessage
-          : null;
-      setApiAlert({ type: "error", message: message ?? "네트워크 오류가 발생했습니다." });
+        e instanceof ApiError
+          ? e.message
+          : e instanceof Error
+            ? e.message
+            : "네트워크 오류가 발생했습니다.";
+      setApiAlert({ type: "error", message });
     } finally {
       setIsLoading(false);
     }

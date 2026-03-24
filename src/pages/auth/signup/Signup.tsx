@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { signup, checkUserId } from "@/api/auth";
+import { ApiError } from "@/api/errors";
 import { Badge, Button } from "@/components";
 import "@/pages/auth/signup/Signup.scss";
 
@@ -60,10 +61,16 @@ export default function Signup() {
         setIdCheckStatus("사용불가");
         setIdCheckMessage("이미 사용 중인 아이디입니다.");
       }
-    } catch (e) {
+    } catch (e: unknown) {
       console.error("아이디 중복 확인 실패:", e);
       setIdCheckStatus("사용불가");
-      setIdCheckMessage("중복 확인에 실패했습니다.");
+      const message =
+        e instanceof ApiError
+          ? e.message
+          : e instanceof Error
+            ? e.message
+            : "중복 확인에 실패했습니다.";
+      setIdCheckMessage(message);
     }
   };  
 
@@ -77,7 +84,13 @@ export default function Signup() {
       navigate("/auth/login");
     } catch (e: unknown) {
       console.error("회원가입 실패:", e);
-      alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+      const message =
+        e instanceof ApiError
+          ? e.message
+          : e instanceof Error
+            ? e.message
+            : "회원가입에 실패했습니다. 다시 시도해주세요.";
+      alert(message);
     }
   };
 
