@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { selectBoardList, BoardApiError } from "@/api/boardApi";
 import type { BoardPostItem, SortOrder } from "@/api/boardApi";
-import { Badge, Button, LoadingState, Pagination, Tooltip } from "@/components";
+import { Badge, Button, Confirm, LoadingState, Pagination, Tooltip } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import "@/pages/post/List.scss";
 
@@ -74,6 +74,9 @@ export default function List() {
   const [draftTitle, setDraftTitle] = useState(titleFromUrl);
   const [draftRgtrId, setDraftRgtrId] = useState(rgtrIdFromUrl);
   const [draftRgtrName, setDraftRgtrName] = useState(rgtrNameFromUrl);
+
+  /** 세 검색 필드가 모두 비었을 때 띄우는 안내 모달(true면 표시) */
+  const [showEmptySearchAlert, setShowEmptySearchAlert] = useState(false);
 
   useEffect(() => {
     setDraftTitle(titleFromUrl);
@@ -238,6 +241,16 @@ export default function List() {
           className="board-search-bar"
           onSubmit={(e) => {
             e.preventDefault();
+            // 공백만 있는 입력은 빈 값으로 취급해 URL을 바꾸지 않도록 함
+            const hasAnyDraft =
+              Boolean(draftTitle.trim()) ||
+              Boolean(draftRgtrId.trim()) ||
+              Boolean(draftRgtrName.trim());
+            if (!hasAnyDraft) {
+              // 검색 조건이 하나도 없으면 applySearchToUrl 대신 모달만 염
+              setShowEmptySearchAlert(true);
+              return;
+            }
             applySearchToUrl();
           }}
         >
@@ -260,7 +273,7 @@ export default function List() {
                 className="board-search-input"
                 value={draftRgtrId}
                 onChange={(e) => setDraftRgtrId(e.target.value)}
-                placeholder="rgtr ID"
+                placeholder="등록자 ID"
                 autoComplete="off"
               />
             </label>
@@ -271,7 +284,7 @@ export default function List() {
                 className="board-search-input"
                 value={draftRgtrName}
                 onChange={(e) => setDraftRgtrName(e.target.value)}
-                placeholder="이름"
+                placeholder="등록자 이름"
                 autoComplete="off"
               />
             </label>
@@ -443,6 +456,17 @@ export default function List() {
           onPageChange={setCurrentPage}
         />
       </div>
+
+      {/* 빈 검색 제출 시: URL 변경 없이 안내만 (Confirm은 확인/취소 둘 다 닫기로 동일 처리) */}
+      <Confirm
+        open={showEmptySearchAlert}
+        title="검색"
+        message="제목, 등록자 ID, 등록자 이름 중 하나 이상 입력해 주세요."
+        confirmLabel="확인"
+        cancelLabel="닫기"
+        onConfirm={() => setShowEmptySearchAlert(false)}
+        onCancel={() => setShowEmptySearchAlert(false)}
+      />
     </div>
   );
 }
