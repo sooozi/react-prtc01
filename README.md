@@ -71,7 +71,7 @@ src/
 │   ├── client.ts           # axios 인스턴스 (baseURL, 공통 헤더)
 │   ├── types.ts            # 공통 응답 타입
 │   ├── auth.ts             # 회원가입, 아이디 중복 확인
-│   ├── login.ts            # 로그인 (BPLTE200 성공 코드)
+│   ├── login.ts            # 로그인 (성공 코드는 소스 내 상수)
 │   ├── boardApi.ts         # 게시판 목록/상세/등록/수정/삭제/조회수
 │   ├── boardApi.types.ts    # 게시판 DTO·요청 타입
 │   └── userApi.ts          # 사용자 목록 조회
@@ -208,7 +208,7 @@ src/
   `GET /posts` (쿼리: `page`, `size`, `sortColumnName`, `sortType`), `GET /posts/:postNumber`, `POST /posts`, `PUT /posts/:postNumber`, `DELETE /posts/:postNumber`, `PATCH /posts/:postNumber/view_count`,  
   사용자 목록 API(경로는 `userApi.ts` 참고).
 - **공통 응답**: `resultCode`, `resultMessage`, `resultDetailMessage`, `data`.
-- **로그인 성공 코드**: `resultCode === "BPLTE200"` (`api/login.ts`의 `LOGIN_SUCCESS_CODE`).
+- **로그인 성공 여부**: 응답 `resultCode`를 `api/login.ts`의 `LOGIN_SUCCESS_CODE`와 비교해 판단합니다. 실제 값은 저장소에 노출하지 않고 소스에서만 관리합니다.
 
 백엔드가 위 주소 규격으로 동작해야 로그인·회원가입·게시판·사용자 목록이 정상 동작합니다.
 

@@ -71,14 +71,14 @@ export type PostsResponseData = {
 export type SortOrder = "ASC" | "DESC";
 
 /** 목록 조회 요청 파라미터 (GET /posts 쿼리, Swagger와 동일한 필드명) */
-export type SelectBoardListParams = {
+export type SelectBoardList = {
   page: number;
   size: number;
-  sortColumnName?: string;
-  sortType?: SortOrder;
   titleSearchKeyword?: string;
   rgtrIdSearchKeyword?: string;
   rgtrNameSearchKeyword?: string;
+  sortColumnName?: string;
+  sortType?: SortOrder;
 };
 
 /** GET /posts/{id} 상세 조회 응답 (조회수: inqCnt) */
@@ -87,7 +87,6 @@ export type PostDetailDto = {
   ownerUserId?: string;
   title: string;
   content?: string;
-  searchContent?: string;
   inqCnt?: number;
   regDt: string;
   rgtrId?: string;

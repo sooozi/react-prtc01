@@ -2,17 +2,13 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { selectBoardList, BoardApiError } from "@/api/boardApi";
 import type { BoardPostItem, SortOrder } from "@/api/boardApi";
-import { Badge, Button, Confirm, LoadingState, Pagination, Tooltip } from "@/components";
+import { Badge, Button, LoadingState, Pagination, Tooltip } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import "@/pages/post/List.scss";
 
 const PAGE_PARAM = "page";
 const SORT_PARAM = "sort";
 const ORDER_PARAM = "order";
-// GET /posts 쿼리와 매핑: titleSearchKeyword 등
-const TITLE_PARAM = "title";
-const RGTR_ID_PARAM = "rgtrId";
-const RGTR_NAME_PARAM = "rgtrName";
 
 const SORT_OPTIONS: { value: string; label: string }[] = [
   { value: "regDt", label: "최신순" },
@@ -46,15 +42,6 @@ function getOrderFromSearchParams(searchParams: URLSearchParams): SortOrder {
   return v === "ASC" || v === "DESC" ? v : "DESC";
 }
 
-// 검색 조건이 있는지 확인
-function hasActiveSearch(searchParams: URLSearchParams): boolean {
-  return Boolean(
-    searchParams.get(TITLE_PARAM)?.trim() ||
-      searchParams.get(RGTR_ID_PARAM)?.trim() ||
-      searchParams.get(RGTR_NAME_PARAM)?.trim()
-  );
-}
-
 export default function List() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -66,23 +53,6 @@ export default function List() {
   const currentPage = getPageFromSearchParams(searchParams);
   const sort = getSortFromSearchParams(searchParams);
   const order = getOrderFromSearchParams(searchParams);
-  const titleFromUrl = searchParams.get(TITLE_PARAM) ?? "";
-  const rgtrIdFromUrl = searchParams.get(RGTR_ID_PARAM) ?? "";
-  const rgtrNameFromUrl = searchParams.get(RGTR_NAME_PARAM) ?? "";
-
-  /** URL에 반영되기 전 입력값; 제출 시에만 URL로 올라감 */
-  const [draftTitle, setDraftTitle] = useState(titleFromUrl);
-  const [draftRgtrId, setDraftRgtrId] = useState(rgtrIdFromUrl);
-  const [draftRgtrName, setDraftRgtrName] = useState(rgtrNameFromUrl);
-
-  /** 세 검색 필드가 모두 비었을 때 띄우는 안내 모달(true면 표시) */
-  const [showEmptySearchAlert, setShowEmptySearchAlert] = useState(false);
-
-  useEffect(() => {
-    setDraftTitle(titleFromUrl);
-    setDraftRgtrId(rgtrIdFromUrl);
-    setDraftRgtrName(rgtrNameFromUrl);
-  }, [titleFromUrl, rgtrIdFromUrl, rgtrNameFromUrl]);
 
   const { totalItems, setTotalItems, totalPages, pageSize } = usePagination();
 
@@ -104,44 +74,13 @@ export default function List() {
     [navigate]
   );
 
-  // 정렬 변경: 검색·페이지 외 쿼리는 유지
+  // 정렬 변경: 페이지 외 쿼리는 유지
   const handleSortChange = (newSort: string, newOrder: SortOrder) => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
       next.set(PAGE_PARAM, "1");
       next.set(SORT_PARAM, newSort);
       next.set(ORDER_PARAM, newOrder);
-      return next;
-    });
-  };
-
-  const applySearchToUrl = () => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.set(PAGE_PARAM, "1");
-      const t = draftTitle.trim();
-      const id = draftRgtrId.trim();
-      const name = draftRgtrName.trim();
-      if (t) next.set(TITLE_PARAM, t);
-      else next.delete(TITLE_PARAM);
-      if (id) next.set(RGTR_ID_PARAM, id);
-      else next.delete(RGTR_ID_PARAM);
-      if (name) next.set(RGTR_NAME_PARAM, name);
-      else next.delete(RGTR_NAME_PARAM);
-      return next;
-    });
-  };
-
-  const clearSearchFromUrl = () => {
-    setDraftTitle("");
-    setDraftRgtrId("");
-    setDraftRgtrName("");
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.set(PAGE_PARAM, "1");
-      next.delete(TITLE_PARAM);
-      next.delete(RGTR_ID_PARAM);
-      next.delete(RGTR_NAME_PARAM);
       return next;
     });
   };
@@ -181,9 +120,6 @@ export default function List() {
           size: pageSize,
           sortColumnName: sort,
           sortType: order,
-          titleSearchKeyword: titleFromUrl || undefined,
-          rgtrIdSearchKeyword: rgtrIdFromUrl || undefined,
-          rgtrNameSearchKeyword: rgtrNameFromUrl || undefined,
         });
 
         // 응답 데이터 파싱
@@ -201,7 +137,7 @@ export default function List() {
         if (e instanceof BoardApiError && e.status === 401) {
           setError(e.message);
           setIsUnauthorized(true);
-        } else {
+        } else { 
           setError(e instanceof Error ? e.message : "게시글 목록 조회 실패");
         }
       } finally {
@@ -216,9 +152,6 @@ export default function List() {
     pageSize,
     sort,
     order,
-    titleFromUrl,
-    rgtrIdFromUrl,
-    rgtrNameFromUrl,
     setCurrentPage,
     setTotalItems,
     navigate,
@@ -237,74 +170,6 @@ export default function List() {
       </div>
 
       <div className="board-write-btn-container">
-        <form
-          className="board-search-bar"
-          onSubmit={(e) => {
-            e.preventDefault();
-            // 공백만 있는 입력은 빈 값으로 취급해 URL을 바꾸지 않도록 함
-            const hasAnyDraft =
-              Boolean(draftTitle.trim()) ||
-              Boolean(draftRgtrId.trim()) ||
-              Boolean(draftRgtrName.trim());
-            if (!hasAnyDraft) {
-              // 검색 조건이 하나도 없으면 applySearchToUrl 대신 모달만 염
-              setShowEmptySearchAlert(true);
-              return;
-            }
-            applySearchToUrl();
-          }}
-        >
-          <div className="board-search-fields">
-            <label className="board-search-label">
-              제목
-              <input
-                type="search"
-                className="board-search-input"
-                value={draftTitle}
-                onChange={(e) => setDraftTitle(e.target.value)}
-                placeholder="제목 키워드"
-                autoComplete="off"
-              />
-            </label>
-            <label className="board-search-label">
-              등록자 ID
-              <input
-                type="search"
-                className="board-search-input"
-                value={draftRgtrId}
-                onChange={(e) => setDraftRgtrId(e.target.value)}
-                placeholder="등록자 ID"
-                autoComplete="off"
-              />
-            </label>
-            <label className="board-search-label">
-              등록자 이름
-              <input
-                type="search"
-                className="board-search-input"
-                value={draftRgtrName}
-                onChange={(e) => setDraftRgtrName(e.target.value)}
-                placeholder="등록자 이름"
-                autoComplete="off"
-              />
-            </label>
-          </div>
-          <div className="board-search-actions">
-            <Button type="submit" variant="secondary" size="sm">
-              검색
-            </Button>
-            <Button
-              type="button"
-              variant="outlinePrimary"
-              size="sm"
-              onClick={clearSearchFromUrl}
-              disabled={!hasActiveSearch(searchParams) && !draftTitle.trim() && !draftRgtrId.trim() && !draftRgtrName.trim()}
-            >
-              초기화
-            </Button>
-          </div>
-        </form>
-
         <div className="board-write-btn-block">
           <div className="board-list-controls">
             <label className="board-sort-label">
@@ -363,11 +228,7 @@ export default function List() {
           ) : posts.length === 0 ? (
             <div className="empty-state">
               <span className="empty-icon">📭</span>
-              <span className="empty-text">
-                {hasActiveSearch(searchParams)
-                  ? "검색 결과가 없습니다."
-                  : "등록된 게시글이 없습니다."}
-              </span>
+              <span className="empty-text">등록된 게시글이 없습니다.</span>
             </div>
           ) : (
             <>
@@ -456,17 +317,6 @@ export default function List() {
           onPageChange={setCurrentPage}
         />
       </div>
-
-      {/* 빈 검색 제출 시: URL 변경 없이 안내만 (Confirm은 확인/취소 둘 다 닫기로 동일 처리) */}
-      <Confirm
-        open={showEmptySearchAlert}
-        title="검색"
-        message="제목, 등록자 ID, 등록자 이름 중 하나 이상 입력해 주세요."
-        confirmLabel="확인"
-        cancelLabel="닫기"
-        onConfirm={() => setShowEmptySearchAlert(false)}
-        onCancel={() => setShowEmptySearchAlert(false)}
-      />
     </div>
   );
 }

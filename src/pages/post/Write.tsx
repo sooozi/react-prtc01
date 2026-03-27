@@ -25,17 +25,28 @@ export default function Write() {
       setError("제목을 입력해주세요.");
       return;
     }
+    if (!content.trim()) {
+      setError("내용을 입력해주세요.");
+      return;
+    }
 
     setLoading(true);
     try {
-      await createPost({ title: title.trim(), content: content.trim() });
+      await createPost({
+        title: title.trim(),
+        content: content.trim(),
+      });
       navigate("/post/list", { replace: true });
     } catch (e) {
       // 인증 오류 처리
       if (e instanceof BoardApiError && e.status === 401) {
         navigate("/auth/login", { state: { toast: e.message }, replace: true });
+      } else if (e instanceof BoardApiError) {
+        const detail = e.resultDetailMessage
+          ? ` ${e.resultDetailMessage}`
+          : "";
+        setError(`${e.message}${detail}`.trim());
       } else {
-        // 다른 오류 처리
         setError(e instanceof Error ? e.message : "등록에 실패했습니다.");
       }
     } finally {

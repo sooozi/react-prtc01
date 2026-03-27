@@ -64,10 +64,17 @@ export default function Update() {
       setError("제목을 입력해주세요.");
       return;
     }
+    if (!content.trim()) {
+      setError("내용을 입력해주세요.");
+      return;
+    }
     setError("");
     setSubmitLoading(true);
     try {
-      await updatePost(postNumber, { title: title.trim(), content: content.trim() });
+      await updatePost(postNumber, {
+        title: title.trim(),
+        content: content.trim(),
+      });
       navigate(`/post/detail?id=${postNumber}`, { replace: true });
     } catch (e) {
       if (e instanceof BoardApiError && e.status === 401) {

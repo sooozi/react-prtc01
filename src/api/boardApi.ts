@@ -1,5 +1,7 @@
+import { apiClient } from "@/api/client";
 import { ApiError } from "@/api/errors";
 import { api } from "@/api/http";
+import type { ApiResponse } from "@/api/types";
 import type {
   BoardPostItem,
   CreatePostRequest,
@@ -7,7 +9,7 @@ import type {
   PostDetailItem,
   PostDto,
   PostsResponseData,
-  SelectBoardListParams,
+  SelectBoardList,
   UpdatePostRequest,
 } from "@/api/boardApi.types";
 
@@ -22,7 +24,7 @@ export type {
 /** 페이지에서 기존처럼 `instanceof BoardApiError` 쓰기 — ApiError와 동일 클래스 */
 export { ApiError as BoardApiError };
 
-// PostDto를 BoardPostItem(화면용 한 건)으로 변환
+// 서버 데이터를 BoardPostItem(화면용 데이터)으로 변환
 function mapPostToItem(dto: PostDto): BoardPostItem {
   return {
     id: dto.postNumber,
@@ -48,42 +50,22 @@ function getAuthTokenOrThrow(): string {
 /**
  * 포스트 목록 조회
  * [GET] /posts
- * 토큰이 있으면 client request interceptor가 Authorization 부착.
  */
-export async function selectBoardList({
-  page,
-  size,
-  sortColumnName,
-  sortType,
-  titleSearchKeyword,
-  rgtrIdSearchKeyword,
-  rgtrNameSearchKeyword,
-}: SelectBoardListParams) {
-  const titleKw = titleSearchKeyword?.trim();
-  const rgtrIdKw = rgtrIdSearchKeyword?.trim();
-  const rgtrNameKw = rgtrNameSearchKeyword?.trim();
-
+export async function selectBoardList(params: SelectBoardList) {
   const json = await api.get<PostsResponseData>("/posts", {
-    params: {
-      page,
-      size,
-      sortColumnName,
-      sortType,
-      ...(titleKw && { titleSearchKeyword: titleKw }),
-      ...(rgtrIdKw && { rgtrIdSearchKeyword: rgtrIdKw }),
-      ...(rgtrNameKw && { rgtrNameSearchKeyword: rgtrNameKw }),
-    },
+    params,
   });
 
-  const raw = json.data;
+  const raw = json.data; // 서버에서 받은 데이터
+  //data는 “BoardPostItem 배열”
   const data: BoardPostItem[] = (raw?.data ?? []).map(mapPostToItem);
 
   return {
     data: {
       data,
-      totalItemSize: raw?.totalItemSize ?? 0,
       itemSize: raw?.itemSize ?? data.length,
-      pageSize: raw?.pageSize ?? size,
+      pageSize: raw?.pageSize ?? params.size,
+      totalItemSize: raw?.totalItemSize ?? 0,
     },
   };
 }
@@ -112,11 +94,18 @@ export async function getPostDetail(postNumber: number): Promise<PostDetailItem>
 /**
  * 포스트 등록
  * [POST] /posts
- * 인증 토큰 필수.
+ * 스웨거에서 `request`가 (query)로 보이는 경우, Spring은 JSON 본문이 아니라
+ * 쿼리/폼 파라미터로 바인딩하는 경우가 많음 → JSON만 보내면 title·content가 비어 400이 남.
  */
 export async function createPost(body: CreatePostRequest) {
   getAuthTokenOrThrow();
-  return api.post<number, CreatePostRequest>("/posts", body);
+  const form = new URLSearchParams();
+  form.set("title", body.title);
+  form.set("content", body.content);
+  const res = await apiClient.post<ApiResponse<number>>("/posts", form.toString(), {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  });
+  return res.data;
 }
 
 /**
@@ -129,7 +118,12 @@ export async function updatePost(
   body: UpdatePostRequest
 ): Promise<void> {
   getAuthTokenOrThrow();
-  await api.put<unknown, UpdatePostRequest>(`/posts/${postNumber}`, body);
+  const form = new URLSearchParams();
+  form.set("title", body.title);
+  form.set("content", body.content);
+  await apiClient.put<ApiResponse<unknown>>(`/posts/${postNumber}`, form.toString(), {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  });
 }
 
 /**
