@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, updatePost, BoardApiError } from "@/api/boardApi";
-import type { PostDetailItem } from "@/api/boardApi";
+import type { PostDetailDto } from "@/api/boardApi";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
 import "@/pages/post/Detail.scss";
 import "@/pages/post/Update.scss";
@@ -13,7 +13,7 @@ export default function Update() {
   const postNumber = idRaw ? parseInt(idRaw, 10) : NaN;
   const invalidId = Number.isNaN(postNumber) || postNumber < 1;
 
-  const [post, setPost] = useState<PostDetailItem | null>(null);
+  const [post, setPost] = useState<PostDetailDto | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState("");
@@ -27,13 +27,6 @@ export default function Update() {
     // 게시글 번호가 유효하지 않으면 조회하지 않음
     if (invalidId) {
       setLoading(false);
-      return;
-    }
-
-    // 로그인 토큰 확인
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    if (!token) {
-      navigate("/auth/login", { state: { toast: "로그인이 필요합니다" }, replace: true });
       return;
     }
 
@@ -135,9 +128,9 @@ export default function Update() {
         ) : post ? (
           <div className="post-update-form">
             <div className="detail-meta">
-              <span className="detail-id">#{post.id}</span>
-              <span className="detail-author">{post.author}</span>
-              <span className="detail-date">{post.createdAt}</span>
+              <span className="detail-id">#{post.postNumber}</span>
+              <span className="detail-author">{post.rgtrInfo ?? "-"}</span>
+              <span className="detail-date">{post.regDt}</span>
             </div>
             <div className="post-update-form-group">
               <label className="post-update-label" htmlFor="update-title">

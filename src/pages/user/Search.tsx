@@ -1,28 +1,20 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { selectUserList } from "@/api/userApi";
 import type { UserItem } from "@/api/userApi";
 import { Badge, LoadingState, Pagination } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
+import { useUrlQueryPage } from "@/hooks/useUrlQueryPage";
 import "@/pages/user/Search.scss";
 
 export default function UserSearch() {
-  const navigate = useNavigate();
   const [users, setUsers] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const { currentPage, setCurrentPage, totalItems, setTotalItems, totalPages, pageSize } =
-    usePagination();
+  const { currentPage, setCurrentPage } = useUrlQueryPage();
+  const { totalItems, setTotalItems, totalPages, pageSize } = usePagination();
 
-  // 로그인 토큰 확인
   useEffect(() => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    if (!token) {
-      navigate("/auth/login", { state: { toast: "로그인이 필요합니다" }, replace: true });
-      return;
-    }
-
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -56,7 +48,7 @@ export default function UserSearch() {
     };
 
     fetchData();
-  }, [currentPage, pageSize, setCurrentPage, setTotalItems, navigate]);
+  }, [currentPage, pageSize, setCurrentPage, setTotalItems]);
 
   const startIndex = (currentPage - 1) * pageSize;
 

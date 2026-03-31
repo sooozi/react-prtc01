@@ -1,33 +1,8 @@
 /**
  * 게시판 API 전용 타입
- * - 화면에서 쓰는 타입: BoardPostItem, PostDetailItem
  * - 요청 body: CreatePostRequest, UpdatePostRequest
  * - 서버 응답 DTO: PostDto, PostDetailDto, PostsResponseData 등
  */
-
-// ─── 화면에서 사용하는 타입 ─────────────────────────────────────────────
-
-/** 목록 한 건 (GET /posts 응답을 매핑한 값) */
-export type BoardPostItem = {
-  id: number;
-  title: string;
-  author: string;
-  createdAt: string;
-  viewCount?: number;
-};
-
-/** 상세 한 건 (GET /posts/{id} 응답을 매핑한 값) */
-export type PostDetailItem = {
-  id: number;
-  title: string;
-  content: string;
-  author: string;
-  createdAt: string;
-  viewCount?: number;
-  ownerUserId?: string;
-};
-
-// ─── 요청 body 타입 ─────────────────────────────────────────────────────
 
 /** POST /posts 요청 body */
 export type CreatePostRequest = {
@@ -40,8 +15,6 @@ export type UpdatePostRequest = {
   title: string;
   content: string;
 };
-
-// ─── 서버 응답 DTO (매핑 전) ───────────────────────────────────────────
 
 /** GET /posts 응답의 게시글 한 건 (조회수: inqCnt) */
 export type PostDto = {

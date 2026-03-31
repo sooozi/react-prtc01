@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, type Location } from "react-router-dom";
 import { ApiError } from "@/api/errors";
 import { LOGIN_SUCCESS_CODE, login } from "@/api/login";
 import { Badge, Button } from "@/components";
@@ -10,6 +10,9 @@ interface LoginFormData {
   userId: string;
   password: string;
 }
+
+/** RequireAuth 등에서 로그인으로 보낼 때 넘기는 state */
+type LoginLocationState = { toast?: string; from?: Location };
 
 export default function Login() {
   const navigate = useNavigate();
@@ -21,12 +24,15 @@ export default function Login() {
   /** 비밀번호 보기/숨기기 */
   const [showPassword, setShowPassword] = useState(false);
 
-  // 보드 등에서 리다이렉트 시 전달한 "로그인이 필요합니다" 토스트
+  // 보드 등에서 리다이렉트 시 전달한 "로그인이 필요합니다" 토스트 (from 은 로그인 후 복귀용으로 유지)
   useEffect(() => {
-    const msg = (location.state as { toast?: string } | null)?.toast;
+    const st = location.state as LoginLocationState | null;
+    const msg = st?.toast;
     if (msg) {
       setToastMessage(msg);
-      navigate(location.pathname, { replace: true, state: {} });
+      const next: LoginLocationState = {};
+      if (st.from) next.from = st.from;
+      navigate(location.pathname, { replace: true, state: next });
     }
   }, [location.pathname, location.state, navigate]);
 
@@ -66,7 +72,13 @@ export default function Login() {
         localStorage.setItem("userName", res.data.userName);
         localStorage.setItem("userId", res.data.userId);
         // localStorage.setItem("lastLoginAt", new Date().toISOString());
-        navigate("/user/search");
+        const st = location.state as LoginLocationState | null;
+        const from = st?.from;
+        const dest =
+          from?.pathname != null && from.pathname !== ""
+            ? `${from.pathname}${from.search ?? ""}${from.hash ?? ""}`
+            : "/user/search";
+        navigate(dest, { replace: true });
       } else {
         setApiAlert({
           type: "error",

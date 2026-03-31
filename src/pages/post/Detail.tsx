@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, deletePost, BoardApiError, viewCountUp } from "@/api/boardApi";
-import type { PostDetailItem } from "@/api/boardApi";
+import type { PostDetailDto } from "@/api/boardApi";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
 import "@/pages/post/Detail.scss";
 
 export default function Detail() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [post, setPost] = useState<PostDetailItem | null>(null);
+  const [post, setPost] = useState<PostDetailDto | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isUnauthorized, setIsUnauthorized] = useState(false);
@@ -23,13 +23,6 @@ export default function Detail() {
   // [게시글 상세 조회]
   useEffect(() => {
     if (invalidId) return;
-
-    // 로그인 토큰 확인
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    if (!token) {
-      navigate("/auth/login", { state: { toast: "로그인이 필요합니다" }, replace: true });
-      return;
-    }
 
     let cancelled = false;
 
@@ -66,7 +59,7 @@ export default function Detail() {
     return () => {
       cancelled = true;
     };
-  }, [postNumber, invalidId, navigate]);
+  }, [postNumber, invalidId]);
 
   // 로딩 상태 확인
   const showLoading = loading && !invalidId;
@@ -162,10 +155,10 @@ export default function Detail() {
         ) : post ? (
           <>
             <div className="detail-meta">
-              <span className="detail-id">#{post.id}</span>
-              <span className="detail-author">{post.author}</span>
-              <span className="detail-date">{post.createdAt}</span>
-              <span className="detail-view">조회 {post.viewCount ?? 0}</span>
+              <span className="detail-id">#{post.postNumber}</span>
+              <span className="detail-author">{post.rgtrInfo ?? "-"}</span>
+              <span className="detail-date">{post.regDt}</span>
+              <span className="detail-view">조회 {post.inqCnt ?? 0}</span>
             </div>
             <h2 className="detail-title">{post.title}</h2>
             <div className="detail-content">{post.content || "내용 없음"}</div>

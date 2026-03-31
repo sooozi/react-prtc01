@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPost, BoardApiError } from "@/api/boardApi";
 import { Badge, Button } from "@/components";
@@ -10,13 +10,6 @@ export default function Write() {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    if (!token) {
-      navigate("/auth/login", { state: { toast: "로그인이 필요합니다" }, replace: true });
-    }
-  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

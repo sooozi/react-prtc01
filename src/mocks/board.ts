@@ -1,13 +1,5 @@
-export type BoardPostItem = {
-  id: number;
-  title: string;
-  author: string;
-  createdAt: string;
-  viewCount: number;
-  category: string;
-};
+import type { PostDto } from "@/api/boardApi.types";
 
-const CATEGORIES = ["공지", "일반", "질문", "자유"] as const;
 const AUTHORS = [
   "홍길동", "김수지", "이민준", "박서연", "최지우", "정예진", "강도윤", "조현우",
   "윤서아", "장민서", "임준혁", "한지민", "오세훈", "신유나", "권지훈", "송하늘",
@@ -36,20 +28,19 @@ const TITLES = [
   "이벤트 참가 신청 안내",
 ];
 
-function buildMockPosts(): BoardPostItem[] {
+function buildMockPosts(): PostDto[] {
   return Array.from({ length: 48 }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() - (i % 90));
-    const createdAt = d.toISOString().slice(0, 10);
+    const regDt = d.toISOString().slice(0, 10);
     return {
-      id: i + 1,
+      postNumber: i + 1,
       title: TITLES[i % TITLES.length] + (i >= TITLES.length ? ` (${i + 1})` : ""),
-      author: AUTHORS[i % AUTHORS.length],
-      createdAt,
-      viewCount: (i % 500) + 10,
-      category: CATEGORIES[i % CATEGORIES.length],
+      regDt,
+      rgtrInfo: AUTHORS[i % AUTHORS.length],
+      inqCnt: (i % 500) + 10,
     };
   });
 }
 
-export const MOCK_BOARD_POSTS: BoardPostItem[] = buildMockPosts();
+export const MOCK_BOARD_POSTS: PostDto[] = buildMockPosts();

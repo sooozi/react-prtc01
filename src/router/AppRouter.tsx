@@ -11,6 +11,7 @@ import Forbidden from "@/pages/Forbidden";
 import Login from "@/pages/auth/login/Login";
 import Signup from "@/pages/auth/signup/Signup";
 import { Layout } from "@/components";
+import RequireAuth from "@/router/RequireAuth";
 
 export default function AppRouter() {
   return (
@@ -25,13 +26,17 @@ export default function AppRouter() {
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />
-          <Route path="/user/search" element={<UserSearch />} />
-          <Route path="/post/list" element={<List />} />
-          <Route path="/post/detail" element={<Detail />} />
-          <Route path="/post/update" element={<Update />} />
-          <Route path="/post/write" element={<Write />} />
-          <Route path="/user/mypage" element={<MyPage />} />
           <Route path="/forbidden" element={<Forbidden />} />
+
+          {/* 로그인 필요 — 토큰 없으면 RequireAuth에서 /auth/login 으로 이동 */}
+          <Route element={<RequireAuth />}>
+            <Route path="/user/search" element={<UserSearch />} />
+            <Route path="/post/list" element={<List />} />
+            <Route path="/post/detail" element={<Detail />} />
+            <Route path="/post/update" element={<Update />} />
+            <Route path="/post/write" element={<Write />} />
+            <Route path="/user/mypage" element={<MyPage />} />
+          </Route>
         </Route>
 
         {/* 잘못된 URL은 forbidden으로 */}

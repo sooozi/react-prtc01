@@ -1,23 +1,9 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Badge, Button } from "@/components";
 import "@/pages/user/MyPage.scss";
 
 export default function MyPage() {
-  const navigate = useNavigate();
   const userName = localStorage.getItem("userName");
   const userId = localStorage.getItem("userId");
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-  useEffect(() => {
-    if (!token) {
-      navigate("/auth/login", { state: { toast: "로그인이 필요합니다" }, replace: true });
-    }
-  }, [token, navigate]);
-
-  if (!token) {
-    return null;
-  }
 
   return (
     <div className="mypage-page">

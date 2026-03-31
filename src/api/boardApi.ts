@@ -1,12 +1,11 @@
 import { apiClient } from "@/api/client";
+import { getAuthTokenOrThrow } from "@/api/authToken";
 import { ApiError } from "@/api/errors";
 import { api } from "@/api/http";
 import type { ApiResponse } from "@/api/types";
 import type {
-  BoardPostItem,
   CreatePostRequest,
   PostDetailDto,
-  PostDetailItem,
   PostDto,
   PostsResponseData,
   SelectBoardList,
@@ -14,9 +13,9 @@ import type {
 } from "@/api/boardApi.types";
 
 export type {
-  BoardPostItem,
   CreatePostRequest,
-  PostDetailItem,
+  PostDetailDto,
+  PostDto,
   SortOrder,
   UpdatePostRequest,
 } from "@/api/boardApi.types";
@@ -24,41 +23,31 @@ export type {
 /** 페이지에서 기존처럼 `instanceof BoardApiError` 쓰기 — ApiError와 동일 클래스 */
 export { ApiError as BoardApiError };
 
-// 서버 데이터를 BoardPostItem(화면용 데이터)으로 변환
-function mapPostToItem(dto: PostDto): BoardPostItem {
-  return {
-    id: dto.postNumber,
-    title: dto.title,
-    author: dto.rgtrInfo ?? "-",
-    createdAt: dto.regDt,
-    viewCount: dto.inqCnt ?? 0,
-  };
-}
-
-// 인증 필수 API용: 토큰 없으면 ApiError(401) throw (서버 왕복 없이 차단)
-function getAuthTokenOrThrow(): string {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  if (!token) {
-    throw new ApiError("인증이 필요합니다. 로그인 후 다시 시도해주세요.", {
-      status: 401,
-    });
-  }
-  return token;
-}
-
 /**
- * 포스트 목록 조회
+ * 포스트 목록 조회 & 검색
  * [GET] /posts
  */
 export async function selectBoardList(params: SelectBoardList) {
+  //trim된 문자열
+  const titleKw = params.titleSearchKeyword?.trim();
+  const rgtrIdKw = params.rgtrIdSearchKeyword?.trim();
+  const rgtrNameKw = params.rgtrNameSearchKeyword?.trim();
+
   const json = await api.get<PostsResponseData>("/posts", {
-    params,
+    params: {
+      page: params.page,
+      size: params.size,
+      sortColumnName: params.sortColumnName,
+      sortType: params.sortType,
+      ...(titleKw && { titleSearchKeyword: titleKw }), //titleKw가 있으면 titleSearchKeyword에 titleKw를 설정
+      ...(rgtrIdKw && { rgtrIdSearchKeyword: rgtrIdKw }),
+      ...(rgtrNameKw && { rgtrNameSearchKeyword: rgtrNameKw }),
+    },
   });
 
-  const raw = json.data; // 서버에서 받은 데이터
-  //data는 “BoardPostItem 배열”
-  const data: BoardPostItem[] = (raw?.data ?? []).map(mapPostToItem);
+  const raw = json.data;
+  // raw.data가 있으면 raw.data를 반환, 없으면 []를 반환
+  const data: PostDto[] = raw?.data ?? [];
 
   return {
     data: {
@@ -74,21 +63,13 @@ export async function selectBoardList(params: SelectBoardList) {
  * 포스트 상세 조회
  * [GET] /posts/{postNumber}
  */
-export async function getPostDetail(postNumber: number): Promise<PostDetailItem> {
+export async function getPostDetail(postNumber: number): Promise<PostDetailDto> {
   const json = await api.get<PostDetailDto>(`/posts/${postNumber}`);
   const d = json.data;
   if (d == null) {
     throw new Error("게시글을 찾을 수 없습니다.");
   }
-  return {
-    id: d.postNumber,
-    title: d.title,
-    content: d.content ?? "",
-    author: d.rgtrInfo ?? "-",
-    createdAt: d.regDt,
-    viewCount: d.inqCnt ?? 0,
-    ownerUserId: d.ownerUserId,
-  };
+  return d;
 }
 
 /**

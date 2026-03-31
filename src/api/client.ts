@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance, isAxiosError } from "axios";
+import { getStoredAuthToken } from "@/api/authToken";
 import { ApiError } from "@/api/errors";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL as string;
@@ -41,8 +42,7 @@ function shouldAttachBearer(url: string | undefined): boolean {
 // request interceptor: Bearer 붙이는 경로 여부 확인 후, 토큰 있으면 Authorization Bearer 자동 부착
 apiClient.interceptors.request.use((config) => {
   if (!shouldAttachBearer(config.url)) return config;
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token = getStoredAuthToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
