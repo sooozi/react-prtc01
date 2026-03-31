@@ -1,8 +1,8 @@
-import { apiClient } from "@/api/client";
-import { getAuthTokenOrThrow } from "@/api/authToken";
-import { ApiError } from "@/api/errors";
-import { api } from "@/api/http";
-import type { ApiResponse } from "@/api/types";
+import { apiClient } from "../http/client";
+import { getAuthTokenOrThrow } from "../auth/authToken";
+import { ApiError } from "../http/errors";
+import { api } from "../http/http";
+import type { ApiResponse } from "../http/types";
 import type {
   CreatePostRequest,
   PostDetailDto,
@@ -10,7 +10,7 @@ import type {
   PostsResponseData,
   SelectBoardList,
   UpdatePostRequest,
-} from "@/api/boardApi.types";
+} from "./boardApi.types";
 
 export type {
   CreatePostRequest,
@@ -18,7 +18,7 @@ export type {
   PostDto,
   SortOrder,
   UpdatePostRequest,
-} from "@/api/boardApi.types";
+} from "./boardApi.types";
 
 /** 페이지에서 기존처럼 `instanceof BoardApiError` 쓰기 — ApiError와 동일 클래스 */
 export { ApiError as BoardApiError };

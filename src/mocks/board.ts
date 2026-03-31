@@ -1,4 +1,4 @@
-import type { PostDto } from "@/api/boardApi.types";
+import type { PostDto } from "@/api/board";
 
 const AUTHORS = [
   "홍길동", "김수지", "이민준", "박서연", "최지우", "정예진", "강도윤", "조현우",

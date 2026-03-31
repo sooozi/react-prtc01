@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate, type Location } from "react-router-dom";
-import { ApiError } from "@/api/errors";
-import { LOGIN_SUCCESS_CODE, login } from "@/api/login";
+import { ApiError } from "@/api/http";
+import { LOGIN_SUCCESS_CODE, login } from "@/api/auth";
 import { Badge, Button } from "@/components";
 import "@/pages/auth/login/Login.scss";
 

@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig } from "axios";
-import { apiClient } from "@/api/client";
-import type { ApiResponse } from "@/api/types";
+import { apiClient } from "./client";
+import type { ApiResponse } from "./types";
 
 /**
  * HTTP 메서드별 얇은 래퍼 — 도메인 API(boardApi, login 등)는 apiClient 대신 여기만 사용.

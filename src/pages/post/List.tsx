@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { selectBoardList, BoardApiError } from "@/api/boardApi";
-import type { PostDto, SortOrder } from "@/api/boardApi";
+import { selectBoardList, BoardApiError } from "@/api/board";
+import type { PostDto, SortOrder } from "@/api/board";
 import { Badge, Button, LoadingState, Pagination, Tooltip } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import { URL_PAGE_QUERY_KEY, useUrlQueryPage } from "@/hooks/useUrlQueryPage";
@@ -82,7 +82,6 @@ export default function List() {
     setAppliedRgtrId(draftRgtrId.trim());
     setAppliedRgtrName(draftRgtrName.trim());
     setCurrentPage(1);
-    console.log("검색했더용");
   };
 
   // 게시글 목록 조회
@@ -156,54 +155,58 @@ export default function List() {
       </div>
 
       <div className="board-write-btn-container">
-        <form
-          className="board-search-bar"
-          onSubmit={(e) => {
-            e.preventDefault();
-            applySearch();
-          }}
-        >
-          <div className="board-search-fields">
-            <label className="board-search-label">
-              제목
-              <input
-                type="search"
-                className="board-search-input"
-                value={draftTitle}
-                onChange={(e) => setDraftTitle(e.target.value)}
-                placeholder="제목 키워드"
-                autoComplete="off"
-              />
-            </label>
-            <label className="board-search-label">
-              등록자 ID
-              <input
-                type="search"
-                className="board-search-input"
-                value={draftRgtrId}
-                onChange={(e) => setDraftRgtrId(e.target.value)}
-                placeholder="등록자 ID"
-                autoComplete="off"
-              />
-            </label>
-            <label className="board-search-label">
-              등록자 이름
-              <input
-                type="search"
-                className="board-search-input"
-                value={draftRgtrName}
-                onChange={(e) => setDraftRgtrName(e.target.value)}
-                placeholder="등록자 이름"
-                autoComplete="off"
-              />
-            </label>
-          </div>
-          <div className="board-search-actions">
-            <Button type="submit" variant="secondary" size="sm">
-              검색
-            </Button>
-          </div>
-        </form>
+        <section className="board-search-panel" aria-label="게시글 검색">
+          <form
+            className="board-search-panel__form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              applySearch();
+            }}
+          >
+            <div className="board-search-toolbar">
+              <div className="board-search-fields-cluster" role="group" aria-label="검색 조건">
+                <label className="board-search-field board-search-field--segment">
+                  <span className="board-search-field__label">제목</span>
+                  <input
+                    type="search"
+                    className="board-search-field__input"
+                    value={draftTitle}
+                    onChange={(e) => setDraftTitle(e.target.value)}
+                    placeholder="검색어 입력"
+                    autoComplete="off"
+                  />
+                </label>
+                <label className="board-search-field board-search-field--segment">
+                  <span className="board-search-field__label">등록자 ID</span>
+                  <input
+                    type="search"
+                    className="board-search-field__input"
+                    value={draftRgtrId}
+                    onChange={(e) => setDraftRgtrId(e.target.value)}
+                    placeholder="아이디"
+                    autoComplete="off"
+                  />
+                </label>
+                <label className="board-search-field board-search-field--segment">
+                  <span className="board-search-field__label">등록자 이름</span>
+                  <input
+                    type="search"
+                    className="board-search-field__input"
+                    value={draftRgtrName}
+                    onChange={(e) => setDraftRgtrName(e.target.value)}
+                    placeholder="이름"
+                    autoComplete="off"
+                  />
+                </label>
+              </div>
+              <div className="board-search-actions">
+                <Button type="submit" variant="primary" size="sm">
+                  검색
+                </Button>
+              </div>
+            </div>
+          </form>
+        </section>
 
         <div className="board-write-btn-block">
           <div className="board-list-controls">

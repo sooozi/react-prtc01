@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { signup, checkUserId } from "@/api/auth";
-import { ApiError } from "@/api/errors";
+import { ApiError } from "@/api/http";
 import { Badge, Button } from "@/components";
 import "@/pages/auth/signup/Signup.scss";
 

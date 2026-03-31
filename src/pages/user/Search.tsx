@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { selectUserList } from "@/api/userApi";
-import type { UserItem } from "@/api/userApi";
+import { selectUserList, type UserItem } from "@/api/user";
 import { Badge, LoadingState, Pagination } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import { useUrlQueryPage } from "@/hooks/useUrlQueryPage";

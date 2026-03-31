@@ -6,13 +6,7 @@
 
   .table-card {
     @extend %table-card-base;
-
-    @include bp.below(bp.$md) {
-      border: none;
-      overflow: visible;
-      box-shadow: none;
-      background: transparent;
-    }
+    @include table-card-mobile-bare;
   }
 
   .error-state {

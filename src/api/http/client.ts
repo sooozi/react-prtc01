@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance, isAxiosError } from "axios";
-import { getStoredAuthToken } from "@/api/authToken";
-import { ApiError } from "@/api/errors";
+import { getStoredAuthToken } from "../auth/authToken";
+import { ApiError } from "./errors";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL as string;
 
@@ -8,8 +8,8 @@ const baseURL = import.meta.env.VITE_API_BASE_URL as string;
  * API 요청에 공통으로 쓰는 axios 인스턴스
  *
  * - 서버 주소(base URL), JSON 헤더(Content-Type)는 여기 한 곳에서만 설정
- * - 실제 호출은 http.ts(api.get/post/…) 또는 이 파일을 직접 쓰는 레이어만 사용.
- *   boardApi·login 등 도메인 모듈은 @/api/http 의 api 를 사용
+ * - 실제 호출은 `api` 래퍼(`http.ts`) 또는 이 파일을 직접 쓰는 레이어만 사용.
+ *   boardApi·login 등 도메인 모듈은 `@/api/http`의 `api`를 사용
  * - request: localStorage 토큰이 있으면 Authorization Bearer 자동 부착 (boardApi 헤더 중복 제거)
  * - response 에러는 interceptor에서 ApiError로 통일 (401 메시지 등 중복 제거)
  */
@@ -55,6 +55,7 @@ type ErrorResponseBody = {
   resultDetailMessage?: string;
 };
 
+// response interceptor: 에러 응답 처리
 apiClient.interceptors.response.use(
   (res) => res,
   (error: unknown) => {

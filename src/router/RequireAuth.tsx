@@ -1,10 +1,8 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { hasAuthToken } from "@/api/authToken";
+import { hasAuthToken } from "@/api/auth";
 
-/**
- * 로그인이 필요한 라우트 묶음의 부모 element.
- * 토큰 없으면 /auth/login 으로 보내고, 이후 복귀용으로 from 위치를 state에 넣음.
- */
+// 부모 라우트로 사용하는 컴포넌트
+// 자식 경로 입장 전 토큰만 확인 후 없으면 로그인 화면 이동
 export default function RequireAuth() {
   const location = useLocation();
 

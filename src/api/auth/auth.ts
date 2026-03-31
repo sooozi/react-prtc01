@@ -1,4 +1,4 @@
-import { api } from "@/api/http";
+import { api } from "../http/http";
 
 //프론트 → 서버
 export type SignupRequest = {

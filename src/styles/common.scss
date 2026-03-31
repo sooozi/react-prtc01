@@ -297,6 +297,16 @@ $error-dark: var(--color-error-dark);
   border: 1px solid var(--color-card-border);
 }
 
+/** 좁은 화면에서 카드 래퍼 숨김 — 모바일에서 별도 카드 목록과 겹치지 않게 */
+@mixin table-card-mobile-bare {
+  @include bp.below(bp.$md) {
+    overflow: visible;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+}
+
 // ========================================
 // 테이블 공통 (목록/검색 페이지)
 // ========================================

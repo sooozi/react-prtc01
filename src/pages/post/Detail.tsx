@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getPostDetail, deletePost, BoardApiError, viewCountUp } from "@/api/boardApi";
-import type { PostDetailDto } from "@/api/boardApi";
+import { getPostDetail, deletePost, BoardApiError, viewCountUp } from "@/api/board";
+import type { PostDetailDto } from "@/api/board";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
 import "@/pages/post/Detail.scss";
 

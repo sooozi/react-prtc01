@@ -1,19 +1,17 @@
-import { ApiError } from "@/api/errors";
+import { ApiError } from "../http/errors";
 
-/** 저장된 로그인 토큰 (없으면 null). SSR 시 window 없으면 null */
+// 로컬 스토리지에 저장된 토큰 (없으면 null)
 export function getStoredAuthToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem("token");
 }
 
+// 토큰 여부 확인(불리언)
 export function hasAuthToken(): boolean {
   return Boolean(getStoredAuthToken());
 }
 
-/**
- * 인증 필수 API용: 토큰 없으면 ApiError(401) throw (서버 왕복 없이 차단)
- * boardApi 등에서 공통 사용
- */
+// 인증 필수 API용: 토큰 없으면 ApiError(401) throw (서버 왕복 없이 차단)
 export function getAuthTokenOrThrow(): string {
   const token = getStoredAuthToken();
   if (!token) {

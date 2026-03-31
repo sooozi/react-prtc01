@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createPost, BoardApiError } from "@/api/boardApi";
+import { createPost, BoardApiError } from "@/api/board";
 import { Badge, Button } from "@/components";
 import "@/pages/post/Write.scss";
 
