@@ -12,15 +12,6 @@
   }
 }
 
-@keyframes hero-float {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-10px);
-  }
-}
-
 .hero {
   position: relative;
   z-index: 10;
@@ -38,8 +29,6 @@
   animation: hero-fade-in 0.7s ease-out both;
 
   @include bp.above(bp.$lg) {
-    grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.95fr);
-    gap: 3rem;
     padding: 0;
   }
 }
@@ -92,111 +81,6 @@
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
-}
-
-/* 추상 디바이스 프레임 — 레이아웃·형태만 (색은 변수) */
-.hero-visual {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 280px;
-
-  @include bp.above(bp.$lg) {
-    min-height: 380px;
-    justify-content: flex-end;
-  }
-}
-
-.hero-visual__glow {
-  position: absolute;
-  width: min(100%, 340px);
-  height: min(100%, 340px);
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 40% 35%,
-    color-mix(in srgb, var(--color-primary) 35%, transparent) 0%,
-    transparent 65%
-  );
-  filter: blur(2px);
-  animation: hero-float 5s ease-in-out infinite alternate;
-}
-
-.hero-visual__phone {
-  position: relative;
-  width: min(100%, 260px);
-  aspect-ratio: 10 / 19;
-  border-radius: 36px;
-  padding: 10px;
-  background: linear-gradient(
-    160deg,
-    color-mix(in srgb, var(--color-card) 70%, var(--color-border)) 0%,
-    var(--color-card) 40%,
-    var(--color-bg-subtle-2) 100%
-  );
-  box-shadow:
-    0 0 0 1px var(--color-border-light),
-    0 24px 48px -12px var(--color-shadow-md),
-    0 12px 24px -8px var(--color-shadow-card);
-  animation: hero-float 6s ease-in-out infinite alternate;
-  animation-delay: 0.3s;
-}
-
-.hero-visual__phone-notch {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 28%;
-  height: 22px;
-  background: var(--color-bg-subtle-2);
-  border-radius: 0 0 14px 14px;
-  z-index: 1;
-}
-
-.hero-visual__phone-body {
-  width: 100%;
-  height: 100%;
-  border-radius: 28px;
-  background: var(--color-bg-subtle);
-  padding: 2.25rem 1.25rem 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  align-items: flex-start;
-}
-
-.hero-visual__line {
-  display: block;
-  height: 10px;
-  border-radius: 6px;
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--color-primary) 45%, var(--color-border)) 0%,
-    color-mix(in srgb, var(--color-secondary) 35%, var(--color-border)) 100%
-  );
-  opacity: 0.85;
-}
-
-.hero-visual__line--long {
-  width: 88%;
-}
-
-.hero-visual__line--mid {
-  width: 72%;
-}
-
-.hero-visual__line--short {
-  width: 48%;
-}
-
-.hero-visual__pill {
-  margin-top: auto;
-  align-self: stretch;
-  height: 44px;
-  border-radius: 12px;
-  background: var(--color-primary-muted);
-  border: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
 }
 
 @keyframes section-title-in {

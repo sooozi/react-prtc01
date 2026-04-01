@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components";
 import "@/components/Layout/Header/Header.scss";
 
-const THEME_KEY = "theme";
-
 const iconProps = {
   width: 18,
   height: 18,
@@ -41,7 +39,7 @@ export default function Header() {
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", next);
-    localStorage.setItem(THEME_KEY, next);
+    localStorage.setItem("theme", next);
     setTheme(next);
   };
 

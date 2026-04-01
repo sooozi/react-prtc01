@@ -48,7 +48,6 @@ export default function Home() {
 
   return (
     <>
-      {/* 히어로: 데스크톱 2열(카피 + 비주얼), 모바일 스택 */}
       <section className="hero">
         <div className="hero-inner">
           <div className="hero-copy">
@@ -70,18 +69,6 @@ export default function Home() {
               <Button variant="secondary" onClick={() => navigate("/about")}>
                 서비스 소개
               </Button>
-            </div>
-          </div>
-          <div className="hero-visual" aria-hidden="true">
-            <div className="hero-visual__glow" />
-            <div className="hero-visual__phone">
-              <div className="hero-visual__phone-notch" />
-              <div className="hero-visual__phone-body">
-                <span className="hero-visual__line hero-visual__line--long" />
-                <span className="hero-visual__line hero-visual__line--mid" />
-                <span className="hero-visual__line hero-visual__line--short" />
-                <span className="hero-visual__pill" />
-              </div>
             </div>
           </div>
         </div>
