@@ -1,6 +1,37 @@
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
 
+.home-page {
+  display: contents;
+}
+
+[data-home-section]:not(.home-reveal--visible) {
+  opacity: 0;
+  transform: translateY(1.75rem);
+}
+
+[data-home-section] {
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-home-section].home-reveal--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes hero-gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
 @keyframes hero-fade-in {
   from {
     opacity: 0;
@@ -48,6 +79,11 @@
   line-height: 1.18;
   letter-spacing: -0.03em;
   color: var(--color-text-heading);
+}
+
+.hero .gradient-text {
+  background-size: 220% auto;
+  animation: hero-gradient-shift 14s ease-in-out infinite;
 }
 
 .hero-description {
@@ -282,10 +318,10 @@
 
 .sitemap-headline {
   margin: 0 0 0.5rem;
-  font-size: clamp(1.85rem, 4vw, 2.75rem);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
   font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 1.2;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
   text-align: center;
   color: var(--color-text-heading);
   animation: section-title-in 0.5s ease-out 0.2s both;
@@ -516,4 +552,20 @@
   font-weight: 700;
   letter-spacing: -0.02em;
   color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .gradient-text {
+    animation: none;
+    background-size: 100% auto;
+  }
+
+  [data-home-section]:not(.home-reveal--visible) {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-home-section] {
+    transition: none;
+  }
 }

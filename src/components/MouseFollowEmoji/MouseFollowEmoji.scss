@@ -1,0 +1,31 @@
+.mouse-follow-emoji {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9998;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  font-size: 1.75rem;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  will-change: transform;
+
+  &--active {
+    opacity: 1;
+  }
+}
+
+@media (hover: none) {
+  .mouse-follow-emoji {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mouse-follow-emoji {
+    display: none;
+  }
+}
