@@ -40,7 +40,7 @@
 
 .mission-card {
   background: var(--color-card);
-  border-radius: 20px;
+  border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 4px 20px var(--color-shadow-card);
   border: 1px solid var(--color-border);
@@ -118,8 +118,8 @@
 .team-avatar {
   width: 80px;
   height: 80px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--color-primary-muted) 0%, var(--color-secondary-muted) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,7 +128,11 @@
 }
 
 [data-theme="dark"] .team-avatar {
-  background: linear-gradient(135deg, var(--color-primary-muted) 0%, rgba(244, 114, 182, 0.15) 100%);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-primary) 25%, transparent) 0%,
+    color-mix(in srgb, var(--color-secondary) 20%, transparent) 100%
+  );
 }
 
 .team-name {
@@ -162,7 +166,7 @@
 
 .cta-card {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
-  border-radius: 24px;
+  border-radius: 20px;
   padding: 3rem 2rem;
   text-align: center;
   box-shadow: 0 10px 40px var(--color-primary-shadow);

@@ -19,18 +19,18 @@
 .title {
   font-size: clamp(1.75rem, 3vw, 2.25rem);
   font-weight: 800;
-  color: #0f172a;
+  color: var(--color-text-heading);
   margin-bottom: 0.5rem;
 }
 
 .subtitle {
   font-size: 1rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 .board-write-form {
   background: var(--color-card);
-  border-radius: 20px;
+  border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 4px 25px var(--color-shadow-card);
   border: 1px solid var(--color-card-border);
@@ -43,11 +43,11 @@
 .board-write-error {
   padding: 0.75rem 1rem;
   margin-bottom: 1.25rem;
-  background: #fef2f2;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 10px;
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  border-radius: 12px;
   font-size: 0.9rem;
-  color: #dc2626;
+  color: var(--color-error-dark);
 }
 
 .form-group {
@@ -59,24 +59,24 @@
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-text-heading);
 }
 
 .form-group .input {
   width: 100%;
   padding: 0.875rem 1rem;
   font-size: 0.95rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--color-input-border);
   border-radius: 12px;
-  background: #f9fafb;
-  color: $text-primary;
+  background: var(--color-input-bg);
+  color: var(--color-text);
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
   &:focus {
-    border-color: $primary-color;
-    background: #fff;
-    box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
+    border-color: var(--color-primary);
+    background: var(--color-input-focus-bg);
+    box-shadow: 0 0 0 4px var(--color-primary-muted);
   }
 
   &.textarea {
@@ -91,5 +91,5 @@
   gap: 0.75rem;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid var(--color-border);
 }

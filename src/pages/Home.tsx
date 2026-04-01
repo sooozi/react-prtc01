@@ -48,23 +48,42 @@ export default function Home() {
 
   return (
     <>
-      {/* 히어로 섹션 */}
+      {/* 히어로: 데스크톱 2열(카피 + 비주얼), 모바일 스택 */}
       <section className="hero">
-        <div className="hero-content">
-          <Badge>🚀 새로운 버전 출시</Badge>
-          <h1 className="hero-title">
-            더 빠르고, 더 아름다운
-            <br />
-            <span className="gradient-text">개발 경험</span>
-          </h1>
-          <p className="hero-description">
-            최신 기술 스택으로 구성된 Vite + React + TypeScript 프로젝트입니다.
-            <br />
-            직관적인 UI와 뛰어난 성능을 경험해보세요.
-          </p>
-          <Button variant="primary" onClick={() => navigate("/auth/signup")}>
-            회원가입하기 →
-          </Button>
+        <div className="hero-inner">
+          <div className="hero-copy">
+            <Badge>🚀 새로운 버전 출시</Badge>
+            <h1 className="hero-title">
+              더 빠르고, 더 아름다운
+              <br />
+              <span className="gradient-text">개발 경험</span>
+            </h1>
+            <p className="hero-description">
+              최신 기술 스택으로 구성된 Vite + React + TypeScript 프로젝트입니다.
+              <br />
+              직관적인 UI와 뛰어난 성능을 경험해보세요.
+            </p>
+            <div className="hero-actions">
+              <Button variant="primary" onClick={() => navigate("/auth/signup")}>
+                회원가입하기 →
+              </Button>
+              <Button variant="secondary" onClick={() => navigate("/about")}>
+                서비스 소개
+              </Button>
+            </div>
+          </div>
+          <div className="hero-visual" aria-hidden="true">
+            <div className="hero-visual__glow" />
+            <div className="hero-visual__phone">
+              <div className="hero-visual__phone-notch" />
+              <div className="hero-visual__phone-body">
+                <span className="hero-visual__line hero-visual__line--long" />
+                <span className="hero-visual__line hero-visual__line--mid" />
+                <span className="hero-visual__line hero-visual__line--short" />
+                <span className="hero-visual__pill" />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -1,14 +1,13 @@
 // ========================================
-// 로그인·회원가입 공통 스타일 (컨테이너, 카드, 폼)
-// common.scss를 @use → Login/Signup 등 페이지에서 불러옴
+// 인증 페이지(로그인·회원가입) 전용 공통 스타일
+// 전역 공통은 @/styles/common — 여기서 @use 후 플레이스홀더·컴포넌트만 정의
 // ========================================
 
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
 @forward "@/styles/common.scss";
 
-// 공통 컨테이너 (각 페이지에서 상속)
-// Layout이 전체 페이지를 감싸므로 min-height 불필요
+// 공통 컨테이너 (Layout이 전체를 감싸므로 min-height 불필요)
 %auth-container {
   display: flex;
   align-items: center;
@@ -20,25 +19,43 @@
   }
 }
 
-// 공통 카드 (각 페이지에서 상속) - 테마 변수로 다크모드 대응
+// 공통 카드 — 테마 변수로 다크모드 대응
 %auth-card {
   width: 100%;
   max-width: 440px;
   background: var(--color-card);
   border: 1px solid var(--color-border);
-  border-radius: 24px;
-  box-shadow: 0 10px 40px var(--color-shadow-md);
+  border-radius: 20px;
+  box-shadow: 0 12px 40px var(--color-shadow-md);
   padding: 2.5rem;
+  padding-top: 2.65rem;
   position: relative;
   z-index: 10;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    border-radius: 20px 20px 0 0;
+  }
 
   @include bp.below(bp.$md) {
     padding: 1.5rem;
+    padding-top: 1.65rem;
     border-radius: 20px;
+
+    &::before {
+      border-radius: 20px 20px 0 0;
+    }
   }
 }
 
-// 공통 헤더 (각 페이지에서 상속)
+// 공통 헤더
 %auth-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -56,13 +73,13 @@
   }
 }
 
-// 카드 안 라벨(아이디, 비밀번호 등) - 다크모드에서도 선명하게
+// 카드 안 라벨 — 다크모드에서도 선명하게
 .login-card .label,
 .signup-card .label {
   color: var(--color-text-heading);
 }
 
-// 로고 (auth 페이지 전용 - 가운데 정렬)
+// 로고 (인증 페이지 — 가운데 정렬)
 .auth-logo {
   @extend .logo;
   justify-content: center;
@@ -76,7 +93,7 @@
   background-clip: text;
 }
 
-// 비밀번호 필드 + 눈 토글 (로그인/회원가입 공통)
+// 비밀번호 필드 + 표시 토글
 .password-field {
   position: relative;
   display: block;
@@ -114,4 +131,4 @@
   }
 }
 
-// .form-group, .label, .input, .error-message, .submit-button은 common.scss에서 정의됨
+// .form-group, .label, .input, .error-message, .submit-button은 @/styles/common.scss

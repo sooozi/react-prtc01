@@ -12,12 +12,11 @@ interface FooterProps {
  */
 export default function Footer({
   year = new Date().getFullYear(),
-  projectName = "MyViteProject",
 }: FooterProps) {
   return (
     <footer className="footer">
       <p className="footer-text">
-        © {year} {projectName}. Made with ❤️ using React & Vite
+        © {year} MyViteProject. Made with ❤️ using React & Vite
       </p>
     </footer>
   );

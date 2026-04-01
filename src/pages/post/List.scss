@@ -172,10 +172,11 @@
 }
 
 .board-sort-select {
-  padding: 0.5rem 2rem 0.5rem 0.75rem;
-  font-size: 0.9rem;
+  min-height: 44px;
+  padding: 0.5rem 2rem 0.5rem 0.85rem;
+  font-size: 0.9375rem;
   border: 2px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 12px;
   background: var(--color-input-bg);
   color: var(--color-text);
   cursor: pointer;

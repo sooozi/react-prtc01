@@ -1,9 +1,8 @@
 // ========================================
 // 테마 색상 변수 (CSS Custom Properties)
-// 라이트/다크 공통 색상 정의 → index에서 @use로 불러옴
+// 라이트/다크 — 인디고·슬레이트·핑크 (이전 디자인)
 // ========================================
 
-/* 라이트 테마 */
 :root {
   font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   line-height: 1.5;
@@ -32,6 +31,7 @@
   /* 카드·패널 */
   --color-card: var(--color-bg);
   --color-card-border: var(--color-border-light);
+  --color-surface-elevated: #f9fafb;
 
   /* 테두리 */
   --color-border: #e2e8f0;
@@ -41,8 +41,10 @@
   --color-primary: #6366f1;
   --color-primary-hover: #8b5cf6;
   --color-secondary: #ec4899;
+  --color-accent: #db2777;
   --color-primary-muted: rgba(99, 102, 241, 0.1);
   --color-primary-shadow: rgba(99, 102, 241, 0.35);
+  --color-secondary-muted: rgba(236, 72, 153, 0.1);
 
   /* 버튼 기본(비강조) */
   --color-button-bg: var(--color-bg-subtle);
@@ -56,11 +58,20 @@
   --color-input-focus-bg: var(--color-bg);
   --color-input-placeholder: #9ca3af;
 
+  /* 성공 (알림·회원가입 메시지 등) */
+  --color-success: #16a34a;
+  --color-success-dark: #15803d;
+  --color-success-bg: rgba(22, 163, 74, 0.1);
+  --color-success-border: rgba(22, 163, 74, 0.35);
+
   /* 에러 */
   --color-error: #ef4444;
   --color-error-dark: #dc2626;
   --color-error-bg: rgba(239, 68, 68, 0.1);
   --color-error-border: rgba(239, 68, 68, 0.35);
+
+  --color-warning: #f59e0b;
+  --color-info: #6366f1;
 
   /* 헤더 */
   --color-header-bg: rgba(255, 255, 255, 0.85);
@@ -79,9 +90,13 @@
   /* 장식 그라데이션 */
   --decoration-primary: rgba(99, 102, 241, 0.08);
   --decoration-secondary: rgba(236, 72, 153, 0.06);
+
+  /* 오버레이·토스트 */
+  --color-overlay-scrim: rgba(15, 23, 42, 0.45);
+  --color-toast-bg: #1e293b;
+  --color-toast-text: #ffffff;
 }
 
-/* 다크 테마 */
 [data-theme="dark"] {
   color-scheme: dark;
   color: var(--color-text);
@@ -99,6 +114,7 @@
 
   --color-card: #1e293b;
   --color-card-border: var(--color-border-light);
+  --color-surface-elevated: #334155;
 
   --color-border: #334155;
   --color-border-light: rgba(51, 65, 85, 0.8);
@@ -106,8 +122,10 @@
   --color-primary: #818cf8;
   --color-primary-hover: #a78bfa;
   --color-secondary: #f472b6;
+  --color-accent: #f472b6;
   --color-primary-muted: rgba(129, 140, 248, 0.15);
   --color-primary-shadow: rgba(129, 140, 248, 0.4);
+  --color-secondary-muted: rgba(244, 114, 182, 0.12);
 
   --color-button-bg: var(--color-bg-subtle-2);
   --color-button-text: var(--color-text-heading);
@@ -119,10 +137,18 @@
   --color-input-focus-bg: var(--color-bg-subtle-2);
   --color-input-placeholder: #64748b;
 
+  --color-success: #4ade80;
+  --color-success-dark: #22c55e;
+  --color-success-bg: rgba(74, 222, 128, 0.12);
+  --color-success-border: rgba(74, 222, 128, 0.35);
+
   --color-error: #f87171;
   --color-error-dark: #ef4444;
   --color-error-bg: rgba(248, 113, 113, 0.15);
   --color-error-border: rgba(248, 113, 113, 0.4);
+
+  --color-warning: #fbbf24;
+  --color-info: #818cf8;
 
   --color-header-bg: rgba(15, 23, 42, 0.9);
   --color-header-border: rgba(255, 255, 255, 0.06);
@@ -137,4 +163,8 @@
 
   --decoration-primary: rgba(129, 140, 248, 0.08);
   --decoration-secondary: rgba(236, 72, 153, 0.06);
+
+  --color-overlay-scrim: rgba(0, 0, 0, 0.55);
+  --color-toast-bg: #1e293b;
+  --color-toast-text: #f8fafc;
 }

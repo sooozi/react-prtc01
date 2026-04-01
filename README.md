@@ -94,8 +94,9 @@ src/
 │   │   └── About.tsx
 │   ├── Forbidden.tsx
 │   ├── auth/
-│   │   ├── login/          # Login.tsx, Login.scss
-│   │   └── signup/         # Signup.tsx, Signup.scss
+│   │   ├── _auth-shared.scss  # 로그인·회원가입 공통 SCSS (카드, 비밀번호 토글)
+│   │   ├── login/             # Login.tsx, Login.scss
+│   │   └── signup/            # Signup.tsx, Signup.scss
 │   ├── user/
 │   │   ├── Search.tsx      # 사용자 목록 + 페이지네이션
 │   │   └── MyPage.tsx      # 마이페이지
@@ -110,8 +111,7 @@ src/
 ├── styles/
 │   ├── _color.scss         # 테마 색상 (라이트/다크 CSS 변수)
 │   ├── _breakpoints.scss   # 반응형 브레이크포인트·믹스인 (below/above)
-│   ├── common.scss         # 폰트/색, 페이지·목록 헤드, 테이블 mixin, 폼·에러/빈 상태 등
-│   └── auth.scss           # 로그인/회원가입 공통, 비밀번호 토글
+│   └── common.scss         # 전역 공통: 폼, 목록 헤드, 테이블 mixin, 에러/빈 상태 등
 ├── App.tsx
 ├── main.tsx                # 저장된 테마 적용 후 React 마운트
 └── index.scss              # 전역 리셋, @keyframes spin, 테마 변수 로드
@@ -219,7 +219,7 @@ src/
 - **테마**: `src/styles/_color.scss` — `:root`(라이트), `[data-theme="dark"]`(다크) CSS 변수 정의. 전역에서 `var(--color-*)` 사용.
 - **전역**: `src/index.scss` — 리셋, `@keyframes spin`, body/버튼 기본 스타일. `@use "@/styles/color"` 로 테마 로드.
 - **공통**: `src/styles/common.scss` — 폰트/색 변수, 배지/카드 placeholder, 섹션 타이틀, 폼(label/input/error), 목록 페이지 헤드(`.list-page-head`), 테이블 공통 mixin, 모바일 테이블 카드 보정(`table-card-mobile-bare`) 등.
-- **인증**: `src/styles/auth.scss` — 로그인/회원가입 카드·헤더, 비밀번호 필드·토글 스타일.
+- **인증(페이지 전용)**: `src/pages/auth/_auth-shared.scss` — 로그인/회원가입 카드·헤더, 비밀번호 필드·토글. `@/styles/common`을 `@use`·`@forward` 함.
 - **컴포넌트**: `components/Button/Button.scss`, `components/LoadingState/LoadingState.scss` 등 컴포넌트별 SCSS.
 - **페이지**: 각 페이지 폴더 내 `*.scss` (예: `List.scss`, `Detail.scss`).
 

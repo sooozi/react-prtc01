@@ -11,10 +11,10 @@
   max-width: 320px;
   font-size: 0.875rem;
   line-height: 1.4;
-  color: #fff;
-  background: #1e293b;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: var(--color-toast-text);
+  background: var(--color-toast-bg);
+  border-radius: 10px;
+  box-shadow: 0 6px 20px var(--color-shadow-md);
   white-space: normal;
   word-break: break-word;
   z-index: 9999;

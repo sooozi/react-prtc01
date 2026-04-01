@@ -1,5 +1,4 @@
-@use "sass:color";
-@use "@/styles/auth.scss" as *;
+@use "@/pages/auth/auth-shared" as *;
 
 .login-container {
   @extend %auth-container;
@@ -13,12 +12,12 @@
   transform: translateX(-50%);
   z-index: 100;
   padding: 0.75rem 1.5rem;
-  background: #1e293b;
-  color: #fff;
+  background: var(--color-toast-bg);
+  color: var(--color-toast-text);
   font-size: 0.9rem;
   font-weight: 500;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 8px 28px var(--color-shadow-md);
   animation: login-toast-in 0.3s ease;
 }
 
@@ -43,8 +42,6 @@
   @extend %auth-header;
 }
 
-$success-color: #16a34a;
-
 .layout-main {
   justify-content: center;
 }
@@ -56,12 +53,12 @@ $success-color: #16a34a;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
-  background: rgba($success-color, 0.1);
-  border: 1px solid rgba($success-color, 0.4);
-  border-radius: 8px;
+  background: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
+  border-radius: 12px;
   font-size: 0.9rem;
   font-weight: 500;
-  color: color.adjust($success-color, $lightness: -12%);
+  color: var(--color-success-dark);
 
   &__icon {
     flex-shrink: 0;
@@ -70,7 +67,7 @@ $success-color: #16a34a;
     justify-content: center;
     width: 1.25rem;
     height: 1.25rem;
-    background: $success-color;
+    background: var(--color-success);
     color: #fff;
     border-radius: 50%;
     font-size: 0.75rem;

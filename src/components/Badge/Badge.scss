@@ -1,15 +1,20 @@
 .badge {
   display: inline-block;
   padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 100%);
-  border-radius: 50px;
+  background: linear-gradient(135deg, var(--color-primary-muted) 0%, var(--color-secondary-muted) 100%);
+  border-radius: 999px;
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-primary);
   margin-bottom: 1rem;
-  border: 1px solid var(--color-primary-muted);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 22%, transparent);
 }
 
 [data-theme="dark"] .badge {
-  background: linear-gradient(135deg, rgba(129, 140, 248, 0.2) 0%, rgba(244, 114, 182, 0.15) 100%);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-primary) 22%, transparent) 0%,
+    color-mix(in srgb, var(--color-secondary) 18%, transparent) 100%
+  );
+  border-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
 }
