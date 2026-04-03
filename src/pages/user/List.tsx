@@ -3,9 +3,9 @@ import { selectUserList, type UserItem } from "@/api/user";
 import { Badge, LoadingState, Pagination } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import { useUrlQueryPage } from "@/hooks/useUrlQueryPage";
-import "@/pages/user/Search.scss";
+import "@/pages/user/List.scss";
 
-export default function UserSearch() {
+export default function UserList() {
   const [users, setUsers] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

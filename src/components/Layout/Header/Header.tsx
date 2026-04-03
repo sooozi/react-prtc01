@@ -149,12 +149,12 @@ export default function Header() {
               </DrawerNavIcon>
               <span className="nav-link__label">About</span>
             </Link>
-            <Link to="/user/search" className="nav-link nav-link--drawer">
+            <Link to="/user/list" className="nav-link nav-link--drawer">
               <DrawerNavIcon>
-                <circle cx="11" cy="11" r="7" />
-                <path d="m20 20-4-4" />
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
               </DrawerNavIcon>
-              <span className="nav-link__label">Search</span>
+              <span className="nav-link__label">User</span>
             </Link>
             <Link to="/post/list" className="nav-link nav-link--drawer">
               <DrawerNavIcon>

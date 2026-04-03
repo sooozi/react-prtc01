@@ -83,9 +83,9 @@
       background 0.2s ease,
       border-color 0.2s ease;
 
-      @include bp.below(bp.$md) {
-        box-shadow: 0 4px 25px var(--color-shadow-card);
-      }
+    @include bp.below(bp.$md) {
+      box-shadow: 0 4px 25px var(--color-shadow-card);
+    }
 
     &__head {
       display: flex;

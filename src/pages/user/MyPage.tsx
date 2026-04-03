@@ -39,7 +39,7 @@ export default function MyPage() {
         </div>
 
         <div className="mypage-actions">
-          <Button variant="secondary" to="/user/search">
+          <Button variant="secondary" to="/user/list">
             사용자 목록
           </Button>
           <Button variant="primary" to="/home">

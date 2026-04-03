@@ -77,7 +77,7 @@ export default function Login() {
         const dest =
           from?.pathname != null && from.pathname !== ""
             ? `${from.pathname}${from.search ?? ""}${from.hash ?? ""}`
-            : "/user/search";
+            : "/user/list";
         navigate(dest, { replace: true });
       } else {
         setApiAlert({

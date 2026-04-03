@@ -108,7 +108,7 @@ export default function About() {
           <div className="cta-buttons">
             <Button
               variant="primaryInverse"
-              onClick={() => navigate("/user/search")}
+              onClick={() => navigate("/user/list")}
             >
               사용자 목록 →
             </Button>

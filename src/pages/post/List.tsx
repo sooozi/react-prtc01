@@ -106,7 +106,7 @@ export default function List() {
   };
 
   /**
-   * 테이블 헤더 정렬 버튼 클릭 시
+   * 테이블 헤더 정렬 버튼 클릭 시 url만 갱신
    * > 지금 보고 있던 sort column을 또 누르면: 오름차순 ↔ 내림차순만 바꿈
    * > 다른 sort column을 누르면: 그 column로 바꾸고, 순서는 내림차순부터
    */
@@ -115,9 +115,9 @@ export default function List() {
       // 검색 조건 설정
       setSearchParams((prev) => {
         const next = new URLSearchParams(prev);
-        next.set(URL_PAGE_QUERY_KEY, "1"); // 페이지 번호를 1로 설정
         const currentSort = getSortFromSearchParams(prev);
         const currentOrder = getOrderFromSearchParams(prev);
+        next.set(URL_PAGE_QUERY_KEY, "1"); // 페이지 번호를 1로 설정
         next.set("sort", column); // 정렬 컬럼을 누른 컬럼으로 설정
         next.set(
           "order",

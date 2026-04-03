@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "@/pages/Home";
 import About from "@/pages/about/About";
-import UserSearch from "@/pages/user/Search";
+import UserList from "@/pages/user/List";
 import List from "@/pages/post/List";
 import Detail from "@/pages/post/Detail";
 import Write from "@/pages/post/Write";
@@ -30,7 +30,8 @@ export default function AppRouter() {
 
           {/* 로그인 필요 — 토큰 없으면 RequireAuth에서 /auth/login 으로 이동 */}
           <Route element={<RequireAuth />}>
-            <Route path="/user/search" element={<UserSearch />} />
+            <Route path="/user/list" element={<UserList />} />
+            <Route path="/user/search" element={<Navigate to="/user/list" replace />} />
             <Route path="/post/list" element={<List />} />
             <Route path="/post/detail" element={<Detail />} />
             <Route path="/post/update" element={<Update />} />
