@@ -16,10 +16,11 @@ const NAMES = [
 
 function buildMockUsers(): UserItem[] {
   return NAMES.map((name, i) => ({
+    userId: name === "김애순" ? "👑 CEO" : `user${i + 1}`,
     userFlnm: name,
-    userJbgdNm: POSITIONS[i % POSITIONS.length],
-    eml: `user${i + 1}@test.com`,
-    userSe: USER_SE[i % 2],
+    userJbgdNm: name === "김애순" ? "CEO" : POSITIONS[i % POSITIONS.length],
+    eml: name === "김애순" ? "🕶️coolCat@test.com" : `user${i + 1}@test.com`,
+    userSe: name === "김애순" ? "관리자" :  USER_SE[i % 2],
   }));
 }
 

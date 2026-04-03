@@ -1,6 +1,7 @@
 import { MOCK_USERS } from "@/mocks/user";
 
 export type UserItem = {
+  userId: string;
   userFlnm: string;
   userJbgdNm: string;
   eml: string;
