@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { selectUserList, type UserItem } from "@/api/user";
 import { Badge, LoadingState, Pagination } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
@@ -6,6 +7,7 @@ import { useUrlQueryPage } from "@/hooks/useUrlQueryPage";
 import "@/pages/user/List.scss";
 
 export default function UserList() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -92,7 +94,18 @@ export default function UserList() {
               </thead>
               <tbody>
                 {users.map((user, index) => (
-                  <tr key={`${user.userId}-${index}`} className="tr">
+                  <tr
+                    key={`${user.userId}-${index}`}
+                    className="tr"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => navigate(`/user/detail?userId=${user.userId}`)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        navigate(`/user/detail?userId=${user.userId}`);
+                      }
+                    }}
+                    >
                     <td className="td td-number">{startIndex + index + 1}</td>
                     <td className="td td-user-id">{user.userId}</td>
                     <td className="td td-user-se">{user.userSe}</td>
