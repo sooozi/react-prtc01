@@ -1,4 +1,4 @@
-import type { PostDto } from "@/api/board";
+import type { Post } from "@/api/board";
 
 const AUTHORS = [
   "홍길동", "김수지", "이민준", "박서연", "최지우", "정예진", "강도윤", "조현우",
@@ -28,7 +28,7 @@ const TITLES = [
   "이벤트 참가 신청 안내",
 ];
 
-function buildMockPosts(): PostDto[] {
+function buildMockPosts(): Post[] {
   return Array.from({ length: 48 }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() - (i % 90));
@@ -43,4 +43,4 @@ function buildMockPosts(): PostDto[] {
   });
 }
 
-export const MOCK_BOARD_POSTS: PostDto[] = buildMockPosts();
+export const MOCK_BOARD_POSTS: Post[] = buildMockPosts();

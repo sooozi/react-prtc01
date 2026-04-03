@@ -1,7 +1,5 @@
 /**
  * 게시판 API 전용 타입
- * - 요청 body: CreatePostRequest, UpdatePostRequest
- * - 서버 응답 DTO: PostDto, PostDetailDto, PostsResponseData 등
  */
 
 /** POST /posts 요청 body */
@@ -16,8 +14,8 @@ export type UpdatePostRequest = {
   content: string;
 };
 
-/** GET /posts 응답의 게시글 한 건 (조회수: inqCnt) */
-export type PostDto = {
+/** GET /posts 목록의 게시글 한 건 (조회수: inqCnt) */
+export type Post = {
   postNumber: number;
   ownerUserId?: string;
   title: string;
@@ -32,12 +30,12 @@ export type PostDto = {
   inqCnt?: number;
 };
 
-/** GET /posts 응답 데이터 구조 */
-export type PostsResponseData = {
+/** GET /posts 목록 응답 본문 (페이지 메타 + rows) */
+export type PostListResponse = {
   itemSize: number;
   pageSize: number;
   totalItemSize: number;
-  data: PostDto[];
+  data: Post[];
 };
 
 /** 목록 정렬 방향 (쿼리 sortType: ASC / DESC) */
@@ -54,8 +52,8 @@ export type SelectBoardList = {
   sortType?: SortOrder;
 };
 
-/** GET /posts/{id} 상세 조회 응답 (조회수: inqCnt) */
-export type PostDetailDto = {
+/** GET /posts/{id} 상세 응답 (조회수: inqCnt) */
+export type PostDetail = {
   postNumber: number;
   ownerUserId?: string;
   title: string;

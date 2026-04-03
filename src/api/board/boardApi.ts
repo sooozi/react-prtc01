@@ -5,17 +5,18 @@ import { api } from "../http/http";
 import type { ApiResponse } from "../http/types";
 import type {
   CreatePostRequest,
-  PostDetailDto,
-  PostDto,
-  PostsResponseData,
+  Post,
+  PostDetail,
+  PostListResponse,
   SelectBoardList,
   UpdatePostRequest,
 } from "./boardApi.types";
 
 export type {
   CreatePostRequest,
-  PostDetailDto,
-  PostDto,
+  Post,
+  PostDetail,
+  PostListResponse,
   SortOrder,
   UpdatePostRequest,
 } from "./boardApi.types";
@@ -33,7 +34,7 @@ export async function selectBoardList(params: SelectBoardList) {
   const rgtrIdKw = params.rgtrIdSearchKeyword?.trim();
   const rgtrNameKw = params.rgtrNameSearchKeyword?.trim();
 
-  const json = await api.get<PostsResponseData>("/posts", {
+  const json = await api.get<PostListResponse>("/posts", {
     params: {
       page: params.page,
       size: params.size,
@@ -47,7 +48,7 @@ export async function selectBoardList(params: SelectBoardList) {
 
   const raw = json.data;
   // raw.data가 있으면 raw.data를 반환, 없으면 []를 반환
-  const data: PostDto[] = raw?.data ?? [];
+  const data: Post[] = raw?.data ?? [];
 
   return {
     data: {
@@ -63,8 +64,8 @@ export async function selectBoardList(params: SelectBoardList) {
  * 포스트 상세 조회
  * [GET] /posts/{postNumber}
  */
-export async function getPostDetail(postNumber: number): Promise<PostDetailDto> {
-  const json = await api.get<PostDetailDto>(`/posts/${postNumber}`);
+export async function getPostDetail(postNumber: number): Promise<PostDetail> {
+  const json = await api.get<PostDetail>(`/posts/${postNumber}`);
   const d = json.data;
   if (d == null) {
     throw new Error("게시글을 찾을 수 없습니다.");
@@ -75,8 +76,6 @@ export async function getPostDetail(postNumber: number): Promise<PostDetailDto> 
 /**
  * 포스트 등록
  * [POST] /posts
- * 스웨거에서 `request`가 (query)로 보이는 경우, Spring은 JSON 본문이 아니라
- * 쿼리/폼 파라미터로 바인딩하는 경우가 많음 → JSON만 보내면 title·content가 비어 400이 남.
  */
 export async function createPost(body: CreatePostRequest) {
   getAuthTokenOrThrow();

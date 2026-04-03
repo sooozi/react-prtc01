@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, updatePost, BoardApiError } from "@/api/board";
-import type { PostDetailDto } from "@/api/board";
+import type { PostDetail } from "@/api/board";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
 import "@/pages/post/Detail.scss";
 import "@/pages/post/Update.scss";
@@ -13,7 +13,7 @@ export default function Update() {
   const postNumber = idRaw ? parseInt(idRaw, 10) : NaN;
   const invalidId = Number.isNaN(postNumber) || postNumber < 1;
 
-  const [post, setPost] = useState<PostDetailDto | null>(null);
+  const [post, setPost] = useState<PostDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState("");

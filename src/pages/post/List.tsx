@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { selectBoardList, BoardApiError } from "@/api/board";
-import type { PostDto, SortOrder } from "@/api/board";
+import type { Post, SortOrder } from "@/api/board";
 import { Badge, Button, LoadingState, Pagination, Tooltip } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import { URL_PAGE_QUERY_KEY, useUrlQueryPage } from "@/hooks/useUrlQueryPage";
@@ -11,6 +11,8 @@ const SORT_OPTIONS: { value: string; label: string }[] = [
   { value: "regDt", label: "최신순" },
   { value: "title", label: "제목순" },
   { value: "inqCnt", label: "조회순" },
+  { value: "postNumber", label: "번호순" },
+  { value: "rgtrName", label: "등록자순" },
 ];
 
 const ORDER_OPTIONS: { value: SortOrder; label: string }[] = [
@@ -36,10 +38,37 @@ function hasAppliedSearch(title: string, rgtrId: string, rgtrName: string): bool
   return Boolean(title.trim() || rgtrId.trim() || rgtrName.trim());
 }
 
+type BoardSortHeaderButtonProps = {
+  ariaLabel: string;
+  onClick: () => void;
+};
+
+/** 테이블 헤더 정렬: 아이콘만 있는 버튼 (이름은 aria-label로 제공) */
+function BoardSortHeaderButton({ ariaLabel, onClick }: BoardSortHeaderButtonProps) {
+  return (
+    <button type="button" className="board-th-sort-btn" aria-label={ariaLabel} onClick={onClick}>
+      <svg
+        className="board-th-sort-btn__svg"
+        viewBox="0 0 24 24"
+        width={15}
+        height={15}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M8 10l4-4 4 4" />
+        <path d="M8 14l4 4 4-4" />
+      </svg>
+    </button>
+  );
+}
+
 export default function List() {
   const navigate = useNavigate();
   const { currentPage, setCurrentPage, searchParams, setSearchParams } = useUrlQueryPage();
-  const [posts, setPosts] = useState<PostDto[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]); // 게시글 목록
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isUnauthorized, setIsUnauthorized] = useState(false);
@@ -76,7 +105,31 @@ export default function List() {
     });
   };
 
-  /** 검색 확정: 입력값을 applied로 복사하고 1페이지로 이동 (주소에는 검색어 안 붙음) */
+  /**
+   * 테이블 헤더 정렬 버튼 클릭 시
+   * > 지금 보고 있던 sort column을 또 누르면: 오름차순 ↔ 내림차순만 바꿈
+   * > 다른 sort column을 누르면: 그 column로 바꾸고, 순서는 내림차순부터
+   */
+  const handleHeaderSort = useCallback(
+    (column: string) => {
+      // 검색 조건 설정
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        next.set(URL_PAGE_QUERY_KEY, "1"); // 페이지 번호를 1로 설정
+        const currentSort = getSortFromSearchParams(prev);
+        const currentOrder = getOrderFromSearchParams(prev);
+        next.set("sort", column); // 정렬 컬럼을 누른 컬럼으로 설정
+        next.set(
+          "order",
+          currentSort === column ? (currentOrder === "ASC" ? "DESC" : "ASC") : "DESC"
+        ); // 순서는 오름차순 ↔ 내림차순만 바꿈
+        return next;
+      });
+    },
+    [setSearchParams]
+  );
+
+  /** 검색 버튼 클릭 시 입력값을 applied로 복사하고 1페이지로 이동 (주소에는 검색어 안 붙음) */
   const applySearch = () => {
     setAppliedTitle(draftTitle.trim());
     setAppliedRgtrId(draftRgtrId.trim());
@@ -92,20 +145,19 @@ export default function List() {
         setError("");
         setIsUnauthorized(false);
 
-        // 게시글 목록 조회
+        // GET /posts — 페이지·정렬·검색 조건을 쿼리로 전달 (스웨거 SelectBoardList와 동일 필드)
         const res = await selectBoardList({
-          page: currentPage,
-          size: pageSize,
-          sortColumnName: sort,
-          sortType: order,
-          titleSearchKeyword: appliedTitle || undefined,
+          page: currentPage, // URL ?page= 과 동기화
+          size: pageSize, // 한 페이지 글 개수 (usePagination)
+          sortColumnName: sort, // URL ?sort= → 백엔드 sortColumnName (예: regDt, title)
+          sortType: order, // URL ?order= → ASC | DESC
+          titleSearchKeyword: appliedTitle || undefined, // 검색 확정값만 전달; 빈 문자열은 undefined로 보내 쿼리에서 제외
           rgtrIdSearchKeyword: appliedRgtrId || undefined,
           rgtrNameSearchKeyword: appliedRgtrName || undefined,
         });
 
         // 응답 데이터 파싱
         const payload = res?.data;
-
         // 게시글 목록 설정
         setPosts(payload?.data ?? []);
         // 전체 게시글 수 설정
@@ -277,11 +329,51 @@ export default function List() {
               <table className="table board-page__table-desktop">
                 <thead>
                   <tr>
-                    <th className="th th-number">번호</th>
-                    <th className="th th-title">제목</th>
-                    <th className="th">등록자</th>
-                    <th className="th th-view">조회</th>
-                    <th className="th th-date">등록일시</th>
+                    <th className="th th-number">
+                      <span className="board-th-sort-wrap board-th-sort-wrap--center">
+                        <span className="board-th-sort-label">번호</span>
+                        <BoardSortHeaderButton
+                          ariaLabel="글 번호 기준 정렬"
+                          onClick={() => handleHeaderSort("postNumber")}
+                        />
+                      </span>
+                    </th>
+                    <th className="th th-title">
+                      <span className="board-th-sort-wrap">
+                        <span className="board-th-sort-label">제목</span>
+                        <BoardSortHeaderButton
+                          ariaLabel="제목 기준 정렬"
+                          onClick={() => handleHeaderSort("title")}
+                        />
+                      </span>
+                    </th>
+                    <th className="th th-rgtr">
+                      <span className="board-th-sort-wrap">
+                        <span className="board-th-sort-label">등록자</span>
+                        <BoardSortHeaderButton
+                          ariaLabel="등록자 이름 기준 정렬"
+                          onClick={() => handleHeaderSort("rgtrName")}
+                        />
+                      </span>
+                    </th>
+                    <th className="th th-view">
+                      <span className="board-th-sort-wrap board-th-sort-wrap--center">
+                        <span className="board-th-sort-label">조회</span>
+                        <BoardSortHeaderButton
+                          ariaLabel="조회수 기준 정렬"
+                          onClick={() => handleHeaderSort("inqCnt")}
+                        />
+                      </span>
+                    </th>
+                    <th className="th th-date">
+                      <span className="board-th-sort-wrap board-th-sort-wrap--center">
+                        <span className="board-th-sort-label">등록일시</span>
+                        <BoardSortHeaderButton
+                          ariaLabel="등록일 기준 정렬"
+                          onClick={() => handleHeaderSort("regDt")}
+                        />
+                      </span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -305,7 +397,7 @@ export default function List() {
                           <span className="list-title-text">{post.title}</span>
                         </Tooltip>
                       </td>
-                      <td className="td">{post.rgtrInfo ?? "-"}</td>
+                      <td className="td td-rgtr">{post.rgtrInfo ?? "-"}</td>
                       <td className="td td-view">{post.inqCnt ?? 0}</td>
                       <td className="td td-date">{post.regDt}</td>
                     </tr>

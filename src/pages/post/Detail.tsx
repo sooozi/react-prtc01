@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, deletePost, BoardApiError, viewCountUp } from "@/api/board";
-import type { PostDetailDto } from "@/api/board";
+import type { PostDetail } from "@/api/board";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
 import "@/pages/post/Detail.scss";
 
 export default function Detail() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [post, setPost] = useState<PostDetailDto | null>(null);
+  const [post, setPost] = useState<PostDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isUnauthorized, setIsUnauthorized] = useState(false);
