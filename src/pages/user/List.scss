@@ -257,3 +257,7 @@
 }
 
 @include table-base(".search-page");
+
+.search-page .tr-clickable {
+  cursor: pointer;
+}

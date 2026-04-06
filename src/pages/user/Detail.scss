@@ -1,129 +1,125 @@
-@use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
 
-.user-detail-page {
-  width: 100%;
-  max-width: 800px;
-  padding: 2rem;
-  position: relative;
-  z-index: 10;
-  margin: 0 auto;
+.user-detail-lead {
+  margin: 0 0 1.75rem;
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  color: var(--color-text);
 
-  @include bp.below(bp.$md) {
+  strong {
+    font-weight: 700;
+    color: var(--color-text-heading);
+  }
+}
+
+.user-detail-subheading {
+  margin: 0 0 0.85rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-text-heading);
+  letter-spacing: -0.02em;
+}
+
+.user-detail-spec {
+  margin: 0 0 1.75rem;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-bg-subtle);
+}
+
+[data-theme="dark"] .user-detail-spec {
+  background: var(--color-bg-subtle-2);
+}
+
+.user-detail-spec__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.85rem 1.1rem;
+  margin: 0;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  dt {
+    margin: 0;
+    flex-shrink: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  dd {
+    margin: 0;
+    text-align: right;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-text);
+    min-width: 0;
+    word-break: break-word;
+  }
+}
+
+.user-detail-spec__hint {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.user-detail-contact {
+  margin-bottom: 1.75rem;
+}
+
+.user-detail-mailto {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+  word-break: break-all;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+.user-detail-aside {
+  margin: 0;
+  padding: 1.1rem 1.15rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border-light);
+  background: color-mix(in srgb, var(--color-primary) 5%, var(--color-bg-subtle));
+
+  @include bp.below(bp.$sm) {
     padding: 1rem;
   }
 }
 
-.user-detail-header {
-  margin-bottom: 2rem;
-  text-align: center;
+[data-theme="dark"] .user-detail-aside {
+  background: color-mix(in srgb, var(--color-primary) 8%, var(--color-bg-subtle-2));
+  border-color: rgba(248, 250, 252, 0.1);
 }
 
-.user-detail-header .title {
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
-  font-weight: 800;
-  color: var(--color-text-heading);
-}
-
-.user-detail-card {
-  background: var(--color-card);
-  border-radius: 16px;
-  padding: 2.5rem;
-  box-shadow: 0 4px 25px var(--color-shadow-card), 0 1px 3px var(--color-shadow-sm);
-  border: 1px solid var(--color-card-border);
-  margin-bottom: 2rem;
-  overflow: hidden;
-
-  @include bp.below(bp.$md) {
-    padding: 1.25rem;
-    margin-bottom: 1.5rem;
-  }
-}
-
-.user-detail-error {
-  @extend %error-state-base;
-  padding: 3rem;
-  gap: 1rem;
-  color: var(--color-error-dark);
-}
-
-.user-detail-error .error-icon {
-  font-size: 2rem;
-}
-
-.user-detail-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  padding: 0.75rem 1rem;
-  background: var(--color-bg-subtle);
-  border-radius: 12px;
-  font-size: 0.875rem;
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-border-light);
-}
-
-[data-theme="dark"] .user-detail-meta {
-  background: var(--color-bg-subtle-2);
-}
-
-.user-detail-id {
-  font-weight: 700;
-  color: var(--color-primary);
-  padding: 0.2rem 0.5rem;
-  background: var(--color-primary-muted);
-  border-radius: 6px;
-}
-
-.user-detail-se::before,
-.user-detail-rank::before {
-  content: "·";
-  margin-right: 0.75rem;
-  color: var(--color-border);
-  font-weight: 700;
-}
-
-.user-detail-title {
-  font-size: 1.625rem;
-  font-weight: 800;
-  color: var(--color-text-heading);
-  margin-bottom: 1.75rem;
-  line-height: 1.35;
-  letter-spacing: -0.02em;
-  padding-bottom: 1.25rem;
-  border-bottom: 2px solid var(--color-border);
-}
-
-.user-detail-content {
-  font-size: 1.0625rem;
-  line-height: 1.85;
-  color: var(--color-text);
-  white-space: pre-wrap;
-  word-break: break-word;
-  min-height: 2em;
-}
-
-.user-detail-content:empty::before {
-  content: "이메일 없음";
-  color: var(--color-text-muted);
-  font-style: italic;
-}
-
-.user-detail-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.user-detail-email-label {
-  display: block;
+.user-detail-aside__title {
+  margin: 0 0 0.4rem;
   font-size: 0.8125rem;
   font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 0.02em;
+}
+
+.user-detail-aside__text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.65;
   color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 0.5rem;
 }

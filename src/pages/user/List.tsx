@@ -96,7 +96,7 @@ export default function UserList() {
                 {users.map((user, index) => (
                   <tr
                     key={`${user.userId}-${index}`}
-                    className="tr"
+                    className="tr tr-clickable"
                     role="button"
                     tabIndex={0}
                     onClick={() =>
