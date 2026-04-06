@@ -125,3 +125,15 @@ export async function viewCountUp(postNumber: number): Promise<void> {
   getAuthTokenOrThrow();
   await api.patch<unknown>(`/posts/${postNumber}/view_count`, undefined);
 }
+
+/**
+ * 내가 작성한 포스트 목록 조회
+ * [GET] /posts/me?userId=...
+ */
+export async function getMyPostList(userId: string): Promise<Post[]> {
+  getAuthTokenOrThrow();
+  const json = await api.get<Post[]>(`/posts/me`, {
+    params: { userId },
+  });
+  return json.data ?? [];
+}

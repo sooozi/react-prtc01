@@ -30,3 +30,13 @@ export async function selectUserList({ page, size }: SelectUserListParams) {
     },
   };
 }
+
+/**
+ * 사용자 상세 (목 데이터 — userId 일치 행)
+ */
+export async function selectUserDetail(userId: string): Promise<UserItem | null> {
+  const id = userId.trim();
+  if (!id) return null;
+  const user = MOCK_USERS.find((u) => u.userId === id);
+  return user ?? null;
+}

@@ -99,10 +99,12 @@ export default function UserList() {
                     className="tr"
                     role="button"
                     tabIndex={0}
-                    onClick={() => navigate(`/user/detail?userId=${user.userId}`)}
+                    onClick={() =>
+                      navigate(`/user/detail?userId=${encodeURIComponent(user.userId)}`)
+                    }
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        navigate(`/user/detail?userId=${user.userId}`);
+                        navigate(`/user/detail?userId=${encodeURIComponent(user.userId)}`);
                       }
                     }}
                     >

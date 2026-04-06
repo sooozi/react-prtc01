@@ -1,17 +1,42 @@
 @use "@/styles/common.scss" as *;
+@use "@/styles/breakpoints" as bp;
+
+$_mypage-dark-divider: rgba(248, 250, 252, 0.15);
+$_mypage-dark-row-line: rgba(248, 250, 252, 0.1);
+$_mypage-gap-md: 0.75rem;
+
+@mixin mypage-flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 .mypage-page {
   min-height: 60vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 2rem 1rem;
+  padding: 2rem 1rem 3rem;
 }
 
 .mypage-section {
-  max-width: 420px;
+  max-width: 720px;
   width: 100%;
   text-align: center;
+}
+
+.mypage-header {
+  margin-bottom: 1.75rem;
+}
+
+.mypage-profile-grid {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  @include bp.above(540px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .mypage-page .title {
@@ -54,10 +79,20 @@
   padding: 1.25rem 1.5rem;
   margin-bottom: 1rem;
   text-align: left;
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--color-text) 6%, transparent);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--color-primary) 35%, var(--color-border));
+  }
 }
 
-[data-theme="dark"] .mypage-card {
-  background: var(--color-bg-subtle-2);
+.mypage-profile-grid .mypage-card {
+  margin-bottom: 0;
+}
+
+.mypage-card--posts {
+  margin-bottom: 1.5rem;
 }
 
 .mypage-card__title {
@@ -69,23 +104,154 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-[data-theme="dark"] .mypage-card__title {
-  border-bottom-color: rgba(248, 250, 252, 0.15);
+.mypage-card__title--inline {
+  margin: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.mypage-posts-head {
+  @include mypage-flex-between;
+  gap: $_mypage-gap-md;
+  margin-bottom: 1rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mypage-posts-count {
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  color: var(--color-primary);
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+
+.mypage-posts-loading.detail-loading {
+  padding: 1.75rem 1rem;
+}
+
+.mypage-posts-empty {
+  margin: 0;
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.mypage-posts-empty--error {
+  color: var(--color-danger, #dc2626);
+  background: color-mix(in srgb, var(--color-danger, #dc2626) 8%, transparent);
+  border-radius: 12px;
+}
+
+.mypage-posts-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mypage-post-link {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  column-gap: $_mypage-gap-md;
+  row-gap: 0.2rem;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  background: var(--color-surface-elevated, var(--color-bg-subtle));
+  border: 1px solid var(--color-border);
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.12s ease;
+
+  &:hover {
+    background: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface-elevated, var(--color-bg-subtle)));
+    border-color: color-mix(in srgb, var(--color-primary) 28%, var(--color-border));
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  @include bp.above(480px) {
+    grid-template-columns: 1fr auto auto;
+    grid-template-rows: auto;
+  }
+}
+
+.mypage-post-link__title {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text-heading);
+  line-height: 1.35;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mypage-post-link__meta {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+
+  @include bp.above(480px) {
+    grid-column: 2;
+    grid-row: 1;
+    justify-content: flex-end;
+  }
+}
+
+.mypage-post-link__views {
+  min-width: 50px;
+  font-variant-numeric: tabular-nums;
+}
+
+.mypage-post-link__chevron {
+  grid-column: 2;
+  grid-row: 1;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--color-text-secondary);
+  border-bottom: 2px solid var(--color-text-secondary);
+  transform: rotate(-45deg);
+  opacity: 0.65;
+
+  @include bp.above(480px) {
+    grid-column: 3;
+  }
+}
+
+.mypage-card__value--ok {
+  color: var(--color-primary);
+  font-weight: 600;
 }
 
 .mypage-card__row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  @include mypage-flex-between;
   padding: 0.5rem 0;
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-table-cell-border);
   }
-}
-
-[data-theme="dark"] .mypage-card__row:not(:last-child) {
-  border-bottom-color: rgba(248, 250, 252, 0.1);
 }
 
 .mypage-card__label {
@@ -102,8 +268,22 @@
 
 .mypage-actions {
   display: flex;
-  gap: 0.75rem;
+  gap: $_mypage-gap-md;
   justify-content: center;
   flex-wrap: wrap;
 }
 
+[data-theme="dark"] {
+  .mypage-card {
+    background: var(--color-bg-subtle-2);
+  }
+
+  .mypage-posts-head,
+  .mypage-card__title {
+    border-bottom-color: $_mypage-dark-divider;
+  }
+
+  .mypage-card__row:not(:last-child) {
+    border-bottom-color: $_mypage-dark-row-line;
+  }
+}

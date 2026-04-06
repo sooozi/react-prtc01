@@ -1,0 +1,129 @@
+@use "@/styles/common.scss" as *;
+@use "@/styles/breakpoints" as bp;
+
+.user-detail-page {
+  width: 100%;
+  max-width: 800px;
+  padding: 2rem;
+  position: relative;
+  z-index: 10;
+  margin: 0 auto;
+
+  @include bp.below(bp.$md) {
+    padding: 1rem;
+  }
+}
+
+.user-detail-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.user-detail-header .title {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 800;
+  color: var(--color-text-heading);
+}
+
+.user-detail-card {
+  background: var(--color-card);
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 25px var(--color-shadow-card), 0 1px 3px var(--color-shadow-sm);
+  border: 1px solid var(--color-card-border);
+  margin-bottom: 2rem;
+  overflow: hidden;
+
+  @include bp.below(bp.$md) {
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.user-detail-error {
+  @extend %error-state-base;
+  padding: 3rem;
+  gap: 1rem;
+  color: var(--color-error-dark);
+}
+
+.user-detail-error .error-icon {
+  font-size: 2rem;
+}
+
+.user-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-bg-subtle);
+  border-radius: 12px;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-light);
+}
+
+[data-theme="dark"] .user-detail-meta {
+  background: var(--color-bg-subtle-2);
+}
+
+.user-detail-id {
+  font-weight: 700;
+  color: var(--color-primary);
+  padding: 0.2rem 0.5rem;
+  background: var(--color-primary-muted);
+  border-radius: 6px;
+}
+
+.user-detail-se::before,
+.user-detail-rank::before {
+  content: "·";
+  margin-right: 0.75rem;
+  color: var(--color-border);
+  font-weight: 700;
+}
+
+.user-detail-title {
+  font-size: 1.625rem;
+  font-weight: 800;
+  color: var(--color-text-heading);
+  margin-bottom: 1.75rem;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.user-detail-content {
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 2em;
+}
+
+.user-detail-content:empty::before {
+  content: "이메일 없음";
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.user-detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.user-detail-email-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
