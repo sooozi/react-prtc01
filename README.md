@@ -1,7 +1,7 @@
 # React Practice
 
 Vite + React + TypeScript 기반의 프론트엔드 연습 프로젝트입니다.  
-로그인·회원가입·사용자 목록(`/user/list`)·게시판(목록/상세/글쓰기/수정/삭제), 다크 모드, 공통 컴포넌트를 다룹니다.  
+로그인·회원가입·사용자 목록·사용자 상세(목 데이터)·마이페이지(내가 쓴 글)·게시판(목록/상세/글쓰기/수정/삭제), 다크 모드, 공통 컴포넌트를 다룹니다.  
 레이아웃은 스크롤 방향에 따라 헤더를 숨겼다 보였다 하며, `MouseFollowEmoji`로 포인터 추적 장식을 둡니다.
 
 ---
@@ -95,13 +95,15 @@ src/
 │   ├── about/
 │   │   └── About.tsx
 │   ├── Forbidden.tsx
+│   ├── NotFound.tsx, NotFound.scss   # 404 (`/not-found`)
 │   ├── auth/
 │   │   ├── _auth-shared.scss  # 로그인·회원가입 공통 SCSS (카드, 비밀번호 토글)
 │   │   ├── login/             # Login.tsx, Login.scss
 │   │   └── signup/            # Signup.tsx, Signup.scss
 │   ├── user/
-│   │   ├── List.tsx, List.scss   # 사용자 목록 + 페이지네이션 (`UserList`, `/user/list`)
-│   │   └── MyPage.tsx, MyPage.scss
+│   │   ├── List.tsx, List.scss       # 사용자 목록 + 페이지네이션 (`/user/list`)
+│   │   ├── Detail.tsx, Detail.scss   # 사용자 상세 — 쿼리 `?userId=` (목 데이터, `/user/detail`)
+│   │   └── MyPage.tsx, MyPage.scss   # 마이페이지 — 내가 쓴 글 API (`/user/mypage`)
 │   └── post/
 │       ├── List.tsx        # 게시글 목록
 │       ├── Detail.tsx      # 게시글 상세
@@ -132,21 +134,21 @@ src/
 | `/auth/login` | Login | 로그인 |
 | `/auth/signup` | Signup | 회원가입 |
 | `/about` | About | 소개 |
-| `/user/list` | UserList | 사용자 목록 + 페이지네이션 |
-| `/user/search` | - | `/user/list`로 리다이렉트(구 경로) |
-| `/user/mypage` | MyPage | 마이페이지 (로그인 필수) |
-| `/post/list` | List | 게시글 목록 (로그인 필수, 컴포넌트는 `post/List`) |
+| `/forbidden` | Forbidden | 접근 제한 안내(직접 진입용) |
+| `/not-found` | NotFound | 404 안내 |
+| `/user/list` | UserList | 사용자 목록 + 페이지네이션 (로그인 필수) |
+| `/user/detail` | UserDetail | 사용자 상세, 쿼리 `?userId=` (로그인 필수, 목 데이터) |
+| `/user/mypage` | MyPage | 마이페이지 — 프로필·내가 쓴 글 목록 (로그인 필수) |
+| `/post/list` | List | 게시글 목록 (로그인 필수) |
 | `/post/detail` | Detail | 게시글 상세 (쿼리: `?id=`) |
 | `/post/update` | Update | 게시글 수정 (쿼리: `?id=`) |
 | `/post/write` | Write | 게시글 작성 |
-| `/forbidden` | Forbidden | 403 접근 제한 |
-| 그 외 (`*`) | - | `/forbidden`으로 리다이렉트 (미등록 경로) |
+| 그 외 (`*`) | - | `/not-found`로 리다이렉트 (미등록 경로) |
 
-`/home`, `/auth/*`, `/about`, `/forbidden`은 비로그인 접근 가능합니다. `/post/*`, `/user/list`, `/user/mypage` 등은 `RequireAuth`로 토큰 검사 후 없으면 `/auth/login`으로 이동하며, 이때 토스트·복귀 경로(`state`)를 넘깁니다.  
-`/user/search`는 구 경로로, `/user/list`로 치환 리다이렉트됩니다.  
+`/home`, `/auth/*`, `/about`, `/forbidden`, `/not-found`는 비로그인 접근 가능합니다. `/post/*`, `/user/list`, `/user/detail`, `/user/mypage`는 `RequireAuth`로 토큰 검사 후 없으면 `/auth/login`으로 이동하며, 이때 토스트·복귀 경로(`state`)를 넘깁니다.  
 공개·보호 구간 모두 `Layout`(Header + `Outlet` + Footer) 안에서 렌더됩니다.
 
-**헤더 네비(로그인 시)**: About, **User**(사용자 목록), Board(게시판), Logout.
+**헤더(로그인 시)**: 상단에 프로필(이름) → **마이페이지** 링크, 메뉴에 About · **User**(목록) · Board · Logout.
 
 ---
 
@@ -175,6 +177,17 @@ src/
 
 - 페이지당 10명, 페이지네이션. `usePagination`, URL `page` 동기화는 `useUrlQueryPage` 사용.
 - 로딩/에러/빈 목록 시 공통 `LoadingState` 컴포넌트로 표시.
+- 데이터는 `selectUserList` → `src/mocks/user.ts` 목 전용.
+
+### 사용자 상세 (`/user/detail?userId=`)
+
+- `selectUserDetail`로 목 데이터에서 `userId` 일치 행 조회. 없으면 안내 메시지.
+- 로그인 필수 (`RequireAuth`).
+
+### 마이페이지 (`/user/mypage`)
+
+- `localStorage`의 `userName`, `userId` 표시.
+- **내가 작성한 글**: `getMyPostList` → `GET /posts/me?userId=...` (토큰 필수). `BoardApiError`면 서버 메시지, 그 외는 공통 문구로 에러 표시.
 
 ### 게시판
 
@@ -183,9 +196,13 @@ src/
 - **글쓰기 (`/post/write`)**: 제목·내용 입력 후 등록, 성공 시 목록으로 이동.
 - **수정 (`/post/update?id=`)**: 상세와 동일 id로 조회 후 제목·내용 수정, 저장 시 상세로 이동.
 
-### Forbidden 페이지 (`/forbidden`)
+### Forbidden (`/forbidden`)
 
-- 라우터에 정의되지 않은 경로(`path="*"`)는 여기로 리다이렉트됩니다. (HTTP 403과 문구는 다를 수 있음.) “홈으로 돌아가기”, “이전 페이지” 등 안내 버튼을 둡니다.
+- 직접 라우팅된 접근 제한 안내 페이지. “홈으로 돌아가기”, “이전 페이지” 등 버튼 제공.
+
+### Not Found (`/not-found`, 그리고 `path="*"`)
+
+- 정의되지 않은 URL은 `Navigate`로 `/not-found`에 보냅니다. 404 문구와 홈·뒤로 가기 버튼을 둡니다.
 
 ---
 
@@ -211,8 +228,8 @@ src/
 - **코드 구조**: HTTP 공통은 `@/api/http`, 인증은 `@/api/auth`, 게시판은 `@/api/board`, 사용자 목록 모듈은 `@/api/user`(각 폴더 `index.ts`에서 재export).
 - **주요 경로 예시**:  
   `POST /auth/login`, `POST /auth/join`, `GET /auth/available/user_id`,  
-  `GET /posts` (쿼리: `page`, `size`, `sortColumnName`, `sortType`, 검색 키워드 등), `GET /posts/:postNumber`, `POST /posts`, `PUT /posts/:postNumber`, `DELETE /posts/:postNumber`, `PATCH /posts/:postNumber/view_count`,  
-  사용자 목록은 백엔드 없이 `src/mocks/user.ts`만 사용합니다(`userApi.ts` 참고). 게시판은 실 API(`boardApi.ts` → `api` 래퍼)를 호출합니다.
+  `GET /posts` (쿼리: `page`, `size`, `sortColumnName`, `sortType`, 검색 키워드 등), `GET /posts/:postNumber`, `GET /posts/me` (쿼리: `userId` — 내 글 목록), `POST /posts`, `PUT /posts/:postNumber`, `DELETE /posts/:postNumber`, `PATCH /posts/:postNumber/view_count`,  
+  사용자 목록·상세는 백엔드 없이 `src/mocks/user.ts`만 사용합니다(`userApi.ts`의 `selectUserList`, `selectUserDetail`). 게시판은 실 API(`boardApi.ts` → `api` 래퍼)를 호출합니다.
 - **공통 응답**: `resultCode`, `resultMessage`, `resultDetailMessage`, `data`.
 - **로그인 성공 여부**: 응답 `resultCode`를 `src/api/auth/login.ts`의 `LOGIN_SUCCESS_CODE`와 비교합니다. 실제 값은 저장소에 노출하지 않고 소스에서만 관리합니다.
 
