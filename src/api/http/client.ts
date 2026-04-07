@@ -61,6 +61,15 @@ apiClient.interceptors.response.use(
   (error: unknown) => {
     if (isAxiosError(error) && error.response) {
       const status = error.response.status;
+      const path = typeof window !== "undefined" ? window.location.pathname : "";
+
+      if (status === 403 && path !== "/forbidden") {
+        window.location.replace("/forbidden");
+      }
+      if (status === 404 && path !== "/not-found") {
+        window.location.replace("/not-found");
+      }
+
       const data = error.response.data as ErrorResponseBody | undefined;
       const msg =
         data?.resultMessage ??

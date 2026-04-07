@@ -144,7 +144,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 1rem;
   margin-bottom: 1rem;
 
@@ -152,43 +152,6 @@
     flex-direction: column;
     align-items: stretch;
     gap: 0.75rem;
-  }
-}
-
-.board-list-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem;
-  opacity: 0;
-}
-
-.board-sort-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-}
-
-.board-sort-select {
-  min-height: 44px;
-  padding: 0.5rem 2rem 0.5rem 0.85rem;
-  font-size: 0.9375rem;
-  border: 2px solid var(--color-border);
-  border-radius: 12px;
-  background: var(--color-input-bg);
-  color: var(--color-text);
-  cursor: pointer;
-  outline: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748B' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.5rem center;
-
-  &:focus {
-    border-color: var(--color-primary);
   }
 }
 
@@ -278,71 +241,6 @@
   min-width: 0;
   text-align: center;
   white-space: nowrap;
-}
-
-.board-th-sort-wrap {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  max-width: 100%;
-  min-width: 0;
-
-  &--center {
-    justify-content: center;
-  }
-}
-
-.board-page .th-number .board-th-sort-wrap,
-.board-page .th-title .board-th-sort-wrap,
-.board-page .th-rgtr .board-th-sort-wrap,
-.board-page .th-view .board-th-sort-wrap,
-.board-page .th-date .board-th-sort-wrap {
-  display: flex;
-  min-width: 0;
-  justify-content: center;
-  position: relative;
-}
-
-.board-th-sort-label {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.board-th-sort-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  padding: 0.2rem;
-  border: none;
-  background: transparent;
-  font: inherit;
-  color: var(--color-text-muted);
-  opacity: 0.9;
-  flex-shrink: 0;
-  cursor: pointer;
-  border-radius: 6px;
-  transition:
-    color 0.15s ease,
-    opacity 0.15s ease,
-    background 0.15s ease;
-
-  &:hover {
-    color: var(--color-primary);
-    opacity: 1;
-  }
-
-  &:focus, &:active {
-    outline: none;
-    border: none;
-  }
-}
-
-.board-th-sort-btn__svg {
-  display: block;
 }
 
 .board-page .post-list-cards {

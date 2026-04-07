@@ -9,6 +9,7 @@ import Write from "@/pages/post/Write";
 import Update from "@/pages/post/Update";
 import MyPage from "@/pages/user/MyPage";
 import Forbidden from "@/pages/Forbidden";
+import NotFound from "@/pages/NotFound";
 import Login from "@/pages/auth/login/Login";
 import Signup from "@/pages/auth/signup/Signup";
 import { Layout } from "@/components";
@@ -28,6 +29,7 @@ export default function AppRouter() {
           <Route path="/auth/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />
           <Route path="/forbidden" element={<Forbidden />} />
+          <Route path="/not-found" element={<NotFound />} />
 
           {/* 로그인 필요 — 토큰 없으면 RequireAuth에서 /auth/login 으로 이동 */}
           <Route element={<RequireAuth />}>
@@ -41,8 +43,8 @@ export default function AppRouter() {
           </Route>
         </Route>
 
-        {/* 잘못된 URL은 forbidden으로 */}
-        <Route path="*" element={<Navigate to="/forbidden" replace />} />
+        {/* 정의되지 않은 경로 → 404 페이지 */}
+        <Route path="*" element={<Navigate to="/not-found" replace />} />
       </Routes>
     </BrowserRouter>
   );
