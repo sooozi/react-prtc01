@@ -5,7 +5,7 @@ import { getMyPostList, BoardApiError } from "@/api/board/boardApi";
 import type { Post } from "@/api/board";
 import "@/pages/user/MyPage.scss";
 
-/** 말줄임이 난 경우에만 `title`을 붙여 브라우저 기본 툴팁으로 전체 제목 표시 */
+// 말줄임이 난 경우에만 `title`을 붙여 브라우저 기본 툴팁으로 전체 제목 표시
 function MypagePostTitle({ title, className }: { title: string; className: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   // 말줄임이 난 경우에만 툴팁 표시
@@ -65,6 +65,7 @@ export default function MyPage() {
         // 취소되지 않았으면 목록 비우기
         if (!cancelled) {
           setPosts([]);
+          // 오류 메시지 설정
           setPostsError(
             e instanceof BoardApiError ? e.message : "목록을 불러오지 못했습니다."
           );

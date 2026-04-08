@@ -6,6 +6,7 @@ export const URL_PAGE_QUERY_KEY = "page";
 
 /**
  * URL `?page=` 와 동기화되는 현재 페이지.
+ * URL에 있는 page 값을 읽어서 페이지 상태로 쓰는 커스텀 훅
  */
 export function useUrlQueryPage() {
   const [searchParams, setSearchParams] = useSearchParams();

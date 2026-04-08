@@ -3,8 +3,12 @@ import { apiClient } from "./client";
 import type { ApiResponse } from "./types";
 
 /**
- * HTTP 메서드별 얇은 래퍼 — 도메인 API(boardApi, login 등)는 apiClient 대신 여기만 사용.
- * 응답 본문(JSON)은 백엔드 ApiResponse 형이므로 `.data`까지 풀어서 반환해 `res.data.data` 중복을 줄임.
+ * axios(get/post/…)를 메서드마다 한 번씩 감싼 얇은 모음
+ *
+ * - 게시판·로그인 같은 도메인 코드는 보통 `apiClient`가 아니라 여기(`api`)만 사용
+ * - axios는 성공 시 `{ data: 서버JSON, status, headers, … }` 전체를 주는데,
+ *   여기서는 그중 서버가 보낸 JSON(`response.data`)만 돌려줍니다.
+ *   그래서 호출하는 쪽에서 `응답.data.data`처럼 `.data`를 두 번 안 적어도 됨!
  */
 export const api = {
   get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {

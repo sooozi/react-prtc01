@@ -50,7 +50,7 @@ export default function Login() {
     formState: { errors }, // errors: 에러 정보
   } = useForm<LoginFormData>();
 
-  // 아이디/비밀번호 현재 값 (watch → 입력할 때마다 갱신)
+  // 아이디/비밀번호 현재 값
   const userId = watch("userId");
   const password = watch("password");
   // 둘 다 한 글자 이상 입력 시 로그인 버튼 활성화 (공백만 있으면 비활성)

@@ -29,6 +29,7 @@ export default function List() {
 
   const { totalItems, setTotalItems, totalPages, pageSize } = usePagination();
 
+  // 게시글 상세 보기
   const openPostDetail = useCallback(
     (id: number) => {
       navigate(`/post/detail?id=${id}`);
@@ -36,6 +37,7 @@ export default function List() {
     [navigate]
   );
 
+  // 검색
   const applySearch = () => {
     setAppliedTitle(draftTitle.trim());
     setAppliedRgtrId(draftRgtrId.trim());
@@ -43,6 +45,7 @@ export default function List() {
     setCurrentPage(1);
   };
 
+  // 게시글 목록 조회
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,10 +63,10 @@ export default function List() {
           rgtrNameSearchKeyword: appliedRgtrName || undefined,
         });
 
-        const payload = res?.data;
-        setPosts(payload?.data ?? []);
-        const total = payload?.totalItemSize ?? 0;
-        setTotalItems(total);
+        const payload = res?.data; // 응답 데이터 파싱
+        setPosts(payload?.data ?? []); // 게시글 목록 설정
+        const total = payload?.totalItemSize ?? 0; // 전체 게시글 수
+        setTotalItems(total); // 전체 게시글 수 설정
         const computedTotalPages = Math.max(1, Math.ceil(total / pageSize));
         if (currentPage > computedTotalPages) setCurrentPage(computedTotalPages);
       } catch (e: unknown) {

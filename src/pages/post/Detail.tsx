@@ -15,9 +15,9 @@ export default function Detail() {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const idRaw = searchParams.get("id");
-  const postNumber = idRaw ? parseInt(idRaw, 10) : NaN;
-  const invalidId = Number.isNaN(postNumber) || postNumber < 1;
+  const idRaw = searchParams.get("id"); // 게시글 번호
+  const postNumber = idRaw ? parseInt(idRaw, 10) : NaN; // 게시글 번호 파싱
+  const invalidId = Number.isNaN(postNumber) || postNumber < 1; // 게시글 번호 유효성 검사
 
 
   // [게시글 상세 조회]
@@ -26,9 +26,10 @@ export default function Detail() {
 
     let cancelled = false;
 
-    // 1) 조회수 증가 먼저 호출 후, 2) 상세 조회 (둘 다 서버 값 사용해 목록·상세 조회수 일치)
+    // 1) 조회수 증가 먼저 호출 
+    // 2) 상세 조회 (둘 다 서버 값 사용해 목록·상세 조회수 일치)
     (async () => {
-      // 조회수 증가
+      // [조회수 증가]
       try {
         await viewCountUp(postNumber);
       } catch (e) {
@@ -37,16 +38,16 @@ export default function Detail() {
       // 조회수 증가 실패 시 취소 플래그 확인
       if (cancelled) return;
 
-      // 게시글 상세 조회
+      // [게시글 상세 조회]
       try {
-        const data = await getPostDetail(postNumber);
-        if (!cancelled) setPost(data);
+        const data = await getPostDetail(postNumber); // 게시글 상세 조회
+        if (!cancelled) setPost(data); // 게시글 상세 데이터 설정
       } catch (e: unknown) {
-        if (cancelled) return;
+        if (cancelled) return; // 취소 플래그 확인
         // 게시글 상세 조회 실패 시 에러 처리
         if (e instanceof BoardApiError && e.status === 401) {
           setError(e.message);
-          setIsUnauthorized(true);
+          setIsUnauthorized(true); // 인증 에러 플래그 설정
         } else {
           setError(e instanceof Error ? e.message : "게시글을 불러오지 못했습니다.");
         }

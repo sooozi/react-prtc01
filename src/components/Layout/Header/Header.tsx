@@ -32,10 +32,12 @@ export default function Header() {
   );
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // 메뉴 닫기
   const closeMenu = useCallback(() => {
     setMenuOpen(false);
   }, []);
 
+  // 다크 모드 토글
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", next);
@@ -43,6 +45,7 @@ export default function Header() {
     setTheme(next);
   };
 
+  // 로그아웃
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userName");
@@ -108,7 +111,9 @@ export default function Header() {
                 type="button"
                 className="theme-toggle"
                 onClick={(e) => {
+                  // 다크 모드 토글 버튼 클릭 시 메뉴 닫기
                   e.stopPropagation();
+                  // 다크 모드 토글
                   toggleTheme();
                 }}
                 title={theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
