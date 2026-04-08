@@ -88,8 +88,7 @@ src/
 │   ├── usePagination.ts
 │   └── useUrlQueryPage.ts  # URL page 쿼리 파싱/갱신 (게시판·사용자 목록 등)
 ├── mocks/
-│   ├── user.ts
-│   └── board.ts
+│   └── user.ts
 ├── pages/
 │   ├── Home.tsx
 │   ├── about/
@@ -264,6 +263,6 @@ src/
 ## 기타
 
 - **ESLint**: React + TypeScript 규칙 사용.
-- **Mock**: `src/mocks/user.ts`만 런타임에서 사용(사용자 목록). `src/mocks/board.ts`는 저장소에 두었으나 현재 코드에서 import하지 않습니다(게시판은 실 API).
+- **Mock**: `src/mocks/user.ts`만 사용(사용자 목록). 게시판은 실 API 연동.
 - **컴포넌트 export**: `src/components/index.ts`는 Badge, Button, Confirm, LoadingState, Header, Footer, Layout, Pagination, Tooltip만 배럴 export. `MouseFollowEmoji`, `CatHover` 등은 필요한 파일에서 경로로 import합니다.
 

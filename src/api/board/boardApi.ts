@@ -112,7 +112,7 @@ export async function updatePost(
  * 인증 토큰 필수.
  */
 export async function deletePost(postNumber: number): Promise<void> {
-  getAuthTokenOrThrow();
+  getAuthTokenOrThrow(); // 인증 토큰 필수
   await api.delete<unknown>(`/posts/${postNumber}`);
 }
 

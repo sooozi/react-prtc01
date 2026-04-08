@@ -22,7 +22,7 @@ export default function Update() {
   const [showSaveConfirm, setShowSaveConfirm] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
-  // 상세 조회 후 폼 초기화
+  // 상세 조회 후 폼 초기화(서버에서 가져온 글 노출)
   useEffect(() => {
     // 게시글 번호가 유효하지 않으면 조회하지 않음
     if (invalidId) {
@@ -63,6 +63,7 @@ export default function Update() {
     }
     setError("");
     setSubmitLoading(true);
+    // [게시글 수정]
     try {
       await updatePost(postNumber, {
         title: title.trim(),
