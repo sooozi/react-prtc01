@@ -28,12 +28,13 @@ export default function AppRouter() {
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />
+          {/* 사용자 목록: 목 데이터만 사용, 로그인 없이 접근 가능 */}
+          <Route path="/user/list" element={<UserList />} />
           <Route path="/forbidden" element={<Forbidden />} />
           <Route path="/not-found" element={<NotFound />} />
 
           {/* 로그인 필요 — 토큰 없으면 RequireAuth에서 /auth/login 으로 이동 */}
           <Route element={<RequireAuth />}>
-            <Route path="/user/list" element={<UserList />} />
             <Route path="/user/detail" element={<UserDetail />} />
             <Route path="/post/list" element={<List />} />
             <Route path="/post/detail" element={<Detail />} />

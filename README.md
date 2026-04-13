@@ -135,7 +135,7 @@ src/
 | `/about` | About | 소개 |
 | `/forbidden` | Forbidden | 접근 제한 안내(직접 진입용) |
 | `/not-found` | NotFound | 404 안내 |
-| `/user/list` | UserList | 사용자 목록 + 페이지네이션 (로그인 필수) |
+| `/user/list` | UserList | 사용자 목록 + 페이지네이션 (비로그인 접근 가능, 목 데이터) |
 | `/user/detail` | UserDetail | 사용자 상세, 쿼리 `?userId=` (로그인 필수, 목 데이터) |
 | `/user/mypage` | MyPage | 마이페이지 — 프로필·내가 쓴 글 목록 (로그인 필수) |
 | `/post/list` | List | 게시글 목록 (로그인 필수) |
@@ -144,7 +144,7 @@ src/
 | `/post/write` | Write | 게시글 작성 |
 | 그 외 (`*`) | - | `/not-found`로 리다이렉트 (미등록 경로) |
 
-`/home`, `/auth/*`, `/about`, `/forbidden`, `/not-found`는 비로그인 접근 가능합니다. `/post/*`, `/user/list`, `/user/detail`, `/user/mypage`는 `RequireAuth`로 토큰 검사 후 없으면 `/auth/login`으로 이동하며, 이때 토스트·복귀 경로(`state`)를 넘깁니다.  
+`/home`, `/auth/*`, `/about`, `/user/list`, `/forbidden`, `/not-found`는 비로그인 접근 가능합니다. `/post/*`, `/user/detail`, `/user/mypage`는 `RequireAuth`로 토큰 검사 후 없으면 `/auth/login`으로 이동하며, 이때 토스트·복귀 경로(`state`)를 넘깁니다.  
 공개·보호 구간 모두 `Layout`(Header + `Outlet` + Footer) 안에서 렌더됩니다.
 
 **헤더(로그인 시)**: 상단에 프로필(이름) → **마이페이지** 링크, 메뉴에 About · **User**(목록) · Board · Logout.
@@ -174,9 +174,9 @@ src/
 
 ### 사용자 목록 (`/user/list`)
 
+- **로그인 없이 접근 가능** (`RequireAuth` 밖). 데이터는 `selectUserList` → `src/mocks/user.ts` 목 전용.
 - 페이지당 10명, 페이지네이션. `usePagination`, URL `page` 동기화는 `useUrlQueryPage` 사용.
 - 로딩/에러/빈 목록 시 공통 `LoadingState` 컴포넌트로 표시.
-- 데이터는 `selectUserList` → `src/mocks/user.ts` 목 전용.
 
 ### 사용자 상세 (`/user/detail?userId=`)
 
