@@ -14,7 +14,7 @@ function hasAppliedSearch(title: string, rgtrId: string, rgtrName: string): bool
 
 export default function List() {
   const navigate = useNavigate();
-  const { currentPage, setCurrentPage } = useUrlQueryPage();
+  const { currentPage, setCurrentPage } = useUrlQueryPage(); // URL에 있는 page 값을 읽어서 페이지 상태로 쓰는 커스텀 훅
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -32,7 +32,7 @@ export default function List() {
   // 게시글 상세 보기
   const openPostDetail = useCallback(
     (id: number) => {
-      navigate(`/post/detail?id=${id}`);
+      navigate(`/post/detail?id=${id}&from=list`);
     },
     [navigate]
   );
@@ -187,6 +187,7 @@ export default function List() {
             <div className="empty-state">
               <span className="empty-icon">📭</span>
               <span className="empty-text">
+                {/* 현재 목록 API에 검색어가 붙어서 나갔는지 boolean 값으로 확인 */}
                 {hasAppliedSearch(appliedTitle, appliedRgtrId, appliedRgtrName)
                   ? "검색 결과가 없습니다."
                   : "등록된 게시글이 없습니다."}

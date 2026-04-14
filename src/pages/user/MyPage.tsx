@@ -150,7 +150,10 @@ export default function MyPage() {
             <ul className="mypage-posts-list">
               {posts.map((post) => (
                 <li key={post.postNumber}>
-                  <Link className="mypage-post-link" to={`/post/detail?id=${post.postNumber}`}>
+                  <Link
+                    className="mypage-post-link"
+                    to={`/post/detail?id=${post.postNumber}&from=mypage`}
+                  >
                     <MypagePostTitle title={post.title} className="mypage-post-link__title" />
                     <span className="mypage-post-link__meta">
                       <time dateTime={post.regDt}>{post.regDt}</time>

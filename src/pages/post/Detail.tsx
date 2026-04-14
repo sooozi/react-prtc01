@@ -3,11 +3,13 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, deletePost, BoardApiError, viewCountUp } from "@/api/board";
 import type { PostDetail } from "@/api/board";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
+import { listReturnPathFromFromQuery, postUpdatePath } from "@/pages/post/postDetailFromQuery";
 import "@/pages/post/Detail.scss";
 
 export default function Detail() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const listReturnPath = listReturnPathFromFromQuery(searchParams.get("from"));
   const [post, setPost] = useState<PostDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -82,7 +84,10 @@ export default function Detail() {
     setDeleteLoading(true);
     try {
       await deletePost(postNumber);
-      navigate("/post/list?page=1", { replace: true });
+      navigate(
+        listReturnPath === "/post/list" ? "/post/list?page=1" : listReturnPath,
+        { replace: true }
+      );
     } catch (e) {
       if (e instanceof BoardApiError && e.status === 401) {
         navigate("/auth/login", { state: { toast: e.message }, replace: true });
@@ -107,17 +112,21 @@ export default function Detail() {
         <Button
           variant="secondary"
           size="sm"
-          onClick={() => navigate("/post/list")}
+          onClick={() =>
+            navigate(listReturnPath === "/post/list" ? "/post/list" : listReturnPath)
+          }
           disabled={deleteLoading}
         >
-          목록
+          {listReturnPath === "/user/mypage" ? "마이페이지" : "목록"}
         </Button>
         {canEdit && (
           <>
             <Button
               variant="primary"
               size="sm"
-              onClick={() => navigate(`/post/update?id=${postNumber}`)}
+              onClick={() =>
+                navigate(postUpdatePath(postNumber, searchParams.get("from")))
+              }
               disabled={deleteLoading}
             >
               수정

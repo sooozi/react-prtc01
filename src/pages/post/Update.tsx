@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, updatePost, BoardApiError } from "@/api/board";
 import type { PostDetail } from "@/api/board";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
+import { postDetailPath } from "@/pages/post/postDetailFromQuery";
 import "@/pages/post/Detail.scss";
 import "@/pages/post/Update.scss";
 
@@ -69,7 +70,7 @@ export default function Update() {
         title: title.trim(),
         content: content.trim(),
       });
-      navigate(`/post/detail?id=${postNumber}`, { replace: true });
+      navigate(postDetailPath(postNumber, searchParams.get("from")), { replace: true });
     } catch (e) {
       if (e instanceof BoardApiError && e.status === 401) {
         navigate("/auth/login", { state: { toast: e.message }, replace: true });
@@ -84,7 +85,7 @@ export default function Update() {
   // [취소 버튼 클릭 시] 컨펌 후 상세로 이동
   const handleCancelConfirm = () => {
     setShowCancelConfirm(false);
-    navigate(`/post/detail?id=${postNumber}`, { replace: true });
+    navigate(postDetailPath(postNumber, searchParams.get("from")), { replace: true });
   };
 
   // 로딩 상태 확인
