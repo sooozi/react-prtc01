@@ -91,6 +91,7 @@ export async function createPost(body: CreatePostRequest) {
 /**
  * 포스트 수정
  * [PUT] /posts/{postNumber}
+ * Request body: application/json { title, content } (Swagger와 동일)
  * 인증 토큰 필수.
  */
 export async function updatePost(
@@ -98,11 +99,9 @@ export async function updatePost(
   body: UpdatePostRequest
 ): Promise<void> {
   getAuthTokenOrThrow();
-  const form = new URLSearchParams();
-  form.set("title", body.title);
-  form.set("content", body.content);
-  await apiClient.put<ApiResponse<unknown>>(`/posts/${postNumber}`, form.toString(), {
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  await api.put<unknown>(`/posts/${postNumber}`, {
+    title: body.title,
+    content: body.content,
   });
 }
 
