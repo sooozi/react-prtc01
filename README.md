@@ -60,7 +60,7 @@ yarn lint
 
 | 변수 | 설명 |
 |------|------|
-| `VITE_API_BASE_URL` | API 베이스 URL. **로그인·회원가입·게시판** 등 axios 연동에 사용합니다. 미설정 시 해당 API 호출이 실패할 수 있습니다. **사용자 목록**(`selectUserList`)은 `src/mocks/user.ts` 목 데이터만 사용하며 이 변수와 무관합니다. 값은 `.env`에만 두고 저장소에는 올리지 않습니다. |
+| `VITE_API_BASE_URL` | API 베이스 URL. **로그인·회원가입·게시판** 등 axios 연동에 사용합니다. 미설정 시 해당 API 호출이 실패할 수 있습니다. **사용자 목록·상세**(`selectUserList`, `selectUserDetail`)는 `src/mocks/user.ts` 목 데이터만 사용하며 이 변수와 무관합니다. 값은 `.env`에만 두고 저장소에는 올리지 않습니다. |
 
 ---
 
@@ -72,7 +72,7 @@ src/
 │   ├── http/               # axios 인스턴스, api 래퍼, ApiResponse, ApiError
 │   ├── auth/               # 토큰(authToken), 로그인, 회원가입(아이디 중복 등)
 │   ├── board/              # 게시판 목록/상세/등록/수정/삭제/조회수, DTO 타입
-│   └── user/               # 사용자 목록(현재 mocks 연동)
+│   └── user/               # 사용자 목록·상세 API 래퍼(현재 mocks만 사용)
 ├── components/             # 공통 컴포넌트
 │   ├── Badge/
 │   ├── Button/             # 버튼 (variant: primary, secondary, danger, ghost 등)
@@ -136,15 +136,15 @@ src/
 | `/forbidden` | Forbidden | 접근 제한 안내(직접 진입용) |
 | `/not-found` | NotFound | 404 안내 |
 | `/user/list` | UserList | 사용자 목록 + 페이지네이션 (비로그인 접근 가능, 목 데이터) |
-| `/user/detail` | UserDetail | 사용자 상세, 쿼리 `?userId=` (로그인 필수, 목 데이터) |
+| `/user/detail` | UserDetail | 사용자 상세, 쿼리 `?userId=` (비로그인 접근 가능, 목 데이터) |
 | `/user/mypage` | MyPage | 마이페이지 — 프로필·내가 쓴 글 목록 (로그인 필수) |
 | `/post/list` | List | 게시글 목록 (로그인 필수) |
-| `/post/detail` | Detail | 게시글 상세 (쿼리: `?id=`) |
-| `/post/update` | Update | 게시글 수정 (쿼리: `?id=`) |
-| `/post/write` | Write | 게시글 작성 |
+| `/post/detail` | Detail | 게시글 상세 (로그인 필수, 쿼리: `?id=`) |
+| `/post/update` | Update | 게시글 수정 (로그인 필수, 쿼리: `?id=`) |
+| `/post/write` | Write | 게시글 작성 (로그인 필수) |
 | 그 외 (`*`) | - | `/not-found`로 리다이렉트 (미등록 경로) |
 
-`/home`, `/auth/*`, `/about`, `/user/list`, `/forbidden`, `/not-found`는 비로그인 접근 가능합니다. `/post/*`, `/user/detail`, `/user/mypage`는 `RequireAuth`로 토큰 검사 후 없으면 `/auth/login`으로 이동하며, 이때 토스트·복귀 경로(`state`)를 넘깁니다.  
+`/home`, `/auth/*`, `/about`, `/user/list`, `/user/detail`, `/forbidden`, `/not-found`는 비로그인 접근 가능합니다. `/post/*`, `/user/mypage`는 `RequireAuth`로 토큰 검사 후 없으면 `/auth/login`으로 이동하며, 이때 토스트·복귀 경로(`state`)를 넘깁니다.  
 공개·보호 구간 모두 `Layout`(Header + `Outlet` + Footer) 안에서 렌더됩니다.
 
 **헤더(로그인 시)**: 상단에 프로필(이름) → **마이페이지** 링크, 메뉴에 About · **User**(목록) · Board · Logout.
@@ -180,8 +180,7 @@ src/
 
 ### 사용자 상세 (`/user/detail?userId=`)
 
-- `selectUserDetail`로 목 데이터에서 `userId` 일치 행 조회. 없으면 안내 메시지.
-- 로그인 필수 (`RequireAuth`).
+- **로그인 없이 접근 가능** (`RequireAuth` 밖). `selectUserDetail`로 목 데이터에서 `userId` 일치 행 조회. 없으면 안내 메시지.
 
 ### 마이페이지 (`/user/mypage`)
 
@@ -190,7 +189,7 @@ src/
 
 ### 게시판
 
-- **목록 (`/post/list`)**: 로그인 필수. `GET /posts` 연동. 페이지네이션·정렬·검색(제목, 등록자 ID, 등록자 이름 — 확정 시에만 API로 전달, URL에는 검색어 미반영). URL 쿼리 `page`, `sort`, `order`(ASC/DESC)는 `useUrlQueryPage`와 동기화하고, API에는 `sortColumnName`, `sortType`으로 전달. 정렬 기준: `regDt`(최신), `title`, `inqCnt`, `postNumber`, `rgtrName`. 테이블 헤더 정렬 버튼으로 컬럼·방향 토글 가능. `page` 범위 보정. 로딩/에러/401 처리·빈 목록 문구.
+- **목록 (`/post/list`)**: 로그인 필수. `GET /posts` 연동. **페이지**: URL 쿼리 `page`만 `useUrlQueryPage`와 동기화(검색어는 URL에 넣지 않음). **검색**: 제목·등록자 ID·등록자 이름 — 「검색」 확정 시에만 API로 전달. **정렬**: API 요청 시 `sortColumnName: "regDt"`, `sortType: "DESC"`로 고정(헤더 클릭 정렬·`sort`/`order` 쿼리 없음). 전체 건수 반영 후 `page` 범위 보정. 로딩/에러/401 처리·빈 목록 문구(검색 적용 여부에 따라 메시지 분기).
 - **상세 (`/post/detail?id=`)**: 조회수 증가 API 후 상세 조회. 수정/삭제 버튼은 작성자만 노출. 잘못된 id 또는 `data: null` 응답 시 “게시글을 찾을 수 없습니다.” 등 메시지 표시.
 - **글쓰기 (`/post/write`)**: 제목·내용 입력 후 등록, 성공 시 목록으로 이동.
 - **수정 (`/post/update?id=`)**: 상세와 동일 id로 조회 후 제목·내용 수정, 저장 시 상세로 이동.
@@ -263,6 +262,7 @@ src/
 ## 기타
 
 - **ESLint**: React + TypeScript 규칙 사용.
-- **Mock**: `src/mocks/user.ts`만 사용(사용자 목록). 게시판은 실 API 연동.
+- **Mock**: `src/mocks/user.ts`만 사용(사용자 목록·상세). 게시판은 실 API 연동.
+- **BackstopJS**(선택): 루트 `backstop.json` — 시각 회귀 테스트. `yarn dev` 실행 후 `npx backstop reference` → `npx backstop test`. 프로젝트가 `"type": "module"`이면 엔진 스크립트 `onBefore`/`onReady`는 `require` 충돌이 나므로 설정에서 생략하거나 `.cjs`로 두는 방식을 씁니다.
 - **컴포넌트 export**: `src/components/index.ts`는 Badge, Button, Confirm, LoadingState, Header, Footer, Layout, Pagination, Tooltip만 배럴 export. `MouseFollowEmoji`, `CatHover` 등은 필요한 파일에서 경로로 import합니다.
 

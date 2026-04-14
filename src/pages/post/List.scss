@@ -5,8 +5,16 @@
   @extend %page-container;
 }
 
+/* 상단 타이틀: 사용자 목록과 동일 — `common.scss`의 `.list-page-head`만 사용 */
+
+.board-write-btn-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
 .board-search-panel {
-  margin-bottom: 2rem;
+  margin-bottom: 0;
 }
 
 .board-search-panel__form {
@@ -31,10 +39,12 @@
   min-width: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-radius: 12px;
-  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, var(--color-primary));
   background: var(--color-surface-elevated, var(--color-input-bg));
-  box-shadow: 0 1px 2px color-mix(in srgb, var(--color-text) 5%, transparent);
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--color-text) 5%, transparent),
+    0 8px 28px -10px color-mix(in srgb, var(--color-primary) 22%, transparent);
   overflow: hidden;
 
   @include bp.below(bp.$lg) {
@@ -146,7 +156,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;
 
   @include bp.below(bp.$md) {
     flex-direction: column;
@@ -158,6 +168,17 @@
 .board-page .table-card {
   @extend %table-card-base;
   @include table-card-mobile-bare;
+  border-radius: 18px;
+  border-color: color-mix(in srgb, var(--color-card-border) 90%, var(--color-primary));
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--color-text) 4%, transparent),
+    0 14px 48px -14px color-mix(in srgb, var(--color-primary) 20%, transparent);
+
+  @include bp.below(bp.$md) {
+    box-shadow: none;
+    border-color: transparent;
+    border-radius: 0;
+  }
 }
 
 .error-state {
@@ -392,4 +413,18 @@
 
 .board-page .tr-clickable {
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+    background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-card));
+  }
+}
+
+.board-page .empty-state,
+.board-page .error-state {
+  padding-block: 3rem;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--color-bg-subtle) 65%, transparent);
+  border: 1px dashed var(--color-border);
 }
