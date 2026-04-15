@@ -152,7 +152,7 @@ export async function getMyPostList(userId: string): Promise<Post[]> {
 
 /**
  * 포스트 상세 첨부파일 목록 조회
- * [GET] /posts/{id}/files — Swagger에 정의된 조회 전용 API (업로드 API와 다름)
+ * [GET] /posts/{id}/files
  */
 export async function getPostFiles(postNumber: number): Promise<PostAttachmentItem[]> {
   getAuthTokenOrThrow();

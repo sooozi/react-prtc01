@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getPostDetail, deletePost, BoardApiError, viewCountUp } from "@/api/board";
-import type { PostDetail } from "@/api/board";
+import {
+  getPostDetail,
+  getPostFiles,
+  deletePost,
+  BoardApiError,
+  viewCountUp,
+} from "@/api/board";
+import type { PostAttachmentItem, PostDetail } from "@/api/board";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
 import { listReturnPathFromFromQuery, postUpdatePath } from "@/pages/post/postDetailFromQuery";
 import "@/pages/post/Detail.scss";
@@ -11,6 +17,7 @@ export default function Detail() {
   const [searchParams] = useSearchParams();
   const listReturnPath = listReturnPathFromFromQuery(searchParams.get("from"));
   const [post, setPost] = useState<PostDetail | null>(null);
+  const [attachments, setAttachments] = useState<PostAttachmentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isUnauthorized, setIsUnauthorized] = useState(false);
@@ -40,10 +47,18 @@ export default function Detail() {
       // 조회수 증가 실패 시 취소 플래그 확인
       if (cancelled) return;
 
-      // [게시글 상세 조회]
+      // [게시글 상세 조회] + [첨부 목록] (병렬)
       try {
-        const data = await getPostDetail(postNumber); // 게시글 상세 조회
-        if (!cancelled) setPost(data); // 게시글 상세 데이터 설정
+        const [data, files] = await Promise.all([
+          getPostDetail(postNumber),
+          getPostFiles(postNumber).catch(() => [] as PostAttachmentItem[]),
+        ]);
+        if (!cancelled) {
+          setPost(data);
+          setAttachments(
+            [...files].sort((a, b) => a.sortOrder - b.sortOrder)
+          );
+        }
       } catch (e: unknown) {
         if (cancelled) return; // 취소 플래그 확인
         // 게시글 상세 조회 실패 시 에러 처리
@@ -172,6 +187,21 @@ export default function Detail() {
             </div>
             <h2 className="detail-title">{post.title}</h2>
             <div className="detail-content">{post.content || "내용 없음"}</div>
+            {attachments.length > 0 && (
+              <section className="detail-attachments" aria-label="첨부파일">
+                <h3 className="detail-attachments__heading">첨부파일</h3>
+                <ul className="detail-attachments__list">
+                  {attachments.map((file) => (
+                    <li key={file.fileId} className="detail-attachments__item">
+                      <span className="detail-attachments__icon" aria-hidden>
+                        📎
+                      </span>
+                      <span className="detail-attachments__name">{file.fileName}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
           </>
         ) : null}
       </div>
