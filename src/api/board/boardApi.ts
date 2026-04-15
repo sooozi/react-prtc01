@@ -6,6 +6,7 @@ import type { ApiResponse } from "../http/types";
 import type {
   CreatePostRequest,
   Post,
+  PostAttachmentItem,
   PostDetail,
   PostListResponse,
   SelectBoardList,
@@ -15,6 +16,7 @@ import type {
 export type {
   CreatePostRequest,
   Post,
+  PostAttachmentItem,
   PostDetail,
   PostListResponse,
   SortOrder,
@@ -75,15 +77,25 @@ export async function getPostDetail(postNumber: number): Promise<PostDetail> {
 
 /**
  * 포스트 등록
- * [POST] /posts
+ * [POST] /posts — multipart/form-data (title, content, attachFileList[])
  */
 export async function createPost(body: CreatePostRequest) {
   getAuthTokenOrThrow();
-  const form = new URLSearchParams();
-  form.set("title", body.title);
-  form.set("content", body.content);
-  const res = await apiClient.post<ApiResponse<number>>("/posts", form.toString(), {
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  const formData = new FormData();
+  formData.append("title", body.title);
+  formData.append("content", body.content);
+  for (const file of body.attachFiles ?? []) {
+    formData.append("attachFileList", file);
+  }
+  const res = await apiClient.post<ApiResponse<number>>("/posts", formData, {
+    transformRequest: [
+      (data, headers) => {
+        if (data instanceof FormData) {
+          delete (headers as Record<string, unknown>)["Content-Type"];
+        }
+        return data;
+      },
+    ],
   });
   return res.data;
 }
@@ -134,5 +146,16 @@ export async function getMyPostList(userId: string): Promise<Post[]> {
   const json = await api.get<Post[]>(`/posts/me`, {
     params: { userId },
   });
+  return json.data ?? [];
+}
+
+
+/**
+ * 포스트 상세 첨부파일 목록 조회
+ * [GET] /posts/{id}/files — Swagger에 정의된 조회 전용 API (업로드 API와 다름)
+ */
+export async function getPostFiles(postNumber: number): Promise<PostAttachmentItem[]> {
+  getAuthTokenOrThrow();
+  const json = await api.get<PostAttachmentItem[]>(`/posts/${postNumber}/files`);
   return json.data ?? [];
 }

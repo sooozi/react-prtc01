@@ -2,10 +2,12 @@
  * 게시판 API 전용 타입
  */
 
-/** POST /posts 요청 body */
+/** POST /posts — 백엔드: multipart/form-data (title, content, 첨부는 File) */
 export type CreatePostRequest = {
   title: string;
   content: string;
+  /** multipart `attachFileList` 필드로 각 파일 append */
+  attachFiles?: File[];
 };
 
 /** PUT /posts/{postNumber} 요청 body (수정 가능: title, content) */
@@ -27,6 +29,7 @@ export type Post = {
   mdfrId?: string;
   mdfrName?: string;
   mdfrInfo?: string;
+  attachFileList?: string[];
   inqCnt?: number;
 };
 
@@ -45,11 +48,18 @@ export type SortOrder = "ASC" | "DESC";
 export type SelectBoardList = {
   page: number;
   size: number;
-  titleSearchKeyword?: string;
+  titleSearchKeyword?: string;  
   rgtrIdSearchKeyword?: string;
   rgtrNameSearchKeyword?: string;
   sortColumnName?: string;
   sortType?: SortOrder;
+};
+
+/** GET /posts/{id}/files 한 건 (Swagger: fileId, fileName, sortOrder) */
+export type PostAttachmentItem = {
+  fileId: number;
+  fileName: string;
+  sortOrder: number;
 };
 
 /** GET /posts/{id} 상세 응답 (조회수: inqCnt) */
@@ -58,6 +68,7 @@ export type PostDetail = {
   ownerUserId?: string;
   title: string;
   content?: string;
+  attachFileList?: string[];
   inqCnt?: number;
   regDt: string;
   rgtrId?: string;
