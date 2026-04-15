@@ -8,3 +8,11 @@ export { default as Footer } from "@/components/Layout/Footer/Footer";
 export { default as Layout } from "@/components/Layout/Layout";
 export { default as Pagination } from "@/components/Pagination/Pagination";
 export { default as Tooltip } from "@/components/Tooltip/Tooltip";
+export {
+  TableSortIconActiveAsc,
+  TableSortIconActiveDesc,
+  TableSortIconNeutral,
+  TableSortTh,
+  type TableSortThAlign,
+  type TableSortThProps,
+} from "@/components/TableSortHeader/TableSortHeader";

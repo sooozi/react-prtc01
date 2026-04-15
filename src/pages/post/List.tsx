@@ -2,9 +2,19 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { selectBoardList, BoardApiError } from "@/api/board";
 import type { Post } from "@/api/board";
-import { Badge, Button, LoadingState, Pagination, Tooltip } from "@/components";
+import { Badge, Button, LoadingState, Pagination, TableSortTh, Tooltip } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import { useUrlQueryPage } from "@/hooks/useUrlQueryPage";
+import {
+  boardListSortToApiParams,
+  boardSortColumnDirection,
+  BOARD_SORT_HEADERS,
+  INITIAL_BOARD_LIST_SORT,
+  isBoardSortColumnActive,
+  nextBoardListSortState,
+  type BoardListSortState,
+  type BoardSortColumn,
+} from "@/pages/post/boardListSort";
 import "@/pages/post/List.scss";
 
 //[검색] API에 실제로 넘긴 검색어가 하나라도 있으면 true (빈 목록 문구용)
@@ -27,6 +37,8 @@ export default function List() {
   const [appliedRgtrId, setAppliedRgtrId] = useState("");
   const [appliedRgtrName, setAppliedRgtrName] = useState("");
 
+  const [sortState, setSortState] = useState<BoardListSortState>(INITIAL_BOARD_LIST_SORT);
+
   const { totalItems, setTotalItems, totalPages, pageSize } = usePagination();
 
   // 게시글 상세 보기
@@ -45,6 +57,14 @@ export default function List() {
     setCurrentPage(1);
   };
 
+  const handleSortClick = useCallback(
+    (clicked: BoardSortColumn) => {
+      setSortState((prev) => nextBoardListSortState(prev, clicked));
+      setCurrentPage(1);
+    },
+    [setCurrentPage]
+  );
+
   // 게시글 목록 조회
   useEffect(() => {
     const fetchData = async () => {
@@ -53,11 +73,12 @@ export default function List() {
         setError("");
         setIsUnauthorized(false);
 
+        const sortParams = boardListSortToApiParams(sortState);
         const res = await selectBoardList({
           page: currentPage,
           size: pageSize,
-          sortColumnName: "regDt",
-          sortType: "DESC",
+          sortColumnName: sortParams.sortColumnName,
+          sortType: sortParams.sortType,
           titleSearchKeyword: appliedTitle || undefined,
           rgtrIdSearchKeyword: appliedRgtrId || undefined,
           rgtrNameSearchKeyword: appliedRgtrName || undefined,
@@ -90,6 +111,7 @@ export default function List() {
     appliedRgtrName,
     setCurrentPage,
     setTotalItems,
+    sortState,
   ]);
 
   return (
@@ -198,11 +220,30 @@ export default function List() {
               <table className="table board-page__table-desktop">
                 <thead>
                   <tr>
-                    <th className="th th-number">번호</th>
-                    <th className="th th-title">제목</th>
-                    <th className="th th-rgtr">등록자</th>
-                    <th className="th th-view">조회</th>
-                    <th className="th th-date">등록일시</th>
+                    {BOARD_SORT_HEADERS.map(({ column, label, align, thClassSuffix }) => (
+                      <th
+                        key={column}
+                        className={`th th-${thClassSuffix}`}
+                        scope="col"
+                        aria-sort={
+                          isBoardSortColumnActive(sortState, column)
+                            ? boardSortColumnDirection(sortState) === "ASC"
+                              ? "ascending"
+                              : "descending"
+                            : undefined
+                        }
+                      >
+                        <TableSortTh
+                          align={align}
+                          active={isBoardSortColumnActive(sortState, column)}
+                          sortDirection={boardSortColumnDirection(sortState)}
+                          iconButtonAriaLabel={`${label} 기준 정렬`}
+                          onIconClick={() => handleSortClick(column)}
+                        >
+                          {label}
+                        </TableSortTh>
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>

@@ -1,0 +1,77 @@
+/* 테이블 `<th>` 안에 넣는 라벨 + 정렬 힌트 아이콘 (페이지 무관) */
+.table-sort-th {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.table-sort-th--align-center {
+  justify-content: center;
+  width: 100%;
+}
+
+.table-sort-th--align-start {
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.table-sort-th__label {
+  min-width: 0;
+}
+
+.table-sort-th__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.table-sort-th__icon--neutral {
+  color: var(--color-text-muted);
+  opacity: 0.42;
+}
+
+/* 활성 열: primary 타일 없이 헤더 톤에 맞는 살짝 진한 아이콘만 */
+.table-sort-th__icon--active {
+  color: var(--color-text-secondary);
+  opacity: 0.88;
+}
+
+.table-sort-th__icon--active svg {
+  margin-top: 0;
+}
+
+.table-sort-th__icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  line-height: 0;
+  border-radius: 8px;
+  transition: transform 0.12s ease;
+
+  &:hover .table-sort-th__icon--neutral {
+    opacity: 0.65;
+  }
+
+  &:hover .table-sort-th__icon--active {
+    color: var(--color-text);
+    opacity: 1;
+  }
+
+  &:active {
+    transform: scale(0.94);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
