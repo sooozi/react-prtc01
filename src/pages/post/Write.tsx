@@ -21,6 +21,7 @@ export default function Write() {
     [attachFiles]
   );
 
+  // 첨부파일 미리보기 URL 목록 정리 => 컴포넌트 언마운트 시 처리
   useEffect(() => {
     return () => {
       attachPreviewUrls.forEach((url) => URL.revokeObjectURL(url));
@@ -30,25 +31,28 @@ export default function Write() {
   // 첨부파일 제거
   const removeAttachAt = (index: number) => {
     setAttachFiles((prev) => {
-      const next = prev.filter((_, i) => i !== index);
+      const next = prev.filter((_, i) => i !== index); // 현재 인덱스 제외한 배열 반환
       if (next.length === 0 && fileInputRef.current) {
-        fileInputRef.current.value = "";
+        fileInputRef.current.value = ""; // 첨부파일 입력 필드 초기화
       }
-      return next;
+      return next; // 현재 인덱스 제외한 배열 반환
     });
   };
 
+  // 첨부파일 추가
   const addImageFiles = (files: File[]) => {
     const images = files.filter((f) => f.type.startsWith("image/"));
     if (images.length === 0) return;
     setAttachFiles((prev) => [...prev, ...images]);
   };
 
+  // 첨부파일 변경 시 처리
   const handleAttachFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const list = e.target.files;
     setAttachFiles(list ? Array.from(list) : []);
   };
 
+  // 첨부파일 드래그 시작 시 처리
   const handleAttachDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -56,6 +60,7 @@ export default function Write() {
     setIsAttachDragging(true);
   };
 
+  // 첨부파일 드래그 떨어질 때 처리
   const handleAttachDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -66,12 +71,14 @@ export default function Write() {
     }
   };
 
+  // 첨부파일 드래그 오버 시 처리
   const handleAttachDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     e.dataTransfer.dropEffect = "copy";
   };
 
+  // 첨부파일 드래그 떨어질 때 처리
   const handleAttachDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -167,9 +174,6 @@ export default function Write() {
           <span className="label" id="post-file-label">
             첨부파일
           </span>
-          <p className="board-write-file-hint" id="post-file-hint">
-            이미지 파일을 선택하거나 여기로 끌어다 놓을 수 있어요.
-          </p>
           <div className="board-write-file-upload">
             <input
               ref={fileInputRef}

@@ -10,10 +10,11 @@ export type CreatePostRequest = {
   attachFiles?: File[];
 };
 
-/** PUT /posts/{postNumber} 요청 body (수정 가능: title, content) */
+/** PUT /posts/{postNumber} — 등록과 동일하게 multipart (title, content, attachFileList[]) */
 export type UpdatePostRequest = {
   title: string;
   content: string;
+  attachFiles?: File[];
 };
 
 /** GET /posts 목록의 게시글 한 건 (조회수: inqCnt) */

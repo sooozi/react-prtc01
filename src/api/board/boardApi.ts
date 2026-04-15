@@ -102,18 +102,28 @@ export async function createPost(body: CreatePostRequest) {
 
 /**
  * 포스트 수정
- * [PUT] /posts/{postNumber}
- * Request body: application/json { title, content } (Swagger와 동일)
- * 인증 토큰 필수.
+ * [PUT] /posts/{postNumber} — multipart/form-data (등록 API와 동일 필드명)
  */
 export async function updatePost(
   postNumber: number,
   body: UpdatePostRequest
 ): Promise<void> {
   getAuthTokenOrThrow();
-  await api.put<unknown>(`/posts/${postNumber}`, {
-    title: body.title,
-    content: body.content,
+  const formData = new FormData();
+  formData.append("title", body.title);
+  formData.append("content", body.content);
+  for (const file of body.attachFiles ?? []) {
+    formData.append("attachFileList", file);
+  }
+  await apiClient.put<unknown>(`/posts/${postNumber}`, formData, {
+    transformRequest: [
+      (data, headers) => {
+        if (data instanceof FormData) {
+          delete (headers as Record<string, unknown>)["Content-Type"];
+        }
+        return data;
+      },
+    ],
   });
 }
 
