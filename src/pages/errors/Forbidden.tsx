@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components";
-import "@/pages/Forbidden.scss";
+import "./Forbidden.scss";
 
 export default function Forbidden() {
   const navigate = useNavigate();
