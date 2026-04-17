@@ -10,8 +10,6 @@ export default function Write() {
   const [content, setContent] = useState("");
   const [attachFiles, setAttachFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const attachDragCounter = useRef(0);
-  const [isAttachDragging, setIsAttachDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -39,53 +37,10 @@ export default function Write() {
     });
   };
 
-  // 첨부파일 추가
-  const addImageFiles = (files: File[]) => {
-    const images = files.filter((f) => f.type.startsWith("image/"));
-    if (images.length === 0) return;
-    setAttachFiles((prev) => [...prev, ...images]);
-  };
-
   // 첨부파일 변경 시 처리
   const handleAttachFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const list = e.target.files;
     setAttachFiles(list ? Array.from(list) : []);
-  };
-
-  // 첨부파일 드래그 시작 시 처리
-  const handleAttachDragEnter = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    attachDragCounter.current += 1;
-    setIsAttachDragging(true);
-  };
-
-  // 첨부파일 드래그 떨어질 때 처리
-  const handleAttachDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    attachDragCounter.current -= 1;
-    if (attachDragCounter.current <= 0) {
-      attachDragCounter.current = 0;
-      setIsAttachDragging(false);
-    }
-  };
-
-  // 첨부파일 드래그 오버 시 처리
-  const handleAttachDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.dataTransfer.dropEffect = "copy";
-  };
-
-  // 첨부파일 드래그 떨어질 때 처리
-  const handleAttachDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    attachDragCounter.current = 0;
-    setIsAttachDragging(false);
-    const dropped = Array.from(e.dataTransfer.files);
-    addImageFiles(dropped);
   };
 
   // 등록 버튼 클릭 시 처리
@@ -106,7 +61,7 @@ export default function Write() {
       await createPost({
         title: title.trim(),
         content: content.trim(),
-        attachFiles: attachFiles.length > 0 ? attachFiles : undefined,
+        attachFiles: attachFiles.length > 0 ? attachFiles : undefined, // 첨부파일이 있으면 첨부파일 전송
       });
       navigate("/post/list", { replace: true });
     } catch (e) {
@@ -174,6 +129,9 @@ export default function Write() {
           <span className="label" id="post-file-label">
             첨부파일
           </span>
+          <p className="board-write-file-hint" id="post-file-hint">
+            이미지 파일을 선택해 첨부할 수 있어요.
+          </p>
           <div className="board-write-file-upload">
             <input
               ref={fileInputRef}
@@ -188,28 +146,31 @@ export default function Write() {
             />
             <label
               htmlFor="post-file"
-              className={
-                isAttachDragging
-                  ? "board-write-file-drop board-write-file-drop--dragging"
-                  : "board-write-file-drop"
-              }
-              onDragEnter={handleAttachDragEnter}
-              onDragLeave={handleAttachDragLeave}
-              onDragOver={handleAttachDragOver}
-              onDrop={handleAttachDrop}
+              className="board-write-file-drop"
             >
               <span className="board-write-file-drop__icon" aria-hidden>
                 <svg width="35" height="35" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect
+                    x="3"
+                    y="5"
+                    width="18"
+                    height="14"
+                    rx="2"
+                    ry="2"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                  />
                   <path
-                    d="M4 16.5V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2.5M8 9l4-4 4 4M12 5v11"
+                    d="M3 16.5 7 12.5l3 3 4-5 7 6"
                     stroke="currentColor"
                     strokeWidth="1.75"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
+                  <circle cx="8.5" cy="9.5" r="1.35" fill="currentColor" />
                 </svg>
               </span>
-              <span className="board-write-file-drop__title">이미지 선택 또는 드롭</span>
+              <span className="board-write-file-drop__title">이미지 선택</span>
               <span className="board-write-file-drop__sub">PNG, JPG, GIF, WebP 등</span>
             </label>
           </div>

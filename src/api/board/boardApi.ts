@@ -76,7 +76,7 @@ export async function getPostDetail(postNumber: number): Promise<PostDetail> {
 }
 
 /**
- * 포스트 등록
+ * 포스트 등록 (게시글 + 파일 업로드)
  * [POST] /posts — multipart/form-data (title, content, attachFileList[])
  */
 export async function createPost(body: CreatePostRequest) {
@@ -84,10 +84,13 @@ export async function createPost(body: CreatePostRequest) {
   const formData = new FormData();
   formData.append("title", body.title);
   formData.append("content", body.content);
+  // body.attachFiles가 있으면 attachFileList에 추가
   for (const file of body.attachFiles ?? []) {
     formData.append("attachFileList", file);
   }
+  // formData를 API로 전송
   const res = await apiClient.post<ApiResponse<number>>("/posts", formData, {
+    // formData를 API로 전송할 때 Content-Type을 지우는 코드
     transformRequest: [
       (data, headers) => {
         if (data instanceof FormData) {
@@ -168,4 +171,17 @@ export async function getPostFiles(postNumber: number): Promise<PostAttachmentIt
   getAuthTokenOrThrow();
   const json = await api.get<PostAttachmentItem[]>(`/posts/${postNumber}/files`);
   return json.data ?? [];
+}
+
+/**
+ * 게시글 첨부 파일 바이너리 (브라우저 미리보기용).
+ * 목록 API `GET /posts/{id}/files`와 쌍을 이루는 단건 조회 경로로 가정합니다.
+ * Swagger 경로가 다르면(예: `…/files/{fileId}/download`) 이 함수의 URL만 맞춰 주세요.
+ */
+export async function getPostFileBlob(postNumber: number, fileId: number): Promise<Blob> {
+  getAuthTokenOrThrow();
+  const res = await apiClient.get<Blob>(`/posts/${postNumber}/files/${fileId}`, {
+    responseType: "blob",
+  });
+  return res.data;
 }

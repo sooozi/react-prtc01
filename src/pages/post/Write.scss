@@ -132,17 +132,9 @@
     color: var(--color-text);
     background: var(--color-input-focus-bg);
   }
-
-  &--dragging {
-    border-color: var(--color-primary);
-    border-style: solid;
-    background: var(--color-primary-muted);
-    color: var(--color-text);
-    box-shadow: 0 0 0 4px var(--color-primary-muted);
-  }
 }
 
-.board-write-file-upload:focus-within .board-write-file-drop:not(.board-write-file-drop--dragging) {
+.board-write-file-upload:focus-within .board-write-file-drop {
   border-color: var(--color-primary);
   background: var(--color-input-focus-bg);
   box-shadow: 0 0 0 4px var(--color-primary-muted);

@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getPostDetail, getPostFiles, updatePost, BoardApiError } from "@/api/board";
+import {
+  getPostDetail,
+  getPostFiles,
+  getPostFileBlob,
+  updatePost,
+  BoardApiError,
+} from "@/api/board";
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
 import { postDetailPath } from "@/pages/post/postDetailFromQuery";
@@ -19,8 +25,6 @@ export default function Update() {
   const [existingAttachments, setExistingAttachments] = useState<PostAttachmentItem[]>([]);
   const [newAttachFiles, setNewAttachFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const attachDragCounter = useRef(0);
-  const [isAttachDragging, setIsAttachDragging] = useState(false);
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState("");
@@ -28,18 +32,25 @@ export default function Update() {
   const [content, setContent] = useState("");
   const [showSaveConfirm, setShowSaveConfirm] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  /** 서버에만 있는 이미지 첨부 — 단건 다운로드 API로 blob URL 생성 */
+  const [existingImageBlobUrls, setExistingImageBlobUrls] = useState<Record<number, string>>(
+    {}
+  );
 
+  // 첨부파일 미리보기 URL 목록
   const newAttachPreviewUrls = useMemo(
     () => newAttachFiles.map((file) => URL.createObjectURL(file)),
     [newAttachFiles]
   );
 
+  // 첨부파일 미리보기 URL 목록 정리 => 컴포넌트 언마운트 시 처리
   useEffect(() => {
     return () => {
       newAttachPreviewUrls.forEach((url) => URL.revokeObjectURL(url));
     };
   }, [newAttachPreviewUrls]);
 
+  // 첨부파일 제거
   const removeNewAttachAt = (index: number) => {
     setNewAttachFiles((prev) => {
       const next = prev.filter((_, i) => i !== index);
@@ -50,49 +61,20 @@ export default function Update() {
     });
   };
 
+  // 첨부파일 추가
   const addImageFiles = (files: File[]) => {
     const images = files.filter((f) => f.type.startsWith("image/"));
     if (images.length === 0) return;
     setNewAttachFiles((prev) => [...prev, ...images]);
   };
 
+  // 첨부파일 변경 시 처리
   const handleAttachFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const list = e.target.files;
     if (list?.length) {
       addImageFiles(Array.from(list));
       e.target.value = "";
     }
-  };
-
-  const handleAttachDragEnter = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    attachDragCounter.current += 1;
-    setIsAttachDragging(true);
-  };
-
-  const handleAttachDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    attachDragCounter.current -= 1;
-    if (attachDragCounter.current <= 0) {
-      attachDragCounter.current = 0;
-      setIsAttachDragging(false);
-    }
-  };
-
-  const handleAttachDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.dataTransfer.dropEffect = "copy";
-  };
-
-  const handleAttachDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    attachDragCounter.current = 0;
-    setIsAttachDragging(false);
-    addImageFiles(Array.from(e.dataTransfer.files));
   };
 
   // 상세 + 기존 첨부 목록
@@ -132,6 +114,38 @@ export default function Update() {
     };
   }, [postNumber, invalidId, navigate]);
 
+  useEffect(() => {
+    let cancelled = false;
+    const created: string[] = [];
+
+    const isImageFileName = (name: string) =>
+      /\.(jpe?g|png|gif|webp|bmp|svg)$/i.test(name);
+
+    (async () => {
+      const next: Record<number, string> = {};
+      for (const att of existingAttachments) {
+        if (!isImageFileName(att.fileName)) continue;
+        try {
+          const blob = await getPostFileBlob(postNumber, att.fileId);
+          if (cancelled) return;
+          const url = URL.createObjectURL(blob);
+          created.push(url);
+          next[att.fileId] = url;
+        } catch {
+          /* 미리보기 없이 파일명만 표시 */
+        }
+      }
+      if (cancelled) return;
+      setExistingImageBlobUrls(next);
+    })();
+
+    return () => {
+      cancelled = true;
+      created.forEach((u) => URL.revokeObjectURL(u));
+      setExistingImageBlobUrls({});
+    };
+  }, [postNumber, existingAttachments]);
+
   const handleSaveConfirm = async () => {
     setShowSaveConfirm(false);
     if (!title.trim()) {
@@ -165,6 +179,7 @@ export default function Update() {
     }
   };
 
+  // 취소 버튼 클릭 시 처리
   const handleCancelConfirm = () => {
     setShowCancelConfirm(false);
     navigate(postDetailPath(postNumber, searchParams.get("from")), { replace: true });
@@ -245,6 +260,9 @@ export default function Update() {
               <span className="label" id="update-file-label">
                 첨부파일
               </span>
+              <p className="board-write-file-hint" id="update-file-hint">
+                이미지 파일을 선택해 첨부할 수 있어요.
+              </p>
               <div className="board-write-file-upload">
                 <input
                   ref={fileInputRef}
@@ -253,50 +271,61 @@ export default function Update() {
                   className="board-write-file-input-hidden"
                   accept="image/*"
                   multiple
-                  aria-labelledby="update-file-label"
-                  aria-describedby="update-file-hint"
+                  aria-labelledby="update-file-label" // 라벨 설정
+                  aria-describedby="update-file-hint" // 설명 설정
                   onChange={handleAttachFileChange}
                 />
-                <label
-                  htmlFor="update-post-file"
-                  className={
-                    isAttachDragging
-                      ? "board-write-file-drop board-write-file-drop--dragging"
-                      : "board-write-file-drop"
-                  }
-                  onDragEnter={handleAttachDragEnter}
-                  onDragLeave={handleAttachDragLeave}
-                  onDragOver={handleAttachDragOver}
-                  onDrop={handleAttachDrop}
-                >
+                <label htmlFor="update-post-file" className="board-write-file-drop">
                   <span className="board-write-file-drop__icon" aria-hidden>
                     <svg width="35" height="35" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect
+                        x="3"
+                        y="5"
+                        width="18"
+                        height="14"
+                        rx="2"
+                        ry="2"
+                        stroke="currentColor"
+                        strokeWidth="1.75"
+                      />
                       <path
-                        d="M4 16.5V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2.5M8 9l4-4 4 4M12 5v11"
+                        d="M3 16.5 7 12.5l3 3 4-5 7 6"
                         stroke="currentColor"
                         strokeWidth="1.75"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       />
+                      <circle cx="8.5" cy="9.5" r="1.35" fill="currentColor" />
                     </svg>
                   </span>
-                  <span className="board-write-file-drop__title">이미지 선택 또는 드롭</span>
+                  <span className="board-write-file-drop__title">이미지 선택</span>
                   <span className="board-write-file-drop__sub">PNG, JPG, GIF, WebP 등</span>
                 </label>
               </div>
               {(existingAttachments.length > 0 || newAttachFiles.length > 0) && (
                 <ul className="board-write-attach-previews" aria-label="첨부파일">
-                  {existingAttachments.map((f) => (
-                    <li
-                      key={`existing-${f.fileId}`}
-                      className="board-write-attach-preview board-write-attach-preview--saved"
-                    >
-                      <div className="board-write-attach-preview__saved-thumb" aria-hidden>
-                        📎
-                      </div>
-                      <span className="board-write-attach-preview__name">{f.fileName}</span>
-                    </li>
-                  ))}
+                  {existingAttachments.map((f) => {
+                    const savedPreview = existingImageBlobUrls[f.fileId];
+                    return (
+                      <li
+                        key={`existing-${f.fileId}`}
+                        className="board-write-attach-preview board-write-attach-preview--saved"
+                      >
+                        {savedPreview ? (
+                          <img
+                            src={savedPreview}
+                            alt=""
+                            className="board-write-attach-preview__img"
+                          />
+                        ) : (
+                          <div className="board-write-attach-preview__saved-thumb" aria-hidden>
+                            📎
+                          </div>
+                        )}
+                        <span className="board-write-attach-preview__name">{f.fileName}</span>
+                      </li>
+                    );
+                  })}
                   {newAttachFiles.map((file, index) => (
                     <li
                       key={`${file.name}-${file.size}-${file.lastModified}-${index}`}
