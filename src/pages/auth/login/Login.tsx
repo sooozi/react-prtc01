@@ -112,7 +112,7 @@ export default function Login() {
       <div className="login-card">
         <div className="login-header">
           <Badge>🔐 Login</Badge>
-          <h1 className="title">로그인로그인</h1>
+          <h1 className="title">로그인</h1>
         </div>
 
         {apiAlert && (

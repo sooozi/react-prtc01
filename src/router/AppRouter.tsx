@@ -8,6 +8,7 @@ import Detail from "@/pages/post/Detail";
 import Write from "@/pages/post/Write";
 import Update from "@/pages/post/Update";
 import MyPage from "@/pages/user/MyPage";
+import Schedule from "@/pages/schedule/Schedule";
 import Forbidden from "@/pages/errors/Forbidden";
 import NotFound from "@/pages/errors/NotFound";
 import Login from "@/pages/auth/login/Login";
@@ -41,6 +42,7 @@ export default function AppRouter() {
             <Route path="/post/update" element={<Update />} />
             <Route path="/post/write" element={<Write />} />
             <Route path="/user/mypage" element={<MyPage />} />
+            <Route path="/schedule" element={<Schedule />} />
           </Route>
         </Route>
 

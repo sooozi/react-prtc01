@@ -13,6 +13,7 @@ const baseURL = import.meta.env.VITE_API_BASE_URL as string;
  * - request: localStorage 토큰이 있으면 Authorization Bearer 자동 부착 (boardApi 헤더 중복 제거)
  * - response 에러는 interceptor에서 ApiError로 통일 (401 메시지 등 중복 제거)
  */
+// 인터셉터로 잡아서 오류 처리 여기서 한방에 처리하기
 export const apiClient: AxiosInstance = axios.create({
   baseURL,
   headers: {

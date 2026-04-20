@@ -168,6 +168,15 @@ export default function Header() {
               </DrawerNavIcon>
               <span className="nav-link__label">Board</span>
             </Link>
+            <Link to="/schedule" className="nav-link nav-link--drawer">
+              <DrawerNavIcon>
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" x2="16" y1="2" y2="6" />
+                <line x1="8" x2="8" y1="2" y2="6" />
+                <line x1="3" x2="21" y1="10" y2="10" />
+              </DrawerNavIcon>
+              <span className="nav-link__label">Schedule</span>
+            </Link>
 
             {userName ? (
               <Button variant="ghost" className="nav-link nav-link--drawer logout-btn" onClick={handleLogout}>
