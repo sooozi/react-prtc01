@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance, isAxiosError } from "axios";
+import { redirectUnauthorizedToLogin } from "../auth/loginRedirectSession";
 import { getStoredAuthToken } from "../auth/authToken";
 import { ApiError } from "./errors";
 
@@ -69,6 +70,15 @@ apiClient.interceptors.response.use(
       }
       if (status === 404 && path !== "/not-found") {
         window.location.replace("/not-found");
+      }
+
+      // 401: 만료·무효 토큰 등 — 로그인으로 보내고 토스트는 sessionStorage(Login에서 consume)
+      if (status === 401 && typeof window !== "undefined") {
+        const data401 = error.response.data as ErrorResponseBody | undefined;
+        const toastMsg =
+          data401?.resultMessage ??
+          "인증이 필요합니다. 로그인 후 다시 시도해주세요.";
+        redirectUnauthorizedToLogin(toastMsg);
       }
 
       const data = error.response.data as ErrorResponseBody | undefined;

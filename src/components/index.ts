@@ -1,4 +1,7 @@
 // 공통 컴포넌트 export
+export { ImageFileAttachField, ImageFileReadOnlyRow } from "@/components/ImageFileAttachField/ImageFileAttachField";
+export { filesToItemsWithIds, itemsToFiles } from "@/components/ImageFileAttachField/fileAttachItemUtils";
+export type { FileWithId } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
 export { default as Badge } from "@/components/Badge/Badge";
 export { default as Button } from "@/components/Button/Button";
 export { default as Confirm } from "@/components/Confirm/Confirm";

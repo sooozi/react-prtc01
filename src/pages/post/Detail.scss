@@ -77,15 +77,6 @@
   border-radius: 6px;
 }
 
-.detail-author::before,
-.detail-date::before,
-.detail-view::before {
-  content: "·";
-  margin-right: 0.75rem;
-  color: var(--color-border);
-  font-weight: 700;
-}
-
 .detail-title {
   font-size: 1.625rem;
   font-weight: 800;
@@ -147,6 +138,11 @@
 
 .detail-attachments__icon {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
   opacity: 0.85;
 }
 

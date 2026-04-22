@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { redirectUnauthorizedToLogin } from "@/api/auth/loginRedirectSession";
 import { selectBoardList, BoardApiError } from "@/api/board";
 import type { Post } from "@/api/board";
 import { Badge, Button, LoadingState, Pagination, TableSortTh, Tooltip } from "@/components";
@@ -28,7 +29,6 @@ export default function List() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [isUnauthorized, setIsUnauthorized] = useState(false);
 
   const [draftTitle, setDraftTitle] = useState("");
   const [draftRgtrId, setDraftRgtrId] = useState("");
@@ -71,7 +71,6 @@ export default function List() {
       try {
         setLoading(true);
         setError("");
-        setIsUnauthorized(false);
 
         const sortParams = boardListSortToApiParams(sortState);
         const res = await selectBoardList({
@@ -92,11 +91,10 @@ export default function List() {
         if (currentPage > computedTotalPages) setCurrentPage(computedTotalPages);
       } catch (e: unknown) {
         if (e instanceof BoardApiError && e.status === 401) {
-          setError(e.message);
-          setIsUnauthorized(true);
-        } else {
-          setError(e instanceof Error ? e.message : "게시글 목록 조회 실패");
+          redirectUnauthorizedToLogin(e.message);
+          return;
         }
+        setError(e instanceof Error ? e.message : "게시글 목록 조회 실패");
       } finally {
         setLoading(false);
       }
@@ -192,18 +190,8 @@ export default function List() {
           ) : error ? (
             <div className="error-state">
               <span className="error-icon">⚠️</span>
-              <span className="error-title">{isUnauthorized ? "인증 필요" : "연결 오류"}</span>
+              <span className="error-title">연결 오류</span>
               <span className="error-message">{error}</span>
-              {isUnauthorized && (
-                <Button
-                  variant="primary"
-                  onClick={() =>
-                    navigate("/auth/login", { state: { toast: "로그인이 필요합니다" }, replace: true })
-                  }
-                >
-                  로그인하기
-                </Button>
-              )}
             </div>
           ) : posts.length === 0 ? (
             <div className="empty-state">

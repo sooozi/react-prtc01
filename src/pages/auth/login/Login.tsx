@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate, type Location } from "react-router-dom";
+import { consumeLoginRedirectSession } from "@/api/auth/loginRedirectSession";
 import { ApiError } from "@/api/http";
 import { LOGIN_SUCCESS_CODE, login } from "@/api/auth";
 import { Badge, Button } from "@/components";
@@ -24,15 +25,38 @@ export default function Login() {
   /** 비밀번호 보기/숨기기 */
   const [showPassword, setShowPassword] = useState(false);
 
-  // 보드 등에서 리다이렉트 시 전달한 "로그인이 필요합니다" 토스트 (from 은 로그인 후 복귀용으로 유지)
+  // RequireAuth의 state.toast 또는 API 401 인터셉터가 sessionStorage에 넣은 토스트 표시 후 state 정리
   useEffect(() => {
+    const consumed = consumeLoginRedirectSession();
     const st = location.state as LoginLocationState | null;
-    const msg = st?.toast;
-    if (msg) {
-      setToastMessage(msg);
+
+    const toastMsg = st?.toast ?? consumed.toast ?? null;
+    const fromLoc =
+      st?.from ??
+      (consumed.from
+        ? ({
+            pathname: consumed.from.pathname,
+            search: consumed.from.search,
+            hash: consumed.from.hash,
+            state: null,
+            key: "default",
+          } as Location)
+        : undefined);
+
+    if (toastMsg) {
+      setToastMessage(toastMsg);
+    }
+
+    const shouldNormalizeState = Boolean(
+      st?.toast ?? consumed.toast ?? consumed.from
+    );
+    if (shouldNormalizeState) {
       const next: LoginLocationState = {};
-      if (st.from) next.from = st.from;
-      navigate(location.pathname, { replace: true, state: next });
+      if (fromLoc) next.from = fromLoc;
+      navigate(location.pathname, {
+        replace: true,
+        state: Object.keys(next).length ? next : undefined,
+      });
     }
   }, [location.pathname, location.state, navigate]);
 

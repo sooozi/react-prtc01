@@ -1,47 +1,21 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { redirectUnauthorizedToLogin } from "@/api/auth/loginRedirectSession";
 import { createPost, BoardApiError } from "@/api/board";
 import { Badge, Button } from "@/components";
+import { ImageFileAttachField } from "@/components/ImageFileAttachField/ImageFileAttachField";
+import { itemsToFiles } from "@/components/ImageFileAttachField/fileAttachItemUtils";
+import type { FileWithId } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
 import "@/pages/post/Write.scss";
 
 export default function Write() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [attachFiles, setAttachFiles] = useState<File[]>([]);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [attachFileItems, setAttachFileItems] = useState<FileWithId[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null); // 파일 입력 요소 참조
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  // 첨부파일 미리보기 URL 목록
-  const attachPreviewUrls = useMemo(
-    () => attachFiles.map((file) => URL.createObjectURL(file)),
-    [attachFiles]
-  );
-
-  // 첨부파일 미리보기 URL 목록 정리 => 컴포넌트 언마운트 시 처리
-  useEffect(() => {
-    return () => {
-      attachPreviewUrls.forEach((url) => URL.revokeObjectURL(url));
-    };
-  }, [attachPreviewUrls]);
-
-  // 첨부파일 제거
-  const removeAttachAt = (index: number) => {
-    setAttachFiles((prev) => {
-      const next = prev.filter((_, i) => i !== index); // 현재 인덱스 제외한 배열 반환
-      if (next.length === 0 && fileInputRef.current) {
-        fileInputRef.current.value = ""; // 첨부파일 입력 필드 초기화
-      }
-      return next; // 현재 인덱스 제외한 배열 반환
-    });
-  };
-
-  // 첨부파일 변경 시 처리
-  const handleAttachFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const list = e.target.files;
-    setAttachFiles(list ? Array.from(list) : []);
-  };
 
   // 등록 버튼 클릭 시 처리
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,17 +32,19 @@ export default function Write() {
 
     setLoading(true);
     try {
+      const files = itemsToFiles(attachFileItems); // 첨부된 이미지 파일 목록
       await createPost({
         title: title.trim(),
         content: content.trim(),
-        attachFiles: attachFiles.length > 0 ? attachFiles : undefined, // 첨부파일이 있으면 첨부파일 전송
+        attachFiles: files.length > 0 ? files : undefined,
       });
       navigate("/post/list", { replace: true });
     } catch (e) {
-      // 인증 오류 처리
       if (e instanceof BoardApiError && e.status === 401) {
-        navigate("/auth/login", { state: { toast: e.message }, replace: true });
-      } else if (e instanceof BoardApiError) {
+        redirectUnauthorizedToLogin(e.message);
+        return;
+      }
+      if (e instanceof BoardApiError) {
         const detail = e.resultDetailMessage
           ? ` ${e.resultDetailMessage}`
           : "";
@@ -126,79 +102,15 @@ export default function Write() {
         </div>
 
         <div className="form-group">
-          <span className="label" id="post-file-label">
+          <span className="label">
             첨부파일
           </span>
-          <p className="board-write-file-hint" id="post-file-hint">
-            이미지 파일을 선택해 첨부할 수 있어요.
-          </p>
-          <div className="board-write-file-upload">
-            <input
-              ref={fileInputRef}
-              id="post-file"
-              type="file"
-              className="board-write-file-input-hidden"
-              accept="image/*"
-              multiple
-              aria-labelledby="post-file-label"
-              aria-describedby="post-file-hint"
-              onChange={handleAttachFileChange}
-            />
-            <label
-              htmlFor="post-file"
-              className="board-write-file-drop"
-            >
-              <span className="board-write-file-drop__icon" aria-hidden>
-                <svg width="35" height="35" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect
-                    x="3"
-                    y="5"
-                    width="18"
-                    height="14"
-                    rx="2"
-                    ry="2"
-                    stroke="currentColor"
-                    strokeWidth="1.75"
-                  />
-                  <path
-                    d="M3 16.5 7 12.5l3 3 4-5 7 6"
-                    stroke="currentColor"
-                    strokeWidth="1.75"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <circle cx="8.5" cy="9.5" r="1.35" fill="currentColor" />
-                </svg>
-              </span>
-              <span className="board-write-file-drop__title">이미지 선택</span>
-              <span className="board-write-file-drop__sub">PNG, JPG, GIF, WebP 등</span>
-            </label>
-          </div>
-          {attachFiles.length > 0 && (
-            <ul
-              className="board-write-attach-previews"
-              aria-label="첨부 이미지 미리보기"
-            >
-              {attachFiles.map((file, index) => (
-                <li key={`${file.name}-${file.size}-${file.lastModified}-${index}`} className="board-write-attach-preview">
-                  <img
-                    src={attachPreviewUrls[index]}
-                    alt=""
-                    className="board-write-attach-preview__img"
-                  />
-                  <span className="board-write-attach-preview__name">{file.name}</span>
-                  <button
-                    type="button"
-                    className="board-write-attach-preview__remove"
-                    onClick={() => removeAttachAt(index)}
-                    aria-label={`${file.name} 첨부 제거`}
-                  >
-                    ×
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+          <ImageFileAttachField
+            fileInputId="post-file"
+            items={attachFileItems} // 첨부된 이미지 목록
+            onChange={setAttachFileItems} // 첨부된 이미지 목록 변경
+            fileInputRef={fileInputRef} // 파일 입력 요소 참조
+          />
         </div>
 
         <div className="board-write-actions">

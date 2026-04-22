@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { redirectUnauthorizedToLogin } from "@/api/auth/loginRedirectSession";
 import {
   getPostDetail,
   getPostFiles,
@@ -20,7 +21,6 @@ export default function Detail() {
   const [attachments, setAttachments] = useState<PostAttachmentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [isUnauthorized, setIsUnauthorized] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -63,11 +63,10 @@ export default function Detail() {
         if (cancelled) return; // 취소 플래그 확인
         // 게시글 상세 조회 실패 시 에러 처리
         if (e instanceof BoardApiError && e.status === 401) {
-          setError(e.message);
-          setIsUnauthorized(true); // 인증 에러 플래그 설정
-        } else {
-          setError(e instanceof Error ? e.message : "게시글을 불러오지 못했습니다.");
+          redirectUnauthorizedToLogin(e.message);
+          return;
         }
+        setError(e instanceof Error ? e.message : "게시글을 불러오지 못했습니다.");
       } finally {
         // 게시글 상세 조회 완료 시 로딩 상태 초기화
         if (!cancelled) setLoading(false);
@@ -105,10 +104,10 @@ export default function Detail() {
       );
     } catch (e) {
       if (e instanceof BoardApiError && e.status === 401) {
-        navigate("/auth/login", { state: { toast: e.message }, replace: true });
-      } else {
-        setError(e instanceof Error ? e.message : "삭제에 실패했습니다.");
+        redirectUnauthorizedToLogin(e.message);
+        return;
       }
+      setError(e instanceof Error ? e.message : "삭제에 실패했습니다.");
     } finally {
       setDeleteLoading(false);
     }
@@ -167,15 +166,6 @@ export default function Detail() {
           <div className="detail-error">
             <span className="error-icon">⚠️</span>
             <span className="error-message">{displayError}</span>
-            {isUnauthorized && (
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => navigate("/auth/login")}
-              >
-                로그인하기
-              </Button>
-            )}
           </div>
         ) : post ? (
           <>
