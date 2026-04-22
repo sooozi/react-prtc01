@@ -9,18 +9,17 @@ import "./ImageFileAttachField.scss";
 const GRIP_SVG = (
   <svg
     className="image-file-attach__grip-icon"
-    width="20"
-    height="20"
-    viewBox="0 0 12 20"
-    fill="currentColor"
+    width="22"
+    height="16"
+    viewBox="0 0 22 16"
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <circle cx="2.5" cy="3" r="1.35" />
-    <circle cx="9.5" cy="3" r="1.35" />
-    <circle cx="2.5" cy="10" r="1.35" />
-    <circle cx="9.5" cy="10" r="1.35" />
-    <circle cx="2.5" cy="17" r="1.35" />
-    <circle cx="9.5" cy="17" r="1.35" />
+    <g stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="5" y1="4" x2="17" y2="4" />
+      <line x1="5" y1="8" x2="17" y2="8" />
+      <line x1="5" y1="12" x2="17" y2="12" />
+    </g>
   </svg>
 );
 
@@ -48,9 +47,9 @@ export function ImageFileAttachField({
   accept = "image/*",
   rootClassName = "",
 }: Props) {
-  const [overIndex, setOverIndex] = useState<number | null>(null);
-  const [reorderFromIndex, setReorderFromIndex] = useState<number | null>(null);
-  const reorderFromRef = useRef<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null); // 드래그 중인 행 인덱스
+  const [reorderFromIndex, setReorderFromIndex] = useState<number | null>(null); // 드래그 시작 행 인덱스
+  const reorderFromRef = useRef<number | null>(null); // 끌기 시작 인덱스(ref)
 
   // 파일 추가
   const onFilesAdded = (files: File[]) => {
@@ -95,11 +94,11 @@ export function ImageFileAttachField({
       {items.length > 0 && (
         <div className="image-file-attach__reorder-block">
           <div className="image-file-attach__reorder-block-top">
-            <h3 className="image-file-attach__reorder-block-title">올릴 이미지 순서</h3>
+            <h3 className="image-file-attach__reorder-block-title">첨부 이미지 순서</h3>
             <p
               className="image-file-attach__reorder-hint"
             >
-              아래 막대를 <strong>드래그</strong>하면 올릴 <strong>순서</strong>를 바꿀 수 있어요
+              아래 핸들을 <strong>드래그</strong>해서 이미지 <strong>순서</strong>를 바꿀 수 있어요
             </p>
           </div>
           <ol className="image-file-attach__list">
@@ -121,6 +120,7 @@ export function ImageFileAttachField({
                   .filter(Boolean)
                   .join(" ")}
                 draggable
+                // 드래그 시작
                 onDragStart={() => {
                   flushSync(() => {
                     setReorderFromIndex(index);
@@ -128,32 +128,37 @@ export function ImageFileAttachField({
                   });
                   reorderFromRef.current = index;
                 }}
+                // 드래그 중
                 onDragOver={(e) => {
                   e.preventDefault();
                   e.dataTransfer.dropEffect = "move";
-                  if (reorderFromRef.current == null) return;
-                  if (overIndex !== index) setOverIndex(index);
+                  if (reorderFromRef.current == null) return; // 드래그 시작 행 인덱스가 없으면 종료
+                  if (overIndex !== index) setOverIndex(index); // 드래그 중인 행 인덱스 업데이트
                 }}
+                // 이 행에 드롭: 순서 반영 또는(파일 드롭이면) 순서 변경 없이 상태만 초기화
                 onDrop={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
+                  // 파일 드롭이면 순서 변경 없이 상태만 초기화
                   if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
                     setReorderFromIndex(null);
-                    reorderFromRef.current = null;
-                    setOverIndex(null);
+                    reorderFromRef.current = null; // 끌기 시작 인덱스(ref) 해제
+                    setOverIndex(null); // 드롭 대상 하이라이트 해제
                     return;
                   }
+                  // 파일 드롭이 아니면 순서 반영
                   const from = reorderFromRef.current;
                   if (from == null) return;
-                  if (from !== index) onChange(arrayMove(items, from, index));
+                  if (from !== index) onChange(arrayMove(items, from, index)); // 시작(from) → 놓은 위치(index)로 순서 반영
                   setReorderFromIndex(null);
                   reorderFromRef.current = null;
                   setOverIndex(null);
                 }}
+                // 드래그 세션 종료(바깥에 놓음·취소 포함) — onDrop이 안 불릴 때도 정리
                 onDragEnd={() => {
-                  setReorderFromIndex(null);
-                  reorderFromRef.current = null;
-                  setOverIndex(null);
+                  setReorderFromIndex(null); // 드래그 시작 행 인덱스 초기화
+                  reorderFromRef.current = null; // 끌기 시작 인덱스(ref) 해제
+                  setOverIndex(null); // 드롭 대상 하이라이트 해제
                 }}
               >
                 <span

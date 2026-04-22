@@ -71,7 +71,9 @@
   position: relative;
   margin-top: 0.75rem;
   width: 100%;
-  border: 1px solid var(--color-card-border, var(--color-border));
+  /* 기본 카드 보더보다 살짝 강조(너무 튀지 않게) */
+  border: 1px solid
+    color-mix(in srgb, var(--color-primary) 14%, var(--color-card-border, var(--color-border)));
   border-radius: 14px;
   background: var(--color-card);
   box-shadow: 0 2px 12px var(--color-shadow-card);
@@ -79,26 +81,26 @@
 }
 
 /* 상단 강조 바 */
-.image-file-attach__reorder-block::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 3px;
-  z-index: 1;
-  background: linear-gradient(
-    90deg,
-    var(--color-primary) 0%,
-    color-mix(in srgb, var(--color-primary) 55%, var(--color-card)) 100%
-  );
-  pointer-events: none;
-}
+// .image-file-attach__reorder-block::before {
+//   content: "";
+//   position: absolute;
+//   left: 0;
+//   right: 0;
+//   top: 0;
+//   height: 3px;
+//   z-index: 1;
+//   background: linear-gradient(
+//     90deg,
+//     var(--color-primary) 0%,
+//     color-mix(in srgb, var(--color-primary) 55%, var(--color-card)) 100%
+//   );
+//   pointer-events: none;
+// }
 
 .image-file-attach__reorder-block-top {
   padding: 0.9rem 1rem 0.75rem;
-  background: var(--color-input-bg, rgba(0, 0, 0, 0.02));
-  border-bottom: 1px solid var(--color-border, rgba(0, 0, 0, 0.08));
+  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-card));
+  border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 10%, var(--color-border));
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset;
 }
 
@@ -236,12 +238,13 @@
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: inset 2px 0 0 0 color-mix(in srgb, var(--color-primary) 45%, transparent);
+  // box-shadow: inset 2px 0 0 0 color-mix(in srgb, var(--color-primary) 45%, transparent);
 }
 
 .image-file-attach__grip-icon {
   display: block;
   opacity: 0.9;
+  color: var(--color-text-secondary, #6b7280);
 }
 
 .image-file-attach__row--read-only {
