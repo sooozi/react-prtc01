@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { redirectUnauthorizedToLogin } from "@/api/auth/loginRedirectSession";
 import {
   getPostDetail,
   getPostFiles,
   deletePost,
-  BoardApiError,
   viewCountUp,
 } from "@/api/board";
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
@@ -20,7 +18,6 @@ export default function Detail() {
   const [post, setPost] = useState<PostDetail | null>(null);
   const [attachments, setAttachments] = useState<PostAttachmentItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -53,20 +50,16 @@ export default function Detail() {
           getPostDetail(postNumber),
           getPostFiles(postNumber).catch(() => [] as PostAttachmentItem[]),
         ]);
-        if (!cancelled) {
+        if (cancelled) return;
+        if (data == null) {
+          setPost(null);
+          setAttachments([]);
+        } else {
           setPost(data);
           setAttachments(
             [...files].sort((a, b) => a.sortOrder - b.sortOrder)
           );
         }
-      } catch (e: unknown) {
-        if (cancelled) return; // 취소 플래그 확인
-        // 게시글 상세 조회 실패 시 에러 처리
-        if (e instanceof BoardApiError && e.status === 401) {
-          redirectUnauthorizedToLogin(e.message);
-          return;
-        }
-        setError(e instanceof Error ? e.message : "게시글을 불러오지 못했습니다.");
       } finally {
         // 게시글 상세 조회 완료 시 로딩 상태 초기화
         if (!cancelled) setLoading(false);
@@ -78,12 +71,14 @@ export default function Detail() {
     };
   }, [postNumber, invalidId]);
 
-  // 로딩 상태 확인
   const showLoading = loading && !invalidId;
-  // 에러 메시지 확인
-  const displayError = invalidId ? "잘못된 게시글 번호입니다." : error;
-  // 에러 섹션 확인
-  const showErrorSection = invalidId || error;
+  const missingAfterLoad = !showLoading && !post && !invalidId;
+  const displayError = invalidId
+    ? "잘못된 게시글 번호입니다."
+    : missingAfterLoad
+      ? "게시글을 불러오지 못했습니다."
+      : "";
+  const showErrorSection = invalidId || missingAfterLoad;
 
   // [수정 버튼 노출] 해당 포스트 작성자와 로그인 사용자가 같을 때
   const currentUserId =
@@ -97,17 +92,13 @@ export default function Detail() {
     setShowDeleteConfirm(false);
     setDeleteLoading(true);
     try {
-      await deletePost(postNumber);
-      navigate(
-        listReturnPath === "/post/list" ? "/post/list?page=1" : listReturnPath,
-        { replace: true }
-      );
-    } catch (e) {
-      if (e instanceof BoardApiError && e.status === 401) {
-        redirectUnauthorizedToLogin(e.message);
-        return;
+      const ok = await deletePost(postNumber);
+      if (ok) {
+        navigate(
+          listReturnPath === "/post/list" ? "/post/list?page=1" : listReturnPath,
+          { replace: true }
+        );
       }
-      setError(e instanceof Error ? e.message : "삭제에 실패했습니다.");
     } finally {
       setDeleteLoading(false);
     }

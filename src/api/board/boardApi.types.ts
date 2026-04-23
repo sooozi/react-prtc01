@@ -7,7 +7,8 @@ export type CreatePostRequest = {
   title: string;
   content: string;
   /** multipart `attachFileList` 필드로 각 파일 append */
-  attachFiles?: File[];
+  attachFiles?: File[]; // 첨부 파일 목록
+  attachFileOrderList?: string[]; // 첨부 파일 순서 목록
 };
 
 /** PUT /posts/{postNumber} — 등록과 동일하게 multipart (title, content, attachFileList[]) */
@@ -15,6 +16,8 @@ export type UpdatePostRequest = {
   title: string;
   content: string;
   attachFiles?: File[];
+  /** 등록 API와 동일: 새로 올리는 첨부의 파일명 순서(확장자 포함) */
+  attachFileOrderList?: string[];
 };
 
 /** GET /posts 목록의 게시글 한 건 (조회수: inqCnt) */

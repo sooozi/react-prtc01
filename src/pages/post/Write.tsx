@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { redirectUnauthorizedToLogin } from "@/api/auth/loginRedirectSession";
-import { createPost, BoardApiError } from "@/api/board";
+import { createPost } from "@/api/board";
 import { Badge, Button } from "@/components";
 import { ImageFileAttachField } from "@/components/ImageFileAttachField/ImageFileAttachField";
 import { itemsToFiles } from "@/components/ImageFileAttachField/fileAttachItemUtils";
@@ -32,25 +31,18 @@ export default function Write() {
 
     setLoading(true);
     try {
-      const files = itemsToFiles(attachFileItems); // 첨부된 이미지 파일 목록
-      await createPost({
+      const files = itemsToFiles(attachFileItems);
+      const res = await createPost({
         title: title.trim(),
         content: content.trim(),
         attachFiles: files.length > 0 ? files : undefined,
+        attachFileOrderList:
+          files.length > 0
+            ? attachFileItems.map((item) => item.file.name)
+            : undefined,
       });
-      navigate("/post/list", { replace: true });
-    } catch (e) {
-      if (e instanceof BoardApiError && e.status === 401) {
-        redirectUnauthorizedToLogin(e.message);
-        return;
-      }
-      if (e instanceof BoardApiError) {
-        const detail = e.resultDetailMessage
-          ? ` ${e.resultDetailMessage}`
-          : "";
-        setError(`${e.message}${detail}`.trim());
-      } else {
-        setError(e instanceof Error ? e.message : "등록에 실패했습니다.");
+      if (res) {
+        navigate("/post/list", { replace: true });
       }
     } finally {
       setLoading(false);

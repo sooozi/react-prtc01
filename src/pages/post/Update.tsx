@@ -1,12 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { redirectUnauthorizedToLogin } from "@/api/auth/loginRedirectSession";
-import {
-  getPostDetail,
-  getPostFiles,
-  updatePost,
-  BoardApiError,
-} from "@/api/board";
+import { getPostDetail, getPostFiles, updatePost } from "@/api/board";
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
 import {
@@ -55,17 +49,19 @@ export default function Update() {
           getPostFiles(postNumber).catch(() => [] as PostAttachmentItem[]),
         ]);
         if (cancelled) return;
-        setPost(data);
-        setTitle(data.title);
-        setContent(data.content ?? "");
-        setExistingAttachments([...files].sort((a, b) => a.sortOrder - b.sortOrder));
-      } catch (e: unknown) {
-        if (cancelled) return;
-        if (e instanceof BoardApiError && e.status === 401) {
-          redirectUnauthorizedToLogin(e.message);
-          return;
+        if (data == null) {
+          setPost(null);
+          setTitle("");
+          setContent("");
+          setExistingAttachments([]);
+        } else {
+          setPost(data);
+          setTitle(data.title);
+          setContent(data.content ?? "");
+          setExistingAttachments(
+            [...files].sort((a, b) => a.sortOrder - b.sortOrder)
+          );
         }
-        setError(e instanceof Error ? e.message : "게시글을 불러오지 못했습니다.");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -90,22 +86,19 @@ export default function Update() {
     setSubmitLoading(true);
     try {
       const newFiles = itemsToFiles(newAttachFileItems);
-      await updatePost(postNumber, {
+      const ok = await updatePost(postNumber, {
         title: title.trim(),
         content: content.trim(),
         attachFiles: newFiles.length > 0 ? newFiles : undefined,
+        attachFileOrderList:
+          newFiles.length > 0
+            ? newAttachFileItems.map((item) => item.file.name)
+            : undefined,
       });
-      navigate(postDetailPath(postNumber, searchParams.get("from")), { replace: true });
-    } catch (e) {
-      if (e instanceof BoardApiError && e.status === 401) {
-        redirectUnauthorizedToLogin(e.message);
-        return;
-      }
-      if (e instanceof BoardApiError) {
-        const detail = e.resultDetailMessage ? ` ${e.resultDetailMessage}` : "";
-        setError(`${e.message}${detail}`.trim());
-      } else {
-        setError(e instanceof Error ? e.message : "수정에 실패했습니다.");
+      if (ok) {
+        navigate(postDetailPath(postNumber, searchParams.get("from")), {
+          replace: true,
+        });
       }
     } finally {
       setSubmitLoading(false);
@@ -119,7 +112,8 @@ export default function Update() {
   };
 
   const showLoading = loading && !invalidId;
-  const showErrorSection = invalidId || error;
+  const missingAfterLoad = !showLoading && !post && !invalidId;
+  const showErrorSection = invalidId || Boolean(error) || missingAfterLoad;
 
   return (
     <div className="post-detail-page">
@@ -152,7 +146,9 @@ export default function Update() {
           <div className="detail-error">
             <span className="error-icon">⚠️</span>
             <span className="error-message">
-              {invalidId ? "잘못된 게시글 번호입니다." : error}
+              {invalidId
+                ? "잘못된 게시글 번호입니다."
+                : error || (missingAfterLoad ? "게시글을 불러오지 못했습니다." : "")}
             </span>
           </div>
         ) : post ? (

@@ -1,0 +1,35 @@
+.api-error-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  background: var(--color-error-ghost, #fef2f2);
+  border-bottom: 1px solid var(--color-error, #e95c5c);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  z-index: 50;
+}
+
+.api-error-bar__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.api-error-bar__dismiss {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0 0.35rem;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 4px;
+
+  &:hover {
+    color: var(--color-text);
+  }
+}

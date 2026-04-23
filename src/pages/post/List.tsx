@@ -90,8 +90,13 @@ export default function List() {
         const computedTotalPages = Math.max(1, Math.ceil(total / pageSize));
         if (currentPage > computedTotalPages) setCurrentPage(computedTotalPages);
       } catch (e: unknown) {
-        if (e instanceof BoardApiError && e.status === 401) {
-          redirectUnauthorizedToLogin(e.message);
+        if (e instanceof BoardApiError) {
+          if (e.status === 401) {
+            redirectUnauthorizedToLogin(e.message);
+            return;
+          }
+          const detail = e.resultDetailMessage ? ` ${e.resultDetailMessage}` : "";
+          setError(`${e.message}${detail}`.trim());
           return;
         }
         setError(e instanceof Error ? e.message : "게시글 목록 조회 실패");

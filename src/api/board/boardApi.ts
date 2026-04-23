@@ -1,3 +1,4 @@
+import { reportApiErrorToUser } from "../http/apiErrorDisplay";
 import { apiClient } from "../http/client";
 import { getAuthTokenOrThrow } from "../auth/authToken";
 import { ApiError } from "../http/errors";
@@ -65,79 +66,110 @@ export async function selectBoardList(params: SelectBoardList) {
 /**
  * 포스트 상세 조회
  * [GET] /posts/{postNumber}
+ * 실패 시 `reportApiErrorToUser` 후 `null`
  */
-export async function getPostDetail(postNumber: number): Promise<PostDetail> {
-  const json = await api.get<PostDetail>(`/posts/${postNumber}`);
-  const d = json.data;
-  if (d == null) {
-    throw new Error("게시글을 찾을 수 없습니다.");
+export async function getPostDetail(postNumber: number): Promise<PostDetail | null> {
+  try {
+    const json = await api.get<PostDetail>(`/posts/${postNumber}`);
+    const d = json.data;
+    if (d == null) {
+      reportApiErrorToUser(new Error("게시글을 찾을 수 없습니다."));
+      return null;
+    }
+    return d;
+  } catch (e) {
+    reportApiErrorToUser(e);
+    return null;
   }
-  return d;
 }
 
 /**
  * 포스트 등록 (게시글 + 파일 업로드)
  * [POST] /posts — multipart/form-data (title, content, attachFileList[])
+ * 실패 시 `reportApiErrorToUser` 후 `null`
  */
-export async function createPost(body: CreatePostRequest) {
-  getAuthTokenOrThrow();
-  const formData = new FormData();
-  formData.append("title", body.title);
-  formData.append("content", body.content);
-  // body.attachFiles가 있으면 attachFileList에 추가
-  for (const file of body.attachFiles ?? []) {
-    formData.append("attachFileList", file);
+export async function createPost(
+  body: CreatePostRequest
+): Promise<ApiResponse<number> | null> {
+  try {
+    getAuthTokenOrThrow();
+    const formData = new FormData();
+    formData.append("title", body.title);
+    formData.append("content", body.content);
+    for (const file of body.attachFiles ?? []) {
+      formData.append("attachFileList", file);
+    }
+    for (const name of body.attachFileOrderList ?? []) {
+      formData.append("attachFileOrderList", name);
+    }
+    const res = await apiClient.post<ApiResponse<number>>("/posts", formData, {
+      transformRequest: [
+        (data, headers) => {
+          if (data instanceof FormData) {
+            delete (headers as Record<string, unknown>)["Content-Type"];
+          }
+          return data;
+        },
+      ],
+    });
+    return res.data;
+  } catch (e) {
+    reportApiErrorToUser(e);
+    return null;
   }
-  // formData를 API로 전송
-  const res = await apiClient.post<ApiResponse<number>>("/posts", formData, {
-    // formData를 API로 전송할 때 Content-Type을 지우는 코드
-    transformRequest: [
-      (data, headers) => {
-        if (data instanceof FormData) {
-          delete (headers as Record<string, unknown>)["Content-Type"];
-        }
-        return data;
-      },
-    ],
-  });
-  return res.data;
 }
 
 /**
  * 포스트 수정
  * [PUT] /posts/{postNumber} — multipart/form-data (등록 API와 동일 필드명)
+ * 실패 시 `reportApiErrorToUser` 후 `false`
  */
 export async function updatePost(
   postNumber: number,
   body: UpdatePostRequest
-): Promise<void> {
-  getAuthTokenOrThrow();
-  const formData = new FormData();
-  formData.append("title", body.title);
-  formData.append("content", body.content);
-  for (const file of body.attachFiles ?? []) {
-    formData.append("attachFileList", file);
+): Promise<boolean> {
+  try {
+    getAuthTokenOrThrow();
+    const formData = new FormData();
+    formData.append("title", body.title);
+    formData.append("content", body.content);
+    for (const file of body.attachFiles ?? []) {
+      formData.append("attachFileList", file);
+    }
+    for (const name of body.attachFileOrderList ?? []) {
+      formData.append("attachFileOrderList", name);
+    }
+    await apiClient.put<unknown>(`/posts/${postNumber}`, formData, {
+      transformRequest: [
+        (data, headers) => {
+          if (data instanceof FormData) {
+            delete (headers as Record<string, unknown>)["Content-Type"];
+          }
+          return data;
+        },
+      ],
+    });
+    return true;
+  } catch (e) {
+    reportApiErrorToUser(e);
+    return false;
   }
-  await apiClient.put<unknown>(`/posts/${postNumber}`, formData, {
-    transformRequest: [
-      (data, headers) => {
-        if (data instanceof FormData) {
-          delete (headers as Record<string, unknown>)["Content-Type"];
-        }
-        return data;
-      },
-    ],
-  });
 }
 
 /**
  * 포스트 삭제
  * [DELETE] /posts/{postNumber}
- * 인증 토큰 필수.
+ * 실패 시 `reportApiErrorToUser` 후 `false`
  */
-export async function deletePost(postNumber: number): Promise<void> {
-  getAuthTokenOrThrow(); // 인증 토큰 필수
-  await api.delete<unknown>(`/posts/${postNumber}`);
+export async function deletePost(postNumber: number): Promise<boolean> {
+  try {
+    getAuthTokenOrThrow();
+    await api.delete<unknown>(`/posts/${postNumber}`);
+    return true;
+  } catch (e) {
+    reportApiErrorToUser(e);
+    return false;
+  }
 }
 
 /**
@@ -153,13 +185,19 @@ export async function viewCountUp(postNumber: number): Promise<void> {
 /**
  * 내가 작성한 포스트 목록 조회
  * [GET] /posts/me?userId=...
+ * 실패 시 `reportApiErrorToUser` 후 `null`
  */
-export async function getMyPostList(userId: string): Promise<Post[]> {
-  getAuthTokenOrThrow();
-  const json = await api.get<Post[]>(`/posts/me`, {
-    params: { userId },
-  });
-  return json.data ?? [];
+export async function getMyPostList(userId: string): Promise<Post[] | null> {
+  try {
+    getAuthTokenOrThrow();
+    const json = await api.get<Post[]>(`/posts/me`, {
+      params: { userId },
+    });
+    return json.data ?? [];
+  } catch (e) {
+    reportApiErrorToUser(e);
+    return null;
+  }
 }
 
 

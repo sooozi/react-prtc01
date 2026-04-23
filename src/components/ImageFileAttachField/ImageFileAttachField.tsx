@@ -1,4 +1,4 @@
-import { useRef, useState, type RefObject } from "react";
+import { useMemo, useRef, useState, type RefObject } from "react";
 import { flushSync } from "react-dom";
 import { arrayMove } from "@/utils/arrayMove";
 import { formatFileSize } from "@/utils/formatFileSize";
@@ -25,12 +25,12 @@ const GRIP_SVG = (
 
 // 컴포넌트 속성 타입
 type Props = {
-  fileInputId: string;
-  items: FileWithId[];
-  onChange: (items: FileWithId[]) => void;
-  fileInputRef: RefObject<HTMLInputElement | null>;
-  accept?: string;
-  rootClassName?: string;
+  fileInputId: string; // 파일 입력 요소 ID
+  items: FileWithId[]; // 첨부 파일 목록
+  onChange: (items: FileWithId[]) => void; // 첨부 파일 목록 변경
+  fileInputRef: RefObject<HTMLInputElement | null>; // 파일 입력 요소 참조
+  accept?: string; // 파일 타입 필터
+  rootClassName?: string; // 루트 컴포넌트 클래스 이름
 };
 
 // 이미지 파일 필터링
@@ -50,6 +50,12 @@ export function ImageFileAttachField({
   const [overIndex, setOverIndex] = useState<number | null>(null); // 드래그 중인 행 인덱스
   const [reorderFromIndex, setReorderFromIndex] = useState<number | null>(null); // 드래그 시작 행 인덱스
   const reorderFromRef = useRef<number | null>(null); // 끌기 시작 인덱스(ref)
+
+  // 첨부 파일 합계 용량
+  const totalSizeBytes = useMemo(
+    () => items.reduce((sum, i) => sum + i.file.size, 0), // 첨부 파일 합계 용량 계산
+    [items]
+  );
 
   // 파일 추가
   const onFilesAdded = (files: File[]) => {
@@ -94,12 +100,19 @@ export function ImageFileAttachField({
       {items.length > 0 && (
         <div className="image-file-attach__reorder-block">
           <div className="image-file-attach__reorder-block-top">
-            <h3 className="image-file-attach__reorder-block-title">첨부 이미지 순서</h3>
-            <p
-              className="image-file-attach__reorder-hint"
-            >
-              아래 핸들을 <strong>드래그</strong>해서 이미지 <strong>순서</strong>를 바꿀 수 있어요
-            </p>
+            <div className="image-file-attach__reorder-headline">
+              <h3 className="image-file-attach__reorder-block-title">첨부 이미지 순서</h3>
+            </div>
+            <div className="image-file-attach__reorder-hint-row">
+              <p className="image-file-attach__reorder-hint">
+                아래 핸들을 <strong>드래그</strong>해서 이미지 <strong>순서</strong>를 바꿀 수 있어요
+              </p>
+              <span
+                className="image-file-attach__reorder-total"
+              >
+                총 {formatFileSize(totalSizeBytes)}
+              </span>
+            </div>
           </div>
           <ol className="image-file-attach__list">
             {items.map((item, index) => (

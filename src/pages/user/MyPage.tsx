@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Button, LoadingState } from "@/components";
-import { getMyPostList, BoardApiError } from "@/api/board/boardApi";
+import { getMyPostList } from "@/api/board/boardApi";
 import type { Post } from "@/api/board";
 import "@/pages/user/MyPage.scss";
 
@@ -40,7 +40,8 @@ export default function MyPage() {
   const userId = localStorage.getItem("userId");
   const [posts, setPosts] = useState<Post[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
-  const [postsError, setPostsError] = useState("");
+  /** API 실패 시(빈 배열은 ‘글 없음’이므로 구분) */
+  const [loadFailed, setLoadFailed] = useState(false);
 
   // 내가 작성한 목록 조회
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function MyPage() {
     if (!userId) {
       setPosts([]);
       setPostsLoading(false);
-      setPostsError("");
+      setLoadFailed(false);
       return;
     }
 
@@ -57,18 +58,16 @@ export default function MyPage() {
     // 내가 작성한 목록 조회
     const fetchData = async () => {
       setPostsLoading(true);
-      setPostsError("");
+      setLoadFailed(false);
       try {
         const data = await getMyPostList(userId);
-        if (!cancelled) setPosts(data);
-      } catch (e) {
-        // 취소되지 않았으면 목록 비우기
-        if (!cancelled) {
+        if (cancelled) return;
+        if (data == null) {
           setPosts([]);
-          // 오류 메시지 설정
-          setPostsError(
-            e instanceof BoardApiError ? e.message : "목록을 불러오지 못했습니다."
-          );
+          setLoadFailed(true);
+        } else {
+          setPosts(data);
+          setLoadFailed(false);
         }
       } finally {
         if (!cancelled) setPostsLoading(false);
@@ -132,21 +131,15 @@ export default function MyPage() {
             <LoadingState message="작성 글을 불러오는 중..." variant="compact" className="mypage-posts-loading" />
           )}
 
-          {!postsLoading && postsError && (
-            <p className="mypage-posts-empty mypage-posts-empty--error" role="alert">
-              {postsError}
-            </p>
-          )}
-
-          {!postsLoading && !postsError && !userId && (
+          {!postsLoading && !userId && (
             <p className="mypage-posts-empty">로그인 후 작성 글을 확인할 수 있습니다.</p>
           )}
 
-          {!postsLoading && !postsError && userId && posts.length === 0 && (
+          {!postsLoading && userId && !loadFailed && posts.length === 0 && (
             <p className="mypage-posts-empty">아직 작성한 글이 없습니다.</p>
           )}
 
-          {!postsLoading && !postsError && posts.length > 0 && (
+          {!postsLoading && !loadFailed && posts.length > 0 && (
             <ul className="mypage-posts-list">
               {posts.map((post) => (
                 <li key={post.postNumber}>

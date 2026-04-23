@@ -80,23 +80,6 @@
   overflow: hidden;
 }
 
-/* 상단 강조 바 */
-// .image-file-attach__reorder-block::before {
-//   content: "";
-//   position: absolute;
-//   left: 0;
-//   right: 0;
-//   top: 0;
-//   height: 3px;
-//   z-index: 1;
-//   background: linear-gradient(
-//     90deg,
-//     var(--color-primary) 0%,
-//     color-mix(in srgb, var(--color-primary) 55%, var(--color-card)) 100%
-//   );
-//   pointer-events: none;
-// }
-
 .image-file-attach__reorder-block-top {
   padding: 0.9rem 1rem 0.75rem;
   background: color-mix(in srgb, var(--color-primary) 10%, var(--color-card));
@@ -104,18 +87,46 @@
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset;
 }
 
+/* 섹션 제목 한 줄 */
+.image-file-attach__reorder-headline {
+  margin-bottom: 0.4rem;
+}
+
+/* 안내 문구(왼쪽·가변) + 총 용량(오른쪽) */
+.image-file-attach__reorder-hint-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem 0.85rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .image-file-attach__reorder-block-title {
-  margin: 0 0 0.4rem;
+  margin: 0;
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--color-text-heading);
 }
 
+.image-file-attach__reorder-total {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  /* 첫 줄 안내와 시각적 정렬(오른쪽 상단 느낌) */
+  margin-top: 0.04rem;
+  text-align: right;
+}
+
 .image-file-attach__reorder-hint {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
   margin: 0;
   padding: 0;
   font-size: 0.7rem;

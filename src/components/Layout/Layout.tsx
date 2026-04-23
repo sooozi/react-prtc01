@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Header from "@/components/Layout/Header/Header";
 import Footer from "@/components/Layout/Footer/Footer";
+import ApiErrorBar from "@/components/ApiErrorBar/ApiErrorBar";
 import MouseFollowEmoji from "@/components/MouseFollowEmoji/MouseFollowEmoji";
 // import CatHover from "@/components/CatHover/CatHover";
 import "@/components/Layout/Layout.scss";
@@ -63,6 +64,8 @@ export default function Layout() {
 
       {/* 헤더 (스크롤 시 숨김/표시) */}
       <Header />
+
+      <ApiErrorBar />
 
       {/* 고양이 - 화면 왼쪽 고정 */}
       {/* <CatHover /> */}
