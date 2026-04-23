@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import clsx from "clsx";
-import { Button } from "@/components";
 import { addMonths, getCalendarCells, isSameCalendarDay, startOfMonth } from "./calendarUtils";
 import "./MonthCalendar.scss";
 
 const WEEKDAYS_KO = ["월", "화", "수", "목", "금", "토", "일"];
+const MONTH_NUMS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
 type Props = {
   /** 표시할 달의 아무 날짜(보통 1일) */
@@ -31,28 +31,65 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
     return new Date(n.getFullYear(), n.getMonth(), n.getDate());
   }, []);
 
+  const isViewingTodayMonth =
+    today.getFullYear() === y && today.getMonth() === m;
+
   return (
     <div className="month-calendar">
-      <header className="month-calendar__toolbar">
-        <Button
+      <div className="month-calendar__month-bar" role="toolbar" aria-label="월·오늘로 이동">
+        {MONTH_NUMS.map((num) => {
+          const monthIndex = num - 1;
+          const isActive = m === monthIndex;
+          return (
+            <button
+              key={num}
+              type="button"
+              className={clsx("month-calendar__nav-chip", {
+                "month-calendar__nav-chip--active": isActive,
+              })}
+              onClick={() => onMonthChange(new Date(y, monthIndex, 1))}
+              aria-pressed={isActive}
+              aria-label={`${num}월`}
+            >
+              {num}
+            </button>
+          );
+        })}
+        <button
           type="button"
-          variant="secondary"
-          size="sm"
+          className={clsx("month-calendar__nav-chip", "month-calendar__nav-chip--today", {
+            "month-calendar__nav-chip--active": isViewingTodayMonth,
+          })}
+          onClick={() => onMonthChange(startOfMonth(new Date()))}
+          aria-pressed={isViewingTodayMonth}
+          aria-label="오늘 날짜가 있는 달로 이동"
+        >
+          오늘
+        </button>
+      </div>
+
+      <header className="month-calendar__toolbar">
+        <button
+          type="button"
+          className="month-calendar__round-nav"
           onClick={() => onMonthChange(addMonths(monthStart, -1))}
           aria-label="이전 달"
         >
-          ‹
-        </Button>
+          <span className="month-calendar__round-nav-icon" aria-hidden>
+            ‹
+          </span>
+        </button>
         <h2 className="month-calendar__title">{title}</h2>
-        <Button
+        <button
           type="button"
-          variant="secondary"
-          size="sm"
+          className="month-calendar__round-nav"
           onClick={() => onMonthChange(addMonths(monthStart, 1))}
           aria-label="다음 달"
         >
-          ›
-        </Button>
+          <span className="month-calendar__round-nav-icon" aria-hidden>
+            ›
+          </span>
+        </button>
       </header>
 
       <div className="month-calendar__grid" role="grid" aria-label={`${title} 달력`}>
@@ -64,6 +101,9 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
         {cells.map((cell) => {
           const key = `${cell.date.getFullYear()}-${cell.date.getMonth()}-${cell.date.getDate()}`;
           const isToday = isSameCalendarDay(cell.date, today);
+          const dow = cell.date.getDay();
+          const isSaturday = dow === 6;
+          const isSunday = dow === 0;
           return (
             <div
               key={key}
@@ -75,7 +115,14 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
               })}
               aria-current={isToday ? "date" : undefined}
             >
-              <span className="month-calendar__day-num">{cell.date.getDate()}</span>
+              <span
+                className={clsx("month-calendar__day-num", {
+                  "month-calendar__day-num--sat": isSaturday,
+                  "month-calendar__day-num--sun": isSunday,
+                })}
+              >
+                {cell.date.getDate()}
+              </span>
             </div>
           );
         })}
