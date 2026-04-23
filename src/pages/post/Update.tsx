@@ -3,10 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, getPostFiles, updatePost } from "@/api/board";
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
-import {
-  ImageFileAttachField,
-  ImageFileReadOnlyRow,
-} from "@/components/ImageFileAttachField/ImageFileAttachField";
+import { ImageFileAttachField } from "@/components/ImageFileAttachField/ImageFileAttachField";
 import { itemsToFiles } from "@/components/ImageFileAttachField/fileAttachItemUtils";
 import type { FileWithId } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
 import { postDetailPath } from "@/pages/post/postDetailFromQuery";
@@ -186,28 +183,16 @@ export default function Update() {
             </div>
 
             <div className="form-group">
-              <span className="label" id="update-file-label">
-                첨부파일
-              </span>
-              <p className="board-write-file-hint" id="update-file-hint">
-                이미지를 선택한 뒤, 아래에서 순서를 드래그로 바꿀 수 있어요.
-              </p>
-              {existingAttachments.length > 0 && (
-                <ol
-                  className="image-file-attach__list"
-                  aria-label="이미 첨부된 이미지"
-                >
-                  {existingAttachments.map((f) => (
-                    <ImageFileReadOnlyRow key={f.fileId} name={f.fileName} />
-                  ))}
-                </ol>
-              )}
+              <span className="label">첨부파일</span>
               <ImageFileAttachField
                 fileInputId="update-post-file"
                 items={newAttachFileItems}
                 onChange={setNewAttachFileItems}
                 fileInputRef={fileInputRef}
-                rootClassName={existingAttachments.length > 0 ? "image-file-attach--spaced" : ""}
+                previousAttachments={existingAttachments.map((f) => ({
+                  id: f.fileId,
+                  name: f.fileName,
+                }))}
               />
             </div>
 

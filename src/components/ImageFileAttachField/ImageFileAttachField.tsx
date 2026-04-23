@@ -2,7 +2,7 @@ import { useMemo, useRef, useState, type RefObject } from "react";
 import { flushSync } from "react-dom";
 import { arrayMove } from "@/utils/arrayMove";
 import { formatFileSize } from "@/utils/formatFileSize";
-import type { FileWithId } from "./ImageFileAttachField.types";
+import type { FileWithId, ImageFilePreviousEntry } from "./ImageFileAttachField.types";
 import { filesToItemsWithIds } from "./fileAttachItemUtils";
 import "./ImageFileAttachField.scss";
 
@@ -31,6 +31,8 @@ type Props = {
   fileInputRef: RefObject<HTMLInputElement | null>; // 파일 입력 요소 참조
   accept?: string; // 파일 타입 필터
   rootClassName?: string; // 루트 컴포넌트 클래스 이름
+  /** 서버에 이미 있는 이미지(읽기 전용). 수정 화면에서만 넣음 */
+  previousAttachments?: ImageFilePreviousEntry[];
 };
 
 // 이미지 파일 필터링
@@ -46,14 +48,17 @@ export function ImageFileAttachField({
   fileInputRef,
   accept = "image/*",
   rootClassName = "",
+  previousAttachments,
 }: Props) {
+  const hasPrevious = (previousAttachments?.length ?? 0) > 0;
+  const hasListInBlock = hasPrevious || items.length > 0;
   const [overIndex, setOverIndex] = useState<number | null>(null); // 드래그 중인 행 인덱스
   const [reorderFromIndex, setReorderFromIndex] = useState<number | null>(null); // 드래그 시작 행 인덱스
   const reorderFromRef = useRef<number | null>(null); // 끌기 시작 인덱스(ref)
 
   // 첨부 파일 합계 용량
   const totalSizeBytes = useMemo(
-    () => items.reduce((sum, i) => sum + i.file.size, 0), // 첨부 파일 합계 용량 계산
+    () => items.reduce((sum, i) => sum + i.file.size, 0),
     [items]
   );
 
@@ -92,29 +97,32 @@ export function ImageFileAttachField({
         multiple
         onChange={handleFileInputChange}
       />
-      <label htmlFor={fileInputId} className="image-file-attach__add">
-        <span className="image-file-attach__add-title">이미지 선택</span>
-        <span className="image-file-attach__add-sub">해당 영역을 클릭해 PNG, JPG, GIF, WebP 등의 이미지를 선택하세요.</span>
-      </label>
-
-      {items.length > 0 && (
+      {hasListInBlock && (
         <div className="image-file-attach__reorder-block">
           <div className="image-file-attach__reorder-block-top">
             <div className="image-file-attach__reorder-headline">
               <h3 className="image-file-attach__reorder-block-title">첨부 이미지 순서</h3>
             </div>
-            <div className="image-file-attach__reorder-hint-row">
-              <p className="image-file-attach__reorder-hint">
-                아래 핸들을 <strong>드래그</strong>해서 이미지 <strong>순서</strong>를 바꿀 수 있어요
-              </p>
-              <span
-                className="image-file-attach__reorder-total"
-              >
-                총 {formatFileSize(totalSizeBytes)}
-              </span>
-            </div>
+            {items.length > 0 && (
+              <div className="image-file-attach__reorder-hint-row">
+                <p className="image-file-attach__reorder-hint">
+                  아래 핸들을 <strong>드래그</strong>해서 이미지 <strong>순서</strong>를 바꿀 수 있어요
+                </p>
+                <span className="image-file-attach__reorder-total">
+                  총 {formatFileSize(totalSizeBytes)}
+                </span>
+              </div>
+            )}
           </div>
-          <ol className="image-file-attach__list">
+          <ol className="image-file-attach__list" aria-label="첨부된 이미지">
+            {hasPrevious &&
+              previousAttachments?.map((f) => (
+                <ImageFileReadOnlyRow
+                  key={String(f.id)}
+                  name={f.name}
+                  sizeBytes={f.sizeBytes}
+                />
+              ))}
             {items.map((item, index) => (
               <li
                 key={item.id}
@@ -203,20 +211,51 @@ export function ImageFileAttachField({
           </ol>
         </div>
       )}
+
+      <label htmlFor={fileInputId} className="image-file-attach__add">
+        <span className="image-file-attach__add-title">이미지 선택</span>
+        <span className="image-file-attach__add-sub">해당 영역을 클릭해 PNG, JPG, GIF, WebP 등의 이미지를 선택하세요.</span>
+      </label>
     </div>
   );
 }
 
-/** 서버에 남아 있는 기존 첨부(읽기 전용) — `ol` / `ul`의 `li`로 둡니다. */
-export function ImageFileReadOnlyRow({ name }: { name: string }) {
+/**
+ * 서버에 이미 있는 기존 첨부 — 새로 추가한 행과 동일한 레이아웃(핸들·× 포함).
+ * 드래그·삭제는 동작하지 않습니다.
+ */
+export function ImageFileReadOnlyRow({
+  name,
+  sizeBytes,
+}: {
+  name: string;
+  sizeBytes?: number;
+}) {
   return (
-    <li className="image-file-attach__row image-file-attach__row--read-only">
-      <span className="image-file-attach__clip-emoji">
-        📎
+    <li
+      className="image-file-attach__row image-file-attach__row--reorder image-file-attach__row--previous"
+      draggable={false}
+    >
+      <span className="image-file-attach__handle-zone" aria-hidden>
+        {GRIP_SVG}
       </span>
-      <span className="image-file-attach__name" title={name}>
-        {name}
-      </span>
+      <span className="image-file-attach__clip-emoji">📎</span>
+      <div className="image-file-attach__file-meta">
+        <span className="image-file-attach__name" title={name}>
+          {name}
+        </span>
+        <span className="image-file-attach__size">
+          {sizeBytes != null ? formatFileSize(sizeBytes) : "—"}
+        </span>
+      </div>
+      <button
+        type="button"
+        className="image-file-attach__remove"
+        disabled
+        title="이미 저장된 첨부는 이 화면에서 삭제할 수 없어요"
+      >
+        ×
+      </button>
     </li>
   );
 }
