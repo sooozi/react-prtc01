@@ -1,5 +1,16 @@
 @use "@/styles/common.scss" as *;
+@use "@/styles/breakpoints" as bp;
 
 .schedule-page {
   @extend %page-container;
+}
+
+.schedule-calendar-section {
+  margin-top: 1.25rem;
+  padding: 0 0.25rem 2rem;
+
+  @include bp.below(bp.$md) {
+    margin-top: 1rem;
+    padding: 0 0 1.5rem;
+  }
 }

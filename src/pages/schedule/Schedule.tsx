@@ -1,7 +1,12 @@
+import { useState } from "react";
 import { Badge } from "@/components";
+import MonthCalendar from "@/pages/schedule/MonthCalendar";
+import { startOfMonth } from "@/pages/schedule/calendarUtils";
 import "@/pages/schedule/Schedule.scss";
 
 export default function Schedule() {
+  const [month, setMonth] = useState(() => startOfMonth(new Date()));
+
   return (
     <div className="schedule-page">
       <div className="list-page-head">
@@ -10,6 +15,10 @@ export default function Schedule() {
           <h1 className="title">내 일정</h1>
         </div>
       </div>
+
+      <section className="schedule-calendar-section" aria-label="월 달력">
+        <MonthCalendar month={month} onMonthChange={setMonth} />
+      </section>
     </div>
   );
 }

@@ -1,9 +1,9 @@
-import { useMemo, useRef, useState, type RefObject } from "react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { flushSync } from "react-dom";
 import { arrayMove } from "@/utils/arrayMove";
 import { formatFileSize } from "@/utils/formatFileSize";
 import type { FileWithId, ImageFilePreviousEntry } from "./ImageFileAttachField.types";
-import { filesToItemsWithIds } from "./fileAttachItemUtils";
+import { filesToItemsWithIds, partitionByAttachmentIdentity } from "./fileAttachItemUtils";
 import "./ImageFileAttachField.scss";
 
 const GRIP_SVG = (
@@ -55,6 +55,17 @@ export function ImageFileAttachField({
   const [overIndex, setOverIndex] = useState<number | null>(null); // 드래그 중인 행 인덱스
   const [reorderFromIndex, setReorderFromIndex] = useState<number | null>(null); // 드래그 시작 행 인덱스
   const reorderFromRef = useRef<number | null>(null); // 끌기 시작 인덱스(ref)
+  const [duplicateAddHint, setDuplicateAddHint] = useState(""); // 같은 파일명 추가 힌트
+  const duplicateHintTRef = useRef<ReturnType<typeof setTimeout> | null>(null); // 같은 파일명 추가 힌트 타임아웃
+
+  // 같은 파일명 추가 힌트 타임아웃 초기화
+  useEffect(() => {
+    return () => {
+      if (duplicateHintTRef.current) {
+        clearTimeout(duplicateHintTRef.current);
+      }
+    };
+  }, []);
 
   // 첨부 파일 합계 용량
   const totalSizeBytes = useMemo(
@@ -62,10 +73,26 @@ export function ImageFileAttachField({
     [items]
   );
 
-  // 파일 추가
+  // 파일 추가(같은 “이름+확(소문자)”는 목록/기존/같은 선택 묶음 안에서 1건만)
   const onFilesAdded = (files: File[]) => {
     if (files.length === 0) return;
-    onChange([...items, ...filesToItemsWithIds(files)]);
+    const { add, skip } = partitionByAttachmentIdentity(files, items, previousAttachments);
+    if (skip.length > 0) {
+      if (duplicateHintTRef.current) clearTimeout(duplicateHintTRef.current);
+      const list =
+        skip.length === 1
+          ? `“${skip[0]!.name.length > 50 ? `${skip[0]!.name.slice(0, 50)}…` : skip[0]!.name}”`
+          : `(${skip.length}개)`;
+      setDuplicateAddHint(
+        `같은 파일명(확장자는 소문자로 비교)이 이미 있어 추가하지 않았습니다. ${list}`
+      );
+      duplicateHintTRef.current = setTimeout(() => {
+        setDuplicateAddHint("");
+        duplicateHintTRef.current = null;
+      }, 9000);
+    }
+    if (add.length === 0) return;
+    onChange([...items, ...filesToItemsWithIds(add)]);
   };
 
   // 파일 입력 요소 변경 시 파일 추가
@@ -97,6 +124,11 @@ export function ImageFileAttachField({
         multiple
         onChange={handleFileInputChange}
       />
+      {duplicateAddHint && (
+        <p className="image-file-attach__dup-hint" role="alert">
+          {duplicateAddHint}
+        </p>
+      )}
       {hasListInBlock && (
         <div className="image-file-attach__reorder-block">
           <div className="image-file-attach__reorder-block-top">

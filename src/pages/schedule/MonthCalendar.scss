@@ -1,0 +1,102 @@
+@use "@/styles/common.scss" as *;
+@use "@/styles/breakpoints" as bp;
+
+.month-calendar {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.25rem 1.35rem 1.35rem;
+  border-radius: 16px;
+  border: 1px solid var(--color-card-border, var(--color-border));
+  background: var(--color-card);
+  box-shadow: 0 4px 25px var(--color-shadow-card);
+
+  @include bp.below(bp.$md) {
+    padding: 1rem 1rem 1.15rem;
+    border-radius: 14px;
+  }
+}
+
+.month-calendar__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.month-calendar__title {
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+  font-weight: 800;
+  color: var(--color-text-heading);
+  letter-spacing: 0.02em;
+}
+
+.month-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+  background: color-mix(in srgb, var(--color-border) 55%, transparent);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.month-calendar__weekday {
+  padding: 0.45rem 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--color-text-secondary);
+  background: color-mix(in srgb, var(--color-primary) 6%, var(--color-card));
+  text-transform: none;
+}
+
+.month-calendar__cell {
+  position: relative;
+  min-height: 5rem;
+  padding: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background: var(--color-card);
+  color: var(--color-text-heading);
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+
+  @include bp.below(bp.$sm) {
+    min-height: 2.75rem;
+  }
+}
+
+.month-calendar__cell--muted {
+  color: var(--color-text-muted);
+  background: color-mix(in srgb, var(--color-input-bg) 65%, var(--color-card));
+
+  .month-calendar__day-num {
+    font-weight: 500;
+    opacity: 0.72;
+  }
+}
+
+.month-calendar__cell--today {
+  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-card));
+  box-shadow: inset 0 0 0 2px var(--color-primary);
+
+  .month-calendar__day-num {
+    font-weight: 800;
+    color: var(--color-primary);
+  }
+}
+
+.month-calendar__day-num {
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}

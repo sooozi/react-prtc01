@@ -65,6 +65,18 @@
   color: var(--color-text-secondary);
 }
 
+/* 동일(이름+확·소) 첨부 제외 안내 */
+.image-file-attach__dup-hint {
+  margin: 0.5rem 0 0;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--color-error-dark, var(--color-text-heading));
+  background: var(--color-error-bg, color-mix(in srgb, var(--color-border) 35%, transparent));
+  border: 1px solid var(--color-error-border, var(--color-border));
+  border-radius: 10px;
+}
+
 /* 순서 조정: 폼 카드와 맞는 단일 블록(헤드 + 본문 리스트) — “이미지 선택” 점선 영역은 아래 */
 .image-file-attach__reorder-block {
   position: relative;
