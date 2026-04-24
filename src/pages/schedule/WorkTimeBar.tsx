@@ -136,26 +136,26 @@ export default function WorkTimeBar() {
                 <span className="work-time-bar__time-display" aria-hidden="true">
                   {clockIn || "--:--"}
                 </span>
-                <input
-                  id="schedule-clock-in"
-                  type="time"
-                  value={clockIn}
-                  onChange={(e) => {
-                    const v = e.target.value;
-                    if (!v) {
-                      setClockIn("");
-                      return;
-                    }
-                    const next = normalizeTimeHHmm(v);
-                    setClockIn(next ?? v);
-                  }}
-                  className="work-time-bar__time-input"
-                  aria-label="출근 시간, 24시 형식"
-                />
               </div>
               <span className="work-time-bar__pill-icon" aria-hidden>
                 <ClockIcon />
               </span>
+              <input
+                id="schedule-clock-in"
+                type="time"
+                value={clockIn}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (!v) {
+                    setClockIn("");
+                    return;
+                  }
+                  const next = normalizeTimeHHmm(v);
+                  setClockIn(next ?? v);
+                }}
+                className="work-time-bar__time-input"
+                aria-label="출근 시간, 24시 형식"
+              />
             </div>
             <span className="work-time-bar__arrow" aria-hidden>
               →
