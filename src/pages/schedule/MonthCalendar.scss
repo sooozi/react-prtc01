@@ -193,8 +193,8 @@
 // 원형 블루 + 흰 화살표 (이전/다음 달)
 .month-calendar__round-nav {
   flex-shrink: 0;
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   padding: 0;
   border: none;
   border-radius: 50%;
@@ -212,16 +212,6 @@
     opacity 0.15s ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-
-  @include bp.below(bp.$md) {
-    width: 2rem;
-    height: 2rem;
-  }
-
-  @include bp.below(bp.$sm) {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
 
   &:hover {
     box-shadow: 0 2px 10px var(--color-primary-shadow);
@@ -341,7 +331,7 @@
   line-height: 1.2;
 
   @include bp.below(bp.$sm) {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
   }
 }
 

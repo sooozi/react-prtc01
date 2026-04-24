@@ -1,5 +1,13 @@
 import type { FileWithId, ImageFilePreviousEntry } from "./ImageFileAttachField.types";
 
+// 첨부 파일 전체 파일명(확장자 포함) 최대 길이
+export const MAX_ATTACHMENT_FILENAME_LENGTH = 300;
+
+// 첨부 파일 전체 파일명(확장자 포함) 최대 길이 이내인지 판별
+export function isAttachmentFileNameWithinLimit(fileName: string): boolean {
+  return fileName.length <= MAX_ATTACHMENT_FILENAME_LENGTH;
+}
+
 /**
  * 마지막 `.` 기준 이름 + 확장자(소문자)로 동일 첨부 여부 판별
  * - `a.png` / `a.jpg` 는 서로 다름(베이스+확 조합이 다름)
@@ -17,7 +25,7 @@ export function getAttachmentIdentityKey(fileName: string): string {
 }
 
 /**
- * 이미 `items`·`previous`·같은 배치 안에 동일(이름+확장자 소)가 있으면 `skip`, 나머지 `add`
+ * 이미 `items`·`previous`·같은 배치 안에 동일(이름+확장자)가 있으면 `skip`, 나머지 `add`
  */
 export function partitionByAttachmentIdentity(
   newFiles: File[], 

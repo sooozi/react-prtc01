@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { createPost } from "@/api/board";
 import { Badge, Button } from "@/components";
 import { ImageFileAttachField } from "@/components/ImageFileAttachField/ImageFileAttachField";
-import { itemsToFiles } from "@/components/ImageFileAttachField/fileAttachItemUtils";
+import {
+  isAttachmentFileNameWithinLimit,
+  itemsToFiles,
+  MAX_ATTACHMENT_FILENAME_LENGTH,
+} from "@/components/ImageFileAttachField/fileAttachItemUtils";
 import type { FileWithId } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
 import "@/pages/post/Write.scss";
 
@@ -20,16 +24,25 @@ export default function Write() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    // 제목 유효성 검사
     if (!title.trim()) {
       setError("제목을 입력해주세요.");
       return;
     }
+    // 내용 유효성 검사
     if (!content.trim()) {
       setError("내용을 입력해주세요.");
       return;
     }
+    // 첨부 파일 유효성 검사
+    if (attachFileItems.some((i) => !isAttachmentFileNameWithinLimit(i.file.name))) {
+      setError(
+        `첨부 파일명(확장자 포함)은 ${MAX_ATTACHMENT_FILENAME_LENGTH}자 이하여야 합니다.`
+      );
+      return;
+    }
 
-    setLoading(true);
+    setLoading(true); // 로딩 상태 설정
     try {
       const files = itemsToFiles(attachFileItems);
       const res = await createPost({
@@ -38,14 +51,14 @@ export default function Write() {
         attachFiles: files.length > 0 ? files : undefined,
         attachFileOrderList:
           files.length > 0
-            ? attachFileItems.map((item) => item.file.name)
+            ? attachFileItems.map((item) => item.file.name) // 첨부 파일 이름 목록 배열
             : undefined,
       });
       if (res) {
-        navigate("/post/list", { replace: true });
+        navigate("/post/list", { replace: true }); // 게시글 목록 페이지로 이동
       }
     } finally {
-      setLoading(false);
+      setLoading(false); // 로딩 상태 초기화
     }
   };
 

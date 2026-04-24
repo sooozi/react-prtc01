@@ -4,7 +4,11 @@ import { getPostDetail, getPostFiles, updatePost } from "@/api/board";
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
 import { ImageFileAttachField } from "@/components/ImageFileAttachField/ImageFileAttachField";
-import { itemsToFiles } from "@/components/ImageFileAttachField/fileAttachItemUtils";
+import {
+  isAttachmentFileNameWithinLimit,
+  itemsToFiles,
+  MAX_ATTACHMENT_FILENAME_LENGTH,
+} from "@/components/ImageFileAttachField/fileAttachItemUtils";
 import type { FileWithId } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
 import { postDetailPath } from "@/pages/post/postDetailFromQuery";
 import "@/pages/post/Detail.scss";
@@ -77,6 +81,12 @@ export default function Update() {
     }
     if (!content.trim()) {
       setError("내용을 입력해주세요.");
+      return;
+    }
+    if (newAttachFileItems.some((i) => !isAttachmentFileNameWithinLimit(i.file.name))) {
+      setError(
+        `첨부 파일명(확장자 포함)은 ${MAX_ATTACHMENT_FILENAME_LENGTH}자 이하여야 합니다.`
+      );
       return;
     }
     setError("");

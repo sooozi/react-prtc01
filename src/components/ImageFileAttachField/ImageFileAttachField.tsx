@@ -3,7 +3,11 @@ import { flushSync } from "react-dom";
 import { arrayMove } from "@/utils/arrayMove";
 import { formatFileSize } from "@/utils/formatFileSize";
 import type { FileWithId, ImageFilePreviousEntry } from "./ImageFileAttachField.types";
-import { filesToItemsWithIds, partitionByAttachmentIdentity } from "./fileAttachItemUtils";
+import {
+  filesToItemsWithIds,
+  MAX_ATTACHMENT_FILENAME_LENGTH,
+  partitionByAttachmentIdentity,
+} from "./fileAttachItemUtils";
 import "./ImageFileAttachField.scss";
 
 const GRIP_SVG = (
@@ -31,7 +35,7 @@ type Props = {
   fileInputRef: RefObject<HTMLInputElement | null>; // 파일 입력 요소 참조
   accept?: string; // 파일 타입 필터
   rootClassName?: string; // 루트 컴포넌트 클래스 이름
-  /** 서버에 이미 있는 이미지(읽기 전용). 수정 화면에서만 넣음 */
+  // 서버에 이미 있는 이미지(읽기 전용). 수정 화면에서만 넣음
   previousAttachments?: ImageFilePreviousEntry[];
 };
 
@@ -55,14 +59,23 @@ export function ImageFileAttachField({
   const [overIndex, setOverIndex] = useState<number | null>(null); // 드래그 중인 행 인덱스
   const [reorderFromIndex, setReorderFromIndex] = useState<number | null>(null); // 드래그 시작 행 인덱스
   const reorderFromRef = useRef<number | null>(null); // 끌기 시작 인덱스(ref)
-  const [duplicateAddHint, setDuplicateAddHint] = useState(""); // 같은 파일명 추가 힌트
-  const duplicateHintTRef = useRef<ReturnType<typeof setTimeout> | null>(null); // 같은 파일명 추가 힌트 타임아웃
+  const [fileAddHint, setFileAddHint] = useState(""); // 파일명 길이 / 중복 등 추가 힌트
+  const fileAddHintTRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // 같은 파일명 추가 힌트 타임아웃 초기화
+  // 힌트(안내 문구) 표시 타임아웃
+  const scheduleFileAddHintClear = () => {
+    if (fileAddHintTRef.current) clearTimeout(fileAddHintTRef.current);
+    fileAddHintTRef.current = setTimeout(() => {
+      setFileAddHint("");
+      fileAddHintTRef.current = null;
+    }, 9000);
+  };
+
+  // 힌트(안내 문구) 표시 타임아웃 초기화
   useEffect(() => {
     return () => {
-      if (duplicateHintTRef.current) {
-        clearTimeout(duplicateHintTRef.current);
+      if (fileAddHintTRef.current) {
+        clearTimeout(fileAddHintTRef.current);
       }
     };
   }, []);
@@ -73,26 +86,60 @@ export function ImageFileAttachField({
     [items]
   );
 
-  // 파일 추가(같은 “이름+확(소문자)”는 목록/기존/같은 선택 묶음 안에서 1건만)
+  // 파일 추가(300자 초과 제외, 같은 “이름(소문자)”는 1건만)
   const onFilesAdded = (files: File[]) => {
     if (files.length === 0) return;
-    const { add, skip } = partitionByAttachmentIdentity(files, items, previousAttachments);
-    if (skip.length > 0) {
-      if (duplicateHintTRef.current) clearTimeout(duplicateHintTRef.current);
+
+    const okLength: File[] = [];
+    const tooLong: File[] = [];
+    // 300자 초과 파일 필터링
+    for (const f of files) {
+      if (f.name.length > MAX_ATTACHMENT_FILENAME_LENGTH) tooLong.push(f);
+      else okLength.push(f);
+    }
+
+    // 힌트(안내 문구) 목록
+    const messageParts: string[] = [];
+    if (tooLong.length > 0) {
+      if (tooLong.length === 1) { // 300자 초과 파일이 1개인 경우
+        const n = tooLong[0]!.name;
+        const shown = n.length > 50 ? `${n.slice(0, 50)}…` : n;
+        messageParts.push(
+          `파일명(확장자 포함)은 ${MAX_ATTACHMENT_FILENAME_LENGTH}자 이하여야 합니다. 추가하지 않음: “${shown}”`
+        );
+      } else {
+        // 300자 초과 파일이 2개 이상인 경우
+        messageParts.push(
+          `파일명(확장자 포함)이 ${MAX_ATTACHMENT_FILENAME_LENGTH}자를 넘는 ${tooLong.length}개는 추가하지 않았습니다.`
+        );
+      }
+    }
+
+    if (okLength.length === 0) { // 300자 이내 파일이 없으면 힌트(안내 문구) 표시
+      if (messageParts.length > 0) {
+        setFileAddHint(messageParts.join(" "));
+        scheduleFileAddHintClear();
+      }
+      return;
+    }
+
+    const { add, skip } = partitionByAttachmentIdentity(okLength, items, previousAttachments);
+    if (skip.length > 0) { // 같은 파일명이 있으면 힌트(안내 문구) 표시
       const list =
         skip.length === 1
           ? `“${skip[0]!.name.length > 50 ? `${skip[0]!.name.slice(0, 50)}…` : skip[0]!.name}”`
           : `(${skip.length}개)`;
-      setDuplicateAddHint(
+      messageParts.push(
         `같은 파일명(확장자는 소문자로 비교)이 이미 있어 추가하지 않았습니다. ${list}`
       );
-      duplicateHintTRef.current = setTimeout(() => {
-        setDuplicateAddHint("");
-        duplicateHintTRef.current = null;
-      }, 9000);
     }
-    if (add.length === 0) return;
-    onChange([...items, ...filesToItemsWithIds(add)]);
+    if (add.length > 0) { // 추가할 파일이 있으면 첨부 파일 목록 업데이트
+      onChange([...items, ...filesToItemsWithIds(add)]);
+    }
+    if (messageParts.length > 0) { // 힌트(안내 문구) 표시 
+      setFileAddHint(messageParts.join(" "));
+      scheduleFileAddHintClear();
+    }
   };
 
   // 파일 입력 요소 변경 시 파일 추가
@@ -106,7 +153,7 @@ export function ImageFileAttachField({
   const removeAt = (index: number) => {
     const next = items.filter((_, i) => i !== index);
     onChange(next);
-    if (next.length === 0 && fileInputRef.current) {
+    if (next.length === 0 && fileInputRef.current) { // 첨부 파일이 없으면 파일 입력 요소 초기화
       fileInputRef.current.value = "";
     }
   };
@@ -124,11 +171,21 @@ export function ImageFileAttachField({
         multiple
         onChange={handleFileInputChange}
       />
-      {duplicateAddHint && (
+
+      <label htmlFor={fileInputId} className="image-file-attach__add">
+        <span className="image-file-attach__add-title">이미지 선택</span>
+        <span className="image-file-attach__add-sub">
+          해당 영역을 클릭해 PNG, JPG, GIF, WebP 등의 이미지를 선택하세요. 파일명(확장자 포함)은{" "}
+          {MAX_ATTACHMENT_FILENAME_LENGTH}자 이하만 가능합니다.
+        </span>
+      </label>
+
+      {fileAddHint && (
         <p className="image-file-attach__dup-hint" role="alert">
-          {duplicateAddHint}
+          {fileAddHint}
         </p>
       )}
+
       {hasListInBlock && (
         <div className="image-file-attach__reorder-block">
           <div className="image-file-attach__reorder-block-top">
@@ -243,11 +300,6 @@ export function ImageFileAttachField({
           </ol>
         </div>
       )}
-
-      <label htmlFor={fileInputId} className="image-file-attach__add">
-        <span className="image-file-attach__add-title">이미지 선택</span>
-        <span className="image-file-attach__add-sub">해당 영역을 클릭해 PNG, JPG, GIF, WebP 등의 이미지를 선택하세요.</span>
-      </label>
     </div>
   );
 }
