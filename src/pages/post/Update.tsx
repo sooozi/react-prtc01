@@ -18,9 +18,9 @@ import "@/pages/post/Update.scss";
 export default function Update() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const idRaw = searchParams.get("id");
-  const postNumber = idRaw ? parseInt(idRaw, 10) : NaN;
-  const invalidId = Number.isNaN(postNumber) || postNumber < 1;
+  const idRaw = searchParams.get("id"); // 게시글 번호
+  const postNumber = idRaw ? parseInt(idRaw, 10) : NaN; // 게시글 번호
+  const invalidId = Number.isNaN(postNumber) || postNumber < 1; // 게시글 번호 유효성 검사
 
   const [post, setPost] = useState<PostDetail | null>(null);
   const [existingAttachments, setExistingAttachments] = useState<PostAttachmentItem[]>([]);
@@ -43,6 +43,7 @@ export default function Update() {
 
     let cancelled = false;
 
+    // 게시글 상세 조회 + 기존 첨부 목록
     (async () => {
       try {
         const [data, files] = await Promise.all([
@@ -73,6 +74,7 @@ export default function Update() {
     };
   }, [postNumber, invalidId, navigate]);
 
+  // 저장 버튼 클릭 시 처리
   const handleSaveConfirm = async () => {
     setShowSaveConfirm(false);
     if (!title.trim()) {
