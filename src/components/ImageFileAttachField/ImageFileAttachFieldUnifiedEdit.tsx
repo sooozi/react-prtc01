@@ -219,18 +219,13 @@ export function ImageFileAttachFieldUnifiedEdit({
     };
   }, []);
 
+  /** 로컬 File.size + 서버 API의 sizeBytes(있을 때만 합산) */
   const totalSizeBytes = useMemo(
     () =>
-      rows.reduce(
-        (sum: number, r: ImageFileUnifiedRow) =>
-          r.kind === "local" ? sum + r.file.size : sum,
-        0
-      ),
-    [rows]
-  );
-
-  const hasLocalFiles = useMemo(
-    () => rows.some((r: ImageFileUnifiedRow) => r.kind === "local"),
+      rows.reduce((sum: number, r: ImageFileUnifiedRow) => {
+        if (r.kind === "local") return sum + r.file.size;
+        return sum + (r.sizeBytes ?? 0);
+      }, 0),
     [rows]
   );
 
@@ -348,7 +343,7 @@ export function ImageFileAttachFieldUnifiedEdit({
             <div className="image-file-attach__reorder-headline">
               <h3 className="image-file-attach__reorder-block-title">첨부 이미지 순서</h3>
             </div>
-            {(rows.length >= 2 || hasLocalFiles) && (
+            {rows.length > 0 && (
               <div className="image-file-attach__reorder-hint-row">
                 {rows.length >= 2 ? (
                   <p className="image-file-attach__reorder-hint">
@@ -357,11 +352,12 @@ export function ImageFileAttachFieldUnifiedEdit({
                 ) : (
                   <span className="image-file-attach__reorder-hint" aria-hidden="true" />
                 )}
-                {hasLocalFiles ? (
-                  <span className="image-file-attach__reorder-total">
-                    총 {formatFileSize(totalSizeBytes)}
-                  </span>
-                ) : null}
+                <span className="image-file-attach__reorder-total">
+                  총{" "}
+                  {totalSizeBytes > 0
+                    ? formatFileSize(totalSizeBytes)
+                    : "—"}
+                </span>
               </div>
             )}
           </div>
