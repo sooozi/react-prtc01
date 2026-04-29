@@ -11,12 +11,21 @@ export type CreatePostRequest = {
   attachFileOrderList?: string[]; // 첨부 파일 순서 목록
 };
 
-/** PUT /posts/{postNumber} — 등록과 동일하게 multipart (title, content, attachFileList[]) */
+/**
+ * PUT /posts/{postNumber} — multipart/form-data
+ * Swagger: addAttachFileList, deleteFileIdList, attachFileOrderList
+ */
 export type UpdatePostRequest = {
   title: string;
   content: string;
-  attachFiles?: File[];
-  /** 등록 API와 동일: 새로 올리는 첨부의 파일명 순서(확장자 포함) */
+  /** multipart `addAttachFileList` — 이번 요청에서 새로 올리는 파일 */
+  addAttachFiles?: File[];
+  /** 삭제할 기존 첨부의 fileId */
+  deleteFileIdList?: number[];
+  /**
+   * 최종 노출 순서. 기존 파일은 보통 `fileId` 문자열, 신규는 업로드 파일명(확장자 포함).
+   * 백엔드가 다른 토큰 규칙을 쓰면 이 배열만 맞추면 됩니다.
+   */
   attachFileOrderList?: string[];
 };
 
@@ -59,10 +68,12 @@ export type SelectBoardList = {
   sortType?: SortOrder;
 };
 
-/** GET /posts/{id}/files 한 건 (Swagger: fileId, fileName, sortOrder) */
+/** GET /posts/{id}/files 한 건 (Swagger: fileId, fileName, fileSize, sortOrder) */
 export type PostAttachmentItem = {
   fileId: number;
   fileName: string;
+  /** 바이트 단위 — 없으면 UI에서 생략 */
+  fileSize?: number;
   sortOrder: number;
 };
 

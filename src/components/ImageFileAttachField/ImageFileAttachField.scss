@@ -1,8 +1,18 @@
 /* 추가 영역(클릭) + 첨부 행(클립·파일명·순서 DnD) — 등록/수정 공용 */
 
+body.image-file-attach--reorder-active {
+  user-select: none;
+  cursor: grabbing;
+}
+
 .image-file-attach {
   position: relative;
   width: 100%;
+}
+
+/* Fragment 대신: li flex 자식으로 핸들·메타·버튼이 안정적으로 배치되도록 */
+.image-file-attach__row-inner {
+  display: contents;
 }
 
 .image-file-attach--spaced {
@@ -213,10 +223,20 @@
 }
 
 .image-file-attach__row--reorder {
-  cursor: grab;
+  cursor: default;
   user-select: none;
   padding: 0 10px 0 0;
   overflow: hidden; /* handle-zone 왼쪽 라운드 */
+}
+
+.image-file-attach__row--reorder:not(.image-file-attach__row--previous) .image-file-attach__handle-zone {
+  cursor: grab;
+  touch-action: none;
+}
+
+.image-file-attach__row--reorder:not(.image-file-attach__row--previous)
+  .image-file-attach__handle-zone:active {
+  cursor: grabbing;
 }
 
 .image-file-attach__row--reorder:hover:not(.image-file-attach__row--dragging) {
@@ -229,22 +249,18 @@
   }
 }
 
-.image-file-attach__row--reorder:active {
-  cursor: grabbing;
-}
-
-/* 서버에만 있는 기존 첨부: 모양은 동일, 드래그/삭제 없음 */
+/* 서버에만 있는 기존 첨부 — 새 행과 동일 호버·테두리, 커서·드래그만 다름 */
 .image-file-attach__row--previous {
   cursor: default;
   user-select: text;
 
   &:hover:not(.image-file-attach__row--dragging) {
-    border-color: var(--color-border);
-    box-shadow: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 
     .image-file-attach__handle-zone {
-      color: var(--color-text-secondary);
-      background: var(--color-primary-muted, rgba(99, 102, 241, 0.1));
+      color: var(--color-primary);
+      background: var(--color-input-focus-bg, rgba(99, 102, 241, 0.12));
     }
   }
 
@@ -262,8 +278,47 @@
 }
 
 .image-file-attach__row--dragging {
-  opacity: 0.78;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  opacity: 0.32;
+  box-shadow: none;
+}
+
+/* 포인터 재정렬 시 body에 붙는 고스트(포털) */
+.image-file-attach__drag-ghost {
+  box-sizing: border-box;
+}
+
+.image-file-attach__drag-ghost-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0 10px 0 0;
+  border: 1px solid var(--color-primary);
+  border-radius: 10px;
+  background: var(--color-card);
+  color: var(--color-text);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.2),
+    0 0 0 1px color-mix(in srgb, var(--color-primary) 35%, transparent);
+  opacity: 0.96;
+  transform: rotate(-0.35deg);
+}
+
+.image-file-attach__drag-ghost-grip {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  padding: 0.4rem 0.5rem;
+  min-width: 2.1rem;
+  color: var(--color-primary);
+  background: var(--color-primary-muted, rgba(99, 102, 241, 0.1));
+  border-right: 1px solid var(--color-border);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 }
 
 .image-file-attach__handle-zone {

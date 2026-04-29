@@ -1,12 +1,17 @@
 // 공통 컴포넌트 export
-export { ImageFileAttachField, ImageFileReadOnlyRow } from "@/components/ImageFileAttachField/ImageFileAttachField";
+export { GripHandleIcon } from "@/components/icons/GripHandleIcon";
+export { ImageFileAttachField } from "@/components/ImageFileAttachField/ImageFileAttachField";
 export {
   filesToItemsWithIds,
   itemsToFiles,
   MAX_ATTACHMENT_FILENAME_LENGTH,
   isAttachmentFileNameWithinLimit,
 } from "@/components/ImageFileAttachField/fileAttachItemUtils";
-export type { FileWithId } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
+export type {
+  FileWithId,
+  ImageFileUnifiedRow,
+} from "@/components/ImageFileAttachField/ImageFileAttachField.types";
+export type { ImageFileAttachFieldProps } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
 export { default as Badge } from "@/components/Badge/Badge";
 export { default as Button } from "@/components/Button/Button";
 export { default as Confirm } from "@/components/Confirm/Confirm";

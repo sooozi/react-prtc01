@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, getPostFiles, updatePost } from "@/api/board";
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
@@ -6,10 +6,9 @@ import { Badge, Button, Confirm, LoadingState } from "@/components";
 import { ImageFileAttachField } from "@/components/ImageFileAttachField/ImageFileAttachField";
 import {
   isAttachmentFileNameWithinLimit,
-  itemsToFiles,
   MAX_ATTACHMENT_FILENAME_LENGTH,
 } from "@/components/ImageFileAttachField/fileAttachItemUtils";
-import type { FileWithId } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
+import type { ImageFileUnifiedRow } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
 import { postDetailPath } from "@/pages/post/postDetailFromQuery";
 import "@/pages/post/Detail.scss";
 import "@/pages/post/Write.scss";
@@ -23,8 +22,8 @@ export default function Update() {
   const invalidId = Number.isNaN(postNumber) || postNumber < 1; // 게시글 번호 유효성 검사
 
   const [post, setPost] = useState<PostDetail | null>(null);
-  const [existingAttachments, setExistingAttachments] = useState<PostAttachmentItem[]>([]);
-  const [newAttachFileItems, setNewAttachFileItems] = useState<FileWithId[]>([]);
+  const [editAttachmentRows, setEditAttachmentRows] = useState<ImageFileUnifiedRow[]>([]); // 첨부 파일 목록
+  const initialServerFileIdsRef = useRef<number[]>([]); // 로드 시점의 서버 fileId 목록
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -36,7 +35,7 @@ export default function Update() {
 
   // 상세 + 기존 첨부 목록
   useEffect(() => {
-    if (invalidId) {
+    if (invalidId) { // 게시글 번호 유효성 검사
       setLoading(false);
       return;
     }
@@ -47,21 +46,29 @@ export default function Update() {
     (async () => {
       try {
         const [data, files] = await Promise.all([
-          getPostDetail(postNumber),
-          getPostFiles(postNumber).catch(() => [] as PostAttachmentItem[]),
+          getPostDetail(postNumber), // 게시글 상세 조회
+          getPostFiles(postNumber).catch(() => [] as PostAttachmentItem[]), // 기존 첨부 목록
         ]);
         if (cancelled) return;
-        if (data == null) {
+        if (data == null) { // 게시글 상세 조회 실패
           setPost(null);
           setTitle("");
           setContent("");
-          setExistingAttachments([]);
+          setEditAttachmentRows([]);
+          initialServerFileIdsRef.current = []; // 기존 첨부 목록 초기화
         } else {
-          setPost(data);
+          setPost(data); // 게시글 상세 조회 성공
           setTitle(data.title);
           setContent(data.content ?? "");
-          setExistingAttachments(
-            [...files].sort((a, b) => a.sortOrder - b.sortOrder)
+          const sorted = [...files].sort((a, b) => a.sortOrder - b.sortOrder); // 기존 첨부 목록 정렬
+          initialServerFileIdsRef.current = sorted.map((f) => f.fileId); // 기존 첨부 목록 ID 목록
+          setEditAttachmentRows(
+            sorted.map((f) => ({
+              kind: "server" as const,
+              fileId: f.fileId,
+              name: f.fileName,
+              ...(f.fileSize != null ? { sizeBytes: f.fileSize } : {}),
+            }))
           );
         }
       } finally {
@@ -72,7 +79,7 @@ export default function Update() {
     return () => {
       cancelled = true;
     };
-  }, [postNumber, invalidId, navigate]);
+  }, [postNumber, invalidId]);
 
   // 저장 버튼 클릭 시 처리
   const handleSaveConfirm = async () => {
@@ -85,7 +92,11 @@ export default function Update() {
       setError("내용을 입력해주세요.");
       return;
     }
-    if (newAttachFileItems.some((i) => !isAttachmentFileNameWithinLimit(i.file.name))) {
+    if (
+      editAttachmentRows.some( // 새로 추가한 첨부 파일 유효성 검사
+        (r) => r.kind === "local" && !isAttachmentFileNameWithinLimit(r.file.name)
+      )
+    ) {
       setError(
         `첨부 파일명(확장자 포함)은 ${MAX_ATTACHMENT_FILENAME_LENGTH}자 이하여야 합니다.`
       );
@@ -94,15 +105,32 @@ export default function Update() {
     setError("");
     setSubmitLoading(true);
     try {
-      const newFiles = itemsToFiles(newAttachFileItems);
-      const ok = await updatePost(postNumber, {
+      const initialIds = initialServerFileIdsRef.current; // 로드 시점의 서버 fileId 목록
+      const currentServerIds = editAttachmentRows // 기존 첨부 목록 ID 목록
+        .filter((r): r is Extract<ImageFileUnifiedRow, { kind: "server" }> => r.kind === "server") // 기존 첨부 목록
+        .map((r) => r.fileId); // 기존 첨부 목록 ID 목록
+      const deleteFileIdList = initialIds.filter((id) => !currentServerIds.includes(id)); // 삭제할 파일 ID 목록
+
+      const newFiles = editAttachmentRows
+        .filter((r): r is Extract<ImageFileUnifiedRow, { kind: "local" }> => r.kind === "local") // 새로 추가한 첨부 파일
+        .map((r) => r.file); // 새로 추가한 첨부 파일 파일 목록
+
+      const everHadServerFiles = initialIds.length > 0; // 기존 첨부 목록이 있는지 여부
+
+      // 첨부 파일 순서 목록
+      const attachFileOrderList: string[] | undefined =
+        editAttachmentRows.length > 0
+          ? editAttachmentRows.map((r) => (r.kind === "server" ? r.name : r.file.name)) // 기존 첨부 목록은 파일명, 새로 추가한 첨부 파일은 파일명
+          : everHadServerFiles
+            ? [] // 기존 첨부 목록이 있으면 빈 배열
+            : undefined;
+
+      const ok = await updatePost(postNumber, { // 게시글 수정 요청 
         title: title.trim(),
         content: content.trim(),
-        attachFiles: newFiles.length > 0 ? newFiles : undefined,
-        attachFileOrderList:
-          newFiles.length > 0
-            ? newAttachFileItems.map((item) => item.file.name)
-            : undefined,
+        addAttachFiles: newFiles.length > 0 ? newFiles : undefined, // 새로 추가한 첨부 파일 파일 목록
+        deleteFileIdList: deleteFileIdList.length > 0 ? deleteFileIdList : undefined, // 삭제할 파일 ID 목록
+        attachFileOrderList, // 첨부 파일 순서 목록
       });
       if (ok) {
         navigate(postDetailPath(postNumber, searchParams.get("from")), {
@@ -198,13 +226,9 @@ export default function Update() {
               <span className="label">첨부파일</span>
               <ImageFileAttachField
                 fileInputId="update-post-file"
-                items={newAttachFileItems}
-                onChange={setNewAttachFileItems}
-                fileInputRef={fileInputRef}
-                previousAttachments={existingAttachments.map((f) => ({
-                  id: f.fileId,
-                  name: f.fileName,
-                }))}
+                fileInputRef={fileInputRef} // 파일 입력 요소 참조
+                unifiedRows={editAttachmentRows} // 첨부 파일 목록
+                onUnifiedRowsChange={setEditAttachmentRows} // 첨부 파일 목록 변경 시 처리
               />
             </div>
 

@@ -9,6 +9,7 @@ import {
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
 import { listReturnPathFromFromQuery, postUpdatePath } from "@/pages/post/postDetailFromQuery";
+import { formatFileSize } from "@/utils/formatFileSize";
 import "@/pages/post/Detail.scss";
 
 export default function Detail() {
@@ -178,6 +179,11 @@ export default function Detail() {
                         📎
                       </span>
                       <span className="detail-attachments__name">{file.fileName}</span>
+                      {file.fileSize != null && (
+                        <span className="detail-attachments__size" title="파일 용량">
+                          {formatFileSize(file.fileSize)}
+                        </span>
+                      )}
                     </li>
                   ))}
                 </ul>

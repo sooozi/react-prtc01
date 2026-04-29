@@ -121,8 +121,7 @@ export async function createPost(
 
 /**
  * 포스트 수정
- * [PUT] /posts/{postNumber} — multipart/form-data (등록 API와 동일 필드명)
- * 실패 시 `reportApiErrorToUser` 후 `false`
+ * [PUT] /posts/{postNumber} — multipart/form-data
  */
 export async function updatePost(
   postNumber: number,
@@ -133,8 +132,11 @@ export async function updatePost(
     const formData = new FormData();
     formData.append("title", body.title);
     formData.append("content", body.content);
-    for (const file of body.attachFiles ?? []) {
-      formData.append("attachFileList", file);
+    for (const file of body.addAttachFiles ?? []) { // 새로 추가한 파일
+      formData.append("addAttachFileList", file);
+    }
+    for (const id of body.deleteFileIdList ?? []) { // 삭제할 파일
+      formData.append("deleteFileIdList", String(id));
     }
     for (const name of body.attachFileOrderList ?? []) {
       formData.append("attachFileOrderList", name);

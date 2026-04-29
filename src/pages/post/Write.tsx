@@ -1,14 +1,15 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPost } from "@/api/board";
-import { Badge, Button } from "@/components";
-import { ImageFileAttachField } from "@/components/ImageFileAttachField/ImageFileAttachField";
 import {
+  Badge,
+  Button,
+  ImageFileAttachField,
   isAttachmentFileNameWithinLimit,
   itemsToFiles,
   MAX_ATTACHMENT_FILENAME_LENGTH,
-} from "@/components/ImageFileAttachField/fileAttachItemUtils";
-import type { FileWithId } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
+} from "@/components";
+import type { FileWithId } from "@/components";
 import "@/pages/post/Write.scss";
 
 export default function Write() {
