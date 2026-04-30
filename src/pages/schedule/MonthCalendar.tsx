@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import clsx from "clsx";
 import { addMonths, getCalendarCells, isSameCalendarDay, startOfMonth } from "./calendarUtils";
 import "./MonthCalendar.scss";
@@ -6,13 +6,19 @@ import "./MonthCalendar.scss";
 const WEEKDAYS_KO = ["월", "화", "수", "목", "금", "토", "일"];
 const MONTH_NUMS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
+// 달력 첫 칸(추후 연동) — 지금은 UI·콘솔 확인용만
+type WeekStartChoice = "monday" | "sunday";
+
 type Props = {
-  /** 표시할 달의 아무 날짜(보통 1일) */
+  // 표시할 달의 아무 날짜(보통 1일)
   month: Date;
   onMonthChange: (nextMonthStart: Date) => void;
 };
 
 export default function MonthCalendar({ month, onMonthChange }: Props) {
+  const [weekStart, setWeekStart] = useState<WeekStartChoice>("monday");
+
+  // 달력 첫 칸 요일 선택
   const monthStart = useMemo(() => startOfMonth(month), [month]);
   const y = monthStart.getFullYear();
   const m = monthStart.getMonth();
@@ -66,6 +72,65 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
         >
           오늘
         </button>
+      </div>
+
+      <div className="month-calendar__week-start-row">
+        <span className="month-calendar__week-start-label" id="month-calendar-week-start-label">
+          주 시작
+        </span>
+        <div
+          className="month-calendar__week-start-switch-wrap"
+          role="group"
+          aria-labelledby="month-calendar-week-start-label"
+        >
+          <button
+            type="button"
+            className="month-calendar__week-start-switch"
+            role="switch"
+            aria-checked={weekStart === "sunday"}
+            aria-label={
+              weekStart === "monday"
+                ? "월요일 시작. 누르면 일요일 시작으로 바뀝니다."
+                : "일요일 시작. 누르면 월요일 시작으로 바뀝니다."
+            }
+            onClick={() => {
+              setWeekStart((prev) => {
+                const next = prev === "monday" ? "sunday" : "monday";
+                console.log(next === "monday" ? "월요일" : "일요일");
+                return next;
+              });
+            }}
+          >
+            <span
+              className={clsx("month-calendar__week-start-switch-track", {
+                "month-calendar__week-start-switch-track--sunday": weekStart === "sunday",
+              })}
+            >
+              <span
+                className={clsx("month-calendar__week-start-switch-thumb", {
+                  "month-calendar__week-start-switch-thumb--right": weekStart === "sunday",
+                })}
+                aria-hidden
+              />
+              <span className="month-calendar__week-start-switch-labels" aria-hidden>
+                <span
+                  className={clsx("month-calendar__week-start-switch-text", {
+                    "month-calendar__week-start-switch-text--active": weekStart === "monday",
+                  })}
+                >
+                  월요일
+                </span>
+                <span
+                  className={clsx("month-calendar__week-start-switch-text", {
+                    "month-calendar__week-start-switch-text--active": weekStart === "sunday",
+                  })}
+                >
+                  일요일
+                </span>
+              </span>
+            </span>
+          </button>
+        </div>
       </div>
 
       <header className="month-calendar__toolbar">

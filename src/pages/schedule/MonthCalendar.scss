@@ -174,6 +174,139 @@
   }
 }
 
+/* 주 시작: 슬라이드 토글(왼쪽=월요일, 오른쪽=일요일) — 격자 연동 전 UI */
+.month-calendar__week-start-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+  padding: 0.35rem 0.15rem;
+
+  @include bp.below(bp.$sm) {
+    margin-bottom: 0.7rem;
+    padding: 0.28rem 0.05rem;
+  }
+}
+
+.month-calendar__week-start-label {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-text-secondary);
+}
+
+.month-calendar__week-start-switch-wrap {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.month-calendar__week-start-switch {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  line-height: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.month-calendar__week-start-switch-track {
+  --track-w: 7rem;
+  --track-h: 2rem;
+  --track-pad: 2px;
+  --thumb-travel: calc((var(--track-w) - var(--track-pad) * 2) / 2);
+
+  position: relative;
+  display: block;
+  width: var(--track-w);
+  height: var(--track-h);
+  box-sizing: border-box;
+  padding: var(--track-pad);
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, var(--color-text-secondary) 8%);
+  background: color-mix(in srgb, var(--color-border) 28%, var(--color-input-bg));
+  overflow: hidden;
+  transition:
+    background 0.22s ease,
+    border-color 0.2s ease;
+}
+
+.month-calendar__week-start-switch-track--sunday {
+  background: color-mix(in srgb, var(--color-border) 38%, var(--color-input-bg));
+}
+
+[data-theme="dark"] .month-calendar__week-start-switch-track {
+  border-color: color-mix(in srgb, var(--color-border) 70%, rgb(255 255 255 / 0.12));
+  background: color-mix(in srgb, var(--color-border) 42%, var(--color-bg-subtle));
+}
+
+[data-theme="dark"] .month-calendar__week-start-switch-track--sunday {
+  background: color-mix(in srgb, var(--color-border) 55%, var(--color-bg-subtle));
+}
+
+/* 반쪽 너비 pill, 이미지처럼 네이비 톤 */
+.month-calendar__week-start-switch-thumb {
+  position: absolute;
+  z-index: 0;
+  top: var(--track-pad);
+  bottom: var(--track-pad);
+  left: var(--track-pad);
+  width: var(--thumb-travel);
+  border-radius: 9999px;
+  /* 브랜드 포인트: 인디고 → 바이올렛 (테마 변수만 사용) */
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.22),
+    0 1px 2px var(--color-primary-shadow);
+  transform: translateX(0);
+  transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.month-calendar__week-start-switch-thumb--right {
+  transform: translateX(var(--thumb-travel));
+}
+
+.month-calendar__week-start-switch-labels {
+  position: absolute;
+  z-index: 1;
+  inset: var(--track-pad);
+  display: flex;
+  align-items: stretch;
+  pointer-events: none;
+}
+
+.month-calendar__week-start-switch-text {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  color: color-mix(in srgb, var(--color-text-secondary) 55%, var(--color-text-heading) 45%);
+  transition: color 0.18s ease, font-weight 0.18s ease;
+}
+
+.month-calendar__week-start-switch-text--active {
+  color: #fff;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .month-calendar__week-start-switch-text:not(.month-calendar__week-start-switch-text--active) {
+  color: color-mix(in srgb, var(--color-text-secondary) 70%, rgb(255 255 255 / 0.35));
+}
+
 .month-calendar__toolbar {
   display: flex;
   align-items: center;
