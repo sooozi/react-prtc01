@@ -5,12 +5,28 @@
   @extend %page-container;
 }
 
-.schedule-calendar-section {
+.schedule-layout {
   margin-top: 1.25rem;
-  padding: 0 0.25rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr minmax(min(100%, 280px), 360px);
+  gap: 1.5rem 1.75rem;
+  align-items: start;
+
+  @include bp.below(bp.$lg) {
+    grid-template-columns: 1fr;
+    gap: 1.35rem;
+  }
 
   @include bp.below(bp.$md) {
     margin-top: 1rem;
+  }
+}
+
+.schedule-calendar-section {
+  min-width: 0;
+  padding: 0 0.25rem 2rem;
+
+  @include bp.below(bp.$md) {
     padding: 0 0.25rem 1.5rem;
   }
 

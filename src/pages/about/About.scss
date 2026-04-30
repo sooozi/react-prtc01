@@ -23,12 +23,25 @@
   font-size: 1.1rem;
   color: var(--color-text-secondary);
   line-height: 1.8;
-  max-width: 600px;
+  max-width: 640px;
   margin: 0 auto;
+}
+
+.about-page .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 // 미션 섹션
 .mission-section {
+  position: relative;
   margin-bottom: 4rem;
 }
 
@@ -67,8 +80,23 @@
 }
 
 // 기술 스택 섹션
+.about-page .tech-section {
+  margin-bottom: 4rem;
+}
+
+.about-page .section-title {
+  margin: 0 0 1.5rem;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: var(--color-text-heading);
+}
 
 .tech-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   justify-content: center;
   gap: 1rem;
@@ -84,6 +112,7 @@
   padding: 0.75rem 1.25rem;
   box-shadow: 0 2px 10px var(--color-shadow-sm);
   border: 1px solid var(--color-border);
+  flex-shrink: 0;
 }
 
 .tech-icon {
@@ -96,23 +125,23 @@
   color: var(--color-text);
 }
 
-// 팀 섹션
-.team-section {
+// 연습 범위(기능 하이라이트)
+.scope-section {
   margin-bottom: 4rem;
 }
 
-.team-grid {
+.scope-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
 
-.team-card {
+.scope-card {
   @extend %card-base;
   text-align: center;
 }
 
-.team-avatar {
+.scope-icon {
   width: 80px;
   height: 80px;
   border-radius: 16px;
@@ -124,7 +153,7 @@
   margin: 0 auto 1rem;
 }
 
-[data-theme="dark"] .team-avatar {
+[data-theme="dark"] .scope-icon {
   background: linear-gradient(
     135deg,
     color-mix(in srgb, var(--color-primary) 25%, transparent) 0%,
@@ -132,14 +161,14 @@
   );
 }
 
-.team-name {
+.scope-title {
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--color-text-heading);
   margin-bottom: 0.25rem;
 }
 
-.team-role {
+.scope-tag {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
@@ -150,7 +179,7 @@
   margin-bottom: 0.75rem;
 }
 
-.team-desc {
+.scope-desc {
   font-size: 0.9rem;
   color: var(--color-text-secondary);
   line-height: 1.5;

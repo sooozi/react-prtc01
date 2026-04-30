@@ -36,64 +36,65 @@ export default function Home() {
 
   const features = [
     {
-      icon: "⚡",
-      title: "빠른 성능",
-      description: "Vite 기반의 초고속 개발 환경으로 생산성을 극대화하세요.",
+      icon: "📋",
+      title: "게시판 & 첨부",
+      description:
+        "목록·상세·작성·수정과 이미지 첨부, 총 용량 표시·순서 조정까지 실무에 가까운 흐름을 다룹니다.",
     },
     {
-      icon: "🎨",
-      title: "모던 디자인",
-      description: "React와 TypeScript로 구현된 세련된 UI 컴포넌트.",
+      icon: "👤",
+      title: "회원 & 인증",
+      description: "회원가입·로그인, 사용자 목록·상세·마이페이지로 계정 기반 화면을 연습합니다.",
     },
     {
-      icon: "🔒",
-      title: "안전한 구조",
-      description: "타입 안정성과 보안을 고려한 설계로 안심하고 개발하세요.",
+      icon: "📅",
+      title: "일정 UI",
+      description: "월 단위 달력, 주 시작(월/일) 전환 등 스케줄형 UI를 구성해 봅니다.",
     },
   ];
 
   const techStack = [
-    { name: "Vite", desc: "빌드 도구" },
-    { name: "React 18", desc: "UI 라이브러리" },
-    { name: "TypeScript", desc: "타입 안정성" },
+    { name: "Vite", desc: "빌드" },
+    { name: "React 19", desc: "UI" },
+    { name: "TypeScript", desc: "타입" },
     { name: "React Router", desc: "라우팅" },
-    { name: "SCSS", desc: "스타일링" },
+    { name: "React Hook Form", desc: "폼" },
+    { name: "Axios", desc: "HTTP" },
+    { name: "clsx", desc: "클래스" },
+    { name: "ESLint", desc: "품질" },
+    { name: "SCSS", desc: "스타일" },
   ];
 
   const quickLinks = [
+    { to: "/about", label: "소개", icon: "📄" },
+    { to: "/post/list", label: "게시판", icon: "📋" },
+    { to: "/post/write", label: "글쓰기", icon: "✏️" },
+    { to: "/schedule", label: "일정", icon: "📅" },
     { to: "/auth/signup", label: "회원가입", icon: "📝" },
     { to: "/auth/login", label: "로그인", icon: "🔑" },
     { to: "/user/list", label: "사용자 목록", icon: "👥" },
     { to: "/user/mypage", label: "마이페이지", icon: "👤" },
   ];
 
-  const sitemapItems = [
-    { to: "/about", title: "소개", subtitle: "프로젝트와 기술 스택을 소개합니다.", theme: "default" },
-    { to: "/auth/login", title: "로그인", subtitle: "계정으로 로그인하세요.", theme: "primary" },
-    { to: "/auth/signup", title: "회원가입", subtitle: "새 계정을 만드세요.", theme: "secondary" },
-    { to: "/user/list", title: "사용자 목록", subtitle: "등록된 멤버 목록을 확인하세요.", theme: "accent" },
-    { to: "/user/mypage", title: "마이페이지", subtitle: "나의 정보를 확인하세요.", theme: "default" },
-  ];
-
   return (
     <div className="home-page" ref={pageRef}>
-      <section className="hero">
+      <section className="hero" aria-labelledby="home-hero-title">
         <div className="hero-inner">
           <div className="hero-copy">
-            <Badge>🚀 새로운 버전 출시</Badge>
-            <h1 className="hero-title">
+            <Badge>연습 프로젝트</Badge>
+            <h1 id="home-hero-title" className="hero-title">
               더 빠르고, 더 아름다운
               <br />
               <span className="gradient-text">개발 경험</span>
             </h1>
             <p className="hero-description">
-              최신 기술 스택으로 구성된 Vite + React + TypeScript 프로젝트입니다.
+              Vite · React · TypeScript 기반으로 게시판·회원·일정 UI를 붙여 본 저장소입니다.
               <br />
-              직관적인 UI와 뛰어난 성능을 경험해보세요.
+              일부 메뉴는 로그인 후에 이용할 수 있어요.
             </p>
             <div className="hero-actions">
               <Button variant="primary" onClick={() => navigate("/auth/signup")}>
-                회원가입하기 →
+                회원가입
               </Button>
               <Button variant="secondary" onClick={() => navigate("/about")}>
                 서비스 소개
@@ -103,72 +104,66 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" className="features-section" data-home-section>
-        <h2 className="section-title">주요 기능</h2>
-        <div className="features-grid">
-          {features.map((feature, index) => (
-            <div key={index} className="feature-card">
-              <span className="feature-icon">{feature.icon}</span>
+      <section
+        id="features"
+        className="features-section"
+        data-home-section
+        aria-labelledby="home-features-heading"
+      >
+        <h2 id="home-features-heading" className="section-title">
+          주요 기능
+        </h2>
+        <ul className="features-grid">
+          {features.map((feature) => (
+            <li key={feature.title} className="feature-card">
+              <span className="feature-icon" aria-hidden>
+                {feature.icon}
+              </span>
               <h3 className="feature-title">{feature.title}</h3>
               <p className="feature-description">{feature.description}</p>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
-      <section className="tech-section" data-home-section>
-        <h2 className="section-title">기술 스택</h2>
-        <div className="tech-grid">
-          {techStack.map((tech, index) => (
-            <div key={index} className="tech-chip">
+      <section className="tech-section" data-home-section aria-labelledby="home-tech-heading">
+        <h2 id="home-tech-heading" className="section-title">
+          기술 스택
+        </h2>
+        <ul className="tech-grid" aria-label="이 프로젝트에서 쓰는 기술">
+          {techStack.map((tech) => (
+            <li key={tech.name} className="tech-chip">
               <span className="tech-name">{tech.name}</span>
               <span className="tech-desc">{tech.desc}</span>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
-      <section className="sitemap-section" data-home-section>
-        <h2 className="sitemap-headline">사이트맵</h2>
-        <p className="sitemap-subline">원하는 페이지로 이동하세요.</p>
-        <div className="sitemap-grid">
-          {sitemapItems.map((item, index) => (
-            <button
-              key={index}
-              type="button"
-              className={`sitemap-card sitemap-card--${item.theme}`}
-              onClick={() => navigate(item.to)}
-            >
-              <div className="sitemap-card-inner">
-                <h3 className="sitemap-card-title">{item.title}</h3>
-                <p className="sitemap-card-subtitle">{item.subtitle}</p>
-                <span className="sitemap-card-link">
-                  더 알아보기
-                  <span className="sitemap-card-arrow" aria-hidden>
-                    ›
-                  </span>
+      <section className="links-section" data-home-section aria-labelledby="home-sitemap-heading">
+        <h2 id="home-sitemap-heading" className="section-title">
+          사이트맵
+        </h2>
+        <p className="links-section__subline">
+          원하는 페이지로 이동하세요. 게시판·일정 등은 로그인이 필요할 수 있어요.
+        </p>
+        <ul className="links-grid">
+          {quickLinks.map((link) => (
+            <li key={link.to}>
+              <button
+                type="button"
+                className="link-card"
+                onClick={() => navigate(link.to)}
+                aria-label={`${link.label} 페이지로 이동`}
+              >
+                <span className="link-icon" aria-hidden>
+                  {link.icon}
                 </span>
-              </div>
-            </button>
+                <span className="link-label">{link.label}</span>
+              </button>
+            </li>
           ))}
-        </div>
-      </section>
-
-      <section className="links-section" data-home-section>
-        <h2 className="section-title">바로가기</h2>
-        <div className="links-grid">
-          {quickLinks.map((link, index) => (
-            <button
-              key={index}
-              type="button"
-              className="link-card"
-              onClick={() => navigate(link.to)}
-            >
-              <span className="link-icon">{link.icon}</span>
-              <span className="link-label">{link.label}</span>
-            </button>
-          ))}
-        </div>
+        </ul>
       </section>
     </div>
   );

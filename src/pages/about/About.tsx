@@ -5,118 +5,131 @@ import "@/pages/about/About.scss";
 export default function About() {
   const navigate = useNavigate();
 
-  const team = [
+  const missionCards = [
     {
-      name: "김개발",
-      role: "Frontend Developer",
-      avatar: "👨‍💻",
-      description: "React와 TypeScript 전문가",
+      icon: "🎯",
+      title: "목적",
+      text: "Vite·React·TypeScript로 실제에 가까운 화면을 만들며, REST API·폼·라우팅·스타일링을 한곳에서 연습합니다.",
     },
     {
-      name: "이디자인",
-      role: "UI/UX Designer",
-      avatar: "🎨",
-      description: "사용자 경험 설계 전문가",
-    },
-    {
-      name: "박백엔드",
-      role: "Backend Developer",
-      avatar: "⚙️",
-      description: "서버 및 API 개발 전문가",
+      icon: "🧭",
+      title: "범위",
+      text: "백엔드는 별도 서버를 두고, 프론트에서 인증·게시판·첨부·일정 UI를 붙여 동작을 확인하는 구조입니다.",
     },
   ];
 
   const techStack = [
-    { name: "React", icon: "⚛️" },
+    { name: "React 19", icon: "⚛️" },
     { name: "TypeScript", icon: "📘" },
     { name: "Vite", icon: "⚡" },
     { name: "React Router", icon: "🔀" },
+    { name: "React Hook Form", icon: "📋" },
+    { name: "Axios", icon: "🌐" },
+    { name: "SCSS", icon: "🎨" },
+    { name: "ESLint", icon: "✅" },
+  ];
+
+  const scopeHighlights = [
+    {
+      icon: "📋",
+      title: "게시판 & 첨부",
+      tag: "API 연동",
+      description: "목록·상세·작성·수정과 이미지 첨부, 용량·순서 조정 등 파일 업로드 흐름을 다룹니다.",
+    },
+    {
+      icon: "👤",
+      title: "회원 & 사용자",
+      tag: "인증·목록",
+      description: "가입·로그인, 사용자 목록·상세, 마이페이지로 계정 기반 화면을 구성합니다.",
+    },
+    {
+      icon: "📅",
+      title: "일정",
+      tag: "UI 컴포넌트",
+      description: "월 단위 달력·주 시작 전환 등 스케줄형 인터페이스를 쌓아 봅니다.",
+    },
   ];
 
   return (
     <div className="about-page">
-      {/* 히어로 섹션 */}
-      <section className="hero-section">
-        <Badge>ℹ️ About Us</Badge>
-        <h1 className="title">
-          우리는 <span className="gradient-text">혁신</span>을 만듭니다
+      <section className="hero-section" aria-labelledby="about-hero-title">
+        <Badge>프로젝트 소개</Badge>
+        <h1 id="about-hero-title" className="title">
+          Vite + React로 <span className="gradient-text">UI·API</span> 연습
         </h1>
         <p className="subtitle">
-          최신 기술과 창의적인 아이디어로 더 나은 디지털 경험을 제공합니다.
+          개인 연습용 프론트 저장소입니다. 로컬 실행·환경 변수는 저장소 README를 참고하세요.
           <br />
-          MyViteProject는 빠르고 안정적인 웹 애플리케이션 개발을 목표로 합니다.
+          게시판·마이페이지·일정 등은 로그인과 백엔드가 준비된 뒤 가장 잘 맞습니다.
         </p>
       </section>
 
-      {/* 미션 & 비전 */}
-      <section className="mission-section">
+      <section className="mission-section" aria-labelledby="about-mission-heading">
+        <h2 id="about-mission-heading" className="visually-hidden">
+          목적과 범위
+        </h2>
         <div className="mission-grid">
-          <div className="mission-card">
-            <span className="mission-icon">🎯</span>
-            <h3 className="mission-title">미션</h3>
-            <p className="mission-text">
-              사용자 중심의 직관적인 인터페이스와 뛰어난 성능으로
-              개발 생산성을 극대화합니다.
-            </p>
-          </div>
-          <div className="mission-card">
-            <span className="mission-icon">🚀</span>
-            <h3 className="mission-title">비전</h3>
-            <p className="mission-text">
-              모든 개발자가 쉽고 빠르게 아이디어를 현실로 만들 수 있는
-              플랫폼을 제공합니다.
-            </p>
-          </div>
+          {missionCards.map((card) => (
+            <div key={card.title} className="mission-card">
+              <span className="mission-icon" aria-hidden>
+                {card.icon}
+              </span>
+              <h3 className="mission-title">{card.title}</h3>
+              <p className="mission-text">{card.text}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* 기술 스택 */}
-      <section className="tech-section">
-        <h2 className="section-title">기술 스택</h2>
-        <div className="tech-grid">
-          {techStack.map((tech, index) => (
-            <div key={index} className="tech-card">
-              <span className="tech-icon">{tech.icon}</span>
+      <section className="tech-section" aria-labelledby="about-tech-heading">
+        <h2 id="about-tech-heading" className="section-title">
+          기술 스택
+        </h2>
+        <ul className="tech-grid" aria-label="주요 기술 목록">
+          {techStack.map((tech) => (
+            <li key={tech.name} className="tech-card">
+              <span className="tech-icon" aria-hidden>
+                {tech.icon}
+              </span>
               <span className="tech-name">{tech.name}</span>
-            </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="scope-section" aria-labelledby="about-scope-heading">
+        <h2 id="about-scope-heading" className="section-title">
+          연습 범위
+        </h2>
+        <div className="scope-grid">
+          {scopeHighlights.map((item) => (
+            <article key={item.title} className="scope-card">
+              <div className="scope-icon" aria-hidden>
+                {item.icon}
+              </div>
+              <h3 className="scope-title">{item.title}</h3>
+              <span className="scope-tag">{item.tag}</span>
+              <p className="scope-desc">{item.description}</p>
+            </article>
           ))}
         </div>
       </section>
 
-      {/* 팀 소개 */}
-      <section className="team-section">
-        <h2 className="section-title">팀 소개</h2>
-        <div className="team-grid">
-          {team.map((member, index) => (
-            <div key={index} className="team-card">
-              <div className="team-avatar">{member.avatar}</div>
-              <h3 className="team-name">{member.name}</h3>
-              <span className="team-role">{member.role}</span>
-              <p className="team-desc">{member.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA 섹션 */}
-      <section className="cta-section">
+      <section className="cta-section" aria-labelledby="about-cta-title">
         <div className="cta-card">
-          <h2 className="cta-title">함께 시작해볼까요?</h2>
-          <p className="cta-text">
-            지금 바로 MyViteProject의 강력한 기능들을 경험해보세요.
-          </p>
+          <h2 id="about-cta-title" className="cta-title">
+            화면 둘러보기
+          </h2>
+          <p className="cta-text">자주 쓰는 메뉴로 바로 이동해 보세요.</p>
           <div className="cta-buttons">
-            <Button
-              variant="primaryInverse"
-              onClick={() => navigate("/user/list")}
-            >
-              사용자 목록 →
+            <Button variant="primaryInverse" onClick={() => navigate("/home")}>
+              홈
             </Button>
-            <Button
-              variant="secondaryInverse"
-              onClick={() => navigate("/home")}
-            >
-              홈으로 돌아가기
+            <Button variant="primaryInverse" onClick={() => navigate("/post/list")}>
+              게시판
+            </Button>
+            <Button variant="secondaryInverse" onClick={() => navigate("/user/list")}>
+              사용자 목록
             </Button>
           </div>
         </div>
