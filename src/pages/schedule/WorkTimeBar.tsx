@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
+import { ChevronThinIcon } from "@/components/icons/ChevronThinIcon";
+import { ClockOutlineIcon } from "@/components/icons/ClockOutlineIcon";
 import { computeClockOut, normalizeTimeHHmm } from "./workTimeUtils";
 import "./WorkTimeBar.scss";
 
 const CLOCK_IN_STORAGE_KEY = "react-practice.schedule.clockIn";
 const EXPANDED_STORAGE_KEY = "react-practice.schedule.workTimeBarExpanded";
 
+// 저장된 출근 시간 읽기
 function readStoredClockIn(): string {
   try {
     const raw = localStorage.getItem(CLOCK_IN_STORAGE_KEY);
@@ -20,6 +23,7 @@ function readStoredClockIn(): string {
   }
 }
 
+// 저장된 확장 상태 읽기
 function readStoredExpanded(): boolean {
   try {
     const raw = localStorage.getItem(EXPANDED_STORAGE_KEY);
@@ -30,54 +34,13 @@ function readStoredExpanded(): boolean {
   }
 }
 
-// 시계 아이콘
-function ClockIcon() {
-  return (
-    <svg className="work-time-bar__clock-svg" width="20" height="20" viewBox="0 0 24 24" aria-hidden>
-      <circle cx="12" cy="12" r="7.25" fill="none" stroke="currentColor" strokeWidth="1.35" />
-      <path d="M12 8.2V12l3 1.9" fill="none" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function ChevronIcon({ expanded }: { expanded: boolean }) {
-  return (
-    <svg
-      className="work-time-bar__chevron"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      aria-hidden
-    >
-      {expanded ? (
-        <path
-          d="M6.5 15.2 12 9.8l5.5 5.4"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      ) : (
-        <path
-          d="M6.5 8.8 12 14.2l5.5-5.4"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      )}
-    </svg>
-  );
-}
-
 // 출퇴근 시각 바
 export default function WorkTimeBar() {
   const [clockIn, setClockIn] = useState(() => readStoredClockIn());
   const [expanded, setExpanded] = useState(() => readStoredExpanded());
   const result = useMemo(() => (clockIn ? computeClockOut(clockIn) : null), [clockIn]);
 
+  // 출근 시간 저장
   useEffect(() => {
     try {
       if (clockIn) {
@@ -90,6 +53,7 @@ export default function WorkTimeBar() {
     }
   }, [clockIn]);
 
+  // 확장 상태 저장
   useEffect(() => {
     try {
       localStorage.setItem(EXPANDED_STORAGE_KEY, expanded ? "1" : "0");
@@ -116,7 +80,7 @@ export default function WorkTimeBar() {
           onClick={() => setExpanded((v) => !v)}
         >
           <span className="work-time-bar__toggle-text">{expanded ? "접기" : "펼치기"}</span>
-          <ChevronIcon expanded={expanded} />
+          <ChevronThinIcon direction={expanded ? "up" : "down"} className="work-time-bar__chevron" />
         </button>
       </div>
 
@@ -138,7 +102,7 @@ export default function WorkTimeBar() {
                 </span>
               </div>
               <span className="work-time-bar__pill-icon" aria-hidden>
-                <ClockIcon />
+                <ClockOutlineIcon className="work-time-bar__clock-svg" />
               </span>
               <input
                 id="schedule-clock-in"

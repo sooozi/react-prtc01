@@ -293,6 +293,7 @@ export function ImageFileAttachFieldUnifiedEdit({
       .filter((r): r is Extract<ImageFileUnifiedRow, { kind: "server" }> => r.kind === "server")
       .map((r) => ({ id: r.fileId, name: r.name }));
 
+    // 현재 목록에서 로컬 파일과 서버 파일 분리
     const { add, skip } = partitionByAttachmentIdentity(okLength, currentItems, previous);
 
     // 이미 있는 파일 목록
@@ -411,15 +412,15 @@ export function ImageFileAttachFieldUnifiedEdit({
                   .join(" ")}
               >
                 <AttachRowBody
-                  fileName={row.kind === "server" ? row.name : row.file.name}
+                  fileName={row.kind === "server" ? row.name : row.file.name} // 파일 이름
                   sizeLabel={ // 파일 크기 레이블
                     row.kind === "server"
-                      ? row.sizeBytes != null
+                      ? row.sizeBytes != null // 서버 파일 크기가 있으면 포맷팅
                         ? formatFileSize(row.sizeBytes)
                         : "?"
-                      : formatFileSize(row.file.size)
+                      : formatFileSize(row.file.size) // 로컬 파일 크기 포맷팅
                   }
-                  onHandlePointerDown={handleReorderHandlePointerDown(index)}
+                  onHandlePointerDown={handleReorderHandlePointerDown(index)} // 순서 변경: 드래그하여 놓기
                   trailing={
                     <button
                       type="button"

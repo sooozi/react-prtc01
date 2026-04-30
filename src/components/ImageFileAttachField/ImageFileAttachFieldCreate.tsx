@@ -245,6 +245,7 @@ export function ImageFileAttachFieldCreate({
       }
     }
 
+    // 이름 길이를 통과한 파일이 하나도 없으면 목록은 바꾸지 않고 안내 메시지만 보여 주고 끝
     if (okLength.length === 0) {
       if (messageParts.length > 0) {
         setFileAddNoticeMessage(messageParts.join(" "));
@@ -253,7 +254,10 @@ export function ImageFileAttachFieldCreate({
       return;
     }
 
+    // 현재 목록에서 로컬 파일과 서버 파일 분리
     const { add, skip } = partitionByAttachmentIdentity(okLength, items, undefined);
+
+    // 이미 있는 파일 목록
     if (skip.length > 0) {
       const list =
         skip.length === 1
@@ -263,9 +267,11 @@ export function ImageFileAttachFieldCreate({
         `같은 파일명(확장자는 소문자로 비교)이 이미 있어 추가하지 않았습니다. ${list}`
       );
     }
+    // 이름 길이를 통과한 파일이 하나라도 있으면 목록을 바꾸고 추가
     if (add.length > 0) {
       onChange([...items, ...filesToItemsWithIds(add)]);
     }
+    // 누적된 안내 문장이 있으면 표시 후 자동 지움 예약
     if (messageParts.length > 0) {
       setFileAddNoticeMessage(messageParts.join(" "));
       scheduleFileAddNoticeClear();

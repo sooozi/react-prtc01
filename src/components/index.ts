@@ -1,4 +1,6 @@
 // 공통 컴포넌트 export
+export { ChevronThinIcon } from "@/components/icons/ChevronThinIcon";
+export { ClockOutlineIcon } from "@/components/icons/ClockOutlineIcon";
 export { GripHandleIcon } from "@/components/icons/GripHandleIcon";
 export { ImageFileAttachField } from "@/components/ImageFileAttachField/ImageFileAttachField";
 export {

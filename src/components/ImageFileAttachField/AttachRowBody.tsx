@@ -5,7 +5,7 @@ export function AttachRowBody({
   fileName,
   sizeLabel,
   handleAriaHidden,
-  onHandlePointerDown,
+  onHandlePointerDown, // 순서 변경: 드래그하여 놓기
   trailing,
 }: {
   fileName: string;
@@ -19,8 +19,8 @@ export function AttachRowBody({
       <span
         className="image-file-attach__handle-zone"
         draggable={false}
-        {...(handleAriaHidden ? { "aria-hidden": true as const } : {})}
-        {...(onHandlePointerDown
+        {...(handleAriaHidden ? { "aria-hidden": true as const } : {})} // 핸들 영역 숨김 처리
+        {...(onHandlePointerDown // 순서 변경: 드래그하여 놓기
           ? {
               role: "button" as const,
               tabIndex: 0,
