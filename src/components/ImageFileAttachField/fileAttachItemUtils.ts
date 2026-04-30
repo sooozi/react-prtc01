@@ -24,9 +24,7 @@ export function getAttachmentIdentityKey(fileName: string): string {
   return `${base.toLowerCase()}\0${ext.toLowerCase()}`;
 }
 
-/**
- * 이미 `items`·`previous`·같은 배치 안에 동일(이름+확장자)가 있으면 `skip`, 나머지 `add`
- */
+// 이미 `items`·`previous`·같은 배치 안에 동일(이름+확장자)가 있으면 `skip`, 나머지 `add`
 export function partitionByAttachmentIdentity(
   newFiles: File[], 
   currentItems: FileWithId[],

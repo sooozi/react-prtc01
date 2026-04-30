@@ -75,8 +75,8 @@ body.image-file-attach--reorder-active {
   color: var(--color-text-secondary);
 }
 
-/* 동일(이름+확·소) 첨부 제외 안내 */
-.image-file-attach__dup-hint {
+/* 동일(이름+확·소) 첨부 제외 등 — 파일 추가 안내 메시지 */
+.image-file-attach__add-notice-message {
   margin: 0.5rem 0 0;
   padding: 0.6rem 0.8rem;
   font-size: 0.8rem;

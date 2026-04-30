@@ -11,8 +11,8 @@ export function AttachRowBody({
   fileName: string;
   sizeLabel: string;
   handleAriaHidden?: boolean;
-  onHandlePointerDown?: (e: React.PointerEvent<HTMLSpanElement>) => void;
-  trailing: ReactNode;
+  onHandlePointerDown?: (e: React.PointerEvent<HTMLSpanElement>) => void; // 순서 변경: 드래그하여 놓기
+  trailing: ReactNode; // 삭제 버튼
 }) {
   return (
     <span className="image-file-attach__row-inner">

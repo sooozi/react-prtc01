@@ -35,19 +35,21 @@ export function ImageFileAttachFieldUnifiedEdit({
   const onRowsChangeRef = useRef(onRowsChange);
   const overIndexRef = useRef<number | null>(null);
   const pointerReorderDetachRef = useRef<(() => void) | null>(null);
-  const [fileAddHint, setFileAddHint] = useState("");
-  const fileAddHintTRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [fileAddNoticeMessage, setFileAddNoticeMessage] = useState("");
+  const fileAddNoticeClearTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [reorderGhost, setReorderGhost] = useState<ReorderGhostState | null>(null);
   const reorderGhostRef = useRef<ReorderGhostState | null>(null);
   const ghostMoveRafRef = useRef<number | null>(null);
   const pendingGhostPointerRef = useRef<{ x: number; y: number } | null>(null);
 
+  // 순서 드래그 중에도 이전 목록과 현재 목록을 바꾸는 함수를 쓰게 ref에 계속 맞춤
   useLayoutEffect(() => {
     rowsRef.current = rows;
     onRowsChangeRef.current = onRowsChange;
   }, [rows, onRowsChange]);
 
+  // 이 블록이 사라질 때(뒤로 가기 등) 드래그 때문에 화면 전체에 걸어 둔 리스너를 떼 줌
   useEffect(() => {
     return () => {
       pointerReorderDetachRef.current?.();
@@ -55,6 +57,7 @@ export function ImageFileAttachFieldUnifiedEdit({
     };
   }, []);
 
+  // 드래그 고스트 초기화
   const clearReorderGhost = () => {
     if (ghostMoveRafRef.current != null) {
       cancelAnimationFrame(ghostMoveRafRef.current);
@@ -65,6 +68,7 @@ export function ImageFileAttachFieldUnifiedEdit({
     setReorderGhost(null);
   };
 
+  // 드래그 고스트 시각적 초기화
   const clearReorderVisual = () => {
     clearReorderGhost();
     reorderFromRef.current = null;
@@ -73,6 +77,7 @@ export function ImageFileAttachFieldUnifiedEdit({
     setOverIndex(null);
   };
 
+  // 드래그 고스트 이동 예약
   const scheduleReorderGhostMove = (clientX: number, clientY: number) => {
     pendingGhostPointerRef.current = { x: clientX, y: clientY };
     if (ghostMoveRafRef.current != null) return;
@@ -81,6 +86,7 @@ export function ImageFileAttachFieldUnifiedEdit({
       const p = pendingGhostPointerRef.current;
       const g = reorderGhostRef.current;
       if (!p || !g) return;
+
       const next: ReorderGhostState = {
         ...g,
         left: p.x - g.offsetX,
@@ -91,6 +97,7 @@ export function ImageFileAttachFieldUnifiedEdit({
     });
   };
 
+  // 드래그 고스트 위치 업데이트
   const updateOverFromPoint = (clientX: number, clientY: number) => {
     const root = rootRef.current;
     if (!root) {
@@ -121,6 +128,7 @@ export function ImageFileAttachFieldUnifiedEdit({
     setOverIndex(idx);
   };
 
+  // 드래그 고스트 세션 바인딩
   const bindPointerReorderSession = (startIndex: number, pointerId: number) => {
     pointerReorderDetachRef.current?.();
 
@@ -133,8 +141,10 @@ export function ImageFileAttachFieldUnifiedEdit({
 
     let ended = false;
 
+    /** 손가락/마우스 움직임(pointermove)마다 불리며 스크롤을 막지 않는다고 표시(passive) */
     const moveOpts: AddEventListenerOptions = { passive: true };
 
+    // 드래그 고스트 세션 종료 함수
     const detach = () => {
       if (ended) return;
       ended = true;
@@ -146,12 +156,14 @@ export function ImageFileAttachFieldUnifiedEdit({
       clearReorderVisual();
     };
 
+    // 드래그 고스트 이동 시 이벤트 핸들러
     const onMove = (ev: PointerEvent) => {
       if (ev.pointerId !== pointerId) return;
       scheduleReorderGhostMove(ev.clientX, ev.clientY);
       updateOverFromPoint(ev.clientX, ev.clientY);
     };
 
+    // 드래그 고스트 세션 종료 함수
     const onUp = (ev: PointerEvent) => {
       if (ev.pointerId !== pointerId) return;
       const from = reorderFromRef.current;
@@ -164,17 +176,18 @@ export function ImageFileAttachFieldUnifiedEdit({
 
     pointerReorderDetachRef.current = detach;
 
-    document.addEventListener("pointermove", onMove, moveOpts);
-    document.addEventListener("pointerup", onUp, true);
-    document.addEventListener("pointercancel", onUp, true);
+    document.addEventListener("pointermove", onMove, moveOpts); // 드래그 고스트 이동 시 이벤트 핸들러
+    document.addEventListener("pointerup", onUp, true); // 손·버튼을 뗐을 때(정상 종료)
+    document.addEventListener("pointercancel", onUp, true); // 포인터가 끊겼을 때(터치 취소·방해 등)
   };
 
+  // 드래그 고스트 핸들 클릭 시 처리
   const handleReorderHandlePointerDown =
     (index: number) => (e: React.PointerEvent<HTMLSpanElement>) => {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
-      if (rows.length < 2) return;
+      if (e.pointerType === "mouse" && e.button !== 0) return; // 마우스 오른쪽 버튼 클릭 시 처리
+      if (rows.length < 2) return; // 첨부 이미지가 2개 미만인 경우 처리
       e.preventDefault();
-      e.stopPropagation();
+      e.stopPropagation(); // 이벤트 버블링 방지
       const rowEl = (e.currentTarget as HTMLElement).closest("[data-reorder-index]") as HTMLElement | null;
       if (!rowEl) return;
       const rect = rowEl.getBoundingClientRect();
@@ -203,23 +216,26 @@ export function ImageFileAttachFieldUnifiedEdit({
       bindPointerReorderSession(index, e.pointerId);
     };
 
-  const scheduleFileAddHintClear = () => {
-    if (fileAddHintTRef.current) clearTimeout(fileAddHintTRef.current);
-    fileAddHintTRef.current = setTimeout(() => {
-      setFileAddHint("");
-      fileAddHintTRef.current = null;
+  /** 안내 메시지를 9초 뒤에 비우도록 예약(이전 예약은 취소) */
+  const scheduleFileAddNoticeClear = () => {
+    if (fileAddNoticeClearTimeoutRef.current)
+      clearTimeout(fileAddNoticeClearTimeoutRef.current);
+    fileAddNoticeClearTimeoutRef.current = setTimeout(() => {
+      setFileAddNoticeMessage("");
+      fileAddNoticeClearTimeoutRef.current = null;
     }, 9000);
   };
 
+  /** 언마운트 시 안내 메시지 자동 지움 타이머 정리 */
   useEffect(() => {
     return () => {
-      if (fileAddHintTRef.current) {
-        clearTimeout(fileAddHintTRef.current);
+      if (fileAddNoticeClearTimeoutRef.current) {
+        clearTimeout(fileAddNoticeClearTimeoutRef.current);
       }
     };
   }, []);
 
-  /** 로컬 File.size + 서버 API의 sizeBytes(있을 때만 합산) */
+  // 로컬 File.size + 서버 API의 sizeBytes(있을 때만 합산)
   const totalSizeBytes = useMemo(
     () =>
       rows.reduce((sum: number, r: ImageFileUnifiedRow) => {
@@ -229,17 +245,21 @@ export function ImageFileAttachFieldUnifiedEdit({
     [rows]
   );
 
+  // 파일 추가 시 처리
   const onFilesAdded = (files: File[]) => {
     if (files.length === 0) return;
 
-    const okLength: File[] = [];
-    const tooLong: File[] = [];
+    const okLength: File[] = []; // 이름 길이를 통과한 파일 목록
+    const tooLong: File[] = []; // 이름 길이를 초과한 파일 목록
     for (const f of files) {
       if (f.name.length > MAX_ATTACHMENT_FILENAME_LENGTH) tooLong.push(f);
       else okLength.push(f);
     }
 
+    // 파일 추가 안내 메시지 문장 조각
     const messageParts: string[] = [];
+
+    // 파일 이름 길이 초과 시 처리
     if (tooLong.length > 0) {
       if (tooLong.length === 1) {
         const n = tooLong[0]!.name;
@@ -254,22 +274,28 @@ export function ImageFileAttachFieldUnifiedEdit({
       }
     }
 
+    // 이름 길이를 통과한 파일이 하나도 없으면 목록은 바꾸지 않고 안내 메시지만 보여 주고 끝
     if (okLength.length === 0) {
       if (messageParts.length > 0) {
-        setFileAddHint(messageParts.join(" "));
-        scheduleFileAddHintClear();
+        setFileAddNoticeMessage(messageParts.join(" "));
+        scheduleFileAddNoticeClear();
       }
       return;
     }
 
+    // 현재 목록에서 로컬 파일과 서버 파일 분리
     const currentItems: FileWithId[] = rows
       .filter((r): r is Extract<ImageFileUnifiedRow, { kind: "local" }> => r.kind === "local")
       .map((r) => ({ id: r.id, file: r.file }));
+
+    // 기존 첨부 파일 목록
     const previous: ImageFilePreviousEntry[] = rows
       .filter((r): r is Extract<ImageFileUnifiedRow, { kind: "server" }> => r.kind === "server")
       .map((r) => ({ id: r.fileId, name: r.name }));
 
     const { add, skip } = partitionByAttachmentIdentity(okLength, currentItems, previous);
+
+    // 이미 있는 파일 목록
     if (skip.length > 0) {
       const list =
         skip.length === 1
@@ -279,6 +305,8 @@ export function ImageFileAttachFieldUnifiedEdit({
         `같은 파일명(확장자는 소문자로 비교)이 이미 있어 추가하지 않았습니다. ${list}`
       );
     }
+    
+    // 이름 길이를 통과한 파일이 하나라도 있으면 목록을 바꾸고 추가
     if (add.length > 0) {
       const newLocals = filesToItemsWithIds(add).map((it) => ({
         kind: "local" as const,
@@ -287,18 +315,21 @@ export function ImageFileAttachFieldUnifiedEdit({
       }));
       onRowsChange([...rows, ...newLocals]);
     }
+    // 누적된 안내 문장이 있으면 표시 후 자동 지움 예약
     if (messageParts.length > 0) {
-      setFileAddHint(messageParts.join(" "));
-      scheduleFileAddHintClear();
+      setFileAddNoticeMessage(messageParts.join(" "));
+      scheduleFileAddNoticeClear();
     }
   };
 
+  // 파일 추가 시 처리
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const list = e.target.files;
     if (list) onFilesAdded(filterImageFiles(list));
     e.target.value = "";
   };
 
+  // 파일 삭제 시 처리
   const removeAt = (index: number) => {
     const next = rows.filter((_row: ImageFileUnifiedRow, i: number) => i !== index);
     onRowsChange(next);
@@ -331,9 +362,9 @@ export function ImageFileAttachFieldUnifiedEdit({
         </span>
       </label>
 
-      {fileAddHint && (
-        <p className="image-file-attach__dup-hint" role="alert">
-          {fileAddHint}
+      {fileAddNoticeMessage && (
+        <p className="image-file-attach__add-notice-message" role="alert">
+          {fileAddNoticeMessage}
         </p>
       )}
 
@@ -381,7 +412,7 @@ export function ImageFileAttachFieldUnifiedEdit({
               >
                 <AttachRowBody
                   fileName={row.kind === "server" ? row.name : row.file.name}
-                  sizeLabel={
+                  sizeLabel={ // 파일 크기 레이블
                     row.kind === "server"
                       ? row.sizeBytes != null
                         ? formatFileSize(row.sizeBytes)

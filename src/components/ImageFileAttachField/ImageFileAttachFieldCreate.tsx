@@ -12,7 +12,7 @@ import { AttachRowBody } from "./AttachRowBody";
 import { ReorderGhostPortal, type ReorderGhostState } from "./ReorderGhostPortal";
 import "./ImageFileAttachField.scss";
 
-// 새로 고른 파일을 한 줄 목록에서 순서 변경·삭제할 때 사용
+// 게시글 등록: 새로 고른 파일을 한 줄 목록에서 순서 변경·삭제할 때 사용
 export function ImageFileAttachFieldCreate({
   fileInputId,
   items,
@@ -30,19 +30,21 @@ export function ImageFileAttachFieldCreate({
   const onChangeRef = useRef(onChange);
   const overIndexRef = useRef<number | null>(null);
   const pointerReorderDetachRef = useRef<(() => void) | null>(null);
-  const [fileAddHint, setFileAddHint] = useState("");
-  const fileAddHintTRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [fileAddNoticeMessage, setFileAddNoticeMessage] = useState("");
+  const fileAddNoticeClearTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [reorderGhost, setReorderGhost] = useState<ReorderGhostState | null>(null);
   const reorderGhostRef = useRef<ReorderGhostState | null>(null);
   const ghostMoveRafRef = useRef<number | null>(null);
   const pendingGhostPointerRef = useRef<{ x: number; y: number } | null>(null);
 
+  // 순서 드래그 중에도 방금 그 목록과, 목록을 바꾸는 함수를 쓰게 ref에 계속 맞춰 둠
   useLayoutEffect(() => {
     itemsRef.current = items;
     onChangeRef.current = onChange;
   }, [items, onChange]);
 
+  // 이 블록이 사라질 때(뒤로 가기 등) 드래그 때문에 화면 전체에 걸어 둔 리스너를 떼 줌
   useEffect(() => {
     return () => {
       pointerReorderDetachRef.current?.();
@@ -50,6 +52,7 @@ export function ImageFileAttachFieldCreate({
     };
   }, []);
 
+  // 드래그 고스트 초기화
   const clearReorderGhost = () => {
     if (ghostMoveRafRef.current != null) {
       cancelAnimationFrame(ghostMoveRafRef.current);
@@ -60,6 +63,7 @@ export function ImageFileAttachFieldCreate({
     setReorderGhost(null);
   };
 
+  // 드래그 고스트 시각적 초기화
   const clearReorderVisual = () => {
     clearReorderGhost();
     reorderFromRef.current = null;
@@ -68,6 +72,7 @@ export function ImageFileAttachFieldCreate({
     setOverIndex(null);
   };
 
+  // 드래그 고스트 이동 예약
   const scheduleReorderGhostMove = (clientX: number, clientY: number) => {
     pendingGhostPointerRef.current = { x: clientX, y: clientY };
     if (ghostMoveRafRef.current != null) return;
@@ -128,6 +133,7 @@ export function ImageFileAttachFieldCreate({
 
     let ended = false;
 
+    /** 손가락/마우스 움직임(pointermove)마다 불리는데, 여기서는 스크롤을 막지 않는다고 표시(passive) */
     const moveOpts: AddEventListenerOptions = { passive: true };
 
     const detach = () => {
@@ -160,8 +166,8 @@ export function ImageFileAttachFieldCreate({
     pointerReorderDetachRef.current = detach;
 
     document.addEventListener("pointermove", onMove, moveOpts);
-    document.addEventListener("pointerup", onUp, true);
-    document.addEventListener("pointercancel", onUp, true);
+    document.addEventListener("pointerup", onUp, true); // 손·버튼을 뗐을 때(정상 종료)
+    document.addEventListener("pointercancel", onUp, true); // 포인터가 끊겼을 때(터치 취소·방해 등)
   };
 
   const handleReorderHandlePointerDown =
@@ -191,18 +197,20 @@ export function ImageFileAttachFieldCreate({
       bindPointerReorderSession(index, e.pointerId);
     };
 
-  const scheduleFileAddHintClear = () => {
-    if (fileAddHintTRef.current) clearTimeout(fileAddHintTRef.current);
-    fileAddHintTRef.current = setTimeout(() => {
-      setFileAddHint("");
-      fileAddHintTRef.current = null;
+  /** 안내 메시지를 9초 뒤에 비우도록 예약(이전 예약은 취소) */
+  const scheduleFileAddNoticeClear = () => {
+    if (fileAddNoticeClearTimeoutRef.current)
+      clearTimeout(fileAddNoticeClearTimeoutRef.current);
+    fileAddNoticeClearTimeoutRef.current = setTimeout(() => {
+      setFileAddNoticeMessage("");
+      fileAddNoticeClearTimeoutRef.current = null;
     }, 9000);
   };
 
   useEffect(() => {
     return () => {
-      if (fileAddHintTRef.current) {
-        clearTimeout(fileAddHintTRef.current);
+      if (fileAddNoticeClearTimeoutRef.current) {
+        clearTimeout(fileAddNoticeClearTimeoutRef.current);
       }
     };
   }, []);
@@ -239,8 +247,8 @@ export function ImageFileAttachFieldCreate({
 
     if (okLength.length === 0) {
       if (messageParts.length > 0) {
-        setFileAddHint(messageParts.join(" "));
-        scheduleFileAddHintClear();
+        setFileAddNoticeMessage(messageParts.join(" "));
+        scheduleFileAddNoticeClear();
       }
       return;
     }
@@ -259,17 +267,19 @@ export function ImageFileAttachFieldCreate({
       onChange([...items, ...filesToItemsWithIds(add)]);
     }
     if (messageParts.length > 0) {
-      setFileAddHint(messageParts.join(" "));
-      scheduleFileAddHintClear();
+      setFileAddNoticeMessage(messageParts.join(" "));
+      scheduleFileAddNoticeClear();
     }
   };
 
+  // 파일 선택 시 처리
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const list = e.target.files;
     if (list) onFilesAdded(filterImageFiles(list));
     e.target.value = "";
   };
 
+  // 파일 삭제 시 처리
   const removeAt = (index: number) => {
     const next = items.filter((_, i) => i !== index);
     onChange(next);
@@ -301,9 +311,9 @@ export function ImageFileAttachFieldCreate({
         </span>
       </label>
 
-      {fileAddHint && (
-        <p className="image-file-attach__dup-hint" role="alert">
-          {fileAddHint}
+      {fileAddNoticeMessage && (
+        <p className="image-file-attach__add-notice-message" role="alert">
+          {fileAddNoticeMessage}
         </p>
       )}
 
