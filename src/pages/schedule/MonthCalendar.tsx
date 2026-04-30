@@ -75,13 +75,10 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
       </div>
 
       <div className="month-calendar__week-start-row">
-        <span className="month-calendar__week-start-label" id="month-calendar-week-start-label">
-          주 시작
-        </span>
         <div
           className="month-calendar__week-start-switch-wrap"
           role="group"
-          aria-labelledby="month-calendar-week-start-label"
+          aria-label="주 시작"
         >
           <button
             type="button"

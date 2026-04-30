@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   getPostDetail,
@@ -88,6 +88,19 @@ export default function Detail() {
   const canEdit =
     !!post && !!currentUserId && post.ownerUserId === currentUserId;
 
+  /** 첨부 API에서 내려준 fileSize만 합산 (없는 항목은 합계에서 제외) */
+  const attachmentSizeSummary = useMemo(() => {
+    let totalBytes = 0;
+    let withSize = 0;
+    for (const f of attachments) {
+      if (typeof f.fileSize === "number" && Number.isFinite(f.fileSize)) {
+        totalBytes += f.fileSize;
+        withSize += 1;
+      }
+    }
+    return { totalBytes, withSize };
+  }, [attachments]);
+
   // [삭제 버튼 클릭 시] 컨펌 후 게시글 삭제
   const handleDeleteConfirm = async () => {
     setShowDeleteConfirm(false);
@@ -171,7 +184,27 @@ export default function Detail() {
             <div className="detail-content">{post.content || "내용 없음"}</div>
             {attachments.length > 0 && (
               <section className="detail-attachments" aria-label="첨부파일">
-                <h3 className="detail-attachments__heading">첨부파일</h3>
+                <div className="detail-attachments__head">
+                  <h3 className="detail-attachments__heading">첨부파일</h3>
+                  <span
+                    className="detail-attachments__total"
+                    aria-label={
+                      attachmentSizeSummary.withSize === 0
+                        ? "첨부파일 총 용량 정보 없음"
+                        : `첨부파일 총 용량 ${formatFileSize(attachmentSizeSummary.totalBytes)}`
+                    }
+                    title={
+                      attachmentSizeSummary.withSize < attachments.length &&
+                      attachmentSizeSummary.withSize > 0
+                        ? `용량이 있는 ${attachmentSizeSummary.withSize}개 파일만 합산했습니다.`
+                        : undefined
+                    }
+                  >
+                    {attachmentSizeSummary.withSize === 0
+                      ? "총 —"
+                      : `총 ${formatFileSize(attachmentSizeSummary.totalBytes)}`}
+                  </span>
+                </div>
                 <ul className="detail-attachments__list">
                   {attachments.map((file) => (
                     <li key={file.fileId} className="detail-attachments__item">

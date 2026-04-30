@@ -310,7 +310,7 @@ export function ImageFileAttachFieldCreate({
       />
 
       <label htmlFor={fileInputId} className="image-file-attach__add">
-        <span className="image-file-attach__add-title">이미지 선택</span>
+        <span className="image-file-attach__add-title">이미지 추가</span>
         <span className="image-file-attach__add-sub">
           해당 영역을 클릭해 PNG, JPG, GIF, WebP 등의 이미지를 선택하세요. 파일명(확장자 포함)은{" "}
           {MAX_ATTACHMENT_FILENAME_LENGTH}자 이하만 가능합니다.

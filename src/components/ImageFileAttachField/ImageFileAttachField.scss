@@ -40,39 +40,65 @@ body.image-file-attach--reorder-active {
   gap: 0.35rem;
   min-height: 88px;
   padding: 0.9rem 1rem;
-  border: 2px dashed var(--color-input-border);
-  border-radius: 10px;
-  background: var(--color-input-bg);
+  /* btn--secondary 계열: 클릭 컨트롤로 읽히도록 카드 배경 + 2px 실선 */
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-card);
   color: var(--color-text-secondary);
   cursor: pointer;
+  box-shadow: 0 1px 2px var(--color-shadow-sm);
   transition:
     border-color 0.2s ease,
     background 0.2s ease,
     box-shadow 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    transform 0.15s ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
 }
 
 .image-file-attach:focus-within .image-file-attach__add {
   border-color: var(--color-primary);
-  background: var(--color-input-focus-bg);
-  box-shadow: 0 0 0 4px var(--color-primary-muted);
+  background: var(--color-button-bg-hover);
+  box-shadow: 0 0 0 3px var(--color-primary-muted);
+
+  .image-file-attach__add-title {
+    color: var(--color-primary);
+  }
+
+  .image-file-attach__add-sub {
+    color: color-mix(in srgb, var(--color-primary) 38%, var(--color-text-secondary));
+  }
 }
 
 .image-file-attach__add:hover {
   border-color: var(--color-primary);
   color: var(--color-text);
-  background: var(--color-input-focus-bg);
+  background: var(--color-button-bg-hover);
+  box-shadow: 0 2px 8px var(--color-shadow-md);
+
+  .image-file-attach__add-title {
+    color: var(--color-primary);
+  }
+
+  .image-file-attach__add-sub {
+    color: color-mix(in srgb, var(--color-primary) 38%, var(--color-text-secondary));
+  }
 }
 
 .image-file-attach__add-title {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--color-text-heading);
+  transition: color 0.2s ease;
 }
 
 .image-file-attach__add-sub {
   font-size: 0.72rem;
   color: var(--color-text-secondary);
+  transition: color 0.2s ease;
 }
 
 /* 동일(이름+확·소) 첨부 제외 등 — 파일 추가 안내 메시지 */
@@ -87,7 +113,7 @@ body.image-file-attach--reorder-active {
   border-radius: 10px;
 }
 
-/* 순서 조정: 폼 카드와 맞는 단일 블록(헤드 + 본문 리스트) — “이미지 선택” 점선 영역은 아래 */
+/* 순서 조정: 폼 카드와 맞는 단일 블록(헤드 + 본문 리스트) — “이미지 선택” 추가 영역은 아래 */
 .image-file-attach__reorder-block {
   position: relative;
   margin: 0.75rem 0;
