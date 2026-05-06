@@ -10,6 +10,7 @@ import type { PostAttachmentItem, PostDetail } from "@/api/board";
 import { Badge, Button, Confirm, LoadingState } from "@/components";
 import { listReturnPathFromFromQuery, postUpdatePath } from "@/pages/post/postDetailFromQuery";
 import { formatFileSize } from "@/utils/formatFileSize";
+import PostCommentSection from "@/pages/post/PostCommentSection";
 import "@/pages/post/Detail.scss";
 
 export default function Detail() {
@@ -222,6 +223,7 @@ export default function Detail() {
                 </ul>
               </section>
             )}
+            <PostCommentSection />
           </>
         ) : null}
       </div>
