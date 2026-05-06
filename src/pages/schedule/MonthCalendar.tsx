@@ -1,13 +1,20 @@
 import { useMemo, useState } from "react";
 import clsx from "clsx";
-import { addMonths, getCalendarCells, isSameCalendarDay, startOfMonth } from "./calendarUtils";
+import {
+  addMonths,
+  getCalendarCells,
+  isSameCalendarDay,
+  startOfMonth,
+  type CalendarWeekStart,
+} from "./calendarUtils";
 import "./MonthCalendar.scss";
 
-const WEEKDAYS_KO = ["월", "화", "수", "목", "금", "토", "일"];
+/** 그리드 열 순서는 weekStart 에 맞출 것 — 월 시작 / 일 시작 */
+const WEEKDAYS_ORDER: Record<CalendarWeekStart, readonly string[]> = {
+  monday: ["월", "화", "수", "목", "금", "토", "일"],
+  sunday: ["일", "월", "화", "수", "목", "금", "토"],
+};
 const MONTH_NUMS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
-
-// 달력 첫 칸(추후 연동) — 지금은 UI·콘솔 확인용만
-type WeekStartChoice = "monday" | "sunday";
 
 type Props = {
   // 표시할 달의 아무 날짜(보통 1일)
@@ -16,13 +23,13 @@ type Props = {
 };
 
 export default function MonthCalendar({ month, onMonthChange }: Props) {
-  const [weekStart, setWeekStart] = useState<WeekStartChoice>("monday");
+  const [weekStart, setWeekStart] = useState<CalendarWeekStart>("monday");
 
   // 달력 첫 칸 요일 선택
   const monthStart = useMemo(() => startOfMonth(month), [month]);
   const y = monthStart.getFullYear();
   const m = monthStart.getMonth();
-  const cells = useMemo(() => getCalendarCells(y, m), [y, m]);
+  const cells = useMemo(() => getCalendarCells(y, m, weekStart), [y, m, weekStart]);
   const title = useMemo(
     () =>
       new Date(y, m, 1).toLocaleDateString("ko-KR", {
@@ -91,11 +98,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
                 : "일요일 시작. 누르면 월요일 시작으로 바뀝니다."
             }
             onClick={() => {
-              setWeekStart((prev) => {
-                const next = prev === "monday" ? "sunday" : "monday";
-                console.log(next === "monday" ? "월요일" : "일요일");
-                return next;
-              });
+              setWeekStart((prev) => (prev === "monday" ? "sunday" : "monday"));
             }}
           >
             <span
@@ -155,7 +158,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
       </header>
 
       <div className="month-calendar__grid" role="grid" aria-label={`${title} 달력`}>
-        {WEEKDAYS_KO.map((label) => (
+        {WEEKDAYS_ORDER[weekStart].map((label) => (
           <div key={label} className="month-calendar__weekday" role="columnheader">
             {label}
           </div>

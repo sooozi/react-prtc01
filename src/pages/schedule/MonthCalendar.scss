@@ -25,10 +25,14 @@
   grid-template-columns: repeat(13, minmax(0, 1fr));
   gap: 0.12rem;
   margin-bottom: 0.5rem;
-  padding: 0.22rem;
+  padding: 0.26rem;
   border-radius: 9999px;
-  background: var(--color-input-bg);
-  box-shadow: inset 0 1px 2px var(--color-shadow-sm);
+  border: 1px solid color-mix(in srgb, var(--color-border) 68%, var(--color-primary) 18%);
+  background: color-mix(in srgb, var(--color-input-bg) 78%, var(--color-card));
+  box-shadow:
+    inset 0 1px 2px color-mix(in srgb, var(--color-shadow-sm) 80%, transparent),
+    0 1px 0 color-mix(in srgb, var(--color-card) 55%, white),
+    0 6px 16px color-mix(in srgb, var(--color-shadow-md) 75%, transparent);
 
   @include bp.below(bp.$md) {
     display: flex;
@@ -67,8 +71,12 @@
 }
 
 [data-theme="dark"] .month-calendar__month-bar {
-  background: var(--color-bg-subtle);
-  box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.25);
+  border-color: color-mix(in srgb, var(--color-border-light) 80%, var(--color-primary) 15%);
+  background: color-mix(in srgb, var(--color-bg-subtle) 92%, var(--color-card));
+  box-shadow:
+    inset 0 1px 2px rgb(0 0 0 / 0.35),
+    0 1px 0 color-mix(in srgb, var(--color-card) 15%, rgb(255 255 255 / 0.04)),
+    0 10px 28px rgb(0 0 0 / 0.32);
 }
 
 .month-calendar__nav-chip {
@@ -493,4 +501,14 @@
 .month-calendar__day-num--sun {
   color: color-mix(in srgb, var(--color-error) 82%, var(--color-text-heading));
   font-weight: 700;
+}
+
+/* 일정 페이지 통합 워크스페이스 안: 바깥 카드와 겹치지 않게 내부는 플랫 */
+.schedule-workspace .month-calendar {
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }

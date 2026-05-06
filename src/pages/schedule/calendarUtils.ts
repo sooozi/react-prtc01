@@ -4,22 +4,35 @@ export type CalendarCell = {
   inCurrentMonth: boolean;
 };
 
+/** 그리드 첫 칸 요일 — “월 시작” 또는 “일 시작” */
+export type CalendarWeekStart = "monday" | "sunday";
+
 /**
- * 해당 달 1일이 속한 주의 월요일부터 6주(42칸)
- * 월·연 경계는 자바스크립트 `Date`가 그레고리력으로 처리(윤년·달 길이 포함)
+ * 해당 달을 감싸는 연속 주 6줄 × 7칸(42칸)
+ * `weekStart`가 `monday`면 첫 열은 월, `sunday`면 첫 열은 일
+ * 월·연 경계는 자바스크립트 `Date`가 그레고리력으로 처리
  */
-export function getCalendarCells(year: number, monthIndex: number): CalendarCell[] {
-  const first = new Date(year, monthIndex, 1); // 해당 달 1일로 시작하는 날짜
-  const pad = (first.getDay() + 6) % 7; // [요일] JS 기본 요일 순서인 일~토를 월~일 순서로 바꾸는 공식
-  const cells: CalendarCell[] = []; // 달력 칸 목록
+export function getCalendarCells(
+  year: number,
+  monthIndex: number,
+  weekStart: CalendarWeekStart = "monday"
+): CalendarCell[] {
+  const first = new Date(year, monthIndex, 1);
+  const dow = first.getDay(); // 일=0 … 토=6
+  /** 1일 이전으로 몇 칸 돌아가야 “이번 줄의 첫 요일”에 맞는지 */
+  const pad =
+    weekStart === "monday"
+      ? (dow + 6) % 7 /* 월=0 … 일=6 */
+      : dow; /* 일=0 시작 */
+  const cells: CalendarCell[] = [];
   for (let i = 0; i < 42; i++) {
-    const d = new Date(year, monthIndex, 1 - pad + i); // 해당 달 1일로 시작하는 날짜에 월 증가 또는 감소 계산 
+    const d = new Date(year, monthIndex, 1 - pad + i);
     cells.push({
-      date: d, // 날짜
-      inCurrentMonth: d.getMonth() === monthIndex, // 해당 달에 속하는지
+      date: d,
+      inCurrentMonth: d.getMonth() === monthIndex,
     });
   }
-  return cells; // 달력 칸 목록 반환
+  return cells;
 }
 
 // 해당 달 1일로 시작하는 날짜 반환

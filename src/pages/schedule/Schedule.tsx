@@ -18,10 +18,14 @@ export default function Schedule() {
       </div>
 
       <div className="schedule-layout">
-        <section className="schedule-calendar-section" aria-label="월 달력">
-          <MonthCalendar month={month} onMonthChange={setMonth} />
-        </section>
-        <ScheduleSidePanel />
+        <div className="schedule-workspace">
+          <section className="schedule-workspace__calendar" aria-label="월 달력">
+            <MonthCalendar month={month} onMonthChange={setMonth} />
+          </section>
+          <div className="schedule-workspace__panel">
+            <ScheduleSidePanel />
+          </div>
+        </div>
       </div>
     </div>
   );

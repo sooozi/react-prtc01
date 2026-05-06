@@ -7,30 +7,69 @@
 
 .schedule-layout {
   margin-top: 1.25rem;
-  display: grid;
-  grid-template-columns: 1fr minmax(min(100%, 280px), 360px);
-  gap: 1.5rem 1.75rem;
-  align-items: start;
-
-  @include bp.below(bp.$lg) {
-    grid-template-columns: 1fr;
-    gap: 1.35rem;
-  }
 
   @include bp.below(bp.$md) {
     margin-top: 1rem;
   }
 }
 
-.schedule-calendar-section {
+/* 달력 + 일정 입력: 한 덩어리의 워크스페이스 (이중 카드 느낌 제거) */
+.schedule-workspace {
+  display: grid;
+  grid-template-columns: 1fr minmax(min(100%, 260px), 340px);
+  align-items: stretch;
+  gap: 0;
+  max-width: 100%;
+  border-radius: clamp(18px, 2.5vw, 22px);
+  border: 1px solid color-mix(in srgb, var(--color-card-border) 72%, var(--color-primary) 14%);
+  background-color: var(--color-card);
+  background-image:
+    radial-gradient(ellipse 105% 80% at 18% -8%, color-mix(in srgb, var(--color-primary-muted) 70%, transparent), transparent 52%),
+    radial-gradient(ellipse 90% 75% at 100% 100%, color-mix(in srgb, var(--color-secondary-muted) 45%, transparent), transparent 46%);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-card) 50%, white),
+    0 22px 50px -16px color-mix(in srgb, var(--color-shadow-card) 92%, var(--color-primary) 8%),
+    0 8px 24px var(--color-shadow-sm);
+  overflow: hidden;
+
+  @include bp.below(bp.$lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.schedule-workspace__calendar {
   min-width: 0;
-  padding: 0 0.25rem 2rem;
+  padding: clamp(1rem, 2.2vw, 1.35rem) clamp(1rem, 2.5vw, 1.35rem) clamp(1.1rem, 2.2vw, 1.45rem);
 
   @include bp.below(bp.$md) {
-    padding: 0 0.25rem 1.5rem;
+    padding: 0.85rem 0.75rem 1rem;
   }
 
   @include bp.below(bp.$sm) {
-    padding: 0 0.125rem 1.25rem;
+    padding: 0.75rem 0.55rem 0.95rem;
   }
+}
+
+.schedule-workspace__panel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
+  background: color-mix(in srgb, var(--color-input-bg) 22%, var(--color-card));
+
+  @include bp.below(bp.$lg) {
+    border-left: none;
+    border-top: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
+  }
+}
+
+[data-theme="dark"] .schedule-workspace__panel {
+  background: color-mix(in srgb, var(--color-bg-subtle) 65%, var(--color-card));
+}
+
+[data-theme="dark"] .schedule-workspace {
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-card) 20%, transparent),
+    0 24px 48px rgba(0, 0, 0, 0.4),
+    0 10px 24px rgba(0, 0, 0, 0.22);
 }

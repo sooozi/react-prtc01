@@ -14,54 +14,64 @@ export default function ScheduleSidePanel() {
   return (
     <aside className="schedule-side-panel" aria-labelledby="schedule-side-panel-title">
       <div className="schedule-side-panel__card">
-        <h2 id="schedule-side-panel-title" className="schedule-side-panel__title">
-          일정 입력
-        </h2>
+        <header className="schedule-side-panel__hero">
+          <h2 id="schedule-side-panel-title" className="schedule-side-panel__title">
+            일정 입력
+          </h2>
+        </header>
 
-        <div className="schedule-side-panel__field">
-          <div id="schedule-category-label" className="schedule-side-panel__label">
-            카테고리
-          </div>
-          <div
-            className="schedule-side-panel__chips"
-            role="radiogroup"
-            aria-labelledby="schedule-category-label"
-          >
-            {CATEGORY_OPTIONS.map((opt) => (
-              <label
-                key={opt.value}
-                className={`schedule-side-panel__chip schedule-side-panel__chip--${opt.theme}`}
+        <div className="schedule-side-panel__body">
+          <div className="schedule-side-panel__field">
+            <div id="schedule-category-label" className="schedule-side-panel__label">
+              카테고리
+            </div>
+            <div className="schedule-side-panel__chip-well">
+              <div
+                className="schedule-side-panel__chips"
+                role="radiogroup"
+                aria-labelledby="schedule-category-label"
               >
-                <input
-                  type="radio"
-                  name="schedule-category"
-                  value={opt.value}
-                  className="schedule-side-panel__chip-input"
-                  defaultChecked={opt.value === "work"}
-                />
-                <span className="schedule-side-panel__chip-text">{opt.label}</span>
-              </label>
-            ))}
+                {CATEGORY_OPTIONS.map((opt) => (
+                  <label
+                    key={opt.value}
+                    className={`schedule-side-panel__chip schedule-side-panel__chip--${opt.theme}`}
+                  >
+                    <input
+                      type="radio"
+                      name="schedule-category"
+                      value={opt.value}
+                      className="schedule-side-panel__chip-input"
+                      defaultChecked={opt.value === "work"}
+                    />
+                    <span className="schedule-side-panel__chip-text">{opt.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="schedule-side-panel__field">
-          <label htmlFor="schedule-date" className="schedule-side-panel__label">
-            날짜
-          </label>
-          <input id="schedule-date" type="date" className="schedule-side-panel__input" />
-        </div>
+          <div className="schedule-side-panel__field">
+            <label htmlFor="schedule-date" className="schedule-side-panel__label">
+              날짜
+            </label>
+            <div className="schedule-side-panel__input-shell">
+              <input id="schedule-date" type="date" className="schedule-side-panel__input" />
+            </div>
+          </div>
 
-        <div className="schedule-side-panel__field">
-          <label htmlFor="schedule-note" className="schedule-side-panel__label">
-            내용
-          </label>
-          <textarea
-            id="schedule-note"
-            className="schedule-side-panel__textarea"
-            rows={6}
-            placeholder="일정 내용을 입력하세요."
-          />
+          <div className="schedule-side-panel__field">
+            <label htmlFor="schedule-note" className="schedule-side-panel__label">
+              내용
+            </label>
+            <div className="schedule-side-panel__input-shell schedule-side-panel__input-shell--grow">
+              <textarea
+                id="schedule-note"
+                className="schedule-side-panel__textarea"
+                rows={6}
+                placeholder="제목 없이 간단히 메모할 수 있어요."
+              />
+            </div>
+          </div>
         </div>
       </div>
     </aside>
