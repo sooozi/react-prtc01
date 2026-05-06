@@ -170,7 +170,7 @@
   content: "";
   position: absolute;
   left: calc(var(--pc-rail-x) - var(--pc-thread-w) / 2);
-  top: calc(var(--pc-avatar) / 2);
+  top: var(--pc-avatar);
   bottom: 0;
   width: var(--pc-thread-w);
   background: var(--pc-thread-color);
