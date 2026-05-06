@@ -294,8 +294,14 @@
   font-size: 0.9rem;
   line-height: 1.55;
   color: var(--color-text);
-  white-space: pre-wrap;
   word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-line;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  overflow: hidden;
 }
 
 .post-comment-section__actions {
