@@ -212,7 +212,6 @@
   width: 4px;
   bottom: 0;
   z-index: 1;
-  /* 게시글 상세는 카드 배경 위에 있음 */
   background: var(--color-card);
   pointer-events: none;
 }
@@ -221,7 +220,6 @@
   display: flex;
   align-items: flex-start;
   flex-shrink: 0;
-  gap: var(--pc-hook-gap);
   position: relative;
   z-index: 2;
 }
