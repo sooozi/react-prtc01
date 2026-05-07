@@ -73,8 +73,12 @@ export default function Header() {
       <div className="header__bg" aria-hidden />
       <nav className="nav">
         <Link to="/home" className="logo" onClick={closeMenu}>
-          <span className="logo-icon">🐱</span>
-          <span className="logo-text">MyViteProject</span>
+          <img
+            src="/logo-mark.svg"
+            alt="MyViteProject"
+            className="logo-img"
+            decoding="async"
+          />
         </Link>
 
         <button

@@ -2,7 +2,7 @@
 
 Vite + React + TypeScript 기반의 프론트엔드 연습 프로젝트입니다.  
 로그인·회원가입·사용자 목록·사용자 상세(목 데이터)·마이페이지(내가 쓴 글)·게시판(목록/상세/글쓰기/수정/삭제), 다크 모드, 공통 컴포넌트를 다룹니다.  
-레이아웃은 스크롤 방향에 따라 헤더를 숨겼다 보였다 하며, `MouseFollowEmoji`로 포인터 추적 장식을 둡니다.
+레이아웃은 스크롤 방향에 따라 헤더를 숨겼다 보였다 합니다.
 
 ---
 
@@ -79,11 +79,10 @@ src/
 │   ├── Confirm/            # 확인 다이얼로그
 │   ├── Layout/             # Layout(스크롤 시 헤더 숨김), Header, Footer
 │   ├── LoadingState/       # 로딩 스피너 + 문구
-│   ├── MouseFollowEmoji/   # Layout에서 포인터 따라다니는 이모지
 │   ├── Pagination/
 │   ├── Tooltip/
 │   ├── CatHover/           # (선택) Layout에서 주석 처리 가능
-│   └── index.ts            # 배럴 export (MouseFollowEmoji 등은 Layout에서 직접 import)
+│   └── index.ts            # 배럴 export (예: CatHover 등은 필요 시 경로로 import)
 ├── hooks/
 │   ├── usePagination.ts
 │   └── useUrlQueryPage.ts  # URL page 쿼리 파싱/갱신 (게시판·사용자 목록 등)
@@ -264,5 +263,5 @@ src/
 - **ESLint**: React + TypeScript 규칙 사용.
 - **Mock**: `src/mocks/user.ts`만 사용(사용자 목록·상세). 게시판은 실 API 연동.
 - **BackstopJS**(선택): 루트 `backstop.json` — 시각 회귀 테스트. `yarn dev` 실행 후 `npx backstop reference` → `npx backstop test`. 프로젝트가 `"type": "module"`이면 엔진 스크립트 `onBefore`/`onReady`는 `require` 충돌이 나므로 설정에서 생략하거나 `.cjs`로 두는 방식을 씁니다.
-- **컴포넌트 export**: `src/components/index.ts`는 Badge, Button, Confirm, LoadingState, Header, Footer, Layout, Pagination, Tooltip만 배럴 export. `MouseFollowEmoji`, `CatHover` 등은 필요한 파일에서 경로로 import합니다.
+- **컴포넌트 export**: `src/components/index.ts`는 Badge, Button, Confirm, LoadingState, Header, Footer, Layout, Pagination, Tooltip만 배럴 export. `CatHover` 등은 필요한 파일에서 경로로 import합니다.
 

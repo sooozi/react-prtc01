@@ -3,8 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import Header from "@/components/Layout/Header/Header";
 import Footer from "@/components/Layout/Footer/Footer";
 import ApiErrorBar from "@/components/ApiErrorBar/ApiErrorBar";
-import MouseFollowEmoji from "@/components/MouseFollowEmoji/MouseFollowEmoji";
-// import CatHover from "@/components/CatHover/CatHover";
 import "@/components/Layout/Layout.scss";
 
 /** 헤더 실제 높이(padding 1.5rem×2 + nav 콘텐츠)에 맞춤 — 72px보다 작으면 메인과 겹침 */
@@ -66,11 +64,6 @@ export default function Layout() {
       <Header />
 
       <ApiErrorBar />
-
-      {/* 고양이 - 화면 왼쪽 고정 */}
-      {/* <CatHover /> */}
-
-      <MouseFollowEmoji emoji="🐱" />
 
       {/* 메인 콘텐츠 - 각 페이지가 여기에 렌더링됨 */}
       <main className="layout-main">

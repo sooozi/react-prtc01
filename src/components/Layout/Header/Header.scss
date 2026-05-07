@@ -13,7 +13,7 @@
   transition: transform 0.3s ease;
 
   @include bp.above(bp.$md) {
-    padding: 1.5rem 2rem;
+    padding: 1.3rem 2rem;
   }
 }
 
@@ -185,7 +185,6 @@
   }
 }
 
-// 상단: 프로필 + 테마 (모바일은 앱 사이드메뉴式 헤더)
 .nav-links__top {
   display: flex;
   flex-shrink: 0;

@@ -69,6 +69,12 @@ $error-dark: var(--color-error-dark);
   }
 }
 
+.logo-img {
+  display: block;
+  height: 2rem;
+  width: auto;
+}
+
 .logo-icon {
   font-size: 1.3rem;
   color: var(--color-primary);
