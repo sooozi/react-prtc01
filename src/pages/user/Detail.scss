@@ -73,6 +73,14 @@
 
 .user-detail-contact {
   margin-bottom: 1.75rem;
+
+  &.detail-content {
+    min-height: unset;
+
+    @include bp.below(bp.$md) {
+      min-height: unset;
+    }
+  }
 }
 
 .user-detail-mailto {

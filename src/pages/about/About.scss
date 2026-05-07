@@ -157,7 +157,7 @@
   background: linear-gradient(
     135deg,
     color-mix(in srgb, var(--color-primary) 25%, transparent) 0%,
-    color-mix(in srgb, var(--color-secondary) 20%, transparent) 100%
+    color-mix(in srgb, var(--color-primary-hover) 18%, transparent) 100%
   );
 }
 

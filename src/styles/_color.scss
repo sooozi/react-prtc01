@@ -1,6 +1,6 @@
 // ========================================
 // 테마 색상 변수 (CSS Custom Properties)
-// 라이트/다크 — 인디고·슬레이트·핑크 (이전 디자인)
+// 라이트/다크 — 슬레이트 중립 + 바이올렛 단일 액센트 (토스에 가깝게, 핑크 제거)
 // ========================================
 
 :root {
@@ -24,7 +24,8 @@
 
   /* 배경 */
   --color-bg: #ffffff;
-  --color-bg-body: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-subtle) 50%, var(--color-bg-subtle-2) 100%);
+  /* 페이지 배경: 무채색 단일면 (그라데이션 톤 축소) */
+  --color-bg-body: var(--color-bg);
   --color-bg-subtle: #f8fafc;
   --color-bg-subtle-2: #f1f5f9;
 
@@ -37,14 +38,14 @@
   --color-border: #e2e8f0;
   --color-border-light: rgba(226, 232, 240, 0.8);
 
-  /* 브랜드·링크 */
+  /* 브랜드·링크 — 바이올렛만 (secondary = 더 진한 보라로 미세 구분) */
   --color-primary: #6366f1;
   --color-primary-hover: #8b5cf6;
-  --color-secondary: #ec4899;
-  --color-accent: #db2777;
+  --color-secondary: #5b21b6;
+  --color-accent: #7c3aed;
   --color-primary-muted: rgba(99, 102, 241, 0.1);
-  --color-primary-shadow: rgba(99, 102, 241, 0.35);
-  --color-secondary-muted: rgba(236, 72, 153, 0.1);
+  --color-primary-shadow: rgba(99, 102, 241, 0.3);
+  --color-secondary-muted: rgba(91, 33, 182, 0.08);
 
   /* 버튼 기본(비강조) */
   --color-button-bg: var(--color-bg-subtle);
@@ -78,7 +79,7 @@
   --color-header-border: rgba(0, 0, 0, 0.06);
 
   /* 테이블 */
-  --color-table-header-bg: linear-gradient(180deg, var(--color-bg-subtle) 0%, var(--color-bg-subtle-2) 100%);
+  --color-table-header-bg: var(--color-bg-subtle);
   --color-table-row-hover: var(--color-bg-subtle);
   --color-table-cell-border: var(--color-bg-subtle-2);
 
@@ -87,9 +88,9 @@
   --color-shadow-md: rgba(0, 0, 0, 0.06);
   --color-shadow-card: rgba(0, 0, 0, 0.05);
 
-  /* 장식 그라데이션 */
-  --decoration-primary: rgba(99, 102, 241, 0.08);
-  --decoration-secondary: rgba(236, 72, 153, 0.06);
+  /* 배경 장식 — 동일 톤, 낮은 채도만 */
+  --decoration-primary: rgba(99, 102, 241, 0.06);
+  --decoration-secondary: rgba(139, 92, 246, 0.045);
 
   /* 오버레이·토스트 */
   --color-overlay-scrim: rgba(15, 23, 42, 0.45);
@@ -108,7 +109,7 @@
   --color-text-muted: #64748b;
 
   --color-bg: #0f172a;
-  --color-bg-body: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  --color-bg-body: var(--color-bg);
   --color-bg-subtle: #1e293b;
   --color-bg-subtle-2: #334155;
 
@@ -121,11 +122,11 @@
 
   --color-primary: #818cf8;
   --color-primary-hover: #a78bfa;
-  --color-secondary: #f472b6;
-  --color-accent: #f472b6;
-  --color-primary-muted: rgba(129, 140, 248, 0.15);
-  --color-primary-shadow: rgba(129, 140, 248, 0.4);
-  --color-secondary-muted: rgba(244, 114, 182, 0.12);
+  --color-secondary: #6d28d9;
+  --color-accent: #a78bfa;
+  --color-primary-muted: rgba(129, 140, 248, 0.14);
+  --color-primary-shadow: rgba(129, 140, 248, 0.35);
+  --color-secondary-muted: rgba(109, 40, 217, 0.2);
 
   --color-button-bg: var(--color-bg-subtle-2);
   --color-button-text: var(--color-text-heading);
@@ -161,8 +162,8 @@
   --color-shadow-md: rgba(0, 0, 0, 0.3);
   --color-shadow-card: rgba(0, 0, 0, 0.25);
 
-  --decoration-primary: rgba(129, 140, 248, 0.08);
-  --decoration-secondary: rgba(236, 72, 153, 0.06);
+  --decoration-primary: rgba(129, 140, 248, 0.06);
+  --decoration-secondary: rgba(167, 139, 250, 0.05);
 
   --color-overlay-scrim: rgba(0, 0, 0, 0.55);
   --color-toast-bg: #1e293b;

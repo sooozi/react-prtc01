@@ -14,7 +14,7 @@
   background-color: var(--color-card);
   background-image:
     radial-gradient(ellipse 120% 85% at 100% 0%, color-mix(in srgb, var(--color-primary) 1%, transparent), transparent 52%),
-    radial-gradient(ellipse 90% 70% at 0% 100%, color-mix(in srgb, var(--color-secondary) 5%, transparent), transparent 48%);
+    radial-gradient(ellipse 90% 70% at 0% 100%, color-mix(in srgb, var(--color-primary) 3.5%, transparent), transparent 48%);
   box-shadow:
     0 1px 0 color-mix(in srgb, var(--color-card) 40%, white),
     0 20px 48px -12px color-mix(in srgb, var(--color-shadow-card) 95%, var(--color-primary) 5%),

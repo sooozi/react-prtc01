@@ -181,7 +181,6 @@
   }
 }
 
-/* 주 시작: 슬라이드 토글(왼쪽=월요일, 오른쪽=일요일) — 격자 연동 전 UI */
 .month-calendar__week-start-row {
   display: flex;
   align-items: center;
@@ -231,17 +230,15 @@
   --track-w: 6rem;
   --track-h: 1.8rem;
   --track-pad: 2px;
-  /* border-box width 안에서 콘텐츠 폭 = w − 좌우 border − 좌우 padding; 썸 반폭·이동량과 동일해야 좌우 여백 대칭 */
   --track-border-w: 1px;
   --thumb-travel: calc(
     (var(--track-w) - var(--track-border-w) * 2 - var(--track-pad) * 2) / 2
   );
-  /* 썸 배경: 좌(월 시작) / 우(일 시작) — 필요 시 이 변수만 덮어쓰면 됨 */
   --week-switch-thumb-bg: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   --week-switch-thumb-bg-right: linear-gradient(
     135deg,
     var(--color-primary-hover) 0%,
-    var(--color-secondary) 100%
+    color-mix(in srgb, var(--color-secondary) 46%, var(--color-primary-hover) 54%) 100%
   );
 
   position: relative;
@@ -256,11 +253,21 @@
   overflow: hidden;
   transition:
     background 0.22s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
+/* 일 시작: nav·썸과 동일 145° 계열, 옅게 깔아 통일감 */
 .month-calendar__week-start-switch-track--sunday {
-  background: color-mix(in srgb, var(--color-border) 38%, var(--color-input-bg));
+  border-color: color-mix(in srgb, var(--color-border) 52%, var(--color-primary) 26%);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--color-primary-muted) 72%, var(--color-input-bg)) 0%,
+    color-mix(in srgb, var(--color-secondary-muted) 68%, var(--color-input-bg)) 100%
+  );
+  box-shadow:
+    inset 0 1px 1px color-mix(in srgb, white 55%, transparent),
+    0 1px 3px color-mix(in srgb, var(--color-primary-shadow) 22%, transparent);
 }
 
 [data-theme="dark"] .month-calendar__week-start-switch-track {
@@ -269,10 +276,18 @@
 }
 
 [data-theme="dark"] .month-calendar__week-start-switch-track--sunday {
-  background: color-mix(in srgb, var(--color-border) 55%, var(--color-bg-subtle));
+  border-color: color-mix(in srgb, var(--color-border) 58%, var(--color-primary) 22%);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--color-primary-muted) 55%, var(--color-bg-subtle)) 0%,
+    color-mix(in srgb, var(--color-secondary-muted) 48%, var(--color-bg-subtle)) 100%
+  );
+  box-shadow:
+    inset 0 1px 1px rgb(255 255 255 / 0.06),
+    0 1px 4px rgb(0 0 0 / 0.28);
 }
 
-/* 반쪽 너비 pill, 이미지처럼 네이비 톤 */
+/* 반쪽 너비 pill — 월/일 썸 색 구분 */
 .month-calendar__week-start-switch-thumb {
   position: absolute;
   z-index: 0;
@@ -281,7 +296,6 @@
   left: var(--track-pad);
   width: var(--thumb-travel);
   border-radius: 9999px;
-  /* 브랜드 포인트: 인디고 → 바이올렛 (테마 변수만 사용) */
   background: var(--week-switch-thumb-bg);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.22),
@@ -298,7 +312,7 @@
   background: var(--week-switch-thumb-bg-right);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.22),
-    0 1px 2px color-mix(in srgb, var(--color-secondary) 40%, var(--color-primary-shadow));
+    0 1px 2px color-mix(in srgb, var(--color-secondary) 14%, var(--color-primary-shadow));
 }
 
 .month-calendar__week-start-switch-labels {
@@ -503,7 +517,6 @@
   font-weight: 700;
 }
 
-/* 일정 페이지 통합 워크스페이스 안: 바깥 카드와 겹치지 않게 내부는 플랫 */
 .schedule-workspace .month-calendar {
   margin: 0;
   padding: 0;
