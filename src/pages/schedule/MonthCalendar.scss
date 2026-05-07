@@ -34,14 +34,6 @@
   }
 }
 
-.month-calendar__week-start-label {
-  flex-shrink: 0;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--color-text-secondary);
-}
-
 .month-calendar__week-start-switch-wrap {
   display: inline-flex;
   flex-shrink: 0;
@@ -263,7 +255,7 @@
   border-radius: 999px;
   padding: 0.35rem 0.6rem;
   font: inherit;
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   cursor: pointer;
@@ -288,6 +280,10 @@
 }
 
 .month-calendar__title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
   margin: 0;
   flex: 1;
   min-width: 0;
@@ -305,25 +301,39 @@
   }
 }
 
+.month-calendar__title-year {
+  font-size: 0.95em;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--color-text-secondary) 78%, var(--color-text-heading) 22%);
+}
+
+.month-calendar__title-month {
+  font-weight: 850;
+  color: var(--color-text-heading);
+}
+
 .month-calendar__title-trigger {
   appearance: none;
-  border: none;
-  background: transparent;
   cursor: pointer;
   font: inherit;
+  font-size: 1.2rem;
   color: inherit;
-  padding: 0.25rem 0.55rem;
-  border-radius: 10px;
+  padding: 0.35rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border-light);
+  background: var(--color-card);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
   max-width: 100%;
-  transition: background-color 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease;
+  transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease;
   -webkit-tap-highlight-color: transparent;
 
   &:hover {
-    background: color-mix(in srgb, var(--color-primary-muted) 55%, transparent);
+    border-color: color-mix(in srgb, var(--color-primary) 20%, var(--color-border));
+    background: color-mix(in srgb, var(--color-primary-muted) 38%, var(--color-card));
   }
 
   &:active {
@@ -345,26 +355,42 @@
 
 .month-calendar__title-caret {
   flex-shrink: 0;
-  font-size: 0.85em;
-  color: color-mix(in srgb, var(--color-text-secondary) 65%, var(--color-text-heading) 35%);
-  transform: translateY(0.04em);
+  width: 0.7rem;
+  height: 0.7rem;
+  color: color-mix(in srgb, var(--color-text-secondary) 70%, var(--color-text-heading) 30%);
+  transform: rotate(0deg);
+  transition: transform 0.18s ease;
+  transform-origin: 50% 50%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='black' d='M5.5 7.5a1 1 0 0 1 1.4 0L10 10.6l3.1-3.1a1 1 0 1 1 1.4 1.4l-3.8 3.8a1 1 0 0 1-1.4 0L5.5 8.9a1 1 0 0 1 0-1.4Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='black' d='M5.5 7.5a1 1 0 0 1 1.4 0L10 10.6l3.1-3.1a1 1 0 1 1 1.4 1.4l-3.8 3.8a1 1 0 0 1-1.4 0L5.5 8.9a1 1 0 0 1 0-1.4Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  background: currentColor;
 }
 
-/* UI만: 기본 hidden. 나중에 open 상태에서만 보여주면 됨 */
+.month-calendar__title-caret--open {
+  transform: rotate(180deg);
+}
+
 .month-calendar__month-popover {
   position: absolute;
   left: 50%;
   top: calc(100% + 0.65rem);
   transform: translateX(-50%);
   width: min(18rem, 92vw);
-  padding: 0.55rem;
-  border-radius: 14px;
+  padding: 0.65rem;
+  border-radius: 16px;
   border: 1px solid var(--color-border-light);
   background: var(--color-card);
   box-shadow:
     0 10px 30px color-mix(in srgb, var(--color-shadow-card) 55%, transparent),
     0 2px 10px var(--color-shadow-sm);
   z-index: 5;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.month-calendar__month-popover[hidden] {
+  display: none !important;
 }
 
 .month-calendar__month-option {
@@ -375,11 +401,11 @@
   font: inherit;
   color: var(--color-text);
   cursor: pointer;
-  padding: 0.55rem 0.7rem;
+  padding: 0.6rem 0.2rem;
   border-radius: 12px;
-  text-align: left;
-  font-size: 0.9rem;
-  font-weight: 650;
+  text-align: center;
+  font-size: 0.88rem;
+  font-weight: 700;
   letter-spacing: -0.02em;
   transition: background-color 0.16s ease, color 0.16s ease;
 

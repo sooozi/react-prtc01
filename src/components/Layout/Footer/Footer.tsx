@@ -10,7 +10,7 @@ export default function Footer({
   return (
     <footer className="footer">
       <p className="footer-text">
-        © {year} MyViteProject. Made with ❤️ using React & Vite
+        © {year} MyViteProject. Built with React, TypeScript, and Vite.
       </p>
     </footer>
   );

@@ -26,8 +26,8 @@ type Props = {
 export default function MonthCalendar({ month, onMonthChange }: Props) {
   const [weekStart, setWeekStart] = useState<CalendarWeekStart>("monday");
   const [isMonthPopoverOpen, setIsMonthPopoverOpen] = useState(false);
-  const titleBtnRef = useRef<HTMLButtonElement | null>(null);
-  const monthPopoverRef = useRef<HTMLDivElement | null>(null);
+  const titleBtnRef = useRef<HTMLButtonElement | null>(null); // 타이틀 버튼 참조
+  const monthPopoverRef = useRef<HTMLDivElement | null>(null); // 팝오버 참조
 
   const monthStart = useMemo(() => startOfMonth(month), [month]); // 지금 보는 달의 1일
   const y = monthStart.getFullYear(); // 년
@@ -41,6 +41,8 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
       }),
     [y, m]
   );
+  const yearLabel = `${y}년`;
+  const monthLabel = `${m + 1}월`;
 
   // 오늘 날짜
   const today = useMemo(() => {
@@ -48,6 +50,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
     return new Date(n.getFullYear(), n.getMonth(), n.getDate());
   }, []);
 
+  // 오늘 날짜가 있는 달인지 확인
   const isViewingTodayMonth = today.getFullYear() === y && today.getMonth() === m;
 
   // 월 선택 팝오버 닫기
@@ -154,6 +157,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
           </span>
         </button>
         <h2 className="month-calendar__title">
+          <span className="month-calendar__title-year" aria-hidden>{yearLabel}</span>
           <button
             type="button"
             ref={titleBtnRef}
@@ -163,10 +167,15 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
             aria-controls="month-calendar-month-picker"
             onClick={() => setIsMonthPopoverOpen((prev) => !prev)}
           >
-            <span className="month-calendar__title-text">{title}</span>
-            <span className="month-calendar__title-caret" aria-hidden>
-              ▾
+            <span className="month-calendar__title-text" aria-hidden>
+              <span className="month-calendar__title-month">{monthLabel}</span>
             </span>
+            <span
+              className={clsx("month-calendar__title-caret", {
+                "month-calendar__title-caret--open": isMonthPopoverOpen,
+              })}
+              aria-hidden
+            />
           </button>
 
           {/* 월 선택 팝오버 */}

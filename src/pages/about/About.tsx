@@ -58,9 +58,7 @@ export default function About() {
           Vite + React로 <span className="gradient-text">UI·API</span> 연습
         </h1>
         <p className="subtitle">
-          개인 연습용 프론트 저장소입니다. 로컬 실행·환경 변수는 저장소 README를 참고하세요.
-          <br />
-          게시판·마이페이지·일정 등은 로그인과 백엔드가 준비된 뒤 가장 잘 맞습니다.
+          React + TypeScript로 UI 컴포넌트·상태 관리·라우팅·API 연동까지 한 흐름으로 정리한 프론트엔드 포트폴리오 프로젝트입니다.
         </p>
       </section>
 
