@@ -9,28 +9,28 @@ import {
 } from "./calendarUtils";
 import "./MonthCalendar.scss";
 
-/** 그리드 열 순서는 weekStart 에 맞출 것 — 월 시작 / 일 시작 */
+// 그리드 열 순서는 weekStart 에 맞출 것 — 월 시작 / 일 시작
 const WEEKDAYS_ORDER: Record<CalendarWeekStart, readonly string[]> = {
   monday: ["월", "화", "수", "목", "금", "토", "일"],
   sunday: ["일", "월", "화", "수", "목", "금", "토"],
 };
+// 월 번호
 const MONTH_NUMS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
+// 부모에서 넘기는 값
 type Props = {
-  // 표시할 달의 아무 날짜(보통 1일)
-  month: Date;
-  onMonthChange: (nextMonthStart: Date) => void;
+  month: Date; // 표시할 달
+  onMonthChange: (nextMonthStart: Date) => void; // 달 바꿀 때 호출
 };
 
 export default function MonthCalendar({ month, onMonthChange }: Props) {
   const [weekStart, setWeekStart] = useState<CalendarWeekStart>("monday");
 
-  // 달력 첫 칸 요일 선택
-  const monthStart = useMemo(() => startOfMonth(month), [month]);
-  const y = monthStart.getFullYear();
-  const m = monthStart.getMonth();
-  const cells = useMemo(() => getCalendarCells(y, m, weekStart), [y, m, weekStart]);
-  const title = useMemo(
+  const monthStart = useMemo(() => startOfMonth(month), [month]); // 지금 보는 달의 1일
+  const y = monthStart.getFullYear(); // 년
+  const m = monthStart.getMonth(); // 월
+  const cells = useMemo(() => getCalendarCells(y, m, weekStart), [y, m, weekStart]); // 달력 그리드
+  const title = useMemo( // 달력 제목
     () =>
       new Date(y, m, 1).toLocaleDateString("ko-KR", {
         year: "numeric",
@@ -39,16 +39,19 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
     [y, m]
   );
 
+  // 오늘 날짜
   const today = useMemo(() => {
     const n = new Date();
     return new Date(n.getFullYear(), n.getMonth(), n.getDate());
   }, []);
 
+  // 오늘 날짜가 있는 달인지 확인
   const isViewingTodayMonth =
     today.getFullYear() === y && today.getMonth() === m;
 
   return (
-    <div className="month-calendar">
+    <div className="month-calendar" role="region" aria-label="월 달력">
+      {/* 월 번호 */}
       <div className="month-calendar__month-bar" role="toolbar" aria-label="월·오늘로 이동">
         {MONTH_NUMS.map((num) => {
           const monthIndex = num - 1;
@@ -68,6 +71,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
             </button>
           );
         })}
+        {/* 오늘 날짜 */}
         <button
           type="button"
           className={clsx("month-calendar__nav-chip", "month-calendar__nav-chip--today", {
@@ -81,6 +85,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
         </button>
       </div>
 
+      {/* 주 시작 */}
       <div className="month-calendar__week-start-row">
         <div
           className="month-calendar__week-start-switch-wrap"
@@ -157,12 +162,15 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
         </button>
       </header>
 
+      {/* 달력 그리드 */}
       <div className="month-calendar__grid" role="grid" aria-label={`${title} 달력`}>
+        {/* 요일 */}
         {WEEKDAYS_ORDER[weekStart].map((label) => (
           <div key={label} className="month-calendar__weekday" role="columnheader">
             {label}
           </div>
         ))}
+        {/* 날짜 */}
         {cells.map((cell) => {
           const key = `${cell.date.getFullYear()}-${cell.date.getMonth()}-${cell.date.getDate()}`;
           const isToday = isSameCalendarDay(cell.date, today);
