@@ -1,3 +1,5 @@
+@use "@/styles/breakpoints" as bp;
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -7,7 +9,7 @@
   font-size: 1.0625rem;
   font-weight: 600;
   font-family: inherit;
-  line-height: 1.2;
+  line-height: 1;
   letter-spacing: -0.02em;
   text-decoration: none;
   border-radius: 14px;
@@ -31,11 +33,28 @@
   }
 }
 
+/* 기본 크기 버튼만 — sm·ghost는 각각 규칙 유지 */
+@include bp.below(bp.$md) {
+  .btn:not(.btn--ghost):not(.btn--sm) {
+    min-height: 40px;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.9rem;
+    border-radius: 12px;
+  }
+}
+
 .btn--sm {
   min-height: 40px;
   padding: 0.5rem 1.15rem;
   font-size: 0.9375rem;
   border-radius: 12px;
+
+  @include bp.below(bp.$md) {
+    min-height: 34px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8125rem;
+    border-radius: 10px;
+  }
 }
 
 // Primary: 그라데이션 + 흰 글자 (글쓰기, 홈으로, 제출 등)

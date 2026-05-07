@@ -183,13 +183,13 @@ export default function List() {
           </form>
         </section>
 
-        <div className="board-write-btn-block">
+        <div className="board-write-btn-block board-write-btn-block--list-adjacent">
           <Button variant="primary" size="sm" onClick={() => navigate("/post/write")}>
             글쓰기
           </Button>
         </div>
 
-        <div className="table-card">
+        <div className="board-page__list">
           {loading ? (
             <LoadingState />
           ) : error ? (

@@ -1,3 +1,5 @@
+import { useMemo, useState } from "react";
+import { Button } from "@/components";
 import "@/pages/schedule/ScheduleSidePanel.scss";
 
 const CATEGORY_OPTIONS = [
@@ -7,10 +9,29 @@ const CATEGORY_OPTIONS = [
   { value: "other", label: "기타", theme: "other" as const },
 ];
 
+type CategoryValue = (typeof CATEGORY_OPTIONS)[number]["value"];
+
 /**
  * 일정 페이지 우측 패널 — 카테고리·날짜·내용 UI만 (저장 등 로직 미연결)
  */
 export default function ScheduleSidePanel() {
+  const todayISO = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const [category, setCategory] = useState<CategoryValue>("work");
+  const [date, setDate] = useState<string>(todayISO);
+  const [note, setNote] = useState<string>("");
+
+  const selectedCategoryLabel =
+    CATEGORY_OPTIONS.find((c) => c.value === category)?.label ?? category;
+
+  function handleSubmit() {
+    console.log({
+      category,
+      categoryLabel: selectedCategoryLabel,
+      date,
+      note,
+    });
+  }
+
   return (
     <aside className="schedule-side-panel" aria-labelledby="schedule-side-panel-title">
       <div className="schedule-side-panel__card">
@@ -41,7 +62,8 @@ export default function ScheduleSidePanel() {
                       name="schedule-category"
                       value={opt.value}
                       className="schedule-side-panel__chip-input"
-                      defaultChecked={opt.value === "work"}
+                      checked={category === opt.value}
+                      onChange={() => setCategory(opt.value)}
                     />
                     <span className="schedule-side-panel__chip-text">{opt.label}</span>
                   </label>
@@ -55,7 +77,13 @@ export default function ScheduleSidePanel() {
               날짜
             </label>
             <div className="schedule-side-panel__input-shell">
-              <input id="schedule-date" type="date" className="schedule-side-panel__input" />
+              <input
+                id="schedule-date"
+                type="date"
+                className="schedule-side-panel__input"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
             </div>
           </div>
 
@@ -69,8 +97,16 @@ export default function ScheduleSidePanel() {
                 className="schedule-side-panel__textarea"
                 rows={6}
                 placeholder="제목 없이 간단히 메모할 수 있어요."
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
               />
             </div>
+          </div>
+
+          <div className="schedule-side-panel__actions">
+            <Button type="button" variant="primary" size="sm" onClick={handleSubmit}>
+              등록
+            </Button>
           </div>
         </div>
       </div>

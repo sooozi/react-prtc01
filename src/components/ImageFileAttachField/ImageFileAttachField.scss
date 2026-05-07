@@ -1,5 +1,7 @@
 /* 추가 영역(클릭) + 첨부 행(클립·파일명·순서 DnD) — 등록/수정 공용 */
 
+@use "@/styles/breakpoints" as bp;
+
 body.image-file-attach--reorder-active {
   user-select: none;
   cursor: grabbing;
@@ -99,6 +101,10 @@ body.image-file-attach--reorder-active {
   font-size: 0.72rem;
   color: var(--color-text-secondary);
   transition: color 0.2s ease;
+
+  @include bp.below(bp.$md) {
+    font-size: 0.5rem;
+  }
 }
 
 /* 동일(이름+확·소) 첨부 제외 등 — 파일 추가 안내 메시지 */
@@ -447,11 +453,5 @@ body.image-file-attach--reorder-active {
       color: var(--color-text-secondary);
       background: transparent;
     }
-  }
-}
-
-@media (max-width: 480px) {
-  .image-file-attach__row {
-    padding: 0.5rem 0.65rem 0.5rem 0.5rem;
   }
 }

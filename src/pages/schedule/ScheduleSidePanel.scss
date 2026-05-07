@@ -290,3 +290,9 @@
   background: transparent;
   background-image: none;
 }
+
+.schedule-side-panel__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1.05rem;
+}

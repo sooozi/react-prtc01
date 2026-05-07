@@ -15,15 +15,15 @@ type PreviewComment = {
 const PREVIEW_COMMENTS: readonly PreviewComment[] = [
   {
     id: "preview-1",
-    author: "김댓글",
+    author: "김애순",
     dateLabel: "58분 전",
-    body: "UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.",
+    body: "UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.UI 예시입니다. 백엔드 연동 후 실제 댓글이 이 자리에 표시됩니다.",
     likes: 12,
     dislikes: 0,
     replies: [
       {
         id: "preview-1-a",
-        author: "박답글",
+        author: "이양갱",
         dateLabel: "42분 전",
         body: "답글 스레드 예시입니다.",
         likes: 3,
@@ -31,7 +31,7 @@ const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       },
       {
         id: "preview-1-b",
-        author: "최답글",
+        author: "이앙금",
         dateLabel: "30분 전",
         body: "같은 부모 아래 두 번째 답글까지 스레드 선이 이어집니다.",
         likes: 1,
@@ -41,7 +41,7 @@ const PREVIEW_COMMENTS: readonly PreviewComment[] = [
   },
   {
     id: "preview-2",
-    author: "이익명",
+    author: "박익명",
     dateLabel: "2026-04-29",
     body: "여러 줄도\n이렇게 보입니다.",
     likes: 0,
@@ -49,10 +49,12 @@ const PREVIEW_COMMENTS: readonly PreviewComment[] = [
   },
 ] as const;
 
+// 댓글 수 계산
 function countCommentsFlat(nodes: readonly PreviewComment[]): number {
   return nodes.reduce((acc, c) => acc + 1 + (c.replies?.length ? countCommentsFlat(c.replies) : 0), 0);
 }
 
+// 아바타 초기 문자 계산
 function avatarInitial(name: string) {
   const t = name.trim();
   return t ? t[0]! : "?";
@@ -123,24 +125,7 @@ export default function PostCommentSection() {
 
   return (
     <section className="post-comment-section" aria-labelledby="post-comment-heading">
-      <div className="post-comment-section__composer-card">
-        <label htmlFor="post-comment-draft" className="visually-hidden">
-          댓글 입력
-        </label>
-        <textarea
-          id="post-comment-draft"
-          className="post-comment-section__draft"
-          rows={5}
-          placeholder="댓글을 입력하세요."
-        />
-        <div className="post-comment-section__composer-foot">
-          <Button type="button" variant="primary" size="sm" disabled>
-            등록
-          </Button>
-        </div>
-      </div>
-
-      <div className="post-comment-section__list-head">
+      <div className="post-comment-section__page-head">
         <h2 id="post-comment-heading" className="post-comment-section__heading">
           댓글
           <span className="post-comment-section__count">{totalCount}</span>
@@ -156,7 +141,29 @@ export default function PostCommentSection() {
         </div>
       </div>
 
-      <ul className="post-comment-section__list">
+      <div className="post-comment-section__write-block">
+        <h3 id="post-comment-write-heading" className="post-comment-section__subheading">
+          댓글 작성
+        </h3>
+        <div className="post-comment-section__composer-card" aria-labelledby="post-comment-write-heading">
+          <label htmlFor="post-comment-draft" className="visually-hidden">
+            댓글 입력
+          </label>
+          <textarea
+            id="post-comment-draft"
+            className="post-comment-section__draft"
+            rows={5}
+            placeholder="댓글을 입력하세요."
+          />
+          <div className="post-comment-section__composer-foot">
+            <Button type="button" variant="primary" size="sm" disabled>
+              등록
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <ul className="post-comment-section__list" aria-label="댓글 목록">
         {PREVIEW_COMMENTS.map((comment) => (
           <li key={comment.id} className="post-comment-section__root">
             <div className="post-comment-section__root-thread">
