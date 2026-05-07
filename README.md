@@ -81,8 +81,7 @@ src/
 │   ├── LoadingState/       # 로딩 스피너 + 문구
 │   ├── Pagination/
 │   ├── Tooltip/
-│   ├── CatHover/           # (선택) Layout에서 주석 처리 가능
-│   └── index.ts            # 배럴 export (예: CatHover 등은 필요 시 경로로 import)
+│   └── index.ts            # 배럴 export
 ├── hooks/
 │   ├── usePagination.ts
 │   └── useUrlQueryPage.ts  # URL page 쿼리 파싱/갱신 (게시판·사용자 목록 등)
@@ -263,5 +262,5 @@ src/
 - **ESLint**: React + TypeScript 규칙 사용.
 - **Mock**: `src/mocks/user.ts`만 사용(사용자 목록·상세). 게시판은 실 API 연동.
 - **BackstopJS**(선택): 루트 `backstop.json` — 시각 회귀 테스트. `yarn dev` 실행 후 `npx backstop reference` → `npx backstop test`. 프로젝트가 `"type": "module"`이면 엔진 스크립트 `onBefore`/`onReady`는 `require` 충돌이 나므로 설정에서 생략하거나 `.cjs`로 두는 방식을 씁니다.
-- **컴포넌트 export**: `src/components/index.ts`는 Badge, Button, Confirm, LoadingState, Header, Footer, Layout, Pagination, Tooltip만 배럴 export. `CatHover` 등은 필요한 파일에서 경로로 import합니다.
+- **컴포넌트 export**: `src/components/index.ts`는 Badge, Button, Confirm, LoadingState, Header, Footer, Layout, Pagination, Tooltip만 배럴 export.
 
