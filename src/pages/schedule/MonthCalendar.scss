@@ -298,7 +298,7 @@
       0 0 0 3px var(--color-primary-muted);
   }
 
-  &[aria-pressed="true"] {
+  &--active {
     background: color-mix(in srgb, var(--color-primary-muted) 78%, rgb(255 255 255 / 0.9));
     border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border-light));
     color: color-mix(in srgb, var(--color-primary-hover) 22%, var(--color-text-heading));
@@ -328,7 +328,7 @@
     background: color-mix(in srgb, var(--color-primary-muted) 55%, rgb(51 65 85 / 0.75));
   }
 
-  &[aria-pressed="true"] {
+  &--active {
     background: color-mix(in srgb, var(--color-primary-muted) 62%, rgb(51 65 85 / 0.72));
     border-color: color-mix(in srgb, var(--color-primary) 45%, rgb(248 250 252 / 0.14));
     color: color-mix(in srgb, var(--color-primary) 12%, var(--color-text-heading));
@@ -538,7 +538,7 @@
     background: var(--color-bg-subtle);
   }
 
-  &[aria-selected="true"] {
+  &--selected {
     background: color-mix(in srgb, var(--color-primary-muted) 75%, var(--color-card));
     color: var(--color-text-heading);
   }

@@ -37,14 +37,6 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
   const y = monthStart.getFullYear(); // 년
   const m = monthStart.getMonth(); // 월
   const cells = useMemo(() => getCalendarCells(y, m, weekStart), [y, m, weekStart]); // 달력 그리드
-  const title = useMemo( // 달력 제목
-    () =>
-      new Date(y, m, 1).toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "long",
-      }),
-    [y, m]
-  );
   const yearLabel = `${y}년`;
   const monthLabel = `${m + 1}월`;
 
@@ -94,24 +86,13 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
   }, [isMonthPopoverOpen, isYearPopoverOpen]);
 
   return (
-    <div className="month-calendar" role="region" aria-label="월 달력">
+    <div className="month-calendar">
       {/* 주 시작 */}
       <div className="month-calendar__week-start-row">
-        <div
-          className="month-calendar__week-start-switch-wrap"
-          role="group"
-          aria-label="주 시작"
-        >
+        <div className="month-calendar__week-start-switch-wrap">
           <button
             type="button"
             className="month-calendar__week-start-switch"
-            role="switch"
-            aria-checked={weekStart === "sunday"}
-            aria-label={
-              weekStart === "monday"
-                ? "월요일 시작. 누르면 일요일 시작으로 바뀝니다."
-                : "일요일 시작. 누르면 월요일 시작으로 바뀝니다."
-            }
             onClick={() => {
               setWeekStart((prev) => (prev === "monday" ? "sunday" : "monday"));
             }}
@@ -125,9 +106,8 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
                 className={clsx("month-calendar__week-start-switch-thumb", {
                   "month-calendar__week-start-switch-thumb--right": weekStart === "sunday",
                 })}
-                aria-hidden
               />
-              <span className="month-calendar__week-start-switch-labels" aria-hidden>
+              <span className="month-calendar__week-start-switch-labels">
                 <span
                   className={clsx("month-calendar__week-start-switch-text", {
                     "month-calendar__week-start-switch-text--active": weekStart === "monday",
@@ -149,20 +129,20 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
 
         <button
           type="button"
-          className="month-calendar__today-btn"
+          className={clsx("month-calendar__today-btn", isViewingTodayMonth && "month-calendar__today-btn--active")}
           onClick={() => {
             onMonthChange(startOfMonth(new Date()));
             setIsMonthPopoverOpen(false);
             setIsYearPopoverOpen(false);
           }}
-          aria-pressed={isViewingTodayMonth}
-          aria-label="오늘 날짜가 있는 달로 이동"
         >
           오늘
         </button>
       </div>
 
+      {/* 헤더 */}
       <header className="month-calendar__toolbar">
+        {/* 이전 달 */}
         <button
           type="button"
           className="month-calendar__round-nav"
@@ -171,13 +151,15 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
             setIsMonthPopoverOpen(false);
             setIsYearPopoverOpen(false);
           }}
-          aria-label="이전 달"
         >
-          <span className="month-calendar__round-nav-icon" aria-hidden>
+          <span className="month-calendar__round-nav-icon">
             ‹
           </span>
         </button>
-        <h2 className="month-calendar__title">
+        
+        {/* 연·월 컨트롤 */}
+        <div className="month-calendar__title">
+          {/* 연도 선택 */}
           <CalendarPickerPopover
             buttonRef={yearBtnRef}
             popoverRef={yearPopoverRef}
@@ -188,14 +170,8 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
               setIsYearPopoverOpen((prev) => !prev);
             }}
             triggerClassName="month-calendar__title-year-trigger"
-            triggerAriaLabel={`연도 선택, 현재 ${yearLabel}`}
-            popoverAriaLabel="연도 선택"
             popoverExtraClassName="month-calendar__year-popover"
-            triggerDisplay={
-              <span className="month-calendar__title-year" aria-hidden>
-                {yearLabel}
-              </span>
-            }
+            triggerDisplay={<span className="month-calendar__title-year">{yearLabel}</span>}
           >
             {yearOptions.map((yearNum) => (
               <CalendarPopoverOption
@@ -211,6 +187,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
             ))}
           </CalendarPickerPopover>
 
+          {/* 월 선택 */}
           <CalendarPickerPopover
             buttonRef={titleBtnRef}
             popoverRef={monthPopoverRef}
@@ -221,10 +198,8 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
               setIsMonthPopoverOpen((prev) => !prev);
             }}
             triggerClassName="month-calendar__title-trigger"
-            triggerAriaLabel={`월 선택, 현재 ${monthLabel}`}
-            popoverAriaLabel="월 선택"
             triggerDisplay={
-              <span className="month-calendar__title-text" aria-hidden>
+              <span className="month-calendar__title-text">
                 <span className="month-calendar__title-month">{monthLabel}</span>
               </span>
             }
@@ -242,7 +217,8 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
               </CalendarPopoverOption>
             ))}
           </CalendarPickerPopover>
-        </h2>
+        </div>
+
         <button
           type="button"
           className="month-calendar__round-nav"
@@ -251,19 +227,18 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
             setIsMonthPopoverOpen(false);
             setIsYearPopoverOpen(false);
           }}
-          aria-label="다음 달"
         >
-          <span className="month-calendar__round-nav-icon" aria-hidden>
+          <span className="month-calendar__round-nav-icon">
             ›
           </span>
         </button>
       </header>
 
       {/* 달력 그리드 */}
-      <div className="month-calendar__grid" role="grid" aria-label={`${title} 달력`}>
+      <div className="month-calendar__grid">
         {/* 요일 */}
         {WEEKDAYS_ORDER[weekStart].map((label) => (
-          <div key={label} className="month-calendar__weekday" role="columnheader">
+          <div key={label} className="month-calendar__weekday">
             {label}
           </div>
         ))}
@@ -277,13 +252,10 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
           return (
             <div
               key={key}
-              role="gridcell"
-              tabIndex={-1}
               className={clsx("month-calendar__cell", {
                 "month-calendar__cell--muted": !cell.inCurrentMonth,
                 "month-calendar__cell--today": isToday,
               })}
-              aria-current={isToday ? "date" : undefined}
             >
               <span
                 className={clsx("month-calendar__day-num", {
