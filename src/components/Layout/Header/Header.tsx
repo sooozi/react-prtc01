@@ -74,7 +74,7 @@ export default function Header() {
       <nav className="nav">
         <Link to="/home" className="logo" onClick={closeMenu}>
           <img
-            src="/logo-mark.svg"
+            src="/logo-mark.png"
             alt="MyViteProject"
             className="logo-img"
             decoding="async"

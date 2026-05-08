@@ -4,15 +4,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
-  padding: 0.75rem 1.75rem;
-  font-size: 1.0625rem;
+  min-height: 42px;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.95rem;
   font-weight: 600;
   font-family: inherit;
   line-height: 1;
   letter-spacing: -0.02em;
   text-decoration: none;
-  border-radius: 14px;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -35,22 +35,22 @@
 
 @include bp.below(bp.$md) {
   .btn:not(.btn--ghost):not(.btn--sm) {
-    min-height: 40px;
-    padding: 0.5rem 1.1rem;
+    min-height: 38px;
+    padding: 0.5rem 1rem;
     font-size: 0.9rem;
-    border-radius: 12px;
+    border-radius: 11px;
   }
 }
 
 .btn--sm {
-  min-height: 40px;
-  padding: 0.5rem 1.15rem;
-  font-size: 0.9375rem;
-  border-radius: 12px;
+  min-height: 36px;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.875rem;
+  border-radius: 11px;
 
   @include bp.below(bp.$md) {
-    min-height: 34px;
-    padding: 0.3rem 0.8rem;
+    min-height: 32px;
+    padding: 0.32rem 0.75rem;
     font-size: 0.8125rem;
     border-radius: 10px;
   }

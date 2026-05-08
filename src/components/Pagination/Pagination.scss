@@ -44,6 +44,12 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+
   @include bp.below(bp.$md) {
     width: var(--pg-ctl-h-sm);
     height: var(--pg-ctl-h-sm);
@@ -90,21 +96,27 @@
   width: var(--pg-page-w);
   height: var(--pg-ctl-h);
   box-sizing: border-box;
+  font-family: inherit;
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--color-text-heading);
   text-align: center;
-  border: none;
+  border: 1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
   border-radius: 10px;
   padding: 0 0.25rem;
   background: color-mix(in srgb, var(--color-primary-muted) 55%, var(--color-card));
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
   line-height: var(--pg-ctl-h);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--color-static-white) 45%, transparent),
+    0 1px 2px var(--color-shadow-sm);
+  caret-color: var(--color-primary);
 
   &:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px var(--color-primary-muted);
+    outline: none;
+    box-shadow: none;
+    border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border));
   }
 
   &::placeholder {
@@ -127,8 +139,8 @@
 
   &::before {
     content: "";
-    width: 4px;
-    height: 4px;
+    width: 3px;
+    height: 3px;
     border-radius: 999px;
     background: color-mix(in srgb, var(--color-text-muted) 65%, transparent);
   }
@@ -148,6 +160,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-family: inherit;
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--color-text-muted);

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Badge, Button, LoadingState } from "@/components";
 import { getMyPostList } from "@/api/board/boardApi";
 import type { Post } from "@/api/board";
-import WorkTimeBar from "@/pages/schedule/WorkTimeBar";
 import "./MyPage.scss";
 
 // 말줄임이 난 경우에만 `title`을 붙여 브라우저 기본 툴팁으로 전체 제목 표시
@@ -93,10 +92,6 @@ export default function MyPage() {
           </h1>
           <p className="subtitle">회원 정보와 작성한 글을 한곳에서 확인하세요.</p>
         </header>
-
-        <section className="mypage-work-time">
-          <WorkTimeBar />
-        </section>
         
         <div className="mypage-profile-grid">
           <div className="mypage-card">

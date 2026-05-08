@@ -51,6 +51,8 @@ $error-dark: var(--color-error-dark);
   gap: 0.5rem;
   text-decoration: none;
   transition: transform 0.2s ease;
+  width: 2rem;
+  justify-content: center;
 
   &:hover {
     transform: scale(1.02);

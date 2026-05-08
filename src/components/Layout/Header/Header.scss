@@ -13,7 +13,7 @@
   transition: transform 0.3s ease;
 
   @include bp.above(bp.$md) {
-    padding: 1.3rem 2rem;
+    padding: 1rem 2rem;
   }
 }
 

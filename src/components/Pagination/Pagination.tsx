@@ -134,7 +134,7 @@ export default function Pagination({
           onKeyDown={handleKeyDown} // 페이지 번호 입력 필드 값 변경 시 페이지 번호 적용
           aria-label="페이지 번호"
         />
-        <span className="page-divider" aria-hidden="true" />
+        {/* <span className="page-divider" aria-hidden="true" /> */}
         <span className="page-total">{totalPages}</span>
       </div>
 
