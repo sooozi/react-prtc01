@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { selectUserDetail, type UserItem } from "@/api/user";
 import { Badge, Button, LoadingState } from "@/components";
 import "@/pages/post/Detail.scss";
-import "@/pages/user/Detail.scss";
+import "./Detail.scss";
 
 export default function UserDetail() {
   const navigate = useNavigate();

@@ -4,7 +4,7 @@ import { Badge, Button, LoadingState } from "@/components";
 import { getMyPostList } from "@/api/board/boardApi";
 import type { Post } from "@/api/board";
 import WorkTimeBar from "@/pages/schedule/WorkTimeBar";
-import "@/pages/user/MyPage.scss";
+import "./MyPage.scss";
 
 // 말줄임이 난 경우에만 `title`을 붙여 브라우저 기본 툴팁으로 전체 제목 표시
 function MypagePostTitle({ title, className }: { title: string; className: string }) {

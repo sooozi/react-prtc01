@@ -4,7 +4,7 @@ import { selectUserList, type UserItem } from "@/api/user";
 import { Badge, LoadingState, Pagination } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import { useUrlQueryPage } from "@/hooks/useUrlQueryPage";
-import "@/pages/user/List.scss";
+import "./List.scss";
 
 export default function UserList() {
   const navigate = useNavigate();

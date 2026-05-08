@@ -1,6 +1,5 @@
 @use "@/styles/breakpoints" as bp;
 
-/* 사용자 상세 — 카드·히어로·패널 레이어 */
 .post-detail-card.user-detail {
   position: relative;
   overflow: clip;
@@ -16,24 +15,6 @@
   @include bp.below(bp.$md) {
     padding: 1.5rem 1.2rem;
     border-radius: 18px;
-  }
-
-  /* 상단 장식 블롭 */
-  &::before {
-    content: "";
-    position: absolute;
-    pointer-events: none;
-    top: -28%;
-    right: -12%;
-    width: min(52%, 280px);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle at 30% 30%,
-      color-mix(in srgb, var(--color-primary-muted) 90%, transparent) 0%,
-      transparent 68%
-    );
-    opacity: 0.95;
   }
 
   .detail-meta {

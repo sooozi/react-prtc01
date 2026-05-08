@@ -10,7 +10,6 @@ $_mypage-gap-md: 0.75rem;
   align-items: center;
 }
 
-/* 바깥 여백·폭은 게시글 상세(post-detail-page)와 동일 */
 .mypage-page {
   width: 100%;
   max-width: 800px;
@@ -67,7 +66,6 @@ $_mypage-gap-md: 0.75rem;
   }
 }
 
-/* 프로필 소카드 — 가벼운 면 (게시글 상세의 본문 카드와 구분) */
 .mypage-profile-grid {
   display: grid;
   gap: 1rem;
@@ -88,7 +86,7 @@ $_mypage-gap-md: 0.75rem;
 }
 
 .mypage-card {
-  background: var(--color-bg-subtle);
+  background: var(--color-card);
   border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 1.2rem 1.35rem;
@@ -101,7 +99,6 @@ $_mypage-gap-md: 0.75rem;
   }
 }
 
-/* 내가 쓴 글 영역만 상세 카드 느낌(강조) */
 .mypage-card--posts {
   background: var(--color-card);
   border: 1px solid var(--color-card-border);

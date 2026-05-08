@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "@/pages/Home";
 import About from "@/pages/about/About";
-import UserList from "@/pages/user/List";
-import UserDetail from "@/pages/user/Detail";
+import UserList from "@/pages/user/list/List";
+import UserDetail from "@/pages/user/detail/Detail";
 import List from "@/pages/post/List";
 import Detail from "@/pages/post/Detail";
 import Write from "@/pages/post/Write";
 import Update from "@/pages/post/Update";
-import MyPage from "@/pages/user/MyPage";
+import MyPage from "@/pages/user/my-page/MyPage";
 import Schedule from "@/pages/schedule/Schedule";
 import Forbidden from "@/pages/errors/Forbidden";
 import NotFound from "@/pages/errors/NotFound";
