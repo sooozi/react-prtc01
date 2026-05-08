@@ -435,7 +435,7 @@
   @extend %month-calendar__title-chip-trigger;
 
   @include bp.below(bp.$sm) {
-    padding: 0.46rem 0.62rem;
+    padding: 0.4rem 0.62rem;
   }
 }
 
@@ -443,7 +443,7 @@
   @extend %month-calendar__title-chip-trigger;
 
   @include bp.below(bp.$sm) {
-    padding: 0.46rem 0.62rem;
+    padding: 0.4rem 0.62rem;
   }
 }
 

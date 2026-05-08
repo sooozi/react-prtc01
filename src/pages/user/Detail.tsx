@@ -1,19 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { selectUserDetail, type UserItem } from "@/api/user";
 import { Badge, Button, LoadingState } from "@/components";
 import "@/pages/post/Detail.scss";
 import "@/pages/user/Detail.scss";
-
-/** 목 데이터용 — userId 기준으로 안정적인 가입일 문자열 (데모 표시) */
-function demoJoinedLabel(userId: string): string {
-  let h = 0;
-  for (let i = 0; i < userId.length; i += 1) h = (h * 31 + userId.charCodeAt(i)) >>> 0;
-  const y = 2019 + (h % 6);
-  const m = 1 + ((h >> 3) % 12);
-  const d = 1 + ((h >> 7) % 28);
-  return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-}
 
 export default function UserDetail() {
   const navigate = useNavigate();
@@ -57,11 +47,6 @@ export default function UserDetail() {
       cancelled = true;
     };
   }, [userId, invalidId]);
-
-  const joinedLabel = useMemo(
-    () => (user ? demoJoinedLabel(user.userId) : ""),
-    [user]
-  );
 
   const showLoading = loading && !invalidId;
   const displayError = invalidId ? "사용자 아이디가 필요합니다." : error;
@@ -130,12 +115,6 @@ export default function UserDetail() {
                 <div className="user-detail-spec__row">
                   <dt>직급</dt>
                   <dd>{user.userJbgdNm}</dd>
-                </div>
-                <div className="user-detail-spec__row">
-                  <dt>가입일</dt>
-                  <dd>
-                    {joinedLabel} <span className="user-detail-spec__hint">(데모)</span>
-                  </dd>
                 </div>
               </dl>
             </div>
