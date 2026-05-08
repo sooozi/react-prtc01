@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import clsx from "clsx";
 import {
   addMonths,
@@ -54,36 +54,6 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
 
   // 오늘 날짜가 있는 달인지 확인
   const isViewingTodayMonth = today.getFullYear() === y && today.getMonth() === m;
-
-  // 월·연도 팝오버: Esc / 바깥 클릭 시 닫기
-  useEffect(() => {
-    if (!isMonthPopoverOpen && !isYearPopoverOpen) return;
-
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        setIsMonthPopoverOpen(false);
-        setIsYearPopoverOpen(false);
-      }
-    }
-
-    function handlePointerDown(e: PointerEvent) {
-      const t = e.target as Node | null;
-      if (!t) return;
-      if (yearBtnRef.current?.contains(t)) return;
-      if (yearPopoverRef.current?.contains(t)) return;
-      if (titleBtnRef.current?.contains(t)) return;
-      if (monthPopoverRef.current?.contains(t)) return;
-      setIsMonthPopoverOpen(false);
-      setIsYearPopoverOpen(false);
-    }
-
-    window.addEventListener("keydown", handleKeyDown); // Esc 키 누르면 팝오버 닫기
-    window.addEventListener("pointerdown", handlePointerDown, { passive: true }); // 팝오버 외 영역 클릭 시 팝오버 닫기
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown); // Esc 키 누르면 팝오버 닫기
-      window.removeEventListener("pointerdown", handlePointerDown); // 팝오버 외 영역 클릭 시 팝오버 닫기
-    };
-  }, [isMonthPopoverOpen, isYearPopoverOpen]);
 
   return (
     <div className="month-calendar">
@@ -165,6 +135,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
             popoverRef={yearPopoverRef}
             popoverId="month-calendar-year-picker"
             isOpen={isYearPopoverOpen}
+            onDismiss={() => setIsYearPopoverOpen(false)}
             onTriggerClick={() => {
               setIsMonthPopoverOpen(false);
               setIsYearPopoverOpen((prev) => !prev);
@@ -175,11 +146,11 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
           >
             {yearOptions.map((yearNum) => (
               <CalendarPopoverOption
-                key={yearNum}
-                selected={y === yearNum}
+                key={yearNum} // 연도 번호
+                selected={y === yearNum} // 선택된 연도인지 확인
                 onSelect={() => {
                   onMonthChange(new Date(yearNum, m, 1));
-                  setIsYearPopoverOpen(false);
+                  setIsYearPopoverOpen(false); // 연도 팝오버 닫기
                 }}
               >
                 {yearNum}년
@@ -193,6 +164,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
             popoverRef={monthPopoverRef}
             popoverId="month-calendar-month-picker"
             isOpen={isMonthPopoverOpen}
+            onDismiss={() => setIsMonthPopoverOpen(false)}
             onTriggerClick={() => {
               setIsYearPopoverOpen(false);
               setIsMonthPopoverOpen((prev) => !prev);
@@ -206,11 +178,11 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
           >
             {MONTH_NUMS.map((num) => (
               <CalendarPopoverOption
-                key={num}
-                selected={m === num - 1}
+                key={num} // 월 번호
+                selected={m === num - 1} // 선택된 월인지 확인
                 onSelect={() => {
                   onMonthChange(new Date(y, num - 1, 1));
-                  setIsMonthPopoverOpen(false);
+                  setIsMonthPopoverOpen(false); // 월 팝오버 닫기
                 }}
               >
                 {num}월

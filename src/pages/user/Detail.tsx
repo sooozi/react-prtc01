@@ -80,7 +80,7 @@ export default function UserDetail() {
         </Button>
       </div>
 
-      <div className="post-detail-card">
+      <div className="post-detail-card user-detail">
         {showLoading ? (
           <LoadingState message="불러오는 중..." variant="compact" />
         ) : showErrorSection ? (
@@ -95,13 +95,14 @@ export default function UserDetail() {
           </div>
         ) : user ? (
           <>
-            <div className="detail-meta">
-              <span className="detail-id">{user.userId}</span>
-              <span className="detail-author">{user.userSe}</span>
-              <span className="detail-date">{user.userJbgdNm}</span>
+            <div className="user-detail-hero">
+              <div className="detail-meta">
+                <span className="detail-id">{user.userId}</span>
+                <span className="detail-author">{user.userSe}</span>
+                <span className="detail-date">{user.userJbgdNm}</span>
+              </div>
+              <h2 className="detail-title">{user.userFlnm}</h2>
             </div>
-
-            <h2 className="detail-title">{user.userFlnm}</h2>
 
             <p className="user-detail-lead">
               <strong>{user.userFlnm}</strong>님은 <strong>{user.userJbgdNm}</strong> 직급의{" "}
@@ -111,50 +112,48 @@ export default function UserDetail() {
                 : " 등록된 이메일이 없어 메일 연락은 불가합니다."}
             </p>
 
-            <h3 className="user-detail-subheading">상세 정보</h3>
-            <dl className="user-detail-spec">
-              <div className="user-detail-spec__row">
-                <dt>아이디</dt>
-                <dd>{user.userId}</dd>
-              </div>
-              <div className="user-detail-spec__row">
-                <dt>이름</dt>
-                <dd>{user.userFlnm}</dd>
-              </div>
-              <div className="user-detail-spec__row">
-                <dt>회원 구분</dt>
-                <dd>{user.userSe}</dd>
-              </div>
-              <div className="user-detail-spec__row">
-                <dt>직급</dt>
-                <dd>{user.userJbgdNm}</dd>
-              </div>
-              <div className="user-detail-spec__row">
-                <dt>가입일</dt>
-                <dd>{joinedLabel} <span className="user-detail-spec__hint">(데모)</span></dd>
-              </div>
-            </dl>
-
-            <h3 className="user-detail-subheading">연락처</h3>
-            <div className="user-detail-contact detail-content">
-              {user.eml ? (
-                <>
-                  이메일{" "}
-                  <a className="user-detail-mailto" href={`mailto:${user.eml}`}>
-                    {user.eml}
-                  </a>
-                </>
-              ) : (
-                "등록된 이메일이 없습니다."
-              )}
+            <div className="user-detail-spec-wrap">
+              <h3 className="user-detail-subheading">상세 정보</h3>
+              <dl className="user-detail-spec">
+                <div className="user-detail-spec__row">
+                  <dt>아이디</dt>
+                  <dd>{user.userId}</dd>
+                </div>
+                <div className="user-detail-spec__row">
+                  <dt>이름</dt>
+                  <dd>{user.userFlnm}</dd>
+                </div>
+                <div className="user-detail-spec__row">
+                  <dt>회원 구분</dt>
+                  <dd>{user.userSe}</dd>
+                </div>
+                <div className="user-detail-spec__row">
+                  <dt>직급</dt>
+                  <dd>{user.userJbgdNm}</dd>
+                </div>
+                <div className="user-detail-spec__row">
+                  <dt>가입일</dt>
+                  <dd>
+                    {joinedLabel} <span className="user-detail-spec__hint">(데모)</span>
+                  </dd>
+                </div>
+              </dl>
             </div>
 
-            <div className="user-detail-aside">
-              <p className="user-detail-aside__title">안내</p>
-              <p className="user-detail-aside__text">
-                표시되는 사용자 정보는 연습용 목(mock) 데이터입니다. 실제 서비스에서는 인사·권한
-                시스템과 연동된 필드가 노출됩니다.
-              </p>
+            <div className="user-detail-contact-block">
+              <h3 className="user-detail-subheading user-detail-subheading--after-spec">연락처</h3>
+              <div className="user-detail-contact">
+                {user.eml ? (
+                  <div className="user-detail-contact__row">
+                    <span className="user-detail-contact__label">이메일</span>
+                    <a className="user-detail-mailto" href={`mailto:${user.eml}`}>
+                      {user.eml}
+                    </a>
+                  </div>
+                ) : (
+                  <p className="user-detail-contact__empty">등록된 이메일이 없습니다.</p>
+                )}
+              </div>
             </div>
           </>
         ) : null}
