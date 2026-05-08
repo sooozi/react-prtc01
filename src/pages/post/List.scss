@@ -5,8 +5,6 @@
   @extend %page-container;
 }
 
-/* 상단 타이틀: 사용자 목록과 동일 — `common.scss`의 `.list-page-head`만 사용 */
-
 .board-write-btn-container {
   display: flex;
   flex-direction: column;
@@ -20,7 +18,7 @@
 .board-search-panel {
   margin-bottom: 0;
 
-  /* 모바일: 검색(필드+버튼)을 목록과 분리된 한 구역으로 */
+  
   @include bp.below(bp.$md) {
     padding: 1rem 1rem 1.05rem;
     border-radius: 16px;
@@ -184,7 +182,6 @@
   }
 }
 
-/* 검색 패널 밖 · 목록(`board-page__list`) 바로 위 — 모바일에서 게시물 영역과 한 덩어리로 읽히게 */
 .board-write-btn-block--list-adjacent {
   @include bp.below(bp.$md) {
     margin-top: 0;
@@ -203,7 +200,7 @@
 
   @include bp.below(bp.$md) {
     margin-top: 0;
-    // padding: 0.75rem 0.65rem 1rem;
+    
     overflow: visible;
     background: none;
     border: none;
@@ -245,7 +242,6 @@
 
 @include table-base(".board-page");
 
-/* 고정 레이아웃: 정렬·내용 길이에 따라 열 너비가 흔들리지 않음 */
 .board-page .board-page__table-desktop {
   table-layout: fixed;
   width: 100%;

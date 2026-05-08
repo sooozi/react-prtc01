@@ -4,66 +4,71 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.75rem;
-  margin-top: 2.5rem;
-  padding: 1.25rem 0;
+  gap: 0.5rem;
+  margin-top: 1.75rem;
+  padding: 0.75rem 0;
 
   @include bp.below(bp.$md) {
-    gap: 0.5rem;
-    margin-top: 1.5rem;
-    padding: 1rem 0;
+    gap: 0.4rem;
+    margin-top: 1.25rem;
+    padding: 0.6rem 0;
   }
 }
 
-// 페이지 이동 버튼
 .page-move-btn {
-  width: 44px;
-  height: 44px;
-  display: flex;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--color-card);
   color: var(--color-text-secondary);
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px var(--color-shadow-sm);
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease,
+    color 0.15s ease;
+  box-shadow: 0 1px 3px var(--color-shadow-sm);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 
   @include bp.below(bp.$md) {
-    width: 38px;
-    height: 38px;
-    font-size: 1rem;
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
   }
 
   &:hover:not(:disabled) {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
-    color: #ffffff;
-    border-color: transparent;
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 20px var(--color-primary-shadow);
+    background: color-mix(in srgb, var(--color-primary-muted) 55%, var(--color-card));
+    border-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+    color: var(--color-primary);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(-1px) scale(1.02);
+    transform: translateY(0) scale(0.98);
   }
 
   &:disabled,
   &.disabled {
-    opacity: 0.35;
+    opacity: 0.42;
     cursor: not-allowed;
     background: var(--color-bg-subtle);
+    border-color: color-mix(in srgb, var(--color-border) 65%, transparent);
+    box-shadow: none;
   }
 }
 
-// 페이지 번호 표시
 .page-numbers {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0 1rem;
+  gap: 0.35rem;
+  padding: 0 0.4rem;
 }
 
 .page-current {
@@ -72,19 +77,21 @@
   color: var(--color-primary);
 }
 
-// 현재 페이지 입력 필드 (페이지 번호 직접 입력)
 .page-current-input {
-  width: 2.5rem;
-  font-size: 1rem;
+  width: 2.2rem;
+  height: 34px;
+  box-sizing: border-box;
+  font-size: 0.9rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-text-heading);
   text-align: center;
   border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 0.35rem 0.25rem;
+  border-radius: 10px;
+  padding: 0 0.25rem;
   background: var(--color-card);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
+  font-variant-numeric: tabular-nums;
 
   &:focus {
     border-color: var(--color-primary);
@@ -94,17 +101,21 @@
   &::placeholder {
     color: var(--color-text-muted);
   }
+
+  @include bp.below(bp.$md) {
+    height: 32px;
+  }
 }
 
 .page-divider {
-  font-size: 1rem;
-  font-weight: 400;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--color-text-muted);
-  margin: 0 0.25rem;
+  margin: 0 0.1rem;
 }
 
 .page-total {
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
   color: var(--color-text-muted);
 }

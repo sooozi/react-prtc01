@@ -8,9 +8,9 @@
   border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
   background: var(--color-card);
   box-shadow:
-    0 1px 0 rgb(255 255 255 / 0.65) inset,
-    0 24px 48px -20px color-mix(in srgb, var(--color-primary) 12%, rgb(15 23 42 / 0.08)),
-    0 8px 24px rgb(15 23 42 / 0.05);
+    0 1px 0 color-mix(in srgb, var(--color-static-white) 65%, transparent) inset,
+    0 24px 48px -20px color-mix(in srgb, var(--color-primary) 12%, color-mix(in srgb, var(--color-static-black) 8%, transparent)),
+    0 8px 24px color-mix(in srgb, var(--color-static-black) 5%, transparent);
 
   @include bp.below(bp.$md) {
     padding: 1.5rem 1.2rem;
@@ -57,7 +57,7 @@
     padding: 0.28rem 0.65rem;
     border-radius: 999px;
     background: color-mix(in srgb, var(--color-bg-subtle) 88%, var(--color-card) 12%);
-    border: 1px solid rgb(15 23 42 / 0.06);
+    border: 1px solid color-mix(in srgb, var(--color-static-black) 6%, transparent);
   }
 
   .detail-title {
@@ -76,10 +76,10 @@
 }
 
 [data-theme="dark"] .post-detail-card.user-detail {
-  border-color: rgb(248 250 252 / 0.1);
+  border-color: color-mix(in srgb, var(--color-static-white) 10%, transparent);
   box-shadow:
-    0 1px 0 rgb(255 255 255 / 0.04) inset,
-    0 24px 48px -18px rgb(0 0 0 / 0.45);
+    0 1px 0 color-mix(in srgb, var(--color-static-white) 4%, transparent) inset,
+    0 24px 48px -18px color-mix(in srgb, var(--color-static-black) 45%, transparent);
 
   &::before {
     background: radial-gradient(
@@ -93,12 +93,12 @@
   .detail-author,
   .detail-date {
     background: color-mix(in srgb, var(--color-bg-subtle) 75%, transparent);
-    border-color: rgb(248 250 252 / 0.08);
+    border-color: color-mix(in srgb, var(--color-static-white) 8%, transparent);
   }
 
   .detail-title {
     color: var(--color-text-heading);
-    border-bottom-color: rgb(248 250 252 / 0.1);
+    border-bottom-color: color-mix(in srgb, var(--color-static-white) 10%, transparent);
   }
 }
 
@@ -148,7 +148,7 @@
     color-mix(in srgb, var(--color-card) 92%, var(--color-bg-subtle) 8%) 100%
   );
   border: 1px solid color-mix(in srgb, var(--color-border) 45%, transparent);
-  box-shadow: 0 1px 0 rgb(255 255 255 / 0.45) inset;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-static-white) 45%, transparent) inset;
 
   @include bp.below(bp.$sm) {
     padding: 1rem 1rem 0.25rem;
@@ -161,8 +161,8 @@
     color-mix(in srgb, var(--color-bg-subtle) 90%, var(--color-primary-muted) 10%) 0%,
     color-mix(in srgb, var(--color-card) 85%, var(--color-bg-subtle) 15%) 100%
   );
-  border-color: rgb(248 250 252 / 0.08);
-  box-shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset;
+  border-color: color-mix(in srgb, var(--color-static-white) 8%, transparent);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-static-white) 4%, transparent) inset;
 }
 
 .user-detail-spec {
@@ -257,8 +257,8 @@
 }
 
 [data-theme="dark"] .user-detail-contact__row {
-  border-color: color-mix(in srgb, var(--color-primary) 22%, rgb(248 250 252 / 0.1));
-  box-shadow: 0 2px 12px rgb(0 0 0 / 0.2);
+  border-color: color-mix(in srgb, var(--color-primary) 22%, color-mix(in srgb, var(--color-static-white) 10%, transparent));
+  box-shadow: 0 2px 12px color-mix(in srgb, var(--color-static-black) 20%, transparent);
 }
 
 .user-detail-contact__label {
@@ -310,7 +310,7 @@
   border-radius: 14px;
   border: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
   background: color-mix(in srgb, var(--color-bg-subtle) 96%, var(--color-card) 4%);
-  box-shadow: 0 1px 0 rgb(255 255 255 / 0.35) inset;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-static-white) 35%, transparent) inset;
 
   @include bp.below(bp.$sm) {
     padding: 1rem 1.1rem;
@@ -319,8 +319,8 @@
 
 [data-theme="dark"] .user-detail-aside {
   background: color-mix(in srgb, var(--color-bg-subtle) 92%, var(--color-card) 8%);
-  border-color: rgb(248 250 252 / 0.1);
-  box-shadow: 0 1px 0 rgb(255 255 255 / 0.05) inset;
+  border-color: color-mix(in srgb, var(--color-static-white) 10%, transparent);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-static-white) 5%, transparent) inset;
 }
 
 .user-detail-aside__title {

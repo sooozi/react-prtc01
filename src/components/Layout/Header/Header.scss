@@ -17,7 +17,6 @@
   }
 }
 
-// 헤더 블러/반투명 배경
 .header__bg {
   position: absolute;
   inset: 0;
@@ -42,7 +41,6 @@
   align-items: center;
 }
 
-// 모바일: 메뉴 딤이 로고보다 위에 오도록 (형제 간 z-index)
 @include bp.below(bp.$md) {
   .logo {
     position: relative;
@@ -55,7 +53,6 @@
   }
 }
 
-// 모바일: 햄버거 버튼 (768px 미만에서만 표시)
 .nav-toggle {
   display: flex;
   flex-direction: column;
@@ -137,7 +134,6 @@
   width: 18px;
 }
 
-// 네비게이션 링크
 .nav-links {
   display: flex;
   align-items: center;
@@ -329,7 +325,6 @@
   }
 }
 
-// 드로어 본문 리스트 (멜론式: 구분선 + 아이콘 행)
 .nav-links__section-label {
   margin: 0;
   display: block;
@@ -412,7 +407,6 @@
   }
 }
 
-// 모바일 드로어 배경 딤 (클릭 시 메뉴 닫기)
 .nav-overlay {
   display: none;
 
@@ -425,7 +419,7 @@
     border: none;
     border-radius: 0;
     cursor: pointer;
-    // layout-main(z-index:10) 등 위에 두고, 드로어보다는 아래
+    
     z-index: 15;
     opacity: 0;
     visibility: hidden;
@@ -519,7 +513,7 @@
     }
   }
 
-  // Sign Up (포인트 컬러)
+  
   &.accent {
     font-weight: 600;
 
@@ -542,7 +536,7 @@
     }
   }
 
-  // 로그인됨 (데스크톱 툴팁 — 프로필 링크)
+  
   &.is-logged-in {
     position: relative;
     color: var(--color-text-secondary);
@@ -574,7 +568,7 @@
     }
   }
 
-  // 로그아웃 버튼 (링크처럼 보이게)
+  
   &.logout-btn {
     background: none;
     border: none;
@@ -597,7 +591,6 @@
   }
 }
 
-// 모바일 드로어: 헤더 아래 리스트 행 (카드형 제거 → 풀폭 + 하단 구분선)
 @include bp.below(bp.$md) {
   .nav-links__list .nav-link--drawer,
   .nav-links__list button.btn.nav-link--drawer.logout-btn {

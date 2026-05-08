@@ -10,7 +10,7 @@
   transition: padding-top 0.3s ease;
 
   @include bp.below(bp.$md) {
-    padding-top: 64px; // 모바일 헤더 높이에 맞춤
+    padding-top: 64px; 
   }
 
   &.layout-container--header-hidden {

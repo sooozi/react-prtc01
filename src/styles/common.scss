@@ -1,7 +1,4 @@
-// ========================================
-// 프로젝트 공통 스타일 (폰트, 테마 변수, 플레이스홀더, 유틸)
-// 테마는 CSS 변수(--color-*) 기준 → 페이지·컴포넌트에서 @use
-// ========================================
+
 
 @use "@/styles/breakpoints" as bp;
 
@@ -15,9 +12,6 @@ $border-color: var(--color-border);
 $error-color: var(--color-error);
 $error-dark: var(--color-error-dark);
 
-// ========================================
-// 공통 배경 그라데이션
-// ========================================
 %base-container {
   min-height: 100vh;
   background: var(--color-bg-body);
@@ -27,9 +21,6 @@ $error-dark: var(--color-error-dark);
   overflow: hidden;
 }
 
-// ========================================
-// 배경 장식 (Layout에서 사용)
-// ========================================
 %bg-decoration-base {
   position: absolute;
   border-radius: 50%;
@@ -54,9 +45,6 @@ $error-dark: var(--color-error-dark);
   background: radial-gradient(circle, var(--decoration-secondary) 0%, transparent 70%);
 }
 
-// ========================================
-// 로고 스타일
-// ========================================
 .logo {
   display: flex;
   align-items: center;
@@ -86,9 +74,6 @@ $error-dark: var(--color-error-dark);
   color: var(--color-text-heading);
 }
 
-// ========================================
-// 그라데이션 텍스트
-// ========================================
 .gradient-text {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   -webkit-background-clip: text;
@@ -103,9 +88,6 @@ $error-dark: var(--color-error-dark);
   }
 }
 
-// ========================================
-// A11y 유틸
-// ========================================
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -118,9 +100,6 @@ $error-dark: var(--color-error-dark);
   border: 0;
 }
 
-// ========================================
-// 섹션 타이틀
-// ========================================
 .section-title {
   text-align: center;
   font-size: clamp(1.5rem, 2.2vw, 1.85rem);
@@ -131,9 +110,6 @@ $error-dark: var(--color-error-dark);
   margin-bottom: 2rem;
 }
 
-// ========================================
-// 카드 스타일
-// ========================================
 %card-base {
   background: var(--color-card);
   border-radius: 16px;
@@ -148,9 +124,6 @@ $error-dark: var(--color-error-dark);
   }
 }
 
-// ========================================
-// 폼 요소 (auth 페이지용)
-// ========================================
 .form-group {
   display: flex;
   flex-direction: column;
@@ -192,10 +165,10 @@ $error-dark: var(--color-error-dark);
 
   &.error {
     border-color: var(--color-error);
-    background: rgba(248, 113, 113, 0.08);
+    background: var(--color-error-bg);
 
     &:focus {
-      box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.15);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-error) 22%, transparent);
     }
   }
 }
@@ -208,18 +181,12 @@ textarea.input {
   line-height: 1.55;
 }
 
-[data-theme="light"] .input.error {
-  background: #fef2f2;
-}
-
-// 다크모드: input 배경·글자색 확실히 적용 (입력값이 보이도록, 흰 배경 방지)
 [data-theme="dark"] .input {
   background-color: var(--color-input-bg) !important;
   color: var(--color-text) !important;
   -webkit-text-fill-color: var(--color-text) !important;
 }
 
-// 다크모드: 포커스 시에도 흰 배경으로 바뀌지 않도록 고정 (브라우저 기본 스타일 우선 덮어씀)
 [data-theme="dark"] .input:focus,
 [data-theme="dark"] .input:focus-visible {
   background-color: var(--color-input-focus-bg) !important;
@@ -227,7 +194,6 @@ textarea.input {
   -webkit-text-fill-color: var(--color-text) !important;
 }
 
-// 다크모드: 브라우저 자동완성(autofill)이 흰/노란 배경으로 덮는 것 방지
 [data-theme="dark"] .input:-webkit-autofill,
 [data-theme="dark"] .input:-webkit-autofill:hover,
 [data-theme="dark"] .input:-webkit-autofill:focus {
@@ -241,9 +207,6 @@ textarea.input {
   color: var(--color-error);
 }
 
-// ========================================
-// 에러/빈 상태 블록 (목록 페이지 공통)
-// ========================================
 %error-state-base {
   display: flex;
   flex-direction: column;
@@ -262,9 +225,6 @@ textarea.input {
   gap: 1rem;
 }
 
-// ========================================
-// 페이지 컨테이너 (목록/검색/About 등)
-// ========================================
 %page-container {
   max-width: 1200px;
   padding: 2rem;
@@ -276,11 +236,6 @@ textarea.input {
   }
 }
 
-// ========================================
-// 목록형 페이지 상단 (게시판·사용자 목록 등)
-// — Write/로그인 등 다른 화면의 .title 과 구분하려면 페이지 루트가 아니라
-//   이 블록 클래스(.list-page-head)만 마크업에 붙이면 됨
-// ========================================
 .list-page-head {
   text-align: center;
   margin-bottom: 2.5rem;
@@ -319,9 +274,6 @@ textarea.input {
   }
 }
 
-// ========================================
-// 테이블 카드 래퍼 (목록/검색 공통)
-// ========================================
 %table-card-base {
   background: var(--color-card);
   border-radius: 16px;
@@ -330,7 +282,6 @@ textarea.input {
   border: 1px solid var(--color-card-border);
 }
 
-/** 좁은 화면에서 카드 래퍼 숨김 — 모바일에서 별도 카드 목록과 겹치지 않게 */
 @mixin table-card-mobile-bare {
   @include bp.below(bp.$md) {
     overflow: visible;
@@ -340,9 +291,6 @@ textarea.input {
   }
 }
 
-// ========================================
-// 테이블 공통 (목록/검색 페이지)
-// ========================================
 @mixin table-base($prefix) {
   #{$prefix} .table {
     width: 100%;

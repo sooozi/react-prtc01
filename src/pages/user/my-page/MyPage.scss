@@ -1,7 +1,7 @@
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
 
-$_mypage-dark-row-line: rgba(248, 250, 252, 0.1);
+$_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, transparent);
 $_mypage-gap-md: 0.75rem;
 
 @mixin mypage-flex-between {
@@ -55,7 +55,7 @@ $_mypage-gap-md: 0.75rem;
   display: inline-block;
   padding: 0.75rem 1.5rem;
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-text-on-primary);
   border-radius: 14px;
   font-weight: 600;
   text-decoration: none;
@@ -166,8 +166,8 @@ $_mypage-gap-md: 0.75rem;
 }
 
 .mypage-posts-empty--error {
-  color: var(--color-danger, #dc2626);
-  background: color-mix(in srgb, var(--color-danger, #dc2626) 8%, transparent);
+  color: var(--color-error-dark);
+  background: color-mix(in srgb, var(--color-error) 8%, transparent);
   border-radius: 12px;
 }
 
@@ -306,6 +306,6 @@ $_mypage-gap-md: 0.75rem;
   }
 
   .mypage-posts-count {
-    border-color: rgba(248, 250, 252, 0.12);
+    border-color: color-mix(in srgb, var(--color-text-on-primary) 12%, transparent);
   }
 }

@@ -1,4 +1,4 @@
-/* 테이블 `<th>` 안에 넣는 라벨 + 정렬 힌트 아이콘 (페이지 무관) */
+
 .table-sort-th {
   display: inline-flex;
   align-items: center;
@@ -33,7 +33,6 @@
   opacity: 0.42;
 }
 
-/* 활성 열: primary 타일 없이 헤더 톤에 맞는 살짝 진한 아이콘만 */
 .table-sort-th__icon--active {
   color: var(--color-text-secondary);
   opacity: 0.88;

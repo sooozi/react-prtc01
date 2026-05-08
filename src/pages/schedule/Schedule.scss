@@ -13,7 +13,6 @@
   }
 }
 
-/* 달력 + 일정 입력: 한 덩어리의 워크스페이스 (이중 카드 느낌 제거) */
 .schedule-workspace {
   display: grid;
   grid-template-columns: 1fr minmax(min(100%, 260px), 340px);
@@ -23,7 +22,7 @@
   border-radius: clamp(18px, 2.5vw, 22px);
   background-color: var(--color-card);
   box-shadow:
-    0 1px 0 color-mix(in srgb, var(--color-card) 50%, white),
+    0 1px 0 color-mix(in srgb, var(--color-card) 50%, var(--color-static-white)),
     0 22px 50px -16px color-mix(in srgb, var(--color-shadow-card) 92%, var(--color-primary) 8%),
     0 8px 24px var(--color-shadow-sm);
   overflow: hidden;
@@ -66,6 +65,6 @@
 [data-theme="dark"] .schedule-workspace {
   box-shadow:
     0 1px 0 color-mix(in srgb, var(--color-card) 20%, transparent),
-    0 24px 48px rgba(0, 0, 0, 0.4),
-    0 10px 24px rgba(0, 0, 0, 0.22);
+    0 24px 48px color-mix(in srgb, var(--color-static-black) 40%, transparent),
+    0 10px 24px color-mix(in srgb, var(--color-static-black) 22%, transparent);
 }

@@ -16,7 +16,7 @@
     radial-gradient(ellipse 120% 85% at 100% 0%, color-mix(in srgb, var(--color-primary) 1%, transparent), transparent 52%),
     radial-gradient(ellipse 90% 70% at 0% 100%, color-mix(in srgb, var(--color-primary) 3.5%, transparent), transparent 48%);
   box-shadow:
-    0 1px 0 color-mix(in srgb, var(--color-card) 40%, white),
+    0 1px 0 color-mix(in srgb, var(--color-card) 40%, var(--color-static-white)),
     0 20px 48px -12px color-mix(in srgb, var(--color-shadow-card) 95%, var(--color-primary) 5%),
     0 8px 24px var(--color-shadow-sm);
 
@@ -86,14 +86,13 @@
   color: var(--color-text-secondary);
 }
 
-/* 달력 월 칩 바(`month-calendar__month-bar`)와 질감 맞춤 */
 .schedule-side-panel__chip-well {
   padding: 0.48rem 0;
 }
 
 [data-theme="dark"] .schedule-side-panel__chip-well {
   background: var(--color-bg-subtle);
-  box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.22);
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--color-static-black) 22%, transparent);
 }
 
 .schedule-side-panel__chips {
@@ -271,11 +270,10 @@
 
 [data-theme="dark"] .schedule-side-panel__chip:has(.schedule-side-panel__chip-input:checked) {
   box-shadow:
-    0 10px 28px rgba(0, 0, 0, 0.35),
-    0 2px 8px rgba(0, 0, 0, 0.2);
+    0 10px 28px color-mix(in srgb, var(--color-static-black) 35%, transparent),
+    0 2px 8px color-mix(in srgb, var(--color-static-black) 20%, transparent);
 }
 
-/* ── 일정 페이지: 워크스페이스 안에서는 패널 카드 이중 테두리 제거 ── */
 .schedule-workspace .schedule-side-panel {
   flex: 1;
   display: flex;

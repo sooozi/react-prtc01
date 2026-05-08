@@ -5,24 +5,24 @@
   --pc-avatar: 2.25rem;
   --pc-avatar-reply: 2rem;
   --pc-gap: 0.75rem;
-  /* 부모 아바타 세로 스레드 위치 (아바타 중심) */
+  
   --pc-rail-x: calc(var(--pc-avatar) / 2);
-  /* 본문 열 시작 = 부모 아바타 + 간격 (답글 아바타 왼쪽과 맞춤) */
+  
   --pc-main-offset: calc(var(--pc-avatar) + var(--pc-gap));
   --pc-connector-w: calc(var(--pc-main-offset) - var(--pc-rail-x));
-  /* 가로 끝이 답글 아바타 왼쪽에서 살짝 떨어지도록 (참고 UI ~4–8px) */
+  
   --pc-hook-gap: 0.375rem;
   --pc-reply-pt: 0.55rem;
   --pc-thread-bridge: 0.5rem;
-  /* 1px 고정 — devicePixelRatio 에서 1.5px 이 겹치면 두 줄처럼 보임 */
+  
   --pc-thread-w: 1px;
-  --pc-thread-color: color-mix(in srgb, var(--color-border) 18%, #e0e0e0 82%);
-  /* 본문·첨부와 구분되는 댓글 전용 면 (detail-meta·인디고 톤과 맞춤) */
+  --pc-thread-color: color-mix(in srgb, var(--color-border) 18%, var(--color-text-muted) 82%);
+  
   --pc-well-bg: color-mix(in srgb, var(--color-bg-subtle) 88%, var(--color-primary-muted) 12%);
   --pc-composer-bg: var(--color-card);
 
   margin-top: 2.25rem;
-  /* 카드 안에서는 폭 100%, 웰 내부는 좌우 여백으로 테두리·배경과 간격 */
+  
   padding: 1.35rem 1.1rem;
   width: 100%;
   box-sizing: border-box;
@@ -37,7 +37,6 @@
   box-shadow: 0 1px 3px var(--color-shadow-sm);
 }
 
-/* 상단: 입력 카드 + 등록 */
 .post-comment-section__composer-card {
   margin-bottom: 0;
   border-radius: 12px;
@@ -78,8 +77,8 @@
   align-items: center;
   justify-content: flex-end;
   padding: 0.55rem 0.75rem 0.65rem;
-  // border-top: 1px solid var(--color-border-light);
-  // background: color-mix(in srgb, var(--color-card) 55%, var(--color-bg-subtle));
+  
+  
 }
 
 .post-comment-section__footnote {
@@ -92,7 +91,6 @@
   background: color-mix(in srgb, var(--color-card) 40%, var(--color-bg-subtle));
 }
 
-/* 카드 상단: 댓글 제목·개수 + 정렬 */
 .post-comment-section__page-head {
   display: flex;
   align-items: center;
@@ -168,7 +166,6 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M2 3.5L5 6.5L8 3.5' stroke='%2394a3b8' stroke-width='1.25' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
-/* 댓글 목록 */
 .post-comment-section__list {
   margin: 0;
   padding: 0.35rem 0 0;
@@ -191,7 +188,6 @@
   }
 }
 
-/* 부모 + 답글 묶음 — 세로 레일이 부모 아바타 중심부터 이어지도록 */
 .post-comment-section__root-thread {
   position: relative;
 }
@@ -216,7 +212,6 @@
   align-items: flex-start;
 }
 
-/* 답글: 꺾임은 SVG(connector), 세로는 root-thread::before */
 .post-comment-section__replies {
   position: relative;
   z-index: 1;
@@ -233,7 +228,6 @@
   padding-top: var(--pc-reply-pt);
 }
 
-/* 마지막 답글: 세로 레일만 꺾임 아래에서 끊기 (배경으로 덮음) */
 .post-comment-section__reply--last::after {
   content: "";
   position: absolute;
@@ -372,7 +366,6 @@
   color: var(--color-text-muted);
 }
 
-/* 모바일: 가로 여유 확보(웰 살짝 확장 + 아바타·스레드 간격 축소) */
 @include bp.below(bp.$md) {
   .post-comment-section {
     margin-top: 1.5rem;

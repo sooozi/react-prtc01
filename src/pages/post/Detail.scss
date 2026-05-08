@@ -32,7 +32,7 @@
   box-shadow: 0 4px 25px var(--color-shadow-card), 0 1px 3px var(--color-shadow-sm);
   border: 1px solid var(--color-card-border);
   margin-bottom: 2rem;
-  /* 카드 overflow:hidden은 내부 포인터/드래그 순서 변경과 충돌할 수 있음 */
+  
   overflow: visible;
 
   @include bp.below(bp.$md) {

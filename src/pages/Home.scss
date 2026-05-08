@@ -82,7 +82,7 @@
     text-align: left;
   }
 
-  /* 히어로 배지: 살짝 떠 있는 느낌 */
+  
   > .badge {
     display: inline-block;
     animation: hero-badge-float 3.5s ease-in-out infinite;
@@ -357,9 +357,6 @@
   color: var(--color-text-muted);
 }
 
-// ========================================
-// 사이트맵(링크 그리드)
-// ========================================
 .links-section {
   position: relative;
   z-index: 10;
