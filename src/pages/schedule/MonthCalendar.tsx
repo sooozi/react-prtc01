@@ -7,6 +7,7 @@ import {
   startOfMonth,
   type CalendarWeekStart,
 } from "./calendarUtils";
+import { CalendarPickerPopover, CalendarPopoverOption } from "./CalendarPickerPopover";
 import "./MonthCalendar.scss";
 
 // 그리드 열 순서는 weekStart 에 맞출 것 — 월 시작 / 일 시작
@@ -14,7 +15,7 @@ const WEEKDAYS_ORDER: Record<CalendarWeekStart, readonly string[]> = {
   monday: ["월", "화", "수", "목", "금", "토", "일"],
   sunday: ["일", "월", "화", "수", "목", "금", "토"],
 };
-// 월 번호
+
 const MONTH_NUMS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
 // 부모에서 넘기는 값
@@ -25,9 +26,12 @@ type Props = {
 
 export default function MonthCalendar({ month, onMonthChange }: Props) {
   const [weekStart, setWeekStart] = useState<CalendarWeekStart>("monday");
-  const [isMonthPopoverOpen, setIsMonthPopoverOpen] = useState(false);
-  const titleBtnRef = useRef<HTMLButtonElement | null>(null); // 타이틀 버튼 참조
-  const monthPopoverRef = useRef<HTMLDivElement | null>(null); // 팝오버 참조
+  const [isMonthPopoverOpen, setIsMonthPopoverOpen] = useState(false); // 월 선택 팝오버 열려있는지 확인
+  const [isYearPopoverOpen, setIsYearPopoverOpen] = useState(false); // 연도 선택 팝오버 열려있는지 확인
+  const yearBtnRef = useRef<HTMLButtonElement | null>(null); // 연도 트리거 버튼
+  const titleBtnRef = useRef<HTMLButtonElement | null>(null); // 월 트리거 버튼
+  const monthPopoverRef = useRef<HTMLDivElement | null>(null); // 월 팝오버
+  const yearPopoverRef = useRef<HTMLDivElement | null>(null); // 연도 팝오버
 
   const monthStart = useMemo(() => startOfMonth(month), [month]); // 지금 보는 달의 1일
   const y = monthStart.getFullYear(); // 년
@@ -44,6 +48,12 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
   const yearLabel = `${y}년`;
   const monthLabel = `${m + 1}월`;
 
+  // 보고 있는 해를 중심으로 앞뒤 범위
+  const yearOptions = useMemo(() => {
+    const span = 10;
+    return Array.from({ length: span * 2 + 1 }, (_, i) => y - span + i);
+  }, [y]);
+
   // 오늘 날짜
   const today = useMemo(() => {
     const n = new Date();
@@ -53,20 +63,26 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
   // 오늘 날짜가 있는 달인지 확인
   const isViewingTodayMonth = today.getFullYear() === y && today.getMonth() === m;
 
-  // 월 선택 팝오버 닫기
+  // 월·연도 팝오버: Esc / 바깥 클릭 시 닫기
   useEffect(() => {
-    if (!isMonthPopoverOpen) return; // 팝오버가 열려있지 않으면 리턴
+    if (!isMonthPopoverOpen && !isYearPopoverOpen) return;
 
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setIsMonthPopoverOpen(false); // Esc 키 누르면 팝오버 닫기
+      if (e.key === "Escape") {
+        setIsMonthPopoverOpen(false);
+        setIsYearPopoverOpen(false);
+      }
     }
 
     function handlePointerDown(e: PointerEvent) {
       const t = e.target as Node | null;
-      if (!t) return; // 타겟이 없으면 리턴
-      if (titleBtnRef.current?.contains(t)) return; // 타이틀 버튼이 타겟을 포함하고 있으면 리턴
-      if (monthPopoverRef.current?.contains(t)) return; // 팝오버가 타겟을 포함하고 있으면 리턴
-      setIsMonthPopoverOpen(false); // 팝오버 닫기
+      if (!t) return;
+      if (yearBtnRef.current?.contains(t)) return;
+      if (yearPopoverRef.current?.contains(t)) return;
+      if (titleBtnRef.current?.contains(t)) return;
+      if (monthPopoverRef.current?.contains(t)) return;
+      setIsMonthPopoverOpen(false);
+      setIsYearPopoverOpen(false);
     }
 
     window.addEventListener("keydown", handleKeyDown); // Esc 키 누르면 팝오버 닫기
@@ -75,7 +91,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
       window.removeEventListener("keydown", handleKeyDown); // Esc 키 누르면 팝오버 닫기
       window.removeEventListener("pointerdown", handlePointerDown); // 팝오버 외 영역 클릭 시 팝오버 닫기
     };
-  }, [isMonthPopoverOpen]);
+  }, [isMonthPopoverOpen, isYearPopoverOpen]);
 
   return (
     <div className="month-calendar" role="region" aria-label="월 달력">
@@ -137,6 +153,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
           onClick={() => {
             onMonthChange(startOfMonth(new Date()));
             setIsMonthPopoverOpen(false);
+            setIsYearPopoverOpen(false);
           }}
           aria-pressed={isViewingTodayMonth}
           aria-label="오늘 날짜가 있는 달로 이동"
@@ -149,7 +166,11 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
         <button
           type="button"
           className="month-calendar__round-nav"
-          onClick={() => onMonthChange(addMonths(monthStart, -1))}
+          onClick={() => {
+            onMonthChange(addMonths(monthStart, -1));
+            setIsMonthPopoverOpen(false);
+            setIsYearPopoverOpen(false);
+          }}
           aria-label="이전 달"
         >
           <span className="month-calendar__round-nav-icon" aria-hidden>
@@ -157,57 +178,79 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
           </span>
         </button>
         <h2 className="month-calendar__title">
-          <span className="month-calendar__title-year" aria-hidden>{yearLabel}</span>
-          <button
-            type="button"
-            ref={titleBtnRef}
-            className="month-calendar__title-trigger"
-            aria-haspopup="listbox"
-            aria-expanded={isMonthPopoverOpen}
-            aria-controls="month-calendar-month-picker"
-            onClick={() => setIsMonthPopoverOpen((prev) => !prev)}
+          <CalendarPickerPopover
+            buttonRef={yearBtnRef}
+            popoverRef={yearPopoverRef}
+            popoverId="month-calendar-year-picker"
+            isOpen={isYearPopoverOpen}
+            onTriggerClick={() => {
+              setIsMonthPopoverOpen(false);
+              setIsYearPopoverOpen((prev) => !prev);
+            }}
+            triggerClassName="month-calendar__title-year-trigger"
+            triggerAriaLabel={`연도 선택, 현재 ${yearLabel}`}
+            popoverAriaLabel="연도 선택"
+            popoverExtraClassName="month-calendar__year-popover"
+            triggerDisplay={
+              <span className="month-calendar__title-year" aria-hidden>
+                {yearLabel}
+              </span>
+            }
           >
-            <span className="month-calendar__title-text" aria-hidden>
-              <span className="month-calendar__title-month">{monthLabel}</span>
-            </span>
-            <span
-              className={clsx("month-calendar__title-caret", {
-                "month-calendar__title-caret--open": isMonthPopoverOpen,
-              })}
-              aria-hidden
-            />
-          </button>
+            {yearOptions.map((yearNum) => (
+              <CalendarPopoverOption
+                key={yearNum}
+                selected={y === yearNum}
+                onSelect={() => {
+                  onMonthChange(new Date(yearNum, m, 1));
+                  setIsYearPopoverOpen(false);
+                }}
+              >
+                {yearNum}년
+              </CalendarPopoverOption>
+            ))}
+          </CalendarPickerPopover>
 
-          {/* 월 선택 팝오버 */}
-          <div
-            id="month-calendar-month-picker"
-            ref={monthPopoverRef}
-            className="month-calendar__month-popover"
-            role="listbox"
-            aria-label="월 선택"
-            hidden={!isMonthPopoverOpen}
+          <CalendarPickerPopover
+            buttonRef={titleBtnRef}
+            popoverRef={monthPopoverRef}
+            popoverId="month-calendar-month-picker"
+            isOpen={isMonthPopoverOpen}
+            onTriggerClick={() => {
+              setIsYearPopoverOpen(false);
+              setIsMonthPopoverOpen((prev) => !prev);
+            }}
+            triggerClassName="month-calendar__title-trigger"
+            triggerAriaLabel={`월 선택, 현재 ${monthLabel}`}
+            popoverAriaLabel="월 선택"
+            triggerDisplay={
+              <span className="month-calendar__title-text" aria-hidden>
+                <span className="month-calendar__title-month">{monthLabel}</span>
+              </span>
+            }
           >
             {MONTH_NUMS.map((num) => (
-              <button
+              <CalendarPopoverOption
                 key={num}
-                type="button"
-                className="month-calendar__month-option"
-                role="option"
-                aria-selected={m === num - 1}
-                onClick={() => {
+                selected={m === num - 1}
+                onSelect={() => {
                   onMonthChange(new Date(y, num - 1, 1));
                   setIsMonthPopoverOpen(false);
                 }}
               >
                 {num}월
-              </button>
+              </CalendarPopoverOption>
             ))}
-          </div>
+          </CalendarPickerPopover>
         </h2>
         <button
           type="button"
           className="month-calendar__round-nav"
-          onClick={() => onMonthChange(addMonths(monthStart, 1))}
+          onClick={() => {
+            onMonthChange(addMonths(monthStart, 1));
+            setIsMonthPopoverOpen(false);
+            setIsYearPopoverOpen(false);
+          }}
           aria-label="다음 달"
         >
           <span className="month-calendar__round-nav-icon" aria-hidden>
