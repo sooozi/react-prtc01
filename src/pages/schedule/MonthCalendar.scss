@@ -88,7 +88,6 @@
     box-shadow 0.2s ease;
 }
 
-/* 일 시작: nav·썸과 동일 145° 계열, 옅게 깔아 통일감 */
 .month-calendar__week-start-switch-track--sunday {
   border-color: color-mix(in srgb, var(--color-border) 52%, var(--color-primary) 26%);
   background: linear-gradient(
@@ -118,7 +117,6 @@
     0 1px 4px rgb(0 0 0 / 0.28);
 }
 
-/* 반쪽 너비 pill — 월/일 썸 색 구분 */
 .month-calendar__week-start-switch-thumb {
   position: absolute;
   z-index: 0;
@@ -193,7 +191,6 @@
   }
 }
 
-// 원형 블루 + 흰 화살표 (이전/다음 달)
 .month-calendar__round-nav {
   flex-shrink: 0;
   width: 1.5rem;
@@ -247,7 +244,6 @@
   }
 }
 
-/* 오늘 — 스위치와 동일 높이·타이포 + 옅은 바이올렛 포인트 */
 .month-calendar__today-btn {
   flex-shrink: 0;
   appearance: none;
@@ -368,7 +364,6 @@
   }
 }
 
-/* 토스류 — 흰 면 · 옅은 테두리 · 중립 호버 (연도/월 칩 공통) */
 %month-calendar__title-chip-trigger {
   --mc-chip-bd: #e8eaed;
   --mc-chip-bd-hover: #dcdfe5;
@@ -579,6 +574,8 @@
   min-height: 5rem;
   padding: 0.5rem;
   display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
   align-items: flex-start;
   justify-content: flex-start;
   background: var(--color-card);
@@ -593,6 +590,22 @@
   }
 }
 
+.month-calendar__holiday-name {
+  display: block;
+  max-width: 100%;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--color-error) 82%, var(--color-text-heading));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @include bp.below(bp.$sm) {
+    font-size: 0.58rem;
+  }
+}
+
 .month-calendar__cell--muted {
   color: var(--color-text-muted);
   background: color-mix(in srgb, var(--color-input-bg) 65%, var(--color-card));
@@ -600,6 +613,10 @@
   .month-calendar__day-num {
     font-weight: 500;
     opacity: 0.72;
+  }
+
+  .month-calendar__holiday-name {
+    opacity: 0.7;
   }
 }
 
@@ -629,6 +646,11 @@
 }
 
 .month-calendar__day-num--sun {
+  color: color-mix(in srgb, var(--color-error) 82%, var(--color-text-heading));
+  font-weight: 700;
+}
+
+.month-calendar__day-num--holiday {
   color: color-mix(in srgb, var(--color-error) 82%, var(--color-text-heading));
   font-weight: 700;
 }

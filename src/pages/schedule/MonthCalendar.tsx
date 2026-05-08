@@ -8,6 +8,7 @@ import {
   type CalendarWeekStart,
 } from "./calendarUtils";
 import { CalendarPickerPopover, CalendarPopoverOption } from "./CalendarPickerPopover";
+import { getKrHolidayName } from "@/lib/holidayUtils";
 import "./MonthCalendar.scss";
 
 // 그리드 열 순서는 weekStart 에 맞출 것 — 월 시작 / 일 시작
@@ -221,6 +222,11 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
           const dow = cell.date.getDay();
           const isSaturday = dow === 6;
           const isSunday = dow === 0;
+          const holidayName = getKrHolidayName(
+            cell.date.getFullYear(),
+            cell.date.getMonth() + 1,
+            cell.date.getDate()
+          );
           return (
             <div
               key={key}
@@ -233,10 +239,17 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
                 className={clsx("month-calendar__day-num", {
                   "month-calendar__day-num--sat": isSaturday,
                   "month-calendar__day-num--sun": isSunday,
+                  "month-calendar__day-num--holiday": Boolean(holidayName),
                 })}
+                title={holidayName ?? undefined}
               >
                 {cell.date.getDate()}
               </span>
+              {holidayName && cell.inCurrentMonth ? (
+                <span className="month-calendar__holiday-name" aria-label={`공휴일: ${holidayName}`}>
+                  {holidayName}
+                </span>
+              ) : null}
             </div>
           );
         })}
