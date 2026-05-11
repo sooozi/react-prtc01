@@ -18,7 +18,7 @@
   font-size: v.fs(body-sm);
   font-weight: v.fw(medium);
   border-radius: v.rad(p12);
-  @include sh.login-toast;
+  @include sh.md-float;
   animation: login-toast-in 0.3s ease;
 }
 

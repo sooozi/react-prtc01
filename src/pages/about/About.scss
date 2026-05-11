@@ -94,7 +94,7 @@
   background: var(--color-card);
   border-radius: v.rad(p12);
   padding: v.space(md) v.space(xl);
-  @include sh.about-stat-soft;
+  @include sh.surface-inverse-rest;
   border: 1px solid var(--color-border);
   flex-shrink: 0;
 }

@@ -215,7 +215,7 @@
   touch-action: manipulation;
 
   &:hover {
-    @include sh.primary-nav-hover;
+    @include sh.primary-rest;
     filter: brightness(1.05);
   }
 
@@ -273,7 +273,7 @@
       color,
       box-shadow,
     ),
-    compact,
+    micro,
     default
   );
   -webkit-tap-highlight-color: transparent;

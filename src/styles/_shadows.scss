@@ -47,10 +47,6 @@
   box-shadow: 0 1px 4px var(--color-primary-shadow);
 }
 
-@mixin primary-nav-hover {
-  @include primary-rest;
-}
-
 @mixin primary-nav-focus {
   box-shadow:
     0 1px 4px var(--color-primary-shadow),
@@ -242,10 +238,6 @@
   box-shadow: 0 6px 20px var(--color-shadow-md);
 }
 
-@mixin login-toast {
-  @include md-float;
-}
-
 /* ---- 에러 페이지 ---- */
 @mixin error-sheet-primary {
   box-shadow: 0 10px 40px color-mix(in srgb, var(--color-primary) 15%, transparent);
@@ -261,10 +253,6 @@
 }
 
 /* ---- About / Home ---- */
-@mixin about-stat-soft {
-  @include surface-inverse-rest;
-}
-
 @mixin about-cta-glow {
   box-shadow: 0 10px 40px var(--color-primary-shadow);
 }
