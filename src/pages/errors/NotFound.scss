@@ -1,23 +1,13 @@
 @use "@/styles/common.scss" as *;
-@use "@/styles/breakpoints" as bp;
+@use "@/styles/variables" as v;
+@use "./error-page-shared" as err;
 
 .not-found-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-
-  @include bp.below(bp.$md) {
-    padding: 1rem;
-  }
+  @extend %viewport-centered-pad;
 }
 
 .not-found-content {
-  text-align: center;
-  padding: 2rem;
-  position: relative;
-  z-index: 10;
-  max-width: 500px;
+  @include err.error-page-inner;
 }
 
 .not-found-icon-wrap {
@@ -32,33 +22,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto v.space(2xl);
   box-shadow: 0 10px 40px color-mix(in srgb, var(--color-primary) 15%, transparent);
 }
 
 .not-found-icon {
-  font-size: 3.5rem;
+  font-size: v.fs(t350);
 }
 
 .not-found-code {
   display: inline-block;
-  padding: 0.4rem 1rem;
+  padding: v.space(r040) v.space(lg);
   background: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg-subtle));
   border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: v.fs(t085);
+  font-weight: v.fw(semibold);
   color: var(--color-primary);
-  margin-bottom: 1rem;
+  margin-bottom: v.space(lg);
   border: 1px solid color-mix(in srgb, var(--color-primary) 28%, var(--color-border));
   letter-spacing: 0.1em;
 }
 
 .not-found-title {
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  font-weight: 800;
-  line-height: 1.3;
-  margin-bottom: 1rem;
-  color: var(--color-text-heading);
+  @include err.error-page-title;
 }
 
 .not-found-accent {
@@ -66,21 +52,13 @@
 }
 
 .not-found-desc {
-  font-size: 1.05rem;
-  color: $text-secondary;
-  line-height: 1.8;
-  margin-bottom: 2rem;
+  @include err.error-page-description;
 }
 
 .not-found-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 2rem;
+  @include err.error-page-actions;
 }
 
 .not-found-hint {
-  font-size: 0.85rem;
-  color: $text-muted;
+  @include err.error-page-hint;
 }

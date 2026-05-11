@@ -29,3 +29,6 @@ dist-ssr
 # Generated CSS from SCSS (source is .scss only)
 src/**/*.css
 src/**/*.css.map
+
+# BackstopJS (로컬 비주얼 회귀 산출물)
+backstop_data/

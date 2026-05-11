@@ -1,5 +1,6 @@
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/variables" as v;
 
 .home-page {
   display: contents;
@@ -12,8 +13,8 @@
 
 [data-home-section] {
   transition:
-    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity #{v.dur(section)} #{v.ease(out-expo)},
+    transform #{v.dur(section)} #{v.ease(out-expo)};
 }
 
 [data-home-section].home-reveal--visible {
@@ -57,17 +58,17 @@
 .hero {
   position: relative;
   z-index: 10;
-  padding: clamp(2.5rem, 6vw, 5rem) 0 clamp(3rem, 8vw, 6rem);
+  padding: clamp(#{v.space(4xl)}, 6vw, #{v.space(r500)}) 0 clamp(#{v.space(5xl)}, 8vw, #{v.space(6xl)});
 }
 
 .hero-inner {
   display: grid;
   grid-template-columns: 1fr;
   align-items: center;
-  gap: clamp(2rem, 5vw, 3.5rem);
+  gap: clamp(#{v.space(3xl)}, 5vw, #{v.space(r350)});
   max-width: 1080px;
   margin: 0 auto;
-  padding: 0 0.5rem;
+  padding: 0 v.space(sm);
   animation: hero-fade-in 0.7s ease-out both;
 
   @include bp.above(bp.$lg) {
@@ -86,7 +87,14 @@
   > .badge {
     display: inline-block;
     animation: hero-badge-float 3.5s ease-in-out infinite;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    @include v.transition-channels(
+      (
+        transform,
+        box-shadow,
+      ),
+      moderate,
+      default
+    );
 
     &:hover {
       transform: translateY(-2px) scale(1.03);
@@ -96,9 +104,9 @@
 }
 
 .hero-title {
-  margin-bottom: 1.25rem;
-  font-size: clamp(2.25rem, 4.5vw + 0.5rem, 3.25rem);
-  font-weight: 800;
+  margin-bottom: v.space(xl);
+  font-size: clamp(v.fs(t225), 4.5vw + v.fs(t050), v.fs(t325));
+  font-weight: v.fw(extrabold);
   line-height: 1.18;
   letter-spacing: -0.03em;
   color: var(--color-text-heading);
@@ -110,11 +118,11 @@
 }
 
 .hero-description {
-  margin-bottom: 2rem;
+  margin-bottom: v.space(3xl);
   margin-left: auto;
   margin-right: auto;
   max-width: 36rem;
-  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  font-size: clamp(v.fs(base), 1.2vw, v.fs(lg));
   line-height: 1.75;
   letter-spacing: -0.01em;
   color: var(--color-text-secondary);
@@ -128,7 +136,7 @@
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem 1rem;
+  gap: v.space(md) v.space(lg);
   justify-content: center;
 
   @include bp.above(bp.$lg) {
@@ -137,11 +145,16 @@
 
   .btn {
     min-height: 52px;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
+    padding-left: v.space(2xl);
+    padding-right: v.space(2xl);
+    @include v.transition-channels(
+      (
+        transform,
+        box-shadow,
+      ),
+      normal,
+      default
+    );
     position: relative;
     overflow: hidden;
     transform: translateY(0);
@@ -165,7 +178,9 @@
       );
       transform: translateX(-30%) rotate(12deg);
       opacity: 0;
-      transition: opacity 0.2s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      transition:
+        opacity #{v.dur(normal)} #{v.ease(default)},
+        transform #{v.dur(reveal)} #{v.ease(out-expo)};
       pointer-events: none;
     }
 
@@ -190,23 +205,23 @@
 .features-section {
   position: relative;
   z-index: 10;
-  margin-left: -2rem;
-  margin-right: -2rem;
-  padding: clamp(3.5rem, 7vw, 5.75rem) 2rem;
+  margin-left: calc(-1 * v.space(3xl));
+  margin-right: calc(-1 * v.space(3xl));
+  padding: clamp(#{v.space(r425)}, 8.5vw, #{v.space(r675)}) #{v.space(3xl)};
   background: var(--color-bg-subtle);
   border-radius: 24px;
 
   @include bp.below(bp.$md) {
-    margin-left: -1rem;
-    margin-right: -1rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    margin-left: calc(-1 * v.space(lg));
+    margin-right: calc(-1 * v.space(lg));
+    padding-left: v.space(lg);
+    padding-right: v.space(lg);
     border-radius: 20px;
   }
 
   .section-title {
-    margin-bottom: 1.75rem;
-    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    margin-bottom: v.space(loft);
+    font-size: clamp(v.fs(2xl), 2.5vw, v.fs(t200));
     letter-spacing: -0.03em;
     animation: section-title-in 0.5s ease-out 0.15s both;
   }
@@ -218,7 +233,7 @@
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  gap: 1.25rem 1.5rem;
+  gap: v.space(xl) v.space(2xl);
   max-width: 1000px;
   margin: 0 auto;
 }
@@ -241,20 +256,20 @@
 .feature-card {
   @extend %card-base;
   text-align: left;
-  padding: 1.75rem 1.5rem;
+  padding: v.space(loft) v.space(2xl);
   min-height: 168px;
   display: flex;
   flex-direction: column;
   animation: card-fade-in 0.5s ease-out both;
   transition:
-    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.22s ease,
-    border-color 0.22s ease;
+    transform #{v.dur(snappy)} #{v.ease(out-expo)},
+    box-shadow #{v.dur(snappy)} #{v.ease(default)},
+    border-color #{v.dur(snappy)} #{v.ease(default)};
 
   @include bp.above(bp.$md) {
     text-align: center;
     align-items: center;
-    padding: 2rem 1.75rem;
+    padding: v.space(3xl) v.space(loft);
   }
 
   @for $i from 1 through 6 {
@@ -280,17 +295,17 @@
   justify-content: center;
   width: 3.25rem;
   height: 3.25rem;
-  margin-bottom: 1.125rem;
-  font-size: 1.5rem;
+  margin-bottom: v.space(input-inline);
+  font-size: v.fs(2xl);
   border-radius: 14px;
   background: var(--color-bg-subtle-2);
   border: 1px solid var(--color-border-light);
   flex-shrink: 0;
   transition:
-    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.3s ease,
-    border-color 0.25s ease,
-    background 0.25s ease;
+    transform #{v.dur(long)} #{v.ease(overshoot)},
+    box-shadow #{v.dur(medium)} #{v.ease(default)},
+    border-color #{v.dur(moderate)} #{v.ease(default)},
+    background #{v.dur(moderate)} #{v.ease(default)};
 
   @include bp.above(bp.$md) {
     margin-left: auto;
@@ -310,15 +325,15 @@
 }
 
 .feature-title {
-  margin-bottom: 0.5rem;
-  font-size: 1.125rem;
-  font-weight: 700;
+  margin-bottom: v.space(sm);
+  font-size: v.fs(lg);
+  font-weight: v.fw(bold);
   letter-spacing: -0.02em;
   color: var(--color-text-heading);
 }
 
 .feature-description {
-  font-size: 0.9375rem;
+  font-size: v.fs(t9375);
   line-height: 1.65;
   letter-spacing: -0.01em;
   color: var(--color-text-secondary);
@@ -327,25 +342,22 @@
 .tech-section {
   position: relative;
   z-index: 10;
-  padding: clamp(3rem, 6vw, 5rem) 0;
+  padding: clamp(#{v.space(5xl)}, 6vw, #{v.space(r500)}) 0;
 
   .section-title {
-    margin-bottom: 1.75rem;
-    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    margin-bottom: v.space(loft);
+    font-size: clamp(v.fs(2xl), 2.5vw, v.fs(t200));
     letter-spacing: -0.03em;
     animation: section-title-in 0.5s ease-out 0.2s both;
   }
 }
 
 .tech-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
+  @extend %tech-grid-base;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 0.65rem 0.75rem;
+  gap: v.space(r065) v.space(md);
   max-width: 100%;
   margin: 0 auto;
 
@@ -353,7 +365,7 @@
     flex-wrap: nowrap;
     justify-content: flex-start;
     overflow-x: auto;
-    padding-bottom: 0.5rem;
+    padding-bottom: v.space(sm);
     scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
 
@@ -366,16 +378,24 @@
 .tech-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1.1rem;
+  gap: v.space(sm);
+  padding: v.space(r065) v.space(table-y);
   border: 1px solid var(--color-border);
   border-radius: 999px;
-  font-size: 0.875rem;
+  font-size: v.fs(sm);
   background: var(--color-card);
   white-space: nowrap;
   flex-shrink: 0;
   scroll-snap-align: start;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  @include v.transition-channels(
+    (
+      transform,
+      box-shadow,
+      border-color,
+    ),
+    normal,
+    default
+  );
 
   &:hover {
     border-color: var(--color-primary);
@@ -385,33 +405,33 @@
 }
 
 .tech-name {
-  font-weight: 600;
+  font-weight: v.fw(semibold);
   color: var(--color-text);
 }
 
 .tech-desc {
-  font-size: 0.8rem;
+  font-size: v.fs(t080);
   color: var(--color-text-muted);
 }
 
 .links-section {
   position: relative;
   z-index: 10;
-  padding: clamp(3rem, 6vw, 5rem) 0 5rem;
+  padding: clamp(#{v.space(5xl)}, 6vw, #{v.space(r500)}) 0 #{v.space(r500)};
 
   .section-title {
-    margin-bottom: 0.5rem;
-    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    margin-bottom: v.space(sm);
+    font-size: clamp(v.fs(2xl), 2.5vw, v.fs(t200));
     letter-spacing: -0.03em;
     animation: section-title-in 0.5s ease-out 0.25s both;
   }
 }
 
 .links-section__subline {
-  margin: 0 auto 1.75rem;
+  margin: 0 auto v.space(loft);
   max-width: 36rem;
   text-align: center;
-  font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  font-size: clamp(v.fs(t9375), 1.2vw, v.fs(md));
   line-height: 1.55;
   color: var(--color-text-secondary);
   animation: section-title-in 0.5s ease-out 0.3s both;
@@ -423,7 +443,7 @@
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
-  gap: 0.875rem;
+  gap: v.space(input-block);
   max-width: 900px;
   margin: 0 auto;
 }
@@ -442,18 +462,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.625rem;
+  gap: v.space(r0625);
   min-height: 118px;
-  padding: 1.25rem 1rem;
+  padding: v.space(xl) v.space(lg);
   font-family: inherit;
   text-align: center;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.2s ease, color 0.2s ease;
+  transition:
+    transform #{v.dur(moderate)} #{v.ease(default)},
+    box-shadow #{v.dur(moderate)} #{v.ease(default)},
+    border-color #{v.dur(normal)} #{v.ease(default)},
+    color #{v.dur(normal)} #{v.ease(default)};
 
-  &:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 3px;
-  }
+  @include focus-ring-primary(3px);
 
   &:hover {
     border-color: var(--color-primary);
@@ -472,14 +493,14 @@
 }
 
 .link-icon {
-  font-size: 1.75rem;
+  font-size: v.fs(t175);
   line-height: 1;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform #{v.dur(emphasized)} #{v.ease(overshoot)};
 }
 
 .link-label {
-  font-size: 0.9375rem;
-  font-weight: 700;
+  font-size: v.fs(t9375);
+  font-weight: v.fw(bold);
   letter-spacing: -0.02em;
   color: inherit;
 }

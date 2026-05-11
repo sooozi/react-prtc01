@@ -1,4 +1,5 @@
 @use "@/styles/common.scss" as *;
+@use "@/styles/variables" as v;
 @use "@/styles/breakpoints" as bp;
 
 .schedule-page {
@@ -6,10 +7,10 @@
 }
 
 .schedule-layout {
-  margin-top: 1.25rem;
+  margin-top: v.space(xl);
 
   @include bp.below(bp.$md) {
-    margin-top: 1rem;
+    margin-top: v.space(lg);
   }
 }
 
@@ -34,14 +35,15 @@
 
 .schedule-workspace__calendar {
   min-width: 0;
-  padding: clamp(1rem, 2.2vw, 1.35rem) clamp(1rem, 2.5vw, 1.35rem) clamp(1.1rem, 2.2vw, 1.45rem);
+  padding: clamp(#{v.space(lg)}, 2.2vw, #{v.space(r135)}) clamp(#{v.space(lg)}, 2.5vw, #{v.space(r135)})
+    clamp(#{v.space(table-y)}, 2.2vw, #{v.space(r145)});
 
   @include bp.below(bp.$md) {
-    padding: 0.85rem 0.75rem 1rem;
+    padding: v.space(r085) v.space(md) v.space(lg);
   }
 
   @include bp.below(bp.$sm) {
-    padding: 0.75rem 0.55rem 0.95rem;
+    padding: v.space(md) v.space(r055) v.space(r095);
   }
 }
 

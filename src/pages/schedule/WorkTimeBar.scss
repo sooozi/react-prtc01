@@ -1,10 +1,12 @@
+@use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/variables" as v;
 
 .work-time-bar {
   width: 100%;
   max-width: 800px;
-  margin: 0 auto 1rem;
-  padding: 1.15rem 1.25rem 1.05rem;
+  margin: 0 auto v.space(lg);
+  padding: v.space(r115) v.space(xl) v.space(r105);
   border-radius: 16px;
   border: 1px solid color-mix(in srgb, var(--color-primary) 12%, var(--color-border));
   background: linear-gradient(
@@ -17,8 +19,8 @@
     0 6px 24px var(--color-shadow-card);
 
   @include bp.below(bp.$md) {
-    margin-bottom: 0.85rem;
-    padding: 1rem 0.9rem 0.95rem;
+    margin-bottom: v.space(r085);
+    padding: v.space(lg) v.space(r090) v.space(r095);
     border-radius: 14px;
   }
 }
@@ -33,24 +35,21 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: v.space(md);
   min-width: 0;
 }
 
 .work-time-bar__header--with-panel {
-  margin-bottom: 0.65rem;
+  margin-bottom: v.space(r065);
 }
 
 .work-time-bar__title {
   margin: 0;
-  font-size: 0.84rem;
-  font-weight: 700;
+  font-size: v.fs(t084);
+  font-weight: v.fw(bold);
   letter-spacing: -0.02em;
   color: var(--color-text-heading);
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  @include text-ellipsis-nowrap;
 }
 
 .work-time-bar__panel {
@@ -61,12 +60,12 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   grid-template-rows: auto auto;
-  column-gap: 0.75rem;
-  row-gap: 0.42rem;
+  column-gap: v.space(md);
+  row-gap: v.space(r042);
   align-items: start;
 
   @include bp.below(bp.$sm) {
-    column-gap: 0.5rem;
+    column-gap: v.space(sm);
   }
 }
 
@@ -77,8 +76,8 @@
 }
 
 .work-time-bar__field-label {
-  font-size: 0.74rem;
-  font-weight: 600;
+  font-size: v.fs(t074);
+  font-weight: v.fw(semibold);
   letter-spacing: -0.01em;
   color: color-mix(in srgb, var(--color-primary) 28%, var(--color-text-secondary));
   white-space: nowrap;
@@ -101,20 +100,25 @@
     cursor: pointer;
     min-height: 48px;
     min-width: 0;
-    padding-right: 0.35rem;
+    padding-right: v.space(r035);
     border: 1px solid color-mix(in srgb, var(--color-border) 85%, var(--color-primary));
-    transition:
-      border-color 0.2s ease,
-      box-shadow 0.2s ease;
+    @include v.transition-channels(
+      (
+        border-color,
+        box-shadow,
+      ),
+      normal,
+      default
+    );
 
     @include bp.below(bp.$md) {
       min-height: 40px;
-      padding-right: 0.28rem;
+      padding-right: v.space(r028);
     }
 
     @include bp.below(bp.$sm) {
       min-height: 36px;
-      padding-right: 0.2rem;
+      padding-right: v.space(r020);
     }
 
     &:focus-within {
@@ -131,19 +135,19 @@
     align-items: center;
     min-height: 48px;
     min-width: 0;
-    padding: 0.5rem 1.1rem;
+    padding: v.space(sm) v.space(table-y);
     border: 1.5px dashed color-mix(in srgb, var(--color-primary) 32%, var(--color-border));
     color: var(--color-text-heading);
 
     @include bp.below(bp.$md) {
       min-height: 42px;
-      padding: 0.38rem 0.75rem;
+      padding: v.space(r038) v.space(md);
       border-width: 1px;
     }
 
     @include bp.below(bp.$sm) {
       min-height: 36px;
-      padding: 0.28rem 0.55rem;
+      padding: v.space(r028) v.space(r055);
     }
   }
 }
@@ -154,22 +158,22 @@
   min-height: 48px;
   display: flex;
   align-items: center;
-  padding: 0.45rem 0.25rem 0.45rem 1.1rem;
+  padding: v.space(r045) v.space(xs) v.space(r045) v.space(table-y);
 
   @include bp.below(bp.$md) {
     min-height: 40px;
-    padding: 0.35rem 0.2rem 0.35rem 0.85rem;
+    padding: v.space(r035) v.space(r020) v.space(r035) v.space(r085);
   }
 
   @include bp.below(bp.$sm) {
     min-height: 36px;
-    padding: 0.28rem 0.15rem 0.28rem 0.65rem;
+    padding: v.space(r028) v.space(r015) v.space(r028) v.space(r065);
   }
 }
 
 .work-time-bar__time-display {
-  font-size: clamp(0.95rem, 3.5vw, 1.05rem);
-  font-weight: 700;
+  font-size: clamp(v.fs(t095), 3.5vw, v.fs(lead));
+  font-weight: v.fw(bold);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
   line-height: 1.2;
@@ -179,11 +183,11 @@
   user-select: none;
 
   @include bp.below(bp.$md) {
-    font-size: clamp(0.86rem, 3.2vw, 0.98rem);
+    font-size: clamp(v.fs(t086), 3.2vw, v.fs(t098));
   }
 
   @include bp.below(bp.$sm) {
-    font-size: clamp(0.78rem, 3vw, 0.9rem);
+    font-size: clamp(v.fs(t078), 3vw, v.fs(body-sm));
   }
 }
 
@@ -199,7 +203,7 @@
   border-radius: 9999px;
   opacity: 0;
   cursor: pointer;
-  font-size: 16px;
+  font-size: v.fs(base);
   -webkit-tap-highlight-color: transparent;
 
   &:focus {
@@ -225,7 +229,7 @@
   justify-content: center;
   width: 2.35rem;
   height: 2.35rem;
-  margin-right: 0.15rem;
+  margin-right: v.space(r015);
   border-radius: 50%;
   color: color-mix(in srgb, var(--color-primary) 55%, var(--color-text-muted));
   background: color-mix(in srgb, var(--color-primary-muted) 55%, transparent);
@@ -234,13 +238,13 @@
   @include bp.below(bp.$md) {
     width: 2rem;
     height: 2rem;
-    margin-right: 0.12rem;
+    margin-right: v.space(r012);
   }
 
   @include bp.below(bp.$sm) {
     width: 1.72rem;
     height: 1.72rem;
-    margin-right: 0.08rem;
+    margin-right: v.space(r008);
   }
 }
 
@@ -268,15 +272,15 @@
   width: 2.1rem;
   height: 2.1rem;
   border-radius: 50%;
-  font-size: 0.82rem;
-  font-weight: 700;
+  font-size: v.fs(t082);
+  font-weight: v.fw(bold);
   color: var(--color-primary);
   background: color-mix(in srgb, var(--color-primary-muted) 70%, transparent);
 
   @include bp.below(bp.$sm) {
     width: 1.85rem;
     height: 1.85rem;
-    font-size: 0.74rem;
+    font-size: v.fs(t074);
   }
 }
 
@@ -284,34 +288,34 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 0.45rem;
+  gap: v.space(r045);
   min-width: 0;
   width: 100%;
 
   @include bp.below(bp.$sm) {
-    gap: 0.3rem;
+    gap: v.space(r030);
   }
 }
 
 .work-time-bar__out-time {
   flex-shrink: 0;
-  font-size: clamp(0.95rem, 3.5vw, 1.05rem);
-  font-weight: 800;
+  font-size: clamp(v.fs(t095), 3.5vw, v.fs(lead));
+  font-weight: v.fw(extrabold);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
   line-height: 1.2;
   white-space: nowrap;
 
   @include bp.below(bp.$sm) {
-    font-size: clamp(0.82rem, 3.2vw, 0.95rem);
+    font-size: clamp(v.fs(t082), 3.2vw, v.fs(t095));
   }
 }
 
 .work-time-bar__next-badge {
   flex-shrink: 0;
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 0.2rem 0.5rem;
+  font-size: v.fs(t065);
+  font-weight: v.fw(bold);
+  padding: v.space(r020) v.space(sm);
   border-radius: 999px;
   letter-spacing: 0.04em;
   background: var(--color-primary-muted);
@@ -322,8 +326,8 @@
   display: block;
   min-width: 0;
   width: 100%;
-  font-size: clamp(0.78rem, 2.8vw, 0.88rem);
-  font-weight: 500;
+  font-size: clamp(v.fs(t078), 2.8vw, v.fs(t088));
+  font-weight: v.fw(medium);
   color: var(--color-text-muted);
   letter-spacing: -0.02em;
   line-height: 1.35;
@@ -332,22 +336,19 @@
   text-overflow: ellipsis;
 
   @include bp.below(bp.$sm) {
-    font-size: clamp(0.68rem, 2.5vw, 0.78rem);
+    font-size: clamp(v.fs(t068), 2.5vw, v.fs(t078));
   }
 }
 
 .work-time-bar__hint {
-  margin: 0.85rem 0 0;
-  padding-top: 0.75rem;
+  margin: v.space(r085) 0 0;
+  padding-top: v.space(md);
   border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
-  font-size: 0.72rem;
-  font-weight: 500;
+  font-size: v.fs(t072);
+  font-weight: v.fw(medium);
   color: var(--color-text-secondary);
   line-height: 1.5;
   letter-spacing: -0.01em;
 
-  strong {
-    font-weight: 700;
-    color: var(--color-text-heading);
-  }
+  @include prose-strong-heading;
 }

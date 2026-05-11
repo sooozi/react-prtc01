@@ -1,5 +1,6 @@
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/variables" as v;
 
 .search-page {
   @extend %page-container;
@@ -14,28 +15,28 @@
   }
 
   .error-title {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: v.fs(xl);
+    font-weight: v.fw(bold);
     color: var(--color-error-dark);
   }
 
   .error-message {
-    font-size: 0.95rem;
+    font-size: v.fs(t095);
     color: var(--color-text-secondary);
     text-align: center;
   }
 
   .retry-button {
-    margin-top: 1rem;
-    padding: 0.75rem 1.5rem;
+    margin-top: v.space(lg);
+    padding: v.space(md) v.space(2xl);
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
     color: var(--color-text-on-primary);
     border: none;
     border-radius: 10px;
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: v.fs(t095);
+    font-weight: v.fw(semibold);
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: transform #{v.dur(normal)} #{v.ease(default)};
 
     &:hover {
       transform: translateY(-2px);
@@ -47,11 +48,11 @@
   }
 
   .empty-icon {
-    font-size: 3rem;
+    font-size: v.fs(t300);
   }
 
   .empty-text {
-    font-size: 1rem;
+    font-size: v.fs(base);
     color: var(--color-text-muted);
   }
 
@@ -126,7 +127,7 @@
     @include bp.below(bp.$md) {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: v.space(md);
     }
   }
 
@@ -134,10 +135,15 @@
     background: var(--color-bg-subtle);
     border: 1px solid var(--color-border);
     border-radius: 14px;
-    padding: 1rem 1.1rem;
-    transition:
-      background 0.2s ease,
-      border-color 0.2s ease;
+    padding: v.space(lg) v.space(table-y);
+    @include v.transition-channels(
+      (
+        background,
+        border-color,
+      ),
+      normal,
+      default
+    );
 
     @include bp.below(bp.$md) {
       box-shadow: 0 4px 25px var(--color-shadow-card);
@@ -146,9 +152,9 @@
     &__head {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-      padding-bottom: 0.65rem;
+      gap: v.space(md);
+      margin-bottom: v.space(md);
+      padding-bottom: v.space(r065);
       border-bottom: 1px solid var(--color-border-light);
     }
 
@@ -156,11 +162,11 @@
       flex-shrink: 0;
       min-width: 2.25rem;
       text-align: center;
-      font-size: 0.8rem;
-      font-weight: 700;
+      font-size: v.fs(t080);
+      font-weight: v.fw(bold);
       color: var(--color-text-muted);
       background: var(--color-bg-subtle-2);
-      padding: 0.3rem 0.45rem;
+      padding: v.space(r030) v.space(r045);
       border-radius: 8px;
     }
 
@@ -174,11 +180,11 @@
       margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.55rem;
+      gap: v.space(r055);
 
       dd.search-user-card__name {
-        font-size: 0.95rem;
-        font-weight: 600;
+        font-size: v.fs(t095);
+        font-weight: v.fw(semibold);
         color: var(--color-text-heading);
         letter-spacing: -0.02em;
       }
@@ -187,22 +193,22 @@
     &__row {
       display: grid;
       grid-template-columns: 3.25rem 1fr;
-      gap: 0.5rem 0.75rem;
+      gap: v.space(sm) v.space(md);
       align-items: start;
 
       dt {
         margin: 0;
-        font-size: 0.72rem;
-        font-weight: 700;
+        font-size: v.fs(t072);
+        font-weight: v.fw(bold);
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--color-text-muted);
-        padding-top: 0.2rem;
+        padding-top: v.space(r020);
       }
 
       dd {
         margin: 0;
-        font-size: 0.9rem;
+        font-size: v.fs(body-sm);
         color: var(--color-text);
         line-height: 1.45;
         min-width: 0;
@@ -216,12 +222,12 @@
 
   .admin-badge {
     display: inline-block;
-    padding: 0.35rem 0.85rem;
+    padding: v.space(r035) v.space(r085);
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
     color: var(--color-text-on-primary);
     border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: v.fs(t080);
+    font-weight: v.fw(semibold);
     @include bp.below(bp.$md) {
       padding: 0;
       background: transparent;
@@ -231,12 +237,12 @@
 
   .user-badge {
     display: inline-block;
-    padding: 0.35rem 0.85rem;
+    padding: v.space(r035) v.space(r085);
     background: var(--color-bg-subtle);
     color: var(--color-text-secondary);
     border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: v.fs(t080);
+    font-weight: v.fw(medium);
     @include bp.below(bp.$md) {
       padding: 0;
     }

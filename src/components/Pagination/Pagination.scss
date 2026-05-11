@@ -1,17 +1,18 @@
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/variables" as v;
 
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 1.75rem;
-  padding: 0.75rem 0;
+  gap: v.space(sm);
+  margin-top: v.space(loft);
+  padding: v.space(md) 0;
 
   @include bp.below(bp.$md) {
-    gap: 0.4rem;
-    margin-top: 1.25rem;
-    padding: 0.6rem 0;
+    gap: v.space(r040);
+    margin-top: v.space(xl);
+    padding: v.space(r060) 0;
   }
 }
 
@@ -28,18 +29,23 @@
   border-radius: 50%;
   background: var(--color-card);
   color: var(--color-text-secondary);
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-size: v.fs(t095);
+  font-weight: v.fw(bold);
   line-height: 1;
   position: relative;
   top: 0.5px;
   cursor: pointer;
-  transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.15s ease,
-    color 0.15s ease;
+  @include v.transition-channels(
+    (
+      background-color,
+      border-color,
+      box-shadow,
+      transform,
+      color,
+    ),
+    micro,
+    default
+  );
   box-shadow: 0 1px 3px var(--color-shadow-md);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -53,7 +59,7 @@
   @include bp.below(bp.$md) {
     width: var(--pg-ctl-h-sm);
     height: var(--pg-ctl-h-sm);
-    font-size: 0.9rem;
+    font-size: v.fs(body-sm);
   }
 
   &:hover:not(:disabled) {
@@ -81,14 +87,14 @@
   grid-auto-flow: column;
   grid-auto-columns: max-content;
   align-items: center;
-  column-gap: 0.3rem;
-  padding: 0 0.35rem;
+  column-gap: v.space(r030);
+  padding: 0 v.space(r035);
   font-variant-numeric: tabular-nums;
 }
 
 .page-current {
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: v.fs(base);
+  font-weight: v.fw(bold);
   color: var(--color-primary);
 }
 
@@ -97,16 +103,23 @@
   height: var(--pg-ctl-h);
   box-sizing: border-box;
   font-family: inherit;
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: v.fs(body-sm);
+  font-weight: v.fw(bold);
   color: var(--color-text-heading);
   text-align: center;
   border: 1px solid color-mix(in srgb, var(--color-border) 85%, transparent);
   border-radius: 10px;
-  padding: 0 0.25rem;
+  padding: 0 v.space(xs);
   background: color-mix(in srgb, var(--color-primary-muted) 55%, var(--color-card));
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  @include v.transition-channels(
+    (
+      border-color,
+      box-shadow,
+    ),
+    normal,
+    default
+  );
   line-height: var(--pg-ctl-h);
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, var(--color-static-white) 45%, transparent),
@@ -161,8 +174,8 @@
   align-items: center;
   justify-content: center;
   font-family: inherit;
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: v.fs(body-sm);
+  font-weight: v.fw(bold);
   color: var(--color-text-muted);
   width: var(--pg-page-w);
   text-align: center;

@@ -1,0 +1,291 @@
+// ===============================================
+// _variables.scss : 색상 제외 디자인 토큰
+// (간격은 4px = 0.25rem 그리드, 기존 common.scss rem 사용과 정합)
+// ===============================================
+
+@use "sass:list";
+@use "sass:map";
+
+/* 트랜지션 · 모션 */
+$duration: (
+  instant: 0.12s,
+  compact: 0.14s,
+  micro: 0.15s,
+  fast: 0.16s,
+  quick: 0.18s,
+  normal: 0.2s,
+  snappy: 0.22s,
+  nudge: 0.24s,
+  moderate: 0.25s,
+  medium: 0.3s,
+  panel: 0.32s,
+  emphasized: 0.35s,
+  long: 0.4s,
+  reveal: 0.45s,
+  section: 0.6s,
+  entry: 0.7s,
+);
+
+$easing: (
+  default: ease,
+  in-out: ease-in-out,
+  out: ease-out,
+  out-expo: cubic-bezier(0.22, 1, 0.36, 1),
+  standard: cubic-bezier(0.4, 0, 0.2, 1),
+  overshoot: cubic-bezier(0.34, 1.56, 0.64, 1),
+);
+
+@function dur($key) {
+  $v: map.get($duration, $key);
+  @if $v == null {
+    @error "Unknown duration key: #{$key}";
+  }
+  @return $v;
+}
+
+@function ease($key) {
+  $v: map.get($easing, $key);
+  @if $v == null {
+    @error "Unknown easing key: #{$key}";
+  }
+  @return $v;
+}
+
+/// 속성마다 동일한 duration·easing (예: transform, box-shadow)
+@mixin transition-channels($props, $duration-key: normal, $easing-key: default) {
+  $segments: ();
+  @each $prop in $props {
+    $piece: #{$prop} #{dur($duration-key)} #{ease($easing-key)};
+    $segments: list.append($segments, $piece, comma);
+  }
+  transition: $segments;
+}
+
+/* 폰트 크기 */
+$font-sizes: (
+  xxs: 0.625rem,
+  xs: 0.75rem,
+  sm: 0.875rem,
+  md: 1.0625rem,
+  base: 1rem,
+  lg: 1.125rem,
+  xl: 1.25rem,
+  2xl: 1.5rem,
+  3xl: 1.85rem,
+  display-xs: 1.3rem,
+  lead: 1.05rem,
+  body-sm: 0.9rem,
+  /* 확장 스케일 (clamp·UI 라벨 등 리터럴 치환용) */
+  t050: 0.5rem,
+  t058: 0.58rem,
+  t060: 0.6rem,
+  t062: 0.62rem,
+  t065: 0.65rem,
+  t068: 0.68rem,
+  t070: 0.7rem,
+  t072: 0.72rem,
+  t074: 0.74rem,
+  t076: 0.76rem,
+  t078: 0.78rem,
+  t080: 0.8rem,
+  t082: 0.82rem,
+  t084: 0.84rem,
+  t085: 0.85rem,
+  t086: 0.86rem,
+  t088: 0.88rem,
+  t092: 0.92rem,
+  t095: 0.95rem,
+  t098: 0.98rem,
+  t108: 1.08rem,
+  t110: 1.1rem,
+  t115: 1.15rem,
+  t120: 1.2rem,
+  t122: 1.22rem,
+  t135: 1.35rem,
+  t1625: 1.625rem,
+  t170: 1.7rem,
+  t175: 1.75rem,
+  t180: 1.8rem,
+  t200: 2rem,
+  t2125: 2.125rem,
+  t225: 2.25rem,
+  t250: 2.5rem,
+  t300: 3rem,
+  t325: 3.25rem,
+  t350: 3.5rem,
+  t6875: 0.6875rem,
+  t8125: 0.8125rem,
+  t9375: 0.9375rem,
+  t96875: 0.96875rem,
+);
+
+/* 폰트 굵기 */
+$font-weights: (
+  regular: 400,
+  medium: 500,
+  semibold: 600,
+  bold: 700,
+  extrabold: 800,
+);
+
+/* 간격 (4px = 0.25rem 단위) + 레이아웃용 이름 키 */
+$spacing: (
+  xxs: 0.125rem,
+  xs: 0.25rem,
+  sm: 0.5rem,
+  md: 0.75rem,
+  lg: 1rem,
+  xl: 1.25rem,
+  loft: 1.75rem,
+  2xl: 1.5rem,
+  3xl: 2rem,
+  4xl: 2.5rem,
+  5xl: 3rem,
+  6xl: 4rem,
+  input-inline: 1.125rem,
+  input-block: 0.875rem,
+  input-min-height: 52px,
+  table-y: 1.1rem,
+  table-x: 1rem,
+  table-td-block: 1.5rem,
+  card-shadow-y: 2px,
+  card-shadow-blur: 12px,
+  card-hover-shadow-y: 1rem,
+  card-hover-shadow-blur: 36px,
+  px1: 1px,
+  px2: 2px,
+  px3: 3px,
+  px5: 5px,
+  px8: 8px,
+  px10: 10px,
+  px64: 64px,
+  r004: 0.04rem,
+  r005: 0.05rem,
+  r008: 0.08rem,
+  r010: 0.1rem,
+  r012: 0.12rem,
+  r015: 0.15rem,
+  r018: 0.18rem,
+  r020: 0.2rem,
+  r022: 0.22rem,
+  r028: 0.28rem,
+  r030: 0.3rem,
+  r032: 0.32rem,
+  r035: 0.35rem,
+  r0375: 0.375rem,
+  r038: 0.38rem,
+  r040: 0.4rem,
+  r042: 0.42rem,
+  r045: 0.45rem,
+  r048: 0.48rem,
+  r055: 0.55rem,
+  r058: 0.58rem,
+  r060: 0.6rem,
+  r062: 0.62rem,
+  r0625: 0.625rem,
+  r080: 0.8rem,
+  r065: 0.65rem,
+  r070: 0.7rem,
+  r072: 0.72rem,
+  r078: 0.78rem,
+  r082: 0.82rem,
+  r085: 0.85rem,
+  r090: 0.9rem,
+  r095: 0.95rem,
+  r105: 1.05rem,
+  r110: 1.1rem,
+  r115: 1.15rem,
+  r120: 1.2rem,
+  r135: 1.35rem,
+  r140: 1.4rem,
+  r145: 1.45rem,
+  r155: 1.55rem,
+  r1625: 1.625rem,
+  r165: 1.65rem,
+  r1875: 1.875rem,
+  r185: 1.85rem,
+  r225: 2.25rem,
+  r265: 2.65rem,
+  r275: 2.75rem,
+  r425: 4.25rem,
+  r350: 3.5rem,
+  r500: 5rem,
+  r525: 5.25rem,
+  r675: 6.75rem,
+);
+
+/* 모서리 반경 */
+$radius: (
+  xs: 0.25rem,
+  sm: 0.5rem,
+  md: 0.625rem,
+  lg: 0.75rem,
+  xl: 0.875rem,
+  2xl: 1rem,
+  3xl: 1.25rem,
+  4xl: 1.5rem,
+);
+
+/* 레이아웃 그리드·기준값 (서로 다른 관심사 분리) */
+$layout-grid-gap: 1.5rem;
+$layout-font-base: 1rem;
+$layout-base: 0.25rem;
+
+/* 테두리 방향 (믹스인·유틸에서 사용 예정) */
+$border-directions: (
+  all: null,
+  top: top,
+  right: right,
+  bottom: bottom,
+  left: left,
+  x: (
+    right,
+    left,
+  ),
+  y: (
+    top,
+    bottom,
+  ),
+);
+
+/* 말줄임 줄 수 */
+$ellipsis-types: (
+  single: 1,
+  line1: 1,
+  line2: 2,
+  line3: 3,
+  line4: 4,
+  line5: 5,
+);
+
+@function fs($key) {
+  $v: map.get($font-sizes, $key);
+  @if $v == null {
+    @error "Unknown font-size key: #{$key}";
+  }
+  @return $v;
+}
+
+@function fw($key) {
+  $v: map.get($font-weights, $key);
+  @if $v == null {
+    @error "Unknown font-weight key: #{$key}";
+  }
+  @return $v;
+}
+
+@function space($key) {
+  $v: map.get($spacing, $key);
+  @if $v == null {
+    @error "Unknown spacing key: #{$key}";
+  }
+  @return $v;
+}
+
+@function rad($key) {
+  $v: map.get($radius, $key);
+  @if $v == null {
+    @error "Unknown radius key: #{$key}";
+  }
+  @return $v;
+}

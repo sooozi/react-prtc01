@@ -1,12 +1,13 @@
+@use "@/styles/variables" as v;
 .badge {
   display: inline-block;
-  padding: 0.5rem 1rem;
+  padding: v.space(sm) v.space(lg);
   background: linear-gradient(135deg, var(--color-primary-muted) 0%, var(--color-secondary-muted) 100%);
   border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: v.fs(t070);
+  font-weight: v.fw(semibold);
   color: var(--color-primary);
-  margin-bottom: 1rem;
+  margin-bottom: v.space(lg);
   border: 1px solid color-mix(in srgb, var(--color-primary) 22%, transparent);
 }
 

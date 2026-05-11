@@ -1,18 +1,11 @@
 
-
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/variables" as v;
 @forward "@/styles/common.scss";
 
 %auth-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-
-  @include bp.below(bp.$md) {
-    padding: 1rem;
-  }
+  @extend %viewport-centered-pad;
 }
 
 %auth-card {
@@ -22,15 +15,15 @@
   border: 1px solid var(--color-border);
   border-radius: 20px;
   box-shadow: 0 12px 40px var(--color-shadow-md);
-  padding: 2.5rem;
-  padding-top: 2.65rem;
+  padding: v.space(4xl);
+  padding-top: v.space(r265);
   position: relative;
   z-index: 10;
   overflow: hidden;
 
   @include bp.below(bp.$md) {
-    padding: 1.5rem;
-    padding-top: 1.65rem;
+    padding: v.space(2xl);
+    padding-top: v.space(r165);
     border-radius: 20px;
 
     &::before {
@@ -41,17 +34,17 @@
 
 %auth-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: v.space(3xl);
 
   .title {
-    font-size: 1.75rem;
-    font-weight: 800;
+    font-size: v.fs(t175);
+    font-weight: v.fw(extrabold);
     color: var(--color-text-heading);
-    margin-bottom: 0.5rem;
+    margin-bottom: v.space(sm);
   }
 
   .subtitle {
-    font-size: 0.95rem;
+    font-size: v.fs(t095);
     color: var(--color-text-secondary);
   }
 }
@@ -64,7 +57,7 @@
 .auth-logo {
   @extend .logo;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: v.space(2xl);
 }
 
 .auth-logo .logo-icon {
@@ -79,7 +72,7 @@
   display: block;
 
   .input {
-    padding-right: 2.75rem;
+    padding-right: v.space(r275);
     color: var(--color-text);
     -webkit-text-fill-color: var(--color-text);
   }
@@ -93,21 +86,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.25rem;
+  padding: v.space(xs);
   border: none;
   background: none;
-  font-size: 1.15rem;
+  font-size: v.fs(t115);
   cursor: pointer;
   border-radius: 6px;
-  transition: background 0.2s ease;
+  transition: background #{v.dur(normal)} #{v.ease(default)};
 
   &:hover {
     background: var(--color-primary-muted);
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-  }
+  @include focus-ring-primary;
 }
 

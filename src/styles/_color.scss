@@ -1,9 +1,9 @@
-
+@use "variables" as v;
 
 :root {
   font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: v.fw(regular);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

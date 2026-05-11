@@ -1,3 +1,4 @@
+@use "@/styles/variables" as v;
 .tooltip-trigger {
   
   max-width: 100%;
@@ -6,10 +7,10 @@
 
 .tooltip-bubble {
   transform: translate(-50%, -100%);
-  margin-top: -8px;
-  padding: 0.5rem 0.75rem;
+  margin-top: calc(-1 * v.space(px8));
+  padding: v.space(sm) v.space(md);
   max-width: 320px;
-  font-size: 0.875rem;
+  font-size: v.fs(sm);
   line-height: 1.4;
   color: var(--color-toast-text);
   background: var(--color-toast-bg);

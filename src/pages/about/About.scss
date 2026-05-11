@@ -1,4 +1,5 @@
 @use "@/styles/common.scss" as *;
+@use "@/styles/variables" as v;
 
 .about-page {
   @extend %page-container;
@@ -7,19 +8,19 @@
 
 .hero-section {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: v.space(6xl);
 }
 
 .about-page .title {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 800;
+  font-size: clamp(v.fs(t200), 5vw, v.fs(t300));
+  font-weight: v.fw(extrabold);
   line-height: 1.2;
-  margin-bottom: 1.5rem;
+  margin-bottom: v.space(2xl);
   color: var(--color-text-heading);
 }
 
 .about-page .subtitle {
-  font-size: 1.1rem;
+  font-size: v.fs(t110);
   color: var(--color-text-secondary);
   line-height: 1.8;
   max-width: 640px;
@@ -28,96 +29,93 @@
 
 .mission-section {
   position: relative;
-  margin-bottom: 4rem;
+  margin-bottom: v.space(6xl);
 }
 
 .mission-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: v.space(2xl);
 }
 
 .mission-card {
   background: var(--color-card);
   border-radius: 16px;
-  padding: 2rem;
+  padding: v.space(3xl);
   box-shadow: 0 4px 20px var(--color-shadow-card);
   border: 1px solid var(--color-border);
   text-align: center;
 }
 
 .mission-icon {
-  font-size: 3rem;
+  font-size: v.fs(t300);
   display: block;
-  margin-bottom: 1rem;
+  margin-bottom: v.space(lg);
 }
 
 .mission-title {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: v.fs(xl);
+  font-weight: v.fw(bold);
   color: var(--color-text-heading);
-  margin-bottom: 0.75rem;
+  margin-bottom: v.space(md);
 }
 
 .mission-text {
-  font-size: 0.95rem;
+  font-size: v.fs(t095);
   color: var(--color-text-secondary);
   line-height: 1.7;
 }
 
 .about-page .tech-section {
-  margin-bottom: 4rem;
+  margin-bottom: v.space(6xl);
 }
 
 .about-page .section-title {
-  margin: 0 0 1.5rem;
-  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
-  font-weight: 800;
+  margin: 0 0 v.space(2xl);
+  font-size: clamp(v.fs(t135), 2.5vw, v.fs(t175));
+  font-weight: v.fw(extrabold);
   letter-spacing: -0.03em;
   text-align: center;
   color: var(--color-text-heading);
 }
 
 .tech-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
+  @extend %tech-grid-base;
   justify-content: center;
-  gap: 1rem;
+  gap: v.space(lg);
   flex-wrap: wrap;
 }
 
 .tech-card {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: v.space(sm);
   background: var(--color-card);
   border-radius: 12px;
-  padding: 0.75rem 1.25rem;
+  padding: v.space(md) v.space(xl);
   box-shadow: 0 2px 10px var(--color-shadow-sm);
   border: 1px solid var(--color-border);
   flex-shrink: 0;
 }
 
 .tech-icon {
-  font-size: 1.25rem;
+  font-size: v.fs(xl);
 }
 
 .about-page .tech-name {
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: v.fs(t095);
+  font-weight: v.fw(semibold);
   color: var(--color-text);
 }
 
 .scope-section {
-  margin-bottom: 4rem;
+  margin-bottom: v.space(6xl);
 }
 
 .scope-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  gap: v.space(2xl);
 }
 
 .scope-card {
@@ -133,8 +131,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
-  margin: 0 auto 1rem;
+  font-size: v.fs(t250);
+  margin: 0 auto v.space(lg);
 }
 
 [data-theme="dark"] .scope-icon {
@@ -146,57 +144,57 @@
 }
 
 .scope-title {
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: v.fs(t115);
+  font-weight: v.fw(bold);
   color: var(--color-text-heading);
-  margin-bottom: 0.25rem;
+  margin-bottom: v.space(xs);
 }
 
 .scope-tag {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
+  padding: v.space(xs) v.space(md);
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   color: var(--color-text-on-primary);
   border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
+  font-size: v.fs(xs);
+  font-weight: v.fw(semibold);
+  margin-bottom: v.space(md);
 }
 
 .scope-desc {
-  font-size: 0.9rem;
+  font-size: v.fs(body-sm);
   color: var(--color-text-secondary);
   line-height: 1.5;
 }
 
 .cta-section {
-  margin-bottom: 2rem;
+  margin-bottom: v.space(3xl);
 }
 
 .cta-card {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   border-radius: 20px;
-  padding: 3rem 2rem;
+  padding: v.space(5xl) v.space(3xl);
   text-align: center;
   box-shadow: 0 10px 40px var(--color-primary-shadow);
 }
 
 .cta-title {
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-size: v.fs(t175);
+  font-weight: v.fw(bold);
   color: var(--color-text-on-primary);
-  margin-bottom: 0.75rem;
+  margin-bottom: v.space(md);
 }
 
 .cta-text {
-  font-size: 1rem;
+  font-size: v.fs(base);
   color: color-mix(in srgb, var(--color-text-on-primary) 90%, transparent);
-  margin-bottom: 1.5rem;
+  margin-bottom: v.space(2xl);
 }
 
 .cta-buttons {
   display: flex;
-  gap: 1rem;
+  gap: v.space(lg);
   justify-content: center;
   flex-wrap: wrap;
 }

@@ -1,83 +1,64 @@
 @use "@/styles/common.scss" as *;
+@use "@/styles/variables" as v;
 @use "@/styles/breakpoints" as bp;
 
 .board-write-page {
-  padding: 2rem;
-  position: relative;
-  z-index: 10;
-
-  @include bp.below(bp.$md) {
-    padding: 1rem;
-  }
+  @include padded-page-z;
 }
 
 .board-write-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: v.space(3xl);
 }
 
 .title {
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
-  font-weight: 800;
+  font-size: clamp(v.fs(t175), 3vw, v.fs(t225));
+  font-weight: v.fw(extrabold);
   color: var(--color-text-heading);
-  margin-bottom: 0.5rem;
+  margin-bottom: v.space(sm);
 }
 
 .subtitle {
-  font-size: 1rem;
+  font-size: v.fs(base);
   color: var(--color-text-secondary);
 }
 
 .board-write-form {
   background: var(--color-card);
   border-radius: 16px;
-  padding: 2rem;
+  padding: v.space(3xl);
   box-shadow: 0 4px 25px var(--color-shadow-card);
   border: 1px solid var(--color-card-border);
 
   @include bp.below(bp.$md) {
-    padding: 1.25rem;
+    padding: v.space(xl);
   }
 }
 
 .board-write-error {
-  padding: 0.75rem 1rem;
-  margin-bottom: 1.25rem;
+  padding: v.space(md) v.space(lg);
+  margin-bottom: v.space(xl);
   background: var(--color-error-bg);
   border: 1px solid var(--color-error-border);
   border-radius: 12px;
-  font-size: 0.9rem;
+  font-size: v.fs(body-sm);
   color: var(--color-error-dark);
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: v.space(2xl);
 }
 
 .form-group .label {
   display: block;
   
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: v.fs(body-sm);
+  font-weight: v.fw(semibold);
   color: var(--color-text-heading);
 }
 
 .form-group .input {
-  width: 100%;
-  padding: 0.875rem 1rem;
-  font-size: 0.95rem;
-  border: 2px solid var(--color-input-border);
-  border-radius: 12px;
-  background: var(--color-input-bg);
-  color: var(--color-text);
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-
-  &:focus {
-    border-color: var(--color-primary);
-    background: var(--color-input-focus-bg);
-    box-shadow: 0 0 0 4px var(--color-primary-muted);
-  }
+  @include post-form-control;
 
   &.textarea {
     min-height: 200px;
@@ -89,8 +70,8 @@
 .board-write-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.75rem;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  gap: v.space(md);
+  margin-top: v.space(3xl);
+  padding-top: v.space(2xl);
   border-top: 1px solid var(--color-border);
 }

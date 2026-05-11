@@ -1,9 +1,11 @@
+@use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/variables" as v;
 
 .post-detail-card.user-detail {
   position: relative;
   overflow: clip;
-  padding: 2rem 1.85rem;
+  padding: v.space(3xl) v.space(r185);
   border-radius: 22px;
   border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
   background: var(--color-card);
@@ -13,18 +15,18 @@
     0 8px 24px color-mix(in srgb, var(--color-static-black) 5%, transparent);
 
   @include bp.below(bp.$md) {
-    padding: 1.5rem 1.2rem;
+    padding: v.space(2xl) v.space(r120);
     border-radius: 18px;
   }
 
   .detail-meta {
     position: relative;
     z-index: 1;
-    margin: 0 0 1.1rem;
+    margin: 0 0 v.space(table-y);
     padding: 0;
     background: transparent;
     border: none;
-    gap: 0.4rem 0.55rem;
+    gap: v.space(r040) v.space(r055);
     align-items: center;
   }
 
@@ -32,9 +34,9 @@
     position: relative;
     z-index: 1;
     border-radius: 999px;
-    padding: 0.32rem 0.78rem;
-    font-size: 0.8125rem;
-    font-weight: 700;
+    padding: v.space(r032) v.space(r078);
+    font-size: v.fs(t8125);
+    font-weight: v.fw(bold);
     letter-spacing: -0.03em;
     color: var(--color-primary);
     background: linear-gradient(
@@ -50,11 +52,11 @@
   .detail-date {
     position: relative;
     z-index: 1;
-    font-size: 0.8125rem;
-    font-weight: 600;
+    font-size: v.fs(t8125);
+    font-weight: v.fw(semibold);
     color: var(--color-text-secondary);
     letter-spacing: -0.02em;
-    padding: 0.28rem 0.65rem;
+    padding: v.space(r028) v.space(r065);
     border-radius: 999px;
     background: color-mix(in srgb, var(--color-bg-subtle) 88%, var(--color-card) 12%);
     border: 1px solid color-mix(in srgb, var(--color-static-black) 6%, transparent);
@@ -64,11 +66,11 @@
     position: relative;
     z-index: 1;
     margin: 0;
-    padding: 0 0 1.05rem;
+    padding: 0 0 v.space(r105);
     border: none;
     border-bottom: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
-    font-size: clamp(1.7rem, 3.5vw, 2.125rem);
-    font-weight: 800;
+    font-size: clamp(v.fs(t170), 3.5vw, v.fs(t2125));
+    font-weight: v.fw(extrabold);
     letter-spacing: -0.045em;
     line-height: 1.15;
     color: var(--color-text-heading);
@@ -104,29 +106,26 @@
 
 .user-detail-hero {
   position: relative;
-  margin-bottom: 0.15rem;
+  margin-bottom: v.space(r015);
 }
 
 .user-detail-lead {
   position: relative;
   z-index: 1;
-  margin: 0 0 1.65rem;
-  padding: 1rem 0 0;
-  font-size: 0.98rem;
+  margin: 0 0 v.space(r165);
+  padding: v.space(lg) 0 0;
+  font-size: v.fs(t098);
   line-height: 1.72;
   letter-spacing: -0.02em;
   color: var(--color-text-secondary);
 
-  strong {
-    font-weight: 700;
-    color: var(--color-text-heading);
-  }
+  @include prose-strong-heading;
 }
 
 .user-detail-subheading {
-  margin: 0 0 0.75rem;
-  font-size: 0.6875rem;
-  font-weight: 700;
+  margin: 0 0 v.space(md);
+  font-size: v.fs(t6875);
+  font-weight: v.fw(bold);
   color: var(--color-text-muted);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -139,8 +138,8 @@
 .user-detail-spec-wrap {
   position: relative;
   z-index: 1;
-  margin: 0 0 1.25rem;
-  padding: 1.2rem 1.25rem 0.35rem;
+  margin: 0 0 v.space(xl);
+  padding: v.space(r120) v.space(xl) v.space(r035);
   border-radius: 16px;
   background: linear-gradient(
     165deg,
@@ -151,7 +150,7 @@
   box-shadow: 0 1px 0 color-mix(in srgb, var(--color-static-white) 45%, transparent) inset;
 
   @include bp.below(bp.$sm) {
-    padding: 1rem 1rem 0.25rem;
+    padding: v.space(lg) v.space(lg) v.space(xs);
   }
 }
 
@@ -177,31 +176,38 @@
   display: grid;
   grid-template-columns: minmax(5.5rem, 7rem) 1fr;
   align-items: baseline;
-  column-gap: 1rem;
-  row-gap: 0.15rem;
-  padding: 0.85rem 0.55rem;
-  margin: 0 -0.55rem;
+  column-gap: v.space(lg);
+  row-gap: v.space(r015);
+  padding: v.space(r085) v.space(r055);
+  margin: 0 calc(-1 * v.space(r055));
   border-radius: 12px;
   border-bottom: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
-  transition: background-color 0.18s ease, transform 0.18s ease;
+  @include v.transition-channels(
+    (
+      background-color,
+      transform,
+    ),
+    quick,
+    default
+  );
 
   &:hover {
     background: color-mix(in srgb, var(--color-card) 65%, var(--color-primary-muted) 35%);
   }
 
   &:first-child {
-    padding-top: 0.25rem;
+    padding-top: v.space(xs);
   }
 
   &:last-child {
     border-bottom: none;
-    padding-bottom: 0.45rem;
+    padding-bottom: v.space(r045);
   }
 
   dt {
     margin: 0;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: v.fs(xs);
+    font-weight: v.fw(semibold);
     color: var(--color-text-muted);
     letter-spacing: 0.02em;
     text-transform: uppercase;
@@ -210,8 +216,8 @@
   dd {
     margin: 0;
     text-align: left;
-    font-size: 0.9375rem;
-    font-weight: 600;
+    font-size: v.fs(t9375);
+    font-weight: v.fw(semibold);
     color: var(--color-text-heading);
     letter-spacing: -0.03em;
     min-width: 0;
@@ -220,12 +226,12 @@
 
   @include bp.below(bp.$sm) {
     grid-template-columns: 1fr;
-    gap: 0.2rem;
-    padding: 0.75rem 0.45rem;
-    margin: 0 -0.45rem;
+    gap: v.space(r020);
+    padding: v.space(md) v.space(r045);
+    margin: 0 calc(-1 * v.space(r045));
 
     dd {
-      font-size: 0.9rem;
+      font-size: v.fs(body-sm);
     }
   }
 }
@@ -233,7 +239,7 @@
 .user-detail-contact-block {
   position: relative;
   z-index: 1;
-  margin: 0 0 1.35rem;
+  margin: 0 0 v.space(r135);
 }
 
 .user-detail-contact {
@@ -244,8 +250,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.65rem 1rem;
-  padding: 1rem 1.15rem;
+  gap: v.space(r065) v.space(lg);
+  padding: v.space(lg) v.space(r115);
   border-radius: 14px;
   background: linear-gradient(
     135deg,
@@ -262,8 +268,8 @@
 }
 
 .user-detail-contact__label {
-  font-size: 0.6875rem;
-  font-weight: 700;
+  font-size: v.fs(t6875);
+  font-weight: v.fw(bold);
   color: var(--color-text-muted);
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -271,8 +277,8 @@
 
 .user-detail-contact__empty {
   margin: 0;
-  padding: 1rem 1.1rem;
-  font-size: 0.9rem;
+  padding: v.space(lg) v.space(table-y);
+  font-size: v.fs(body-sm);
   color: var(--color-text-secondary);
   letter-spacing: -0.02em;
   border-radius: 14px;
@@ -282,15 +288,22 @@
 
 .user-detail-mailto {
   color: var(--color-primary);
-  font-weight: 700;
-  font-size: 0.95rem;
+  font-weight: v.fw(bold);
+  font-size: v.fs(t095);
   text-decoration: none;
   word-break: break-all;
   letter-spacing: -0.03em;
-  padding: 0.2rem 0.55rem;
-  margin: -0.2rem -0.55rem;
+  padding: v.space(r020) v.space(r055);
+  margin: calc(-1 * v.space(r020)) calc(-1 * v.space(r055));
   border-radius: 10px;
-  transition: color 0.16s ease, background-color 0.16s ease;
+  @include v.transition-channels(
+    (
+      color,
+      background-color,
+    ),
+    fast,
+    default
+  );
 
   &:hover {
     color: var(--color-primary-hover);
@@ -306,14 +319,14 @@
 .user-detail-aside {
   position: relative;
   margin: 0;
-  padding: 1.15rem 1.25rem;
+  padding: v.space(r115) v.space(xl);
   border-radius: 14px;
   border: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
   background: color-mix(in srgb, var(--color-bg-subtle) 96%, var(--color-card) 4%);
   box-shadow: 0 1px 0 color-mix(in srgb, var(--color-static-white) 35%, transparent) inset;
 
   @include bp.below(bp.$sm) {
-    padding: 1rem 1.1rem;
+    padding: v.space(lg) v.space(table-y);
   }
 }
 
@@ -324,9 +337,9 @@
 }
 
 .user-detail-aside__title {
-  margin: 0 0 0.4rem;
-  font-size: 0.6875rem;
-  font-weight: 800;
+  margin: 0 0 v.space(r040);
+  font-size: v.fs(t6875);
+  font-weight: v.fw(extrabold);
   color: var(--color-text-heading);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -334,7 +347,7 @@
 
 .user-detail-aside__text {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: v.fs(t8125);
   line-height: 1.68;
   color: var(--color-text-secondary);
   letter-spacing: -0.02em;

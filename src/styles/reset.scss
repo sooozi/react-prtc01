@@ -1,0 +1,165 @@
+@use "@/styles/color";
+@use "@/styles/variables" as v;
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 뷰포트·스크롤 (모션 줄임 존중) */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 미디어 기본 반응형 */
+img,
+picture,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 폼·컨트롤은 문서 타이포·색 상속 */
+input,
+button,
+textarea,
+select,
+optgroup {
+  font: inherit;
+  color: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* 테이블·구분선·임베드 */
+table {
+  border-collapse: collapse;
+}
+
+hr {
+  height: 0;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+iframe {
+  border: 0;
+}
+
+/* 인라인 코드 */
+code,
+kbd,
+samp,
+pre {
+  font-family:
+    ui-monospace,
+    "Cascadia Code",
+    "Source Code Pro",
+    Menlo,
+    Consolas,
+    "DejaVu Sans Mono",
+    monospace;
+}
+
+pre {
+  overflow: auto;
+}
+
+/* 숨김 속성 (브라우저 기본과 정합) */
+[hidden]:where(:not([hidden="until-found"])) {
+  display: none !important;
+}
+
+/* 다이얼로그 기본 위치 */
+dialog {
+  margin: auto;
+}
+
+a {
+  font-weight: v.fw(medium);
+  color: var(--color-primary);
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: v.rad(sm);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--color-bg-body);
+  color: var(--color-text);
+  word-break: keep-all;
+}
+
+h1 {
+  font-size: clamp(v.fs(t175), 5vw, 3.2em);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--color-text-heading);
+}
+
+button {
+  cursor: pointer;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  padding: v.space(r060) v.space(r120);
+  font-size: v.fs(base);
+  font-weight: v.fw(medium);
+  font-family: inherit;
+  background-color: var(--color-button-bg);
+  color: var(--color-button-text);
+  transition: all #{v.dur(moderate)} #{v.ease(default)};
+}
+
+button:hover {
+  border-color: var(--color-button-border-hover);
+  background-color: var(--color-button-bg-hover);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}

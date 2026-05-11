@@ -81,7 +81,7 @@ export default function Home() {
       <section className="hero" aria-labelledby="home-hero-title">
         <div className="hero-inner">
           <div className="hero-copy">
-            <Badge>연습 프로젝트</Badge>
+            <Badge>Practice Project</Badge>
             <h1 id="home-hero-title" className="hero-title">
               더 빠르고, 더 아름다운
               <br />

@@ -1,4 +1,5 @@
 @use "@/pages/auth/auth-shared" as *;
+@use "@/styles/variables" as v;
 
 .login-container {
   @extend %auth-container;
@@ -6,15 +7,15 @@
 
 .login-toast {
   position: fixed;
-  top: calc(var(--header-height, 84px) + 1rem);
+  top: calc(var(--header-height, 84px) + #{v.space(lg)});
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
-  padding: 0.75rem 1.5rem;
+  padding: v.space(md) v.space(2xl);
   background: var(--color-toast-bg);
   color: var(--color-toast-text);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: v.fs(body-sm);
+  font-weight: v.fw(medium);
   border-radius: 12px;
   box-shadow: 0 8px 28px var(--color-shadow-md);
   animation: login-toast-in 0.3s ease;
@@ -46,14 +47,14 @@
 .login-success-alert {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
+  gap: v.space(sm);
+  padding: v.space(md) v.space(lg);
+  margin-bottom: v.space(lg);
   background: var(--color-success-bg);
   border: 1px solid var(--color-success-border);
   border-radius: 12px;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: v.fs(body-sm);
+  font-weight: v.fw(medium);
   color: var(--color-success-dark);
 
   &__icon {
@@ -66,8 +67,8 @@
     background: var(--color-success);
     color: var(--color-text-on-primary);
     border-radius: 50%;
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: v.fs(xs);
+    font-weight: v.fw(bold);
   }
 
   &__text {
@@ -78,14 +79,14 @@
 .login-error-alert {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
+  gap: v.space(sm);
+  padding: v.space(md) v.space(lg);
+  margin-bottom: v.space(lg);
   background: var(--color-error-bg);
   border: 1px solid var(--color-error-border);
   border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: v.fs(body-sm);
+  font-weight: v.fw(medium);
   color: var(--color-error-dark);
 
   &__icon {
@@ -98,8 +99,8 @@
     background: var(--color-error);
     color: var(--color-text-on-primary);
     border-radius: 50%;
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: v.fs(xs);
+    font-weight: v.fw(bold);
   }
 
   &__text {
@@ -113,16 +114,16 @@
 }
 
 .login-footer {
-  margin-top: 1.5rem;
+  margin-top: v.space(2xl);
   text-align: center;
-  font-size: 0.9rem;
+  font-size: v.fs(body-sm);
   color: $text-secondary;
 
   .signup-link {
     color: $primary-color;
-    font-weight: 600;
+    font-weight: v.fw(semibold);
     text-decoration: none;
-    margin-left: 0.5rem;
+    margin-left: v.space(sm);
 
     &:hover {
       text-decoration: underline;

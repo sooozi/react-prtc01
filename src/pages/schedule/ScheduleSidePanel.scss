@@ -1,5 +1,6 @@
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/variables" as v;
 
 .schedule-side-panel {
   min-width: 0;
@@ -28,26 +29,27 @@
 .schedule-side-panel__hero {
   position: relative;
   z-index: 1;
-  padding: clamp(1.35rem, 3vw, 1.65rem) clamp(1.25rem, 3vw, 1.45rem) 1.1rem;
+  padding: clamp(#{v.space(r135)}, 3vw, #{v.space(r165)}) clamp(#{v.space(xl)}, 3vw, #{v.space(r145)})
+    #{v.space(table-y)};
 
   @include bp.below(bp.$sm) {
-    padding: 1.15rem 1rem 0.95rem;
+    padding: v.space(r115) v.space(lg) v.space(r095);
   }
 }
 
 .schedule-side-panel__title {
   margin: 0;
-  font-size: clamp(1.08rem, 2.2vw, 1.22rem);
-  font-weight: 800;
+  font-size: clamp(v.fs(t108), 2.2vw, v.fs(t122));
+  font-weight: v.fw(extrabold);
   letter-spacing: -0.04em;
   line-height: 1.25;
   color: var(--color-text-heading);
 }
 
 .schedule-side-panel__subtitle {
-  margin: 0.45rem 0 0;
+  margin: v.space(r045) 0 0;
   max-width: 28ch;
-  font-size: 0.8rem;
+  font-size: v.fs(t080);
   line-height: 1.55;
   letter-spacing: -0.02em;
   color: var(--color-text-muted);
@@ -59,35 +61,35 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: 0 clamp(1.15rem, 2.8vw, 1.4rem) clamp(1.35rem, 3vw, 1.55rem);
+  padding: 0 clamp(#{v.space(r115)}, 2.8vw, #{v.space(r140)}) clamp(#{v.space(r135)}, 3vw, #{v.space(r155)});
 
   @include bp.below(bp.$sm) {
-    padding: 0 1rem 1.2rem;
+    padding: 0 v.space(lg) v.space(r120);
   }
 }
 
 .schedule-side-panel__body > .schedule-side-panel__field:first-child {
-  padding-bottom: 0.1rem;
+  padding-bottom: v.space(r010);
 }
 
 .schedule-side-panel__body > .schedule-side-panel__field:not(:first-child) {
-  margin-top: 1rem;
-  padding-top: 1.05rem;
+  margin-top: v.space(lg);
+  padding-top: v.space(r105);
   border-top: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
 }
 
 .schedule-side-panel__label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.72rem;
-  font-weight: 700;
+  margin-bottom: v.space(sm);
+  font-size: v.fs(t072);
+  font-weight: v.fw(bold);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-text-secondary);
 }
 
 .schedule-side-panel__chip-well {
-  padding: 0.48rem 0;
+  padding: v.space(r048) 0;
 }
 
 [data-theme="dark"] .schedule-side-panel__chip-well {
@@ -98,7 +100,7 @@
 .schedule-side-panel__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.42rem 0.45rem;
+  gap: v.space(r042) v.space(r045);
 }
 
 .schedule-side-panel__chip {
@@ -107,20 +109,20 @@
   align-items: center;
   justify-content: center;
   margin: 0;
-  padding: 0 0.8rem;
+  padding: 0 v.space(r080);
   border-radius: 999px;
   border: 2px solid transparent;
   line-height: 1.5rem;
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: v.fs(t080);
+  font-weight: v.fw(bold);
   letter-spacing: -0.03em;
   cursor: pointer;
   transition:
-    border-color 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.16s ease,
-    filter 0.2s ease,
-    background-color 0.2s ease;
+    border-color #{v.dur(snappy)} #{v.ease(out-expo)},
+    box-shadow #{v.dur(snappy)} #{v.ease(out-expo)},
+    transform #{v.dur(fast)} #{v.ease(default)},
+    filter #{v.dur(normal)} #{v.ease(default)},
+    background-color #{v.dur(normal)} #{v.ease(default)};
 
   &:hover {
     filter: brightness(1.04);
@@ -137,15 +139,7 @@
 }
 
 .schedule-side-panel__chip-input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  @extend %visually-hidden;
 }
 
 .schedule-side-panel__chip-text {
@@ -206,7 +200,7 @@
 
 .schedule-side-panel__input-shell {
   border-radius: 14px;
-  padding: 2px;
+  padding: v.space(px2);
   background: linear-gradient(
     135deg,
     color-mix(in srgb, var(--color-border-light) 90%, transparent),
@@ -225,7 +219,7 @@
   box-sizing: border-box;
   margin: 0;
   font-family: inherit;
-  font-size: 0.8125rem;
+  font-size: v.fs(t8125);
   color: var(--color-text);
   border: none;
   border-radius: calc(14px - 2px);
@@ -233,8 +227,8 @@
   outline: none;
   box-shadow: inset 0 1px 2px color-mix(in srgb, var(--color-shadow-sm) 50%, transparent);
   transition:
-    box-shadow 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-    background 0.2s ease;
+    box-shadow #{v.dur(snappy)} #{v.ease(out-expo)},
+    background #{v.dur(normal)} #{v.ease(default)};
 
   &:focus {
     background: var(--color-input-focus-bg);
@@ -245,7 +239,7 @@
 }
 
 .schedule-side-panel__input {
-  padding: 0.7rem 0.95rem;
+  padding: v.space(r070) v.space(r095);
   min-height: 2.85rem;
 
   &:focus {
@@ -257,7 +251,7 @@
 
 .schedule-side-panel__textarea {
   display: block;
-  padding: 0.82rem 0.95rem;
+  padding: v.space(r082) v.space(r095);
   line-height: 1.6;
   letter-spacing: -0.01em;
   resize: none;
@@ -293,5 +287,5 @@
 .schedule-side-panel__actions {
   display: flex;
   justify-content: flex-end;
-  padding-top: 1.05rem;
+  padding-top: v.space(r105);
 }

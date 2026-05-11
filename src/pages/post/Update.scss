@@ -1,40 +1,28 @@
 @use "@/styles/common.scss" as *;
+@use "@/styles/variables" as v;
 @use "@/styles/breakpoints" as bp;
 
 .post-update-form {
   .detail-meta {
-    margin-bottom: 1.5rem;
+    margin-bottom: v.space(2xl);
   }
 }
 
 .post-update-form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: v.space(2xl);
 }
 
 .post-update-label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
+  margin-bottom: v.space(sm);
+  font-size: v.fs(body-sm);
+  font-weight: v.fw(semibold);
   color: var(--color-text-heading);
 }
 
 .post-update-input,
 .post-update-textarea {
-  width: 100%;
-  padding: 0.875rem 1rem;
-  font-size: 0.95rem;
-  border: 2px solid var(--color-input-border);
-  border-radius: 12px;
-  background: var(--color-input-bg);
-  color: var(--color-text);
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-
-  &:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 4px var(--color-primary-muted);
-  }
+  @include post-form-control;
 }
 
 .post-update-textarea {
@@ -47,11 +35,11 @@
 }
 
 .post-update-error {
-  padding: 0.75rem 1rem;
-  margin-top: 1rem;
+  padding: v.space(md) v.space(lg);
+  margin-top: v.space(lg);
   background: var(--color-error-bg);
   border: 1px solid var(--color-error-border);
   border-radius: 10px;
-  font-size: 0.9rem;
+  font-size: v.fs(body-sm);
   color: var(--color-error-dark);
 }

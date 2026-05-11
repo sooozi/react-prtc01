@@ -1,8 +1,8 @@
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/variables" as v;
 
 $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, transparent);
-$_mypage-gap-md: 0.75rem;
 
 @mixin mypage-flex-between {
   display: flex;
@@ -11,16 +11,7 @@ $_mypage-gap-md: 0.75rem;
 }
 
 .mypage-page {
-  width: 100%;
-  max-width: 800px;
-  padding: 2rem;
-  position: relative;
-  z-index: 10;
-  margin: 0 auto;
-
-  @include bp.below(bp.$md) {
-    padding: 1rem;
-  }
+  @include narrow-centered-page(800px);
 }
 
 .mypage-section {
@@ -28,15 +19,15 @@ $_mypage-gap-md: 0.75rem;
 }
 
 .mypage-header {
-  margin-bottom: 1.75rem;
+  margin-bottom: v.space(loft);
   text-align: center;
 }
 
 .mypage-page .title {
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
-  font-weight: 800;
+  font-size: clamp(v.fs(t175), 3vw, v.fs(t225));
+  font-weight: v.fw(extrabold);
   color: var(--color-text-heading);
-  margin-bottom: 0.5rem;
+  margin-bottom: v.space(sm);
   line-height: 1.2;
 
   .highlight {
@@ -46,20 +37,20 @@ $_mypage-gap-md: 0.75rem;
 
 .mypage-page .subtitle {
   margin: 0;
-  font-size: 1rem;
+  font-size: v.fs(base);
   color: var(--color-text-secondary);
   line-height: 1.5;
 }
 
 .mypage-page .login-link {
   display: inline-block;
-  padding: 0.75rem 1.5rem;
+  padding: v.space(md) v.space(2xl);
   background: var(--color-primary);
   color: var(--color-text-on-primary);
   border-radius: 14px;
-  font-weight: 600;
+  font-weight: v.fw(semibold);
   text-decoration: none;
-  transition: background 0.2s;
+  transition: background #{v.dur(normal)} #{v.ease(default)};
 
   &:hover {
     background: var(--color-primary-hover);
@@ -68,8 +59,8 @@ $_mypage-gap-md: 0.75rem;
 
 .mypage-profile-grid {
   display: grid;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: v.space(lg);
+  margin-bottom: v.space(lg);
 
   @include bp.above(540px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -84,10 +75,10 @@ $_mypage-gap-md: 0.75rem;
   background: var(--color-card);
   border: 1px solid var(--color-border);
   border-radius: 12px;
-  padding: 1.2rem 1.35rem;
-  margin-bottom: 1rem;
+  padding: v.space(r120) v.space(r135);
+  margin-bottom: v.space(lg);
   text-align: left;
-  transition: border-color 0.15s ease;
+  transition: border-color #{v.dur(micro)} #{v.ease(default)};
 
   &:hover {
     border-color: color-mix(in srgb, var(--color-primary) 16%, var(--color-border));
@@ -98,12 +89,12 @@ $_mypage-gap-md: 0.75rem;
   background: var(--color-card);
   border: 1px solid var(--color-card-border);
   border-radius: 16px;
-  padding: 1.5rem 1.75rem;
+  padding: v.space(2xl) v.space(loft);
   box-shadow: 0 4px 25px var(--color-shadow-card), 0 1px 3px var(--color-shadow-sm);
-  margin-bottom: 1.5rem;
+  margin-bottom: v.space(2xl);
 
   @include bp.below(bp.$md) {
-    padding: 1.25rem;
+    padding: v.space(xl);
   }
 
   &:hover {
@@ -116,46 +107,46 @@ $_mypage-gap-md: 0.75rem;
 }
 
 .mypage-card__title {
-  font-size: 0.8125rem;
-  font-weight: 600;
+  font-size: v.fs(t8125);
+  font-weight: v.fw(semibold);
   color: var(--color-text-heading);
-  margin: 0 0 0.9rem;
-  padding: 0 0 0 0.65rem;
+  margin: 0 0 v.space(r090);
+  padding: 0 0 0 v.space(r065);
   border-left: 3px solid var(--color-primary);
   letter-spacing: 0.02em;
 }
 
 .mypage-card__title--inline {
   margin: 0;
-  padding: 0 0 0 0.65rem;
+  padding: 0 0 0 v.space(r065);
   border-left: 3px solid var(--color-primary);
 }
 
 .mypage-posts-head {
   @include mypage-flex-between;
-  gap: $_mypage-gap-md;
-  margin-bottom: 0.85rem;
+  gap: v.space(md);
+  margin-bottom: v.space(r085);
 }
 
 .mypage-posts-count {
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: v.fs(xs);
+  font-weight: v.fw(semibold);
   color: var(--color-text-secondary);
-  padding: 0.2rem 0.5rem;
+  padding: v.space(r020) v.space(sm);
   border-radius: 6px;
   border: 1px solid var(--color-border);
   background: transparent;
 }
 
 .mypage-posts-loading.detail-loading {
-  padding: 1.5rem 1rem;
+  padding: v.space(2xl) v.space(lg);
 }
 
 .mypage-posts-empty {
   margin: 0;
-  padding: 1.75rem 1rem;
+  padding: v.space(loft) v.space(lg);
   text-align: center;
-  font-size: 0.95rem;
+  font-size: v.fs(t095);
   color: var(--color-text-secondary);
   line-height: 1.5;
 }
@@ -172,33 +163,37 @@ $_mypage-gap-md: 0.75rem;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: v.space(r045);
 }
 
 .mypage-post-link {
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: auto auto;
-  column-gap: $_mypage-gap-md;
-  row-gap: 0.2rem;
+  column-gap: v.space(md);
+  row-gap: v.space(r020);
   align-items: center;
-  padding: 0.75rem 0.9rem;
+  padding: v.space(md) v.space(r090);
   border-radius: 10px;
   text-decoration: none;
   color: inherit;
   background: var(--color-bg-subtle);
   border: 1px solid var(--color-border);
-  transition: border-color 0.15s ease, background 0.15s ease;
+  @include v.transition-channels(
+    (
+      border-color,
+      background,
+    ),
+    micro,
+    default
+  );
 
   &:hover {
     background: color-mix(in srgb, var(--color-text) 4%, transparent);
     border-color: color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-  }
+  @include focus-ring-primary;
 
   @include bp.above(480px) {
     grid-template-columns: 1fr auto auto;
@@ -214,8 +209,8 @@ $_mypage-gap-md: 0.75rem;
   grid-column: 1;
   grid-row: 1;
   min-width: 0;
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: v.fw(semibold);
+  font-size: v.fs(t095);
   color: var(--color-text-heading);
   line-height: 1.35;
   text-align: left;
@@ -230,8 +225,8 @@ $_mypage-gap-md: 0.75rem;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem 1rem;
-  font-size: 0.8rem;
+  gap: v.space(sm) v.space(lg);
+  font-size: v.fs(t080);
   color: var(--color-text-secondary);
 
   @include bp.above(480px) {
@@ -264,12 +259,12 @@ $_mypage-gap-md: 0.75rem;
 
 .mypage-card__value--ok {
   color: var(--color-primary);
-  font-weight: 600;
+  font-weight: v.fw(semibold);
 }
 
 .mypage-card__row {
   @include mypage-flex-between;
-  padding: 0.45rem 0;
+  padding: v.space(r045) 0;
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-border);
@@ -277,20 +272,20 @@ $_mypage-gap-md: 0.75rem;
 }
 
 .mypage-card__label {
-  font-size: 0.8125rem;
-  font-weight: 500;
+  font-size: v.fs(t8125);
+  font-weight: v.fw(medium);
   color: var(--color-text-muted);
 }
 
 .mypage-card__value {
-  font-size: 0.9375rem;
-  font-weight: 500;
+  font-size: v.fs(t9375);
+  font-weight: v.fw(medium);
   color: var(--color-text);
 }
 
 .mypage-actions {
   display: flex;
-  gap: $_mypage-gap-md;
+  gap: v.space(md);
   justify-content: center;
   flex-wrap: wrap;
 }

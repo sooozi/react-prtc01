@@ -1,19 +1,20 @@
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/variables" as v;
 
 .header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  padding: 1rem 1.25rem;
+  padding: v.space(lg) v.space(xl);
   z-index: 999;
   background: transparent;
   box-shadow: 0 1px 0 var(--color-header-border);
-  transition: transform 0.3s ease;
+  transition: transform #{v.dur(medium)} #{v.ease(default)};
 
   @include bp.above(bp.$md) {
-    padding: 1rem 2rem;
+    padding: v.space(lg) v.space(3xl);
   }
 }
 
@@ -58,7 +59,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 3px;
+  gap: v.space(px3);
   width: 35px;
   height: 35px;
   padding: 0;
@@ -70,10 +71,10 @@
   cursor: pointer;
   box-shadow: 0 1px 2px var(--color-shadow-sm);
   transition:
-    background 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.2s ease;
+    background #{v.dur(moderate)} #{v.ease(default)},
+    border-color #{v.dur(moderate)} #{v.ease(default)},
+    box-shadow #{v.dur(moderate)} #{v.ease(default)},
+    transform #{v.dur(normal)} #{v.ease(default)};
 
   &:hover {
     border-color: color-mix(in srgb, var(--color-primary) 35%, var(--color-border));
@@ -111,10 +112,10 @@
   margin: 0 auto;
   transform-origin: center;
   transition:
-    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.25s ease,
-    background 0.25s ease,
-    width 0.25s ease;
+    transform #{v.dur(emphasized)} #{v.ease(standard)},
+    opacity #{v.dur(moderate)} #{v.ease(default)},
+    background #{v.dur(moderate)} #{v.ease(default)},
+    width #{v.dur(moderate)} #{v.ease(default)};
 }
 
 .header.is-menu-open .nav-toggle-bar {
@@ -137,10 +138,10 @@
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: v.space(r035);
 
   @include bp.above(bp.$md) {
-    gap: 1.25rem;
+    gap: v.space(xl);
     padding: 0;
     border: none;
     background: none;
@@ -161,13 +162,15 @@
     align-items: stretch;
     justify-content: flex-start;
     gap: 0;
-    padding: 4.25rem 0 1.5rem;
+    padding: v.space(r425) 0 v.space(2xl);
     background: var(--color-bg);
     border-left: 1px solid var(--color-border);
     box-shadow: -8px 0 32px var(--color-shadow-md);
     transform: translateX(100%);
     visibility: hidden;
-    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.32s ease;
+    transition:
+      transform #{v.dur(panel)} #{v.ease(standard)},
+      visibility #{v.dur(panel)} #{v.ease(default)};
     overflow-y: auto;
     z-index: 20;
   }
@@ -194,7 +197,7 @@
     .nav-links__top-bar {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: v.space(2xl);
     }
 
     .nav-links__avatar,
@@ -220,7 +223,7 @@
       background: none;
       text-decoration: none;
       color: var(--color-text-secondary);
-      transition: color 0.2s ease;
+      transition: color #{v.dur(normal)} #{v.ease(default)};
 
       &:hover {
         color: var(--color-primary);
@@ -233,7 +236,7 @@
     flex-direction: column;
     align-items: stretch;
     width: 100%;
-    padding: 0 1.25rem 1rem;
+    padding: 0 v.space(xl) v.space(lg);
     margin-bottom: 0;
     border-bottom: 1px solid var(--color-border);
 
@@ -244,14 +247,14 @@
     .nav-links__top-bar {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: v.space(md);
     }
 
     .nav-links__profile {
       display: flex;
       flex: 1;
       align-items: center;
-      gap: 0.85rem;
+      gap: v.space(r085);
       min-width: 0;
       padding: 0;
       margin: 0;
@@ -278,7 +281,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.35rem;
+      font-size: v.fs(t135);
       background: var(--color-bg-subtle-2);
       border: 1px solid var(--color-border-light);
     }
@@ -286,13 +289,13 @@
     .nav-links__profile-body {
       display: flex;
       flex-direction: column;
-      gap: 0.15rem;
+      gap: v.space(r015);
       min-width: 0;
     }
 
     .nav-links__profile-name {
-      font-size: 1.0625rem;
-      font-weight: 700;
+      font-size: v.fs(md);
+      font-weight: v.fw(bold);
       letter-spacing: -0.02em;
       color: var(--color-text-heading);
       overflow: hidden;
@@ -301,8 +304,8 @@
     }
 
     .nav-links__profile-hint {
-      font-size: 0.75rem;
-      font-weight: 500;
+      font-size: v.fs(xs);
+      font-weight: v.fw(medium);
       color: var(--color-text-muted);
     }
 
@@ -314,7 +317,7 @@
       border-radius: 999px;
       border: 1px solid var(--color-border);
       background: var(--color-bg);
-      font-size: 1.2rem;
+      font-size: v.fs(t120);
       box-shadow: none;
 
       &:hover {
@@ -328,9 +331,9 @@
 .nav-links__section-label {
   margin: 0;
   display: block;
-  padding: 0.5rem 1.25rem 0.35rem;
-  font-size: 0.6875rem;
-  font-weight: 700;
+  padding: v.space(sm) v.space(xl) v.space(r035);
+  font-size: v.fs(t6875);
+  font-weight: v.fw(bold);
   letter-spacing: 0.11em;
   text-transform: uppercase;
   color: var(--color-text-muted);
@@ -343,7 +346,7 @@
 .nav-links__list {
   @include bp.below(bp.$md) {
     flex: 1;
-    padding-bottom: 0.5rem;
+    padding-bottom: v.space(sm);
   }
 }
 
@@ -354,7 +357,7 @@
   justify-content: center;
   width: 1.125rem;
   height: 1.125rem;
-  margin-right: 0.5rem;
+  margin-right: v.space(sm);
   color: var(--color-text-secondary);
 }
 
@@ -424,7 +427,9 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition:
+      opacity #{v.dur(medium)} #{v.ease(default)},
+      visibility #{v.dur(medium)} #{v.ease(default)};
   }
 }
 
@@ -441,12 +446,20 @@
   flex-shrink: 0;
   background: none;
   border: none;
-  padding: 0.35rem 0.5rem;
-  font-size: 1.25rem;
+  padding: v.space(r035) v.space(sm);
+  font-size: v.fs(xl);
   line-height: 1;
   cursor: pointer;
   border-radius: 999px;
-  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  @include v.transition-channels(
+    (
+      background,
+      transform,
+      box-shadow,
+    ),
+    normal,
+    default
+  );
 
   &:hover {
     background: var(--color-primary-muted);
@@ -456,10 +469,7 @@
     transform: scale(0.95);
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-  }
+  @include focus-ring-primary;
 
   @include bp.above(bp.$md) {
     display: inline-flex;
@@ -471,7 +481,7 @@
     border-radius: 50%;
     border: none;
     background: var(--color-bg-subtle);
-    font-size: 1.15rem;
+    font-size: v.fs(t115);
     box-shadow: 0 2px 8px var(--color-shadow-md), 0 1px 2px var(--color-shadow-sm);
 
     &:hover {
@@ -490,19 +500,24 @@
 .nav-link {
   color: var(--color-text-secondary);
   text-decoration: none;
-  font-size: 0.9375rem;
-  font-weight: 500;
+  font-size: v.fs(t9375);
+  font-weight: v.fw(medium);
   letter-spacing: -0.01em;
-  transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  @include v.transition-channels(
+    (
+      color,
+      background,
+      box-shadow,
+    ),
+    normal,
+    default
+  );
 
   &:hover {
     color: var(--color-primary);
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-  }
+  @include focus-ring-primary;
 
   @include bp.above(bp.$md) {
     padding: 0;
@@ -515,7 +530,7 @@
 
   
   &.accent {
-    font-weight: 600;
+    font-weight: v.fw(semibold);
 
     @include bp.above(bp.$md) {
       margin: 0;
@@ -547,16 +562,19 @@
       left: 50%;
       top: 100%;
       transform: translate(-50%, -0.25rem);
-      padding: 0.3rem 0.6rem;
+      padding: v.space(r030) v.space(r060);
       background: var(--color-bg-subtle-2);
       color: var(--color-text);
-      font-size: 0.75rem;
-      font-weight: 500;
+      font-size: v.fs(xs);
+      font-weight: v.fw(medium);
       white-space: nowrap;
       border-radius: 20px;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      transition:
+        opacity #{v.dur(normal)} #{v.ease(default)},
+        transform #{v.dur(normal)} #{v.ease(default)},
+        visibility #{v.dur(normal)} #{v.ease(default)};
       pointer-events: none;
       box-shadow: 0 2px 8px var(--color-shadow-md);
     }
@@ -600,17 +618,24 @@
     width: 100%;
     min-height: 3.25rem;
     margin: 0;
-    padding: 0.65rem 1.25rem;
+    padding: v.space(r065) v.space(xl);
     border: none;
     border-radius: 0;
     border-bottom: 1px solid var(--color-border);
     background: transparent;
     box-shadow: none;
-    font-size: 0.9375rem;
-    font-weight: 500;
+    font-size: v.fs(t9375);
+    font-weight: v.fw(medium);
     color: var(--color-text-heading);
     text-decoration: none;
-    transition: background 0.15s ease, color 0.15s ease;
+    @include v.transition-channels(
+      (
+        background,
+        color,
+      ),
+      micro,
+      default
+    );
 
     &::after {
       content: "";
@@ -641,8 +666,8 @@
     width: 100%;
     cursor: pointer;
     font: inherit;
-    font-size: 0.9375rem;
-    font-weight: 500;
+    font-size: v.fs(t9375);
+    font-weight: v.fw(medium);
     text-align: left;
 
     &:hover,
@@ -659,20 +684,25 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 1rem 1.25rem 0;
-    padding: 0.7rem 1rem;
+    margin: v.space(lg) v.space(xl) 0;
+    padding: v.space(r070) v.space(lg);
     border-radius: 999px;
     border: 1px solid var(--color-primary);
     background: transparent;
-    font-size: 0.9375rem;
-    font-weight: 600;
+    font-size: v.fs(t9375);
+    font-weight: v.fw(semibold);
     color: var(--color-primary);
     text-decoration: none;
-    transition:
-      background 0.2s ease,
-      color 0.2s ease,
-      border-color 0.2s ease,
-      box-shadow 0.2s ease;
+    @include v.transition-channels(
+      (
+        background,
+        color,
+        border-color,
+        box-shadow,
+      ),
+      normal,
+      default
+    );
 
     &::after {
       content: none;

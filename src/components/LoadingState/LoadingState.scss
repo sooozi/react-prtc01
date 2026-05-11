@@ -1,10 +1,8 @@
+@use "@/styles/common.scss" as *;
+@use "@/styles/variables" as v;
+
 .loading-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  gap: 1rem;
+  @extend %empty-state-base;
   color: var(--color-text-secondary);
 }
 
@@ -21,8 +19,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding: 3rem;
+  gap: v.space(md);
+  padding: v.space(5xl);
   color: var(--color-text-secondary);
 }
 

@@ -1,13 +1,14 @@
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/variables" as v;
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 42px;
-  padding: 0.6rem 1.25rem;
-  font-size: 0.95rem;
-  font-weight: 600;
+  padding: v.space(r060) v.space(xl);
+  font-size: v.fs(t095);
+  font-weight: v.fw(semibold);
   font-family: inherit;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -15,7 +16,7 @@
   border-radius: 12px;
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all #{v.dur(normal)} #{v.ease(default)};
   white-space: nowrap;
 
   &:disabled {
@@ -36,22 +37,22 @@
 @include bp.below(bp.$md) {
   .btn:not(.btn--ghost):not(.btn--sm) {
     min-height: 38px;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+    padding: v.space(sm) v.space(lg);
+    font-size: v.fs(body-sm);
     border-radius: 11px;
   }
 }
 
 .btn--sm {
   min-height: 36px;
-  padding: 0.45rem 0.95rem;
-  font-size: 0.875rem;
+  padding: v.space(r045) v.space(r095);
+  font-size: v.fs(sm);
   border-radius: 11px;
 
   @include bp.below(bp.$md) {
     min-height: 32px;
-    padding: 0.32rem 0.75rem;
-    font-size: 0.8125rem;
+    padding: v.space(r032) v.space(md);
+    font-size: v.fs(t8125);
     border-radius: 10px;
   }
 }
@@ -147,7 +148,7 @@
 .btn--ghost {
   min-height: 0;
   min-width: 0;
-  padding: 0.35rem 0.5rem;
+  padding: v.space(r035) v.space(sm);
   font-size: inherit;
   font-weight: inherit;
   letter-spacing: inherit;
@@ -163,7 +164,7 @@
 }
 
 .submit-button {
-  margin-top: 0.5rem;
-  padding: 1rem;
+  margin-top: v.space(sm);
+  padding: v.space(lg);
   width: 100%;
 }

@@ -1,4 +1,5 @@
 @use "@/pages/auth/auth-shared" as *;
+@use "@/styles/variables" as v;
 
 .signup-container {
   @extend %auth-container;
@@ -22,11 +23,11 @@
 }
 
 .message {
-  padding: 0.875rem 1rem;
+  padding: v.space(input-block) v.space(lg);
   border-radius: 12px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-bottom: 1rem;
+  font-size: v.fs(body-sm);
+  font-weight: v.fw(medium);
+  margin-bottom: v.space(lg);
 
   &.success {
     background: var(--color-success-bg);
@@ -52,18 +53,18 @@
 .label-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: v.space(sm);
 }
 
 .hint-text {
-  font-size: 0.7rem;
-  font-weight: 400;
+  font-size: v.fs(t070);
+  font-weight: v.fw(regular);
   color: var(--color-text-muted);
 }
 
 .input-with-button {
   display: flex;
-  gap: 0.5rem;
+  gap: v.space(sm);
 
   .input {
     flex: 1;
@@ -76,8 +77,8 @@
 }
 
 .check-message {
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: v.fs(xs);
+  font-weight: v.fw(medium);
 
   &.사용가능 {
     color: $primary-color;
@@ -89,17 +90,17 @@
 }
 
 .signup-footer {
-  margin-top: 1.5rem;
+  margin-top: v.space(2xl);
   text-align: center;
-  font-size: 0.9rem;
+  font-size: v.fs(body-sm);
   color: $text-secondary;
 
   .login-link {
     display: inline;
     color: $primary-color;
-    font-weight: 600;
+    font-weight: v.fw(semibold);
     text-decoration: none;
-    margin-left: 0.5rem;
+    margin-left: v.space(sm);
     background: transparent;
     padding: 0;
 

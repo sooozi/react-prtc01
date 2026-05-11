@@ -1,8 +1,10 @@
+@use "@/styles/common.scss" as *;
+@use "@/styles/variables" as v;
 
 .table-sort-th {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: v.space(r040);
   min-width: 0;
 }
 
@@ -54,7 +56,7 @@
   font: inherit;
   line-height: 0;
   border-radius: 8px;
-  transition: transform 0.12s ease;
+  transition: transform #{v.dur(instant)} #{v.ease(default)};
 
   &:hover .table-sort-th__icon--neutral {
     opacity: 0.65;
@@ -69,8 +71,5 @@
     transform: scale(0.94);
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-  }
+  @include focus-ring-primary;
 }

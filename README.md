@@ -96,6 +96,7 @@ src/
 │   ├── about/
 │   │   └── About.tsx, About.scss
 │   ├── errors/
+│   │   ├── _error-page-shared.scss   # 403/404 공통 믹스인
 │   │   ├── Forbidden.tsx, Forbidden.scss   # `/forbidden`
 │   │   └── NotFound.tsx, NotFound.scss      # `/not-found`
 │   ├── auth/
@@ -123,14 +124,16 @@ src/
 │   └── RequireAuth.tsx     # 보호 라우트(토큰 없으면 로그인으로)
 ├── styles/
 │   ├── _color.scss         # 테마 색상 (라이트/다크 CSS 변수)
+│   ├── _variables.scss     # 간격·타입·radius·모션 등 (v.space / v.fs / v.fw)
 │   ├── _breakpoints.scss   # 반응형 브레이크포인트·믹스인 (below/above)
+│   ├── reset.scss          # 전역 리셋·베이스, @keyframes spin (`main.tsx`에서 import)
 │   └── common.scss         # 전역 공통: 폼, 목록 헤드, 테이블 mixin, 에러/빈 상태 등
 ├── App.tsx
-├── main.tsx                # 저장된 테마 적용 후 React 마운트
-└── index.scss              # 전역 리셋, @keyframes spin, 테마 변수 로드
+└── main.tsx                # `reset.scss`·테마 적용 후 React 마운트
 ```
 
 - **경로 별칭**: `@` → `src` (예: `@/api/board`, `@/api/auth`, `@/api/http`, `@/components`)
+- **도우미 스크립트**: 저장소 루트 `scripts/` — SCSS의 간격·폰트 리터럴을 `v.space`·`v.fs`·`v.fw` 등으로 맞출 때 로컬에서 실행합니다 (`apply-spacing-tokens.py`, `apply-font-tokens.py`).
 
 ---
 
@@ -254,8 +257,9 @@ src/
 ## 스타일
 
 - **테마**: `src/styles/_color.scss` — `:root`(라이트), `[data-theme="dark"]`(다크) CSS 변수 정의. 전역에서 `var(--color-*)` 사용.
-- **전역**: `src/index.scss` — 리셋, `@keyframes spin`, body/버튼 기본 스타일. `@use "@/styles/color"` 로 테마 로드.
-- **공통**: `src/styles/common.scss` — 폰트/색 변수, 배지/카드 placeholder, 섹션 타이틀, 폼(label/input/error), 목록 페이지 헤드(`.list-page-head`), 테이블 공통 mixin, 모바일 테이블 카드 보정(`table-card-mobile-bare`) 등.
+- **토큰**: `src/styles/_variables.scss` — `v.space`, `v.fs`, `v.fw`, `v.rad`, `v.dur` / `v.ease` 등.
+- **전역**: `src/styles/reset.scss` — `main.tsx`에서 단일 import. 리셋·미디어/폼 기본, `@keyframes spin`, body·링크·버튼·`#root` 베이스. 내부에서 `_color`·`_variables`를 `@use`합니다.
+- **공통**: `src/styles/common.scss` — 배지/카드 placeholder, 섹션 타이틀, 폼(label/input/error), 목록 페이지 헤드(`.list-page-head`), 테이블 공통 mixin, 모바일 테이블 카드 보정(`table-card-mobile-bare`) 등.
 - **인증(페이지 전용)**: `src/pages/auth/_auth-shared.scss` — 로그인/회원가입 카드·헤더, 비밀번호 필드·토글. `@/styles/common`을 `@use`·`@forward` 함.
 - **컴포넌트**: `components/Button/Button.scss`, `components/LoadingState/LoadingState.scss` 등 컴포넌트별 SCSS.
 - **페이지**: 각 화면 폴더의 `*.scss` (예: `user/list/List.scss`, `post/Detail.scss`). 동일 폴더의 TSX에서는 `./Something.scss`로 import하는 패턴을 씁니다.
