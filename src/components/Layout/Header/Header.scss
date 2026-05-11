@@ -1,5 +1,6 @@
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
 .header {
@@ -8,9 +9,9 @@
   left: 0;
   right: 0;
   padding: v.space(lg) v.space(xl);
-  z-index: 999;
+  z-index: v.z(header);
   background: transparent;
-  box-shadow: 0 1px 0 var(--color-header-border);
+  @include sh.header-border-bottom;
   transition: transform #{v.dur(medium)} #{v.ease(default)};
 
   @include bp.above(bp.$md) {
@@ -21,7 +22,7 @@
 .header__bg {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: v.z(base);
   pointer-events: none;
   background: var(--color-header-bg);
   backdrop-filter: blur(12px);
@@ -34,8 +35,8 @@
 
 .nav {
   position: relative;
-  z-index: 1;
-  max-width: 1200px;
+  z-index: v.z(raised);
+  max-width: v.layout-max(content);
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -45,12 +46,12 @@
 @include bp.below(bp.$md) {
   .logo {
     position: relative;
-    z-index: 1;
+    z-index: v.z(raised);
   }
 
   .nav-toggle {
     position: relative;
-    z-index: 25;
+    z-index: v.z(submenu);
   }
 }
 
@@ -67,9 +68,9 @@
   background: color-mix(in srgb, var(--color-header-bg) 85%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border-radius: 12px;
+  border-radius: v.rad(p12);
   cursor: pointer;
-  box-shadow: 0 1px 2px var(--color-shadow-sm);
+  @include sh.sm-1;
   transition:
     background #{v.dur(moderate)} #{v.ease(default)},
     border-color #{v.dur(moderate)} #{v.ease(default)},
@@ -79,7 +80,7 @@
   &:hover {
     border-color: color-mix(in srgb, var(--color-primary) 35%, var(--color-border));
     background: var(--color-primary-muted);
-    box-shadow: 0 2px 8px var(--color-primary-shadow);
+    @include sh.primary-soft;
   }
 
   &:active {
@@ -100,14 +101,14 @@
 .header.is-menu-open .nav-toggle {
   border-color: color-mix(in srgb, var(--color-primary) 35%, var(--color-border));
   background: var(--color-primary-muted);
-  box-shadow: 0 1px 3px var(--color-shadow-sm);
+  @include sh.sm-2;
 }
 
 .nav-toggle-bar {
   display: block;
   width: 15px;
   height: 2px;
-  border-radius: 99px;
+  border-radius: v.rad(squircle);
   background: var(--color-text-secondary);
   margin: 0 auto;
   transform-origin: center;
@@ -138,14 +139,14 @@
 .nav-links {
   display: flex;
   align-items: center;
-  gap: v.space(r035);
+  gap: v.space(xs);
 
   @include bp.above(bp.$md) {
     gap: v.space(xl);
     padding: 0;
     border: none;
     background: none;
-    box-shadow: none;
+    @include sh.none;
 
     .nav-links__list {
       display: contents;
@@ -162,17 +163,17 @@
     align-items: stretch;
     justify-content: flex-start;
     gap: 0;
-    padding: v.space(r425) 0 v.space(2xl);
+    padding: v.space(6xl) 0 v.space(2xl);
     background: var(--color-bg);
     border-left: 1px solid var(--color-border);
-    box-shadow: -8px 0 32px var(--color-shadow-md);
+    @include sh.md-drawer;
     transform: translateX(100%);
     visibility: hidden;
     transition:
       transform #{v.dur(panel)} #{v.ease(standard)},
       visibility #{v.dur(panel)} #{v.ease(default)};
     overflow-y: auto;
-    z-index: 20;
+    z-index: v.z(sticky-local);
   }
 }
 
@@ -254,7 +255,7 @@
       display: flex;
       flex: 1;
       align-items: center;
-      gap: v.space(r085);
+      gap: v.space(md);
       min-width: 0;
       padding: 0;
       margin: 0;
@@ -277,11 +278,11 @@
       flex-shrink: 0;
       width: 3rem;
       height: 3rem;
-      border-radius: 999px;
+      border-radius: v.rad(pill);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: v.fs(t135);
+      font-size: v.fs(xl);
       background: var(--color-bg-subtle-2);
       border: 1px solid var(--color-border-light);
     }
@@ -289,7 +290,7 @@
     .nav-links__profile-body {
       display: flex;
       flex-direction: column;
-      gap: v.space(r015);
+      gap: v.space(xxs);
       min-width: 0;
     }
 
@@ -314,11 +315,11 @@
       width: 2.75rem;
       height: 2.75rem;
       padding: 0;
-      border-radius: 999px;
+      border-radius: v.rad(pill);
       border: 1px solid var(--color-border);
       background: var(--color-bg);
-      font-size: v.fs(t120);
-      box-shadow: none;
+      font-size: v.fs(xl);
+      @include sh.none;
 
       &:hover {
         background: var(--color-bg-subtle);
@@ -331,8 +332,8 @@
 .nav-links__section-label {
   margin: 0;
   display: block;
-  padding: v.space(sm) v.space(xl) v.space(r035);
-  font-size: v.fs(t6875);
+  padding: v.space(sm) v.space(xl) v.space(xs);
+  font-size: v.fs(xs);
   font-weight: v.fw(bold);
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -397,14 +398,14 @@
     padding: 0;
     border: none;
     background: none;
-    box-shadow: none;
+    @include sh.none;
     color: var(--color-primary);
 
     &:hover,
     &:active {
       color: var(--color-primary-hover);
       background: none;
-      box-shadow: none;
+      @include sh.none;
       filter: none;
     }
   }
@@ -423,7 +424,7 @@
     border-radius: 0;
     cursor: pointer;
     
-    z-index: 15;
+    z-index: v.z(curtain);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -446,11 +447,11 @@
   flex-shrink: 0;
   background: none;
   border: none;
-  padding: v.space(r035) v.space(sm);
+  padding: v.space(xs) v.space(sm);
   font-size: v.fs(xl);
   line-height: 1;
   cursor: pointer;
-  border-radius: 999px;
+  border-radius: v.rad(pill);
   @include v.transition-channels(
     (
       background,
@@ -478,15 +479,15 @@
     width: 2.5rem;
     height: 2.5rem;
     padding: 0;
-    border-radius: 50%;
+    border-radius: v.rad(circle);
     border: none;
     background: var(--color-bg-subtle);
-    font-size: v.fs(t115);
-    box-shadow: 0 2px 8px var(--color-shadow-md), 0 1px 2px var(--color-shadow-sm);
+    font-size: v.fs(xl);
+    @include sh.md-plus-sm;
 
     &:hover {
       background: var(--color-primary-muted);
-      box-shadow: 0 4px 14px var(--color-primary-shadow);
+      @include sh.primary-hover;
       opacity: 1;
     }
 
@@ -500,7 +501,7 @@
 .nav-link {
   color: var(--color-text-secondary);
   text-decoration: none;
-  font-size: v.fs(t9375);
+  font-size: v.fs(body-sm);
   font-weight: v.fw(medium);
   letter-spacing: -0.01em;
   @include v.transition-channels(
@@ -537,12 +538,12 @@
       padding: 0;
       color: var(--color-primary);
       background: none;
-      box-shadow: none;
+      @include sh.none;
 
       &:hover {
         color: var(--color-primary-hover);
         background: none;
-        box-shadow: none;
+        @include sh.none;
       }
     }
 
@@ -562,13 +563,13 @@
       left: 50%;
       top: 100%;
       transform: translate(-50%, -0.25rem);
-      padding: v.space(r030) v.space(r060);
+      padding: v.space(xs) v.space(sm);
       background: var(--color-bg-subtle-2);
       color: var(--color-text);
       font-size: v.fs(xs);
       font-weight: v.fw(medium);
       white-space: nowrap;
-      border-radius: 20px;
+      border-radius: v.rad(p20);
       opacity: 0;
       visibility: hidden;
       transition:
@@ -576,7 +577,7 @@
         transform #{v.dur(normal)} #{v.ease(default)},
         visibility #{v.dur(normal)} #{v.ease(default)};
       pointer-events: none;
-      box-shadow: 0 2px 8px var(--color-shadow-md);
+      @include sh.md-soft;
     }
 
     &:hover .nav-link__tooltip {
@@ -618,13 +619,13 @@
     width: 100%;
     min-height: 3.25rem;
     margin: 0;
-    padding: v.space(r065) v.space(xl);
+    padding: v.space(md) v.space(xl);
     border: none;
     border-radius: 0;
     border-bottom: 1px solid var(--color-border);
     background: transparent;
-    box-shadow: none;
-    font-size: v.fs(t9375);
+    @include sh.none;
+    font-size: v.fs(body-sm);
     font-weight: v.fw(medium);
     color: var(--color-text-heading);
     text-decoration: none;
@@ -666,7 +667,7 @@
     width: 100%;
     cursor: pointer;
     font: inherit;
-    font-size: v.fs(t9375);
+    font-size: v.fs(body-sm);
     font-weight: v.fw(medium);
     text-align: left;
 
@@ -685,11 +686,11 @@
     align-items: center;
     justify-content: center;
     margin: v.space(lg) v.space(xl) 0;
-    padding: v.space(r070) v.space(lg);
-    border-radius: 999px;
+    padding: v.space(md) v.space(lg);
+    border-radius: v.rad(pill);
     border: 1px solid var(--color-primary);
     background: transparent;
-    font-size: v.fs(t9375);
+    font-size: v.fs(body-sm);
     font-weight: v.fw(semibold);
     color: var(--color-primary);
     text-decoration: none;

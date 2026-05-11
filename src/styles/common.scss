@@ -1,4 +1,5 @@
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
 $font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, sans-serif;
@@ -25,7 +26,7 @@ $error-dark: var(--color-error-dark);
 @mixin padded-page-z {
   padding: v.space(3xl);
   position: relative;
-  z-index: 10;
+  z-index: v.z(dock);
 
   @include bp.below(bp.$md) {
     padding: v.space(lg);
@@ -74,7 +75,7 @@ $error-dark: var(--color-error-dark);
   &:focus {
     border-color: var(--color-primary);
     background: var(--color-input-focus-bg);
-    box-shadow: 0 0 0 v.space(xs) var(--color-primary-muted);
+    @include sh.focus-ring-primary-xs;
   }
 }
 
@@ -113,7 +114,7 @@ $error-dark: var(--color-error-dark);
 
 %bg-decoration-base {
   position: absolute;
-  border-radius: 50%;
+  border-radius: v.rad(circle);
   pointer-events: none;
 }
 
@@ -218,7 +219,7 @@ body.page--home .bg-decoration-2 {
   border-radius: v.rad(2xl);
   padding: v.space(3xl);
   border: 1px solid var(--color-card-border);
-  box-shadow: 0 v.space(card-shadow-y) v.space(card-shadow-blur) var(--color-shadow-card);
+  @include sh.card-promo-rest;
   transition:
     transform #{v.dur(moderate)} #{v.ease(default)},
     box-shadow #{v.dur(moderate)} #{v.ease(default)},
@@ -226,7 +227,7 @@ body.page--home .bg-decoration-2 {
 
   &:hover {
     transform: translateY(-#{v.space(card-shadow-y)}) scale(1.01);
-    box-shadow: 0 v.space(card-hover-shadow-y) v.space(card-hover-shadow-blur) var(--color-shadow-md);
+    @include sh.card-promo-hover;
   }
 }
 
@@ -252,7 +253,11 @@ body.page--home .bg-decoration-2 {
   background: var(--color-input-bg);
   color: var(--color-text);
   -webkit-text-fill-color: var(--color-text);
-  transition: all #{v.dur(normal)} #{v.ease(default)};
+  @include v.transition-channels(
+    (border-color, background-color, box-shadow),
+    normal,
+    default
+  );
   outline: none;
 
   @include input-placeholder-tokens;
@@ -260,7 +265,7 @@ body.page--home .bg-decoration-2 {
   &:focus {
     border-color: var(--color-primary);
     background: var(--color-input-focus-bg);
-    box-shadow: 0 0 0 v.space(xs) var(--color-primary-muted);
+    @include sh.focus-ring-primary-xs;
   }
 
   &.error {
@@ -268,7 +273,7 @@ body.page--home .bg-decoration-2 {
     background: var(--color-error-bg);
 
     &:focus {
-      box-shadow: 0 0 0 v.space(xs) color-mix(in srgb, var(--color-error) 22%, transparent);
+      @include sh.focus-ring-error-xs;
     }
   }
 }
@@ -298,8 +303,7 @@ textarea.input {
 [data-theme="dark"] .input:-webkit-autofill:hover,
 [data-theme="dark"] .input:-webkit-autofill:focus {
   -webkit-text-fill-color: var(--color-text);
-  -webkit-box-shadow: 0 0 0 1000px var(--color-input-bg) inset;
-  box-shadow: 0 0 0 1000px var(--color-input-bg) inset;
+  @include sh.input-autofill-mask;
 }
 
 .error-message {
@@ -326,7 +330,7 @@ textarea.input {
 }
 
 %page-container {
-  max-width: 1200px;
+  max-width: v.layout-max(content);
   @include padded-page-z;
 }
 
@@ -348,7 +352,7 @@ textarea.input {
   }
 
   .title {
-    font-size: clamp(v.fs(t200), 4vw, v.fs(t250));
+    font-size: clamp(v.fs(display-sm), 4vw, v.fs(display-lg));
     font-weight: v.fw(extrabold);
     line-height: 1.15;
     color: var(--color-text-heading);
@@ -368,7 +372,7 @@ textarea.input {
 %table-card-base {
   background: var(--color-card);
   border-radius: v.rad(2xl);
-  box-shadow: 0 v.space(xs) v.space(2xl) var(--color-shadow-card);
+  @include sh.table-surface;
   overflow: hidden;
   border: 1px solid var(--color-card-border);
 }
@@ -377,7 +381,7 @@ textarea.input {
   @include bp.below(bp.$md) {
     overflow: visible;
     border: none;
-    box-shadow: none;
+    @include sh.none;
     background: transparent;
   }
 }
@@ -403,7 +407,7 @@ textarea.input {
     min-height: 3.5rem;
     border-bottom: 1px solid var(--color-table-cell-border);
     color: var(--color-text);
-    font-size: v.fs(t96875);
+    font-size: v.fs(base);
     line-height: 1.45;
     vertical-align: middle;
   }

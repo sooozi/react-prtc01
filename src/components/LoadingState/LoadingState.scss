@@ -11,7 +11,7 @@
   height: 40px;
   border: 3px solid var(--color-border);
   border-top-color: var(--color-primary);
-  border-radius: 50%;
+  border-radius: v.rad(circle);
   animation: spin 1s linear infinite;
 }
 
@@ -29,6 +29,6 @@
   height: 24px;
   border: 3px solid var(--color-border);
   border-top-color: var(--color-primary);
-  border-radius: 50%;
+  border-radius: v.rad(circle);
   animation: spin 0.8s linear infinite;
 }

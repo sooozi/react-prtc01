@@ -39,7 +39,7 @@
   margin-top: v.space(lg);
   background: var(--color-error-bg);
   border: 1px solid var(--color-error-border);
-  border-radius: 10px;
+  border-radius: v.rad(p10);
   font-size: v.fs(body-sm);
   color: var(--color-error-dark);
 }

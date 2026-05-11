@@ -1,4 +1,5 @@
 @use "@/styles/common.scss" as *;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 @use "./error-page-shared" as err;
 
@@ -14,24 +15,24 @@
   width: 120px;
   height: 120px;
   background: linear-gradient(135deg, var(--color-error-bg) 0%, color-mix(in srgb, var(--color-error) 16%, transparent) 100%);
-  border-radius: 50%;
+  border-radius: v.rad(circle);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto v.space(2xl);
-  box-shadow: 0 10px 40px color-mix(in srgb, var(--color-error) 18%, transparent);
+  @include sh.error-sheet-danger;
 }
 
 .icon {
-  font-size: v.fs(t350);
+  font-size: v.fs(display-2xl);
 }
 
 .error-code {
   display: inline-block;
-  padding: v.space(r040) v.space(lg);
+  padding: v.space(sm) v.space(lg);
   background: var(--color-error-bg);
-  border-radius: 999px;
-  font-size: v.fs(t085);
+  border-radius: v.rad(pill);
+  font-size: v.fs(sm);
   font-weight: v.fw(semibold);
   color: var(--color-error-dark);
   margin-bottom: v.space(lg);

@@ -1,5 +1,6 @@
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
 .schedule-side-panel {
@@ -16,30 +17,27 @@
   background-image:
     radial-gradient(ellipse 120% 85% at 100% 0%, color-mix(in srgb, var(--color-primary) 1%, transparent), transparent 52%),
     radial-gradient(ellipse 90% 70% at 0% 100%, color-mix(in srgb, var(--color-primary) 3.5%, transparent), transparent 48%);
-  box-shadow:
-    0 1px 0 color-mix(in srgb, var(--color-card) 40%, var(--color-static-white)),
-    0 20px 48px -12px color-mix(in srgb, var(--color-shadow-card) 95%, var(--color-primary) 5%),
-    0 8px 24px var(--color-shadow-sm);
+  @include sh.schedule-side-card;
 
   @include bp.below(bp.$sm) {
-    border-radius: 16px;
+    border-radius: v.rad(p16);
   }
 }
 
 .schedule-side-panel__hero {
   position: relative;
-  z-index: 1;
-  padding: clamp(#{v.space(r135)}, 3vw, #{v.space(r165)}) clamp(#{v.space(xl)}, 3vw, #{v.space(r145)})
+  z-index: v.z(raised);
+  padding: clamp(#{v.space(xl)}, 3vw, #{v.space(loft)}) clamp(#{v.space(xl)}, 3vw, #{v.space(2xl)})
     #{v.space(table-y)};
 
   @include bp.below(bp.$sm) {
-    padding: v.space(r115) v.space(lg) v.space(r095);
+    padding: v.space(lg) v.space(lg) v.space(lg);
   }
 }
 
 .schedule-side-panel__title {
   margin: 0;
-  font-size: clamp(v.fs(t108), 2.2vw, v.fs(t122));
+  font-size: clamp(v.fs(lg), 2.2vw, v.fs(xl));
   font-weight: v.fw(extrabold);
   letter-spacing: -0.04em;
   line-height: 1.25;
@@ -47,9 +45,9 @@
 }
 
 .schedule-side-panel__subtitle {
-  margin: v.space(r045) 0 0;
+  margin: v.space(sm) 0 0;
   max-width: 28ch;
-  font-size: v.fs(t080);
+  font-size: v.fs(sm);
   line-height: 1.55;
   letter-spacing: -0.02em;
   color: var(--color-text-muted);
@@ -57,31 +55,31 @@
 
 .schedule-side-panel__body {
   position: relative;
-  z-index: 1;
+  z-index: v.z(raised);
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: 0 clamp(#{v.space(r115)}, 2.8vw, #{v.space(r140)}) clamp(#{v.space(r135)}, 3vw, #{v.space(r155)});
+  padding: 0 clamp(#{v.space(lg)}, 2.8vw, #{v.space(2xl)}) clamp(#{v.space(xl)}, 3vw, #{v.space(2xl)});
 
   @include bp.below(bp.$sm) {
-    padding: 0 v.space(lg) v.space(r120);
+    padding: 0 v.space(lg) v.space(xl);
   }
 }
 
 .schedule-side-panel__body > .schedule-side-panel__field:first-child {
-  padding-bottom: v.space(r010);
+  padding-bottom: v.space(xxs);
 }
 
 .schedule-side-panel__body > .schedule-side-panel__field:not(:first-child) {
   margin-top: v.space(lg);
-  padding-top: v.space(r105);
+  padding-top: v.space(lg);
   border-top: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
 }
 
 .schedule-side-panel__label {
   display: block;
   margin-bottom: v.space(sm);
-  font-size: v.fs(t072);
+  font-size: v.fs(xs);
   font-weight: v.fw(bold);
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -89,18 +87,18 @@
 }
 
 .schedule-side-panel__chip-well {
-  padding: v.space(r048) 0;
+  padding: v.space(sm) 0;
 }
 
 [data-theme="dark"] .schedule-side-panel__chip-well {
   background: var(--color-bg-subtle);
-  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--color-static-black) 22%, transparent);
+  @include sh.chip-well-inset-dark;
 }
 
 .schedule-side-panel__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: v.space(r042) v.space(r045);
+  gap: v.space(sm) v.space(sm);
 }
 
 .schedule-side-panel__chip {
@@ -109,11 +107,11 @@
   align-items: center;
   justify-content: center;
   margin: 0;
-  padding: 0 v.space(r080);
-  border-radius: 999px;
+  padding: 0 v.space(md);
+  border-radius: v.rad(pill);
   border: 2px solid transparent;
   line-height: 1.5rem;
-  font-size: v.fs(t080);
+  font-size: v.fs(sm);
   font-weight: v.fw(bold);
   letter-spacing: -0.03em;
   cursor: pointer;
@@ -134,7 +132,7 @@
   }
 
   &:focus-within {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 28%, transparent);
+    @include sh.focus-ring-primary-3-mix;
   }
 }
 
@@ -171,9 +169,7 @@
 }
 
 .schedule-side-panel__chip:has(.schedule-side-panel__chip-input:checked) {
-  box-shadow:
-    0 8px 20px color-mix(in srgb, var(--color-primary-shadow) 18%, transparent),
-    0 2px 6px var(--color-shadow-sm);
+  @include sh.side-chip-selected;
   filter: saturate(1.06);
   transform: translateY(-1px);
 }
@@ -199,7 +195,7 @@
 }
 
 .schedule-side-panel__input-shell {
-  border-radius: 14px;
+  border-radius: v.rad(p14);
   padding: v.space(px2);
   background: linear-gradient(
     135deg,
@@ -219,39 +215,35 @@
   box-sizing: border-box;
   margin: 0;
   font-family: inherit;
-  font-size: v.fs(t8125);
+  font-size: v.fs(sm);
   color: var(--color-text);
   border: none;
   border-radius: calc(14px - 2px);
   background: color-mix(in srgb, var(--color-input-bg) 94%, var(--color-card));
   outline: none;
-  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--color-shadow-sm) 50%, transparent);
+  @include sh.side-input-inset;
   transition:
     box-shadow #{v.dur(snappy)} #{v.ease(out-expo)},
     background #{v.dur(normal)} #{v.ease(default)};
 
   &:focus {
     background: var(--color-input-focus-bg);
-    box-shadow:
-      inset 0 1px 2px color-mix(in srgb, var(--color-primary) 8%, transparent),
-      0 0 0 3px color-mix(in srgb, var(--color-primary-muted) 92%, transparent);
+    @include sh.side-input-focus;
   }
 }
 
 .schedule-side-panel__input {
-  padding: v.space(r070) v.space(r095);
+  padding: v.space(md) v.space(lg);
   min-height: 2.85rem;
 
   &:focus {
-    box-shadow:
-      inset 0 1px 2px color-mix(in srgb, var(--color-primary) 8%, transparent),
-      0 0 0 3px var(--color-primary-muted);
+    @include sh.side-input-focus-ring;
   }
 }
 
 .schedule-side-panel__textarea {
   display: block;
-  padding: v.space(r082) v.space(r095);
+  padding: v.space(md) v.space(lg);
   line-height: 1.6;
   letter-spacing: -0.01em;
   resize: none;
@@ -263,9 +255,7 @@
 }
 
 [data-theme="dark"] .schedule-side-panel__chip:has(.schedule-side-panel__chip-input:checked) {
-  box-shadow:
-    0 10px 28px color-mix(in srgb, var(--color-static-black) 35%, transparent),
-    0 2px 8px color-mix(in srgb, var(--color-static-black) 20%, transparent);
+  @include sh.side-chip-selected-dark;
 }
 
 .schedule-workspace .schedule-side-panel {
@@ -279,7 +269,7 @@
   flex: 1;
   border: none;
   border-radius: 0;
-  box-shadow: none;
+  @include sh.none;
   background: transparent;
   background-image: none;
 }
@@ -287,5 +277,5 @@
 .schedule-side-panel__actions {
   display: flex;
   justify-content: flex-end;
-  padding-top: v.space(r105);
+  padding-top: v.space(lg);
 }

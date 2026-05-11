@@ -24,7 +24,7 @@
 
 .message {
   padding: v.space(input-block) v.space(lg);
-  border-radius: 12px;
+  border-radius: v.rad(p12);
   font-size: v.fs(body-sm);
   font-weight: v.fw(medium);
   margin-bottom: v.space(lg);
@@ -57,7 +57,7 @@
 }
 
 .hint-text {
-  font-size: v.fs(t070);
+  font-size: v.fs(xs);
   font-weight: v.fw(regular);
   color: var(--color-text-muted);
 }

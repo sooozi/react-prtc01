@@ -1,5 +1,6 @@
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
 body.image-file-attach--reorder-active {
@@ -17,7 +18,7 @@ body.image-file-attach--reorder-active {
 }
 
 .image-file-attach--spaced {
-  margin-top: v.space(r065);
+  margin-top: v.space(md);
 }
 
 .image-file-attach__input-hidden {
@@ -30,16 +31,16 @@ body.image-file-attach--reorder-active {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: v.space(r035);
+  gap: v.space(xs);
   min-height: 88px;
-  padding: v.space(r090) v.space(lg);
+  padding: v.space(lg) v.space(lg);
   
   border: 2px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: v.rad(p12);
   background: var(--color-card);
   color: var(--color-text-secondary);
   cursor: pointer;
-  box-shadow: 0 1px 2px var(--color-shadow-sm);
+  @include sh.sm-1;
   transition:
     border-color #{v.dur(normal)} #{v.ease(default)},
     background #{v.dur(normal)} #{v.ease(default)},
@@ -55,7 +56,7 @@ body.image-file-attach--reorder-active {
 .image-file-attach:focus-within .image-file-attach__add {
   border-color: var(--color-primary);
   background: var(--color-button-bg-hover);
-  box-shadow: 0 0 0 3px var(--color-primary-muted);
+  @include sh.focus-ring-primary-3;
 
   .image-file-attach__add-title {
     color: var(--color-primary);
@@ -70,7 +71,7 @@ body.image-file-attach--reorder-active {
   border-color: var(--color-primary);
   color: var(--color-text);
   background: var(--color-button-bg-hover);
-  box-shadow: 0 2px 8px var(--color-shadow-md);
+  @include sh.md-soft;
 
   .image-file-attach__add-title {
     color: var(--color-primary);
@@ -82,31 +83,31 @@ body.image-file-attach--reorder-active {
 }
 
 .image-file-attach__add-title {
-  font-size: v.fs(t080);
+  font-size: v.fs(sm);
   font-weight: v.fw(semibold);
   color: var(--color-text-heading);
   transition: color #{v.dur(normal)} #{v.ease(default)};
 }
 
 .image-file-attach__add-sub {
-  font-size: v.fs(t072);
+  font-size: v.fs(xs);
   color: var(--color-text-secondary);
   transition: color #{v.dur(normal)} #{v.ease(default)};
 
   @include bp.below(bp.$md) {
-    font-size: v.fs(t050);
+    font-size: v.fs(xxs);
   }
 }
 
 .image-file-attach__add-notice-message {
   margin: v.space(sm) 0 0;
-  padding: v.space(r060) v.space(r080);
-  font-size: v.fs(t080);
+  padding: v.space(sm) v.space(md);
+  font-size: v.fs(sm);
   line-height: 1.4;
   color: var(--color-error-dark, var(--color-text-heading));
   background: var(--color-error-bg, color-mix(in srgb, var(--color-border) 35%, transparent));
   border: 1px solid var(--color-error-border, var(--color-border));
-  border-radius: 10px;
+  border-radius: v.rad(p10);
 }
 
 .image-file-attach__reorder-block {
@@ -116,35 +117,35 @@ body.image-file-attach--reorder-active {
   
   border: 1px solid
     color-mix(in srgb, var(--color-primary) 14%, var(--color-card-border, var(--color-border)));
-  border-radius: 14px;
+  border-radius: v.rad(p14);
   background: var(--color-card);
-  box-shadow: 0 2px 12px var(--color-shadow-card);
+  @include sh.md-elevated;
   overflow: hidden;
 }
 
 .image-file-attach__reorder-block-top {
-  padding: v.space(r090) v.space(lg) v.space(md);
+  padding: v.space(lg) v.space(lg) v.space(md);
   background: color-mix(in srgb, var(--color-primary) 10%, var(--color-card));
   border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 10%, var(--color-border));
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-static-white) 45%, transparent) inset;
+  @include sh.inset-top-white-45;
 }
 
 .image-file-attach__reorder-headline {
-  margin-bottom: v.space(r040);
+  margin-bottom: v.space(sm);
 }
 
 .image-file-attach__reorder-hint-row {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: v.space(sm) v.space(r085);
+  gap: v.space(sm) v.space(md);
   width: 100%;
   box-sizing: border-box;
 }
 
 .image-file-attach__reorder-block-title {
   margin: 0;
-  font-size: v.fs(t080);
+  font-size: v.fs(sm);
   font-weight: v.fw(bold);
   letter-spacing: 0.02em;
   color: var(--color-text-heading);
@@ -159,7 +160,7 @@ body.image-file-attach--reorder-active {
   white-space: nowrap;
   flex: 0 0 auto;
   
-  margin-top: v.space(r004);
+  margin-top: v.space(xxs);
   text-align: right;
 }
 
@@ -169,7 +170,7 @@ body.image-file-attach--reorder-active {
   min-width: 0;
   margin: 0;
   padding: 0;
-  font-size: v.fs(t070);
+  font-size: v.fs(xs);
   line-height: 1.45;
   color: var(--color-text-secondary);
 
@@ -186,10 +187,10 @@ body.image-file-attach--reorder-active {
   justify-content: center;
   width: 1.75rem;
   height: 1.75rem;
-  border-radius: 7px;
+  border-radius: v.rad(p8);
   color: var(--color-primary);
   background: var(--color-card);
-  box-shadow: inset 0 0 0 1px var(--color-border);
+  @include sh.inset-border-1;
 }
 
 .image-file-attach__reorder-hint-ico {
@@ -200,7 +201,7 @@ body.image-file-attach--reorder-active {
 .image-file-attach__reorder-block .image-file-attach__list {
   list-style: none;
   margin: 0;
-  padding: v.space(r085) v.space(r090) v.space(lg);
+  padding: v.space(md) v.space(lg) v.space(lg);
   display: flex;
   flex-direction: column;
   gap: v.space(sm);
@@ -228,10 +229,10 @@ body.image-file-attach--reorder-active {
   gap: v.space(sm);
   width: 100%;
   min-height: 2.5rem;
-  padding: v.space(r055) v.space(r090) v.space(r055) v.space(r070);
+  padding: v.space(sm) v.space(lg) v.space(sm) v.space(md);
   box-sizing: border-box;
   border: 1px solid var(--color-border);
-  border-radius: 10px;
+  border-radius: v.rad(p10);
   background: var(--color-input-bg);
   color: var(--color-text);
   transition:
@@ -259,7 +260,7 @@ body.image-file-attach--reorder-active {
 
 .image-file-attach__row--reorder:hover:not(.image-file-attach__row--dragging) {
   border-color: var(--color-primary);
-  box-shadow: 0 2px 10px color-mix(in srgb, var(--color-static-black) 8%, transparent);
+  @include sh.image-row-hover;
 
   .image-file-attach__handle-zone {
     color: var(--color-primary);
@@ -273,7 +274,7 @@ body.image-file-attach--reorder-active {
 
   &:hover:not(.image-file-attach__row--dragging) {
     border-color: var(--color-primary);
-    box-shadow: 0 2px 10px color-mix(in srgb, var(--color-static-black) 8%, transparent);
+    @include sh.image-row-hover;
 
     .image-file-attach__handle-zone {
       color: var(--color-primary);
@@ -291,12 +292,12 @@ body.image-file-attach--reorder-active {
   outline-offset: 1px;
   background: var(--color-input-focus-bg);
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-muted);
+  @include sh.focus-ring-primary-3;
 }
 
 .image-file-attach__row--dragging {
   opacity: 0.32;
-  box-shadow: none;
+  @include sh.none;
 }
 
 .image-file-attach__drag-ghost {
@@ -312,12 +313,10 @@ body.image-file-attach--reorder-active {
   min-height: 2.5rem;
   padding: 0 v.space(px10) 0 0;
   border: 1px solid var(--color-primary);
-  border-radius: 10px;
+  border-radius: v.rad(p10);
   background: var(--color-card);
   color: var(--color-text);
-  box-shadow:
-    0 12px 40px color-mix(in srgb, var(--color-static-black) 20%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--color-primary) 35%, transparent);
+  @include sh.image-drag-ghost;
   opacity: 0.96;
   transform: rotate(-0.35deg);
 }
@@ -328,7 +327,7 @@ body.image-file-attach--reorder-active {
   align-items: center;
   justify-content: center;
   align-self: stretch;
-  padding: v.space(r040) v.space(sm);
+  padding: v.space(sm) v.space(sm);
   min-width: 2.1rem;
   color: var(--color-primary);
   background: var(--color-primary-muted);
@@ -343,7 +342,7 @@ body.image-file-attach--reorder-active {
   align-items: center;
   justify-content: center;
   align-self: stretch;
-  padding: v.space(r040) v.space(sm);
+  padding: v.space(sm) v.space(sm);
   min-width: 2.1rem;
   color: var(--color-primary);
   background: var(--color-primary-muted);
@@ -395,7 +394,7 @@ body.image-file-attach--reorder-active {
 .image-file-attach__name {
   width: 100%;
   min-width: 0;
-  font-size: v.fs(t070);
+  font-size: v.fs(xs);
   line-height: 1.3;
   color: var(--color-text-heading);
   white-space: nowrap;
@@ -410,7 +409,7 @@ body.image-file-attach--reorder-active {
 }
 
 .image-file-attach__size {
-  font-size: v.fs(t060);
+  font-size: v.fs(xs);
   line-height: 1.2;
   color: var(--color-text-secondary);
   font-variant-numeric: tabular-nums;
@@ -423,8 +422,8 @@ body.image-file-attach--reorder-active {
   height: 1.5rem;
   padding: 0;
   border: none;
-  border-radius: 6px;
-  font-size: v.fs(t110);
+  border-radius: v.rad(p8);
+  font-size: v.fs(lg);
   line-height: 1;
   cursor: pointer;
   color: var(--color-text-secondary);

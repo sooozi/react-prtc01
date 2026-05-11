@@ -3,8 +3,8 @@
   display: inline-block;
   padding: v.space(sm) v.space(lg);
   background: linear-gradient(135deg, var(--color-primary-muted) 0%, var(--color-secondary-muted) 100%);
-  border-radius: 999px;
-  font-size: v.fs(t070);
+  border-radius: v.rad(pill);
+  font-size: v.fs(xs);
   font-weight: v.fw(semibold);
   color: var(--color-primary);
   margin-bottom: v.space(lg);

@@ -1,4 +1,5 @@
 @use "@/styles/common.scss" as *;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 @use "@/styles/breakpoints" as bp;
 
@@ -22,10 +23,7 @@
   max-width: 100%;
   border-radius: clamp(18px, 2.5vw, 22px);
   background-color: var(--color-card);
-  box-shadow:
-    0 1px 0 color-mix(in srgb, var(--color-card) 50%, var(--color-static-white)),
-    0 22px 50px -16px color-mix(in srgb, var(--color-shadow-card) 92%, var(--color-primary) 8%),
-    0 8px 24px var(--color-shadow-sm);
+  @include sh.schedule-workspace-light;
   overflow: hidden;
 
   @include bp.below(bp.$lg) {
@@ -35,15 +33,15 @@
 
 .schedule-workspace__calendar {
   min-width: 0;
-  padding: clamp(#{v.space(lg)}, 2.2vw, #{v.space(r135)}) clamp(#{v.space(lg)}, 2.5vw, #{v.space(r135)})
-    clamp(#{v.space(table-y)}, 2.2vw, #{v.space(r145)});
+  padding: clamp(#{v.space(lg)}, 2.2vw, #{v.space(xl)}) clamp(#{v.space(lg)}, 2.5vw, #{v.space(xl)})
+    clamp(#{v.space(table-y)}, 2.2vw, #{v.space(2xl)});
 
   @include bp.below(bp.$md) {
-    padding: v.space(r085) v.space(md) v.space(lg);
+    padding: v.space(md) v.space(md) v.space(lg);
   }
 
   @include bp.below(bp.$sm) {
-    padding: v.space(md) v.space(r055) v.space(r095);
+    padding: v.space(md) v.space(sm) v.space(lg);
   }
 }
 
@@ -65,8 +63,5 @@
 }
 
 [data-theme="dark"] .schedule-workspace {
-  box-shadow:
-    0 1px 0 color-mix(in srgb, var(--color-card) 20%, transparent),
-    0 24px 48px color-mix(in srgb, var(--color-static-black) 40%, transparent),
-    0 10px 24px color-mix(in srgb, var(--color-static-black) 22%, transparent);
+  @include sh.schedule-workspace-dark;
 }

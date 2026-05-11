@@ -4,13 +4,13 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: v.space(md);
-  padding: v.space(r065) v.space(lg);
+  padding: v.space(md) v.space(lg);
   background: var(--color-error-bg);
   border-bottom: 1px solid var(--color-error);
   color: var(--color-text);
   font-size: v.fs(body-sm);
   line-height: 1.4;
-  z-index: 50;
+  z-index: v.z(banner);
 }
 
 .api-error-bar__text {
@@ -21,14 +21,14 @@
 .api-error-bar__dismiss {
   flex-shrink: 0;
   margin: 0;
-  padding: 0 v.space(r035);
+  padding: 0 v.space(xs);
   border: none;
   background: transparent;
   color: var(--color-text-secondary);
   font-size: v.fs(xl);
   line-height: 1;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: v.rad(xs);
 
   &:hover {
     color: var(--color-text);

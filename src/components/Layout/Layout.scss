@@ -23,7 +23,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  max-width: 1200px;
+  max-width: v.layout-max(content);
   width: 100%;
   margin: 0 auto;
   @include padded-page-z;
@@ -58,11 +58,11 @@
   content: "";
   position: fixed;
   inset: auto;
-  z-index: -1;
+  z-index: v.z(below);
   pointer-events: none;
   width: 520px;
   height: 520px;
-  border-radius: 9999px;
+  border-radius: v.rad(blob);
   filter: blur(34px);
   opacity: 0.38;
   transform: translate3d(0, 0, 0);

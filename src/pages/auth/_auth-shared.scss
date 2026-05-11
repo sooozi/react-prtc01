@@ -1,6 +1,7 @@
 
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 @forward "@/styles/common.scss";
 
@@ -13,21 +14,21 @@
   max-width: 440px;
   background: var(--color-card);
   border: 1px solid var(--color-border);
-  border-radius: 20px;
-  box-shadow: 0 12px 40px var(--color-shadow-md);
+  border-radius: v.rad(p20);
+  @include sh.auth-card-elevated;
   padding: v.space(4xl);
-  padding-top: v.space(r265);
+  padding-top: v.space(4xl);
   position: relative;
-  z-index: 10;
+  z-index: v.z(dock);
   overflow: hidden;
 
   @include bp.below(bp.$md) {
     padding: v.space(2xl);
-    padding-top: v.space(r165);
-    border-radius: 20px;
+    padding-top: v.space(loft);
+    border-radius: v.rad(p20);
 
     &::before {
-      border-radius: 20px 20px 0 0;
+      border-radius: v.rad(p20) v.rad(p20) 0 0;
     }
   }
 }
@@ -37,14 +38,14 @@
   margin-bottom: v.space(3xl);
 
   .title {
-    font-size: v.fs(t175);
+    font-size: v.fs(3xl);
     font-weight: v.fw(extrabold);
     color: var(--color-text-heading);
     margin-bottom: v.space(sm);
   }
 
   .subtitle {
-    font-size: v.fs(t095);
+    font-size: v.fs(sm);
     color: var(--color-text-secondary);
   }
 }
@@ -72,7 +73,7 @@
   display: block;
 
   .input {
-    padding-right: v.space(r275);
+    padding-right: v.space(5xl);
     color: var(--color-text);
     -webkit-text-fill-color: var(--color-text);
   }
@@ -89,9 +90,9 @@
   padding: v.space(xs);
   border: none;
   background: none;
-  font-size: v.fs(t115);
+  font-size: v.fs(xl);
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: v.rad(p8);
   transition: background #{v.dur(normal)} #{v.ease(default)};
 
   &:hover {

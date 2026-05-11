@@ -1,4 +1,5 @@
 @use "@/styles/common.scss" as *;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 @use "@/styles/breakpoints" as bp;
 
@@ -12,16 +13,16 @@
 }
 
 .post-detail-header .title {
-  font-size: clamp(v.fs(t175), 3vw, v.fs(t225));
+  font-size: clamp(v.fs(3xl), 3vw, v.fs(display-md));
   font-weight: v.fw(extrabold);
   color: var(--color-text-heading);
 }
 
 .post-detail-card {
   background: var(--color-card);
-  border-radius: 16px;
+  border-radius: v.rad(p16);
   padding: v.space(4xl);
-  box-shadow: 0 4px 25px var(--color-shadow-card), 0 1px 3px var(--color-shadow-sm);
+  @include sh.card-stack-lg-sm;
   border: 1px solid var(--color-card-border);
   margin-bottom: v.space(3xl);
   
@@ -41,7 +42,7 @@
 }
 
 .detail-error .error-icon {
-  font-size: v.fs(t200);
+  font-size: v.fs(display-sm);
 }
 
 .detail-meta {
@@ -52,7 +53,7 @@
   margin-bottom: v.space(2xl);
   padding: v.space(md) v.space(lg);
   background: var(--color-bg-subtle);
-  border-radius: 12px;
+  border-radius: v.rad(p12);
   font-size: v.fs(sm);
   color: var(--color-text-secondary);
   border: 1px solid var(--color-border-light);
@@ -65,13 +66,13 @@
 .detail-id {
   font-weight: v.fw(bold);
   color: var(--color-primary);
-  padding: v.space(r020) v.space(sm);
+  padding: v.space(xs) v.space(sm);
   background: var(--color-primary-muted);
-  border-radius: 6px;
+  border-radius: v.rad(p8);
 }
 
 .detail-title {
-  font-size: clamp(v.fs(t120), 2.2vw + v.fs(t092), v.fs(t1625));
+  font-size: clamp(v.fs(xl), 2.2vw + v.fs(sm), v.fs(2xl));
   font-weight: v.fw(extrabold);
   color: var(--color-text-heading);
   margin-bottom: v.space(loft);
@@ -81,7 +82,7 @@
   border-bottom: 2px solid var(--color-border);
 
   @include bp.below(bp.$md) {
-    margin-bottom: v.space(r135);
+    margin-bottom: v.space(xl);
     padding-bottom: v.space(lg);
     line-height: 1.38;
     border-bottom-width: 1px;
@@ -89,7 +90,7 @@
 }
 
 .detail-content {
-  font-size: clamp(v.fs(t098), 0.35vw + v.fs(t095), v.fs(md));
+  font-size: clamp(v.fs(lead), 0.35vw + v.fs(sm), v.fs(md));
   line-height: 1.85;
   color: var(--color-text);
   white-space: pre-wrap;
@@ -133,7 +134,7 @@
 
 .detail-attachments__total {
   flex-shrink: 0;
-  font-size: v.fs(t8125);
+  font-size: v.fs(sm);
   font-weight: v.fw(semibold);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
@@ -156,13 +157,13 @@
   padding: v.space(sm) v.space(md);
   background: var(--color-bg-subtle);
   border: 1px solid var(--color-border-light);
-  border-radius: 10px;
+  border-radius: v.rad(p10);
   font-size: v.fs(body-sm);
 
   @include bp.below(bp.$md) {
-    padding: v.space(r045) v.space(r060);
-    gap: v.space(r045);
-    font-size: v.fs(t065);
+    padding: v.space(sm) v.space(sm);
+    gap: v.space(sm);
+    font-size: v.fs(xs);
   }
 }
 
@@ -187,7 +188,7 @@
 
 .detail-attachments__size {
   flex-shrink: 0;
-  font-size: v.fs(t078);
+  font-size: v.fs(xs);
   font-variant-numeric: tabular-nums;
   color: var(--color-text-secondary);
 }

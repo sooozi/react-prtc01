@@ -1,4 +1,5 @@
 @use "@/styles/common.scss" as *;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 @use "./error-page-shared" as err;
 
@@ -18,24 +19,24 @@
     color-mix(in srgb, var(--color-primary) 12%, var(--color-bg-subtle)) 0%,
     color-mix(in srgb, var(--color-primary) 22%, transparent) 100%
   );
-  border-radius: 50%;
+  border-radius: v.rad(circle);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto v.space(2xl);
-  box-shadow: 0 10px 40px color-mix(in srgb, var(--color-primary) 15%, transparent);
+  @include sh.error-sheet-primary;
 }
 
 .not-found-icon {
-  font-size: v.fs(t350);
+  font-size: v.fs(display-2xl);
 }
 
 .not-found-code {
   display: inline-block;
-  padding: v.space(r040) v.space(lg);
+  padding: v.space(sm) v.space(lg);
   background: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg-subtle));
-  border-radius: 999px;
-  font-size: v.fs(t085);
+  border-radius: v.rad(pill);
+  font-size: v.fs(sm);
   font-weight: v.fw(semibold);
   color: var(--color-primary);
   margin-bottom: v.space(lg);

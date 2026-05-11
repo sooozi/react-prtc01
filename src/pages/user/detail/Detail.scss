@@ -1,41 +1,39 @@
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
 .post-detail-card.user-detail {
   position: relative;
   overflow: clip;
-  padding: v.space(3xl) v.space(r185);
-  border-radius: 22px;
+  padding: v.space(3xl) v.space(loft);
+  border-radius: v.rad(p20);
   border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
   background: var(--color-card);
-  box-shadow:
-    0 1px 0 color-mix(in srgb, var(--color-static-white) 65%, transparent) inset,
-    0 24px 48px -20px color-mix(in srgb, var(--color-primary) 12%, color-mix(in srgb, var(--color-static-black) 8%, transparent)),
-    0 8px 24px color-mix(in srgb, var(--color-static-black) 5%, transparent);
+  @include sh.user-detail-card-light;
 
   @include bp.below(bp.$md) {
-    padding: v.space(2xl) v.space(r120);
-    border-radius: 18px;
+    padding: v.space(2xl) v.space(xl);
+    border-radius: v.rad(p18);
   }
 
   .detail-meta {
     position: relative;
-    z-index: 1;
+    z-index: v.z(raised);
     margin: 0 0 v.space(table-y);
     padding: 0;
     background: transparent;
     border: none;
-    gap: v.space(r040) v.space(r055);
+    gap: v.space(sm) v.space(sm);
     align-items: center;
   }
 
   .detail-id {
     position: relative;
-    z-index: 1;
-    border-radius: 999px;
-    padding: v.space(r032) v.space(r078);
-    font-size: v.fs(t8125);
+    z-index: v.z(raised);
+    border-radius: v.rad(pill);
+    padding: v.space(xs) v.space(md);
+    font-size: v.fs(sm);
     font-weight: v.fw(bold);
     letter-spacing: -0.03em;
     color: var(--color-primary);
@@ -45,31 +43,31 @@
       color-mix(in srgb, var(--color-primary-muted) 55%, var(--color-card)) 100%
     );
     border: 1px solid color-mix(in srgb, var(--color-primary) 22%, var(--color-border-light));
-    box-shadow: 0 1px 2px color-mix(in srgb, var(--color-primary-shadow) 12%, transparent);
+    @include sh.primary-mix-12;
   }
 
   .detail-author,
   .detail-date {
     position: relative;
-    z-index: 1;
-    font-size: v.fs(t8125);
+    z-index: v.z(raised);
+    font-size: v.fs(sm);
     font-weight: v.fw(semibold);
     color: var(--color-text-secondary);
     letter-spacing: -0.02em;
-    padding: v.space(r028) v.space(r065);
-    border-radius: 999px;
+    padding: v.space(xs) v.space(md);
+    border-radius: v.rad(pill);
     background: color-mix(in srgb, var(--color-bg-subtle) 88%, var(--color-card) 12%);
     border: 1px solid color-mix(in srgb, var(--color-static-black) 6%, transparent);
   }
 
   .detail-title {
     position: relative;
-    z-index: 1;
+    z-index: v.z(raised);
     margin: 0;
-    padding: 0 0 v.space(r105);
+    padding: 0 0 v.space(lg);
     border: none;
     border-bottom: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
-    font-size: clamp(v.fs(t170), 3.5vw, v.fs(t2125));
+    font-size: clamp(v.fs(2xl), 3.5vw, v.fs(display-md));
     font-weight: v.fw(extrabold);
     letter-spacing: -0.045em;
     line-height: 1.15;
@@ -79,9 +77,7 @@
 
 [data-theme="dark"] .post-detail-card.user-detail {
   border-color: color-mix(in srgb, var(--color-static-white) 10%, transparent);
-  box-shadow:
-    0 1px 0 color-mix(in srgb, var(--color-static-white) 4%, transparent) inset,
-    0 24px 48px -18px color-mix(in srgb, var(--color-static-black) 45%, transparent);
+  @include sh.user-detail-card-dark;
 
   &::before {
     background: radial-gradient(
@@ -106,15 +102,15 @@
 
 .user-detail-hero {
   position: relative;
-  margin-bottom: v.space(r015);
+  margin-bottom: v.space(xxs);
 }
 
 .user-detail-lead {
   position: relative;
-  z-index: 1;
-  margin: 0 0 v.space(r165);
+  z-index: v.z(raised);
+  margin: 0 0 v.space(loft);
   padding: v.space(lg) 0 0;
-  font-size: v.fs(t098);
+  font-size: v.fs(lead);
   line-height: 1.72;
   letter-spacing: -0.02em;
   color: var(--color-text-secondary);
@@ -124,7 +120,7 @@
 
 .user-detail-subheading {
   margin: 0 0 v.space(md);
-  font-size: v.fs(t6875);
+  font-size: v.fs(xs);
   font-weight: v.fw(bold);
   color: var(--color-text-muted);
   letter-spacing: 0.06em;
@@ -137,17 +133,17 @@
 
 .user-detail-spec-wrap {
   position: relative;
-  z-index: 1;
+  z-index: v.z(raised);
   margin: 0 0 v.space(xl);
-  padding: v.space(r120) v.space(xl) v.space(r035);
-  border-radius: 16px;
+  padding: v.space(xl) v.space(xl) v.space(xs);
+  border-radius: v.rad(p16);
   background: linear-gradient(
     165deg,
     color-mix(in srgb, var(--color-bg-subtle) 94%, var(--color-primary-muted) 6%) 0%,
     color-mix(in srgb, var(--color-card) 92%, var(--color-bg-subtle) 8%) 100%
   );
   border: 1px solid color-mix(in srgb, var(--color-border) 45%, transparent);
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-static-white) 45%, transparent) inset;
+  @include sh.inset-top-white-45;
 
   @include bp.below(bp.$sm) {
     padding: v.space(lg) v.space(lg) v.space(xs);
@@ -161,7 +157,7 @@
     color-mix(in srgb, var(--color-card) 85%, var(--color-bg-subtle) 15%) 100%
   );
   border-color: color-mix(in srgb, var(--color-static-white) 8%, transparent);
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-static-white) 4%, transparent) inset;
+  @include sh.inset-top-white-4;
 }
 
 .user-detail-spec {
@@ -177,10 +173,10 @@
   grid-template-columns: minmax(5.5rem, 7rem) 1fr;
   align-items: baseline;
   column-gap: v.space(lg);
-  row-gap: v.space(r015);
-  padding: v.space(r085) v.space(r055);
-  margin: 0 calc(-1 * v.space(r055));
-  border-radius: 12px;
+  row-gap: v.space(xxs);
+  padding: v.space(md) v.space(sm);
+  margin: 0 calc(-1 * v.space(sm));
+  border-radius: v.rad(p12);
   border-bottom: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
   @include v.transition-channels(
     (
@@ -201,7 +197,7 @@
 
   &:last-child {
     border-bottom: none;
-    padding-bottom: v.space(r045);
+    padding-bottom: v.space(sm);
   }
 
   dt {
@@ -216,7 +212,7 @@
   dd {
     margin: 0;
     text-align: left;
-    font-size: v.fs(t9375);
+    font-size: v.fs(body-sm);
     font-weight: v.fw(semibold);
     color: var(--color-text-heading);
     letter-spacing: -0.03em;
@@ -226,9 +222,9 @@
 
   @include bp.below(bp.$sm) {
     grid-template-columns: 1fr;
-    gap: v.space(r020);
-    padding: v.space(md) v.space(r045);
-    margin: 0 calc(-1 * v.space(r045));
+    gap: v.space(xs);
+    padding: v.space(md) v.space(sm);
+    margin: 0 calc(-1 * v.space(sm));
 
     dd {
       font-size: v.fs(body-sm);
@@ -238,8 +234,8 @@
 
 .user-detail-contact-block {
   position: relative;
-  z-index: 1;
-  margin: 0 0 v.space(r135);
+  z-index: v.z(raised);
+  margin: 0 0 v.space(xl);
 }
 
 .user-detail-contact {
@@ -250,25 +246,25 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: v.space(r065) v.space(lg);
-  padding: v.space(lg) v.space(r115);
-  border-radius: 14px;
+  gap: v.space(md) v.space(lg);
+  padding: v.space(lg) v.space(lg);
+  border-radius: v.rad(p14);
   background: linear-gradient(
     135deg,
     color-mix(in srgb, var(--color-primary-muted) 55%, var(--color-card)) 0%,
     color-mix(in srgb, var(--color-bg-subtle) 90%, var(--color-card) 10%) 100%
   );
   border: 1px solid color-mix(in srgb, var(--color-primary) 14%, var(--color-border-light));
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-primary-shadow) 10%, transparent);
+  @include sh.user-contact-row;
 }
 
 [data-theme="dark"] .user-detail-contact__row {
   border-color: color-mix(in srgb, var(--color-primary) 22%, color-mix(in srgb, var(--color-static-white) 10%, transparent));
-  box-shadow: 0 2px 12px color-mix(in srgb, var(--color-static-black) 20%, transparent);
+  @include sh.user-contact-row-dark;
 }
 
 .user-detail-contact__label {
-  font-size: v.fs(t6875);
+  font-size: v.fs(xs);
   font-weight: v.fw(bold);
   color: var(--color-text-muted);
   letter-spacing: 0.05em;
@@ -281,7 +277,7 @@
   font-size: v.fs(body-sm);
   color: var(--color-text-secondary);
   letter-spacing: -0.02em;
-  border-radius: 14px;
+  border-radius: v.rad(p14);
   background: var(--color-bg-subtle);
   border: 1px dashed color-mix(in srgb, var(--color-border) 80%, transparent);
 }
@@ -289,13 +285,13 @@
 .user-detail-mailto {
   color: var(--color-primary);
   font-weight: v.fw(bold);
-  font-size: v.fs(t095);
+  font-size: v.fs(sm);
   text-decoration: none;
   word-break: break-all;
   letter-spacing: -0.03em;
-  padding: v.space(r020) v.space(r055);
-  margin: calc(-1 * v.space(r020)) calc(-1 * v.space(r055));
-  border-radius: 10px;
+  padding: v.space(xs) v.space(sm);
+  margin: calc(-1 * v.space(xs)) calc(-1 * v.space(sm));
+  border-radius: v.rad(p10);
   @include v.transition-channels(
     (
       color,
@@ -319,11 +315,11 @@
 .user-detail-aside {
   position: relative;
   margin: 0;
-  padding: v.space(r115) v.space(xl);
-  border-radius: 14px;
+  padding: v.space(lg) v.space(xl);
+  border-radius: v.rad(p14);
   border: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
   background: color-mix(in srgb, var(--color-bg-subtle) 96%, var(--color-card) 4%);
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-static-white) 35%, transparent) inset;
+  @include sh.inset-top-white-35;
 
   @include bp.below(bp.$sm) {
     padding: v.space(lg) v.space(table-y);
@@ -333,12 +329,12 @@
 [data-theme="dark"] .user-detail-aside {
   background: color-mix(in srgb, var(--color-bg-subtle) 92%, var(--color-card) 8%);
   border-color: color-mix(in srgb, var(--color-static-white) 10%, transparent);
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-static-white) 5%, transparent) inset;
+  @include sh.inset-top-white-5;
 }
 
 .user-detail-aside__title {
-  margin: 0 0 v.space(r040);
-  font-size: v.fs(t6875);
+  margin: 0 0 v.space(sm);
+  font-size: v.fs(xs);
   font-weight: v.fw(extrabold);
   color: var(--color-text-heading);
   letter-spacing: 0.06em;
@@ -347,7 +343,7 @@
 
 .user-detail-aside__text {
   margin: 0;
-  font-size: v.fs(t8125);
+  font-size: v.fs(sm);
   line-height: 1.68;
   color: var(--color-text-secondary);
   letter-spacing: -0.02em;

@@ -128,7 +128,7 @@ body {
 }
 
 h1 {
-  font-size: clamp(v.fs(t175), 5vw, 3.2em);
+  font-size: clamp(v.fs(3xl), 5vw, 3.2em);
   line-height: 1.12;
   letter-spacing: -0.03em;
   color: var(--color-text-heading);
@@ -136,15 +136,19 @@ h1 {
 
 button {
   cursor: pointer;
-  border-radius: 14px;
+  border-radius: v.rad(p14);
   border: 1px solid transparent;
-  padding: v.space(r060) v.space(r120);
+  padding: v.space(sm) v.space(xl);
   font-size: v.fs(base);
   font-weight: v.fw(medium);
   font-family: inherit;
   background-color: var(--color-button-bg);
   color: var(--color-button-text);
-  transition: all #{v.dur(moderate)} #{v.ease(default)};
+  @include v.transition-channels(
+    (border-color, background-color, color, box-shadow),
+    moderate,
+    default
+  );
 }
 
 button:hover {

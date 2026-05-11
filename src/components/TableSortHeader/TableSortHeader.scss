@@ -4,7 +4,7 @@
 .table-sort-th {
   display: inline-flex;
   align-items: center;
-  gap: v.space(r040);
+  gap: v.space(sm);
   min-width: 0;
 }
 
@@ -55,7 +55,7 @@
   cursor: pointer;
   font: inherit;
   line-height: 0;
-  border-radius: 8px;
+  border-radius: v.rad(p8);
   transition: transform #{v.dur(instant)} #{v.ease(default)};
 
   &:hover .table-sort-th__icon--neutral {

@@ -1,3 +1,4 @@
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 @keyframes confirm-overlay-in {
   from {
@@ -26,7 +27,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: v.z(modal);
   padding: v.space(lg);
   animation: confirm-overlay-in 0.2s ease-out;
 }
@@ -34,8 +35,8 @@
 .confirm-modal {
   background: var(--color-card);
   border: 1px solid var(--color-border);
-  border-radius: 16px;
-  box-shadow: 0 20px 25px -5px var(--color-shadow-md), 0 8px 10px -6px var(--color-shadow-sm);
+  border-radius: v.rad(p16);
+  @include sh.confirm-modal-elevated;
   min-width: 280px;
   max-width: 400px;
   padding: v.space(2xl);
@@ -43,14 +44,14 @@
 }
 
 .confirm-title {
-  font-size: v.fs(t110);
+  font-size: v.fs(lg);
   font-weight: v.fw(semibold);
   color: var(--color-text-heading);
   margin-bottom: v.space(sm);
 }
 
 .confirm-message {
-  font-size: v.fs(t095);
+  font-size: v.fs(sm);
   color: var(--color-text-secondary);
   margin-bottom: v.space(xl);
   line-height: 1.5;

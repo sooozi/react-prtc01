@@ -1,34 +1,31 @@
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
 .work-time-bar {
   width: 100%;
   max-width: 800px;
   margin: 0 auto v.space(lg);
-  padding: v.space(r115) v.space(xl) v.space(r105);
-  border-radius: 16px;
+  padding: v.space(lg) v.space(xl) v.space(lg);
+  border-radius: v.rad(p16);
   border: 1px solid color-mix(in srgb, var(--color-primary) 12%, var(--color-border));
   background: linear-gradient(
     155deg,
     color-mix(in srgb, var(--color-primary) 9%, var(--color-card)) 0%,
     color-mix(in srgb, var(--color-primary-muted) 55%, var(--color-card)) 100%
   );
-  box-shadow:
-    0 1px 0 color-mix(in srgb, var(--color-static-white) 55%, transparent) inset,
-    0 6px 24px var(--color-shadow-card);
+  @include sh.work-time-bar-light;
 
   @include bp.below(bp.$md) {
-    margin-bottom: v.space(r085);
-    padding: v.space(lg) v.space(r090) v.space(r095);
-    border-radius: 14px;
+    margin-bottom: v.space(md);
+    padding: v.space(lg) v.space(lg) v.space(lg);
+    border-radius: v.rad(p14);
   }
 }
 
 [data-theme="dark"] .work-time-bar {
-  box-shadow:
-    0 1px 0 color-mix(in srgb, var(--color-static-white) 4%, transparent) inset,
-    0 8px 28px var(--color-shadow-card);
+  @include sh.work-time-bar-dark;
 }
 
 .work-time-bar__header {
@@ -40,12 +37,12 @@
 }
 
 .work-time-bar__header--with-panel {
-  margin-bottom: v.space(r065);
+  margin-bottom: v.space(md);
 }
 
 .work-time-bar__title {
   margin: 0;
-  font-size: v.fs(t084);
+  font-size: v.fs(sm);
   font-weight: v.fw(bold);
   letter-spacing: -0.02em;
   color: var(--color-text-heading);
@@ -61,7 +58,7 @@
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   grid-template-rows: auto auto;
   column-gap: v.space(md);
-  row-gap: v.space(r042);
+  row-gap: v.space(sm);
   align-items: start;
 
   @include bp.below(bp.$sm) {
@@ -76,7 +73,7 @@
 }
 
 .work-time-bar__field-label {
-  font-size: v.fs(t074);
+  font-size: v.fs(xs);
   font-weight: v.fw(semibold);
   letter-spacing: -0.01em;
   color: color-mix(in srgb, var(--color-primary) 28%, var(--color-text-secondary));
@@ -88,11 +85,9 @@
 
 .work-time-bar__pill {
   position: relative;
-  border-radius: 9999px;
+  border-radius: v.rad(blob);
   background: var(--color-card);
-  box-shadow:
-    0 1px 2px color-mix(in srgb, var(--color-static-black) 4%, transparent),
-    0 2px 8px var(--color-shadow-sm);
+  @include sh.work-time-pill;
 
   &--in {
     display: flex;
@@ -100,7 +95,7 @@
     cursor: pointer;
     min-height: 48px;
     min-width: 0;
-    padding-right: v.space(r035);
+    padding-right: v.space(xs);
     border: 1px solid color-mix(in srgb, var(--color-border) 85%, var(--color-primary));
     @include v.transition-channels(
       (
@@ -113,20 +108,17 @@
 
     @include bp.below(bp.$md) {
       min-height: 40px;
-      padding-right: v.space(r028);
+      padding-right: v.space(xs);
     }
 
     @include bp.below(bp.$sm) {
       min-height: 36px;
-      padding-right: v.space(r020);
+      padding-right: v.space(xs);
     }
 
     &:focus-within {
       border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border));
-      box-shadow:
-        0 1px 2px color-mix(in srgb, var(--color-static-black) 4%, transparent),
-        0 2px 10px var(--color-shadow-sm),
-        0 0 0 3px var(--color-primary-muted);
+      @include sh.work-time-pill-focus;
     }
   }
 
@@ -141,13 +133,13 @@
 
     @include bp.below(bp.$md) {
       min-height: 42px;
-      padding: v.space(r038) v.space(md);
+      padding: v.space(xs) v.space(md);
       border-width: 1px;
     }
 
     @include bp.below(bp.$sm) {
       min-height: 36px;
-      padding: v.space(r028) v.space(r055);
+      padding: v.space(xs) v.space(sm);
     }
   }
 }
@@ -158,21 +150,21 @@
   min-height: 48px;
   display: flex;
   align-items: center;
-  padding: v.space(r045) v.space(xs) v.space(r045) v.space(table-y);
+  padding: v.space(sm) v.space(xs) v.space(sm) v.space(table-y);
 
   @include bp.below(bp.$md) {
     min-height: 40px;
-    padding: v.space(r035) v.space(r020) v.space(r035) v.space(r085);
+    padding: v.space(xs) v.space(xs) v.space(xs) v.space(md);
   }
 
   @include bp.below(bp.$sm) {
     min-height: 36px;
-    padding: v.space(r028) v.space(r015) v.space(r028) v.space(r065);
+    padding: v.space(xs) v.space(xxs) v.space(xs) v.space(md);
   }
 }
 
 .work-time-bar__time-display {
-  font-size: clamp(v.fs(t095), 3.5vw, v.fs(lead));
+  font-size: clamp(v.fs(sm), 3.5vw, v.fs(lead));
   font-weight: v.fw(bold);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
@@ -183,24 +175,24 @@
   user-select: none;
 
   @include bp.below(bp.$md) {
-    font-size: clamp(v.fs(t086), 3.2vw, v.fs(t098));
+    font-size: clamp(v.fs(sm), 3.2vw, v.fs(lead));
   }
 
   @include bp.below(bp.$sm) {
-    font-size: clamp(v.fs(t078), 3vw, v.fs(body-sm));
+    font-size: clamp(v.fs(xs), 3vw, v.fs(body-sm));
   }
 }
 
 .work-time-bar__time-input {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: v.z(raised);
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
   border: none;
-  border-radius: 9999px;
+  border-radius: v.rad(blob);
   opacity: 0;
   cursor: pointer;
   font-size: v.fs(base);
@@ -229,8 +221,8 @@
   justify-content: center;
   width: 2.35rem;
   height: 2.35rem;
-  margin-right: v.space(r015);
-  border-radius: 50%;
+  margin-right: v.space(xxs);
+  border-radius: v.rad(circle);
   color: color-mix(in srgb, var(--color-primary) 55%, var(--color-text-muted));
   background: color-mix(in srgb, var(--color-primary-muted) 55%, transparent);
   pointer-events: none;
@@ -238,13 +230,13 @@
   @include bp.below(bp.$md) {
     width: 2rem;
     height: 2rem;
-    margin-right: v.space(r012);
+    margin-right: v.space(xxs);
   }
 
   @include bp.below(bp.$sm) {
     width: 1.72rem;
     height: 1.72rem;
-    margin-right: v.space(r008);
+    margin-right: v.space(xxs);
   }
 }
 
@@ -271,8 +263,8 @@
   justify-content: center;
   width: 2.1rem;
   height: 2.1rem;
-  border-radius: 50%;
-  font-size: v.fs(t082);
+  border-radius: v.rad(circle);
+  font-size: v.fs(sm);
   font-weight: v.fw(bold);
   color: var(--color-primary);
   background: color-mix(in srgb, var(--color-primary-muted) 70%, transparent);
@@ -280,7 +272,7 @@
   @include bp.below(bp.$sm) {
     width: 1.85rem;
     height: 1.85rem;
-    font-size: v.fs(t074);
+    font-size: v.fs(xs);
   }
 }
 
@@ -288,18 +280,18 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: v.space(r045);
+  gap: v.space(sm);
   min-width: 0;
   width: 100%;
 
   @include bp.below(bp.$sm) {
-    gap: v.space(r030);
+    gap: v.space(xs);
   }
 }
 
 .work-time-bar__out-time {
   flex-shrink: 0;
-  font-size: clamp(v.fs(t095), 3.5vw, v.fs(lead));
+  font-size: clamp(v.fs(sm), 3.5vw, v.fs(lead));
   font-weight: v.fw(extrabold);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
@@ -307,16 +299,16 @@
   white-space: nowrap;
 
   @include bp.below(bp.$sm) {
-    font-size: clamp(v.fs(t082), 3.2vw, v.fs(t095));
+    font-size: clamp(v.fs(sm), 3.2vw, v.fs(sm));
   }
 }
 
 .work-time-bar__next-badge {
   flex-shrink: 0;
-  font-size: v.fs(t065);
+  font-size: v.fs(xs);
   font-weight: v.fw(bold);
-  padding: v.space(r020) v.space(sm);
-  border-radius: 999px;
+  padding: v.space(xs) v.space(sm);
+  border-radius: v.rad(pill);
   letter-spacing: 0.04em;
   background: var(--color-primary-muted);
   color: var(--color-primary);
@@ -326,7 +318,7 @@
   display: block;
   min-width: 0;
   width: 100%;
-  font-size: clamp(v.fs(t078), 2.8vw, v.fs(t088));
+  font-size: clamp(v.fs(xs), 2.8vw, v.fs(sm));
   font-weight: v.fw(medium);
   color: var(--color-text-muted);
   letter-spacing: -0.02em;
@@ -336,15 +328,15 @@
   text-overflow: ellipsis;
 
   @include bp.below(bp.$sm) {
-    font-size: clamp(v.fs(t068), 2.5vw, v.fs(t078));
+    font-size: clamp(v.fs(xs), 2.5vw, v.fs(sm));
   }
 }
 
 .work-time-bar__hint {
-  margin: v.space(r085) 0 0;
+  margin: v.space(md) 0 0;
   padding-top: v.space(md);
   border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
-  font-size: v.fs(t072);
+  font-size: v.fs(xs);
   font-weight: v.fw(medium);
   color: var(--color-text-secondary);
   line-height: 1.5;

@@ -1,5 +1,6 @@
 @use "@/styles/common.scss" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
 $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, transparent);
@@ -24,7 +25,7 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
 }
 
 .mypage-page .title {
-  font-size: clamp(v.fs(t175), 3vw, v.fs(t225));
+  font-size: clamp(v.fs(3xl), 3vw, v.fs(display-md));
   font-weight: v.fw(extrabold);
   color: var(--color-text-heading);
   margin-bottom: v.space(sm);
@@ -47,7 +48,7 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
   padding: v.space(md) v.space(2xl);
   background: var(--color-primary);
   color: var(--color-text-on-primary);
-  border-radius: 14px;
+  border-radius: v.rad(p14);
   font-weight: v.fw(semibold);
   text-decoration: none;
   transition: background #{v.dur(normal)} #{v.ease(default)};
@@ -74,8 +75,8 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
 .mypage-card {
   background: var(--color-card);
   border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: v.space(r120) v.space(r135);
+  border-radius: v.rad(p12);
+  padding: v.space(xl) v.space(xl);
   margin-bottom: v.space(lg);
   text-align: left;
   transition: border-color #{v.dur(micro)} #{v.ease(default)};
@@ -88,9 +89,9 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
 .mypage-card--posts {
   background: var(--color-card);
   border: 1px solid var(--color-card-border);
-  border-radius: 16px;
+  border-radius: v.rad(p16);
   padding: v.space(2xl) v.space(loft);
-  box-shadow: 0 4px 25px var(--color-shadow-card), 0 1px 3px var(--color-shadow-sm);
+  @include sh.card-stack-lg-sm;
   margin-bottom: v.space(2xl);
 
   @include bp.below(bp.$md) {
@@ -107,33 +108,33 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
 }
 
 .mypage-card__title {
-  font-size: v.fs(t8125);
+  font-size: v.fs(sm);
   font-weight: v.fw(semibold);
   color: var(--color-text-heading);
-  margin: 0 0 v.space(r090);
-  padding: 0 0 0 v.space(r065);
+  margin: 0 0 v.space(lg);
+  padding: 0 0 0 v.space(md);
   border-left: 3px solid var(--color-primary);
   letter-spacing: 0.02em;
 }
 
 .mypage-card__title--inline {
   margin: 0;
-  padding: 0 0 0 v.space(r065);
+  padding: 0 0 0 v.space(md);
   border-left: 3px solid var(--color-primary);
 }
 
 .mypage-posts-head {
   @include mypage-flex-between;
   gap: v.space(md);
-  margin-bottom: v.space(r085);
+  margin-bottom: v.space(md);
 }
 
 .mypage-posts-count {
   font-size: v.fs(xs);
   font-weight: v.fw(semibold);
   color: var(--color-text-secondary);
-  padding: v.space(r020) v.space(sm);
-  border-radius: 6px;
+  padding: v.space(xs) v.space(sm);
+  border-radius: v.rad(p8);
   border: 1px solid var(--color-border);
   background: transparent;
 }
@@ -146,7 +147,7 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
   margin: 0;
   padding: v.space(loft) v.space(lg);
   text-align: center;
-  font-size: v.fs(t095);
+  font-size: v.fs(sm);
   color: var(--color-text-secondary);
   line-height: 1.5;
 }
@@ -154,7 +155,7 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
 .mypage-posts-empty--error {
   color: var(--color-error-dark);
   background: color-mix(in srgb, var(--color-error) 8%, transparent);
-  border-radius: 12px;
+  border-radius: v.rad(p12);
 }
 
 .mypage-posts-list {
@@ -163,7 +164,7 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: v.space(r045);
+  gap: v.space(sm);
 }
 
 .mypage-post-link {
@@ -171,10 +172,10 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
   grid-template-columns: 1fr auto;
   grid-template-rows: auto auto;
   column-gap: v.space(md);
-  row-gap: v.space(r020);
+  row-gap: v.space(xs);
   align-items: center;
-  padding: v.space(md) v.space(r090);
-  border-radius: 10px;
+  padding: v.space(md) v.space(lg);
+  border-radius: v.rad(p10);
   text-decoration: none;
   color: inherit;
   background: var(--color-bg-subtle);
@@ -210,7 +211,7 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
   grid-row: 1;
   min-width: 0;
   font-weight: v.fw(semibold);
-  font-size: v.fs(t095);
+  font-size: v.fs(sm);
   color: var(--color-text-heading);
   line-height: 1.35;
   text-align: left;
@@ -226,7 +227,7 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
   flex-wrap: wrap;
   align-items: center;
   gap: v.space(sm) v.space(lg);
-  font-size: v.fs(t080);
+  font-size: v.fs(sm);
   color: var(--color-text-secondary);
 
   @include bp.above(480px) {
@@ -264,7 +265,7 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
 
 .mypage-card__row {
   @include mypage-flex-between;
-  padding: v.space(r045) 0;
+  padding: v.space(sm) 0;
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-border);
@@ -272,13 +273,13 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
 }
 
 .mypage-card__label {
-  font-size: v.fs(t8125);
+  font-size: v.fs(sm);
   font-weight: v.fw(medium);
   color: var(--color-text-muted);
 }
 
 .mypage-card__value {
-  font-size: v.fs(t9375);
+  font-size: v.fs(body-sm);
   font-weight: v.fw(medium);
   color: var(--color-text);
 }
