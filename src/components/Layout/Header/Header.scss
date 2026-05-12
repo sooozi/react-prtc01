@@ -1,4 +1,4 @@
-@use "@/styles/common.scss" as *;
+@use "@/styles/common-tools" as *;
 @use "@/styles/breakpoints" as bp;
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
@@ -295,7 +295,7 @@
     }
 
     .nav-links__profile-name {
-      font-size: v.fs(md);
+      font-size: v.fs(lead);
       font-weight: v.fw(bold);
       letter-spacing: -0.02em;
       color: var(--color-text-heading);

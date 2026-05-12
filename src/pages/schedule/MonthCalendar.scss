@@ -1,4 +1,4 @@
-@use "@/styles/common.scss" as *;
+@use "@/styles/common-tools" as *;
 @use "@/styles/breakpoints" as bp;
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
@@ -371,7 +371,7 @@
   cursor: pointer;
   margin: 0;
   font-family: inherit;
-  font-size: clamp(v.fs(body-sm), 2.65vw, v.fs(md));
+  font-size: clamp(v.fs(body-sm), 2.65vw, v.fs(lead));
   font-weight: v.fw(semibold);
   letter-spacing: -0.02em;
   line-height: 1.35;

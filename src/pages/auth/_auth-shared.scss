@@ -1,9 +1,9 @@
 
-@use "@/styles/common.scss" as *;
+@use "@/styles/common-tools" as *;
 @use "@/styles/breakpoints" as bp;
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
-@forward "@/styles/common.scss";
+@forward "@/styles/common-tools";
 
 %auth-container {
   @extend %viewport-centered-pad;
@@ -56,7 +56,7 @@
 }
 
 .auth-logo {
-  @extend .logo;
+  @extend %logo;
   justify-content: center;
   margin-bottom: v.space(2xl);
 }

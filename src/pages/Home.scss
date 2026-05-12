@@ -1,4 +1,4 @@
-@use "@/styles/common.scss" as *;
+@use "@/styles/common-tools" as *;
 @use "@/styles/breakpoints" as bp;
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
@@ -432,7 +432,7 @@
   margin: 0 auto v.space(loft);
   max-width: 36rem;
   text-align: center;
-  font-size: clamp(v.fs(body-sm), 1.2vw, v.fs(md));
+  font-size: clamp(v.fs(body-sm), 1.2vw, v.fs(lead));
   line-height: 1.55;
   color: var(--color-text-secondary);
   animation: section-title-in 0.5s ease-out 0.3s both;

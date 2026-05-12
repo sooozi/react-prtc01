@@ -64,8 +64,7 @@ $font-sizes: (
   sm: 0.875rem,
   body-sm: 0.9rem,
   base: 1rem,
-  lead: 1.05rem,
-  md: 1.0625rem,
+  lead: 1.0625rem,
   lg: 1.125rem,
   xl: 1.25rem,
   2xl: 1.5rem,
@@ -153,7 +152,15 @@ $layout-max-width: (
   content: 1200px,
 );
 
-/* 쌓임 순서 */
+/* 쌓임 순서 (z-index는 항상 v.z(키)만 사용)
+ * 아래 → 위로 올라갈수록 위에 그려짐. 숫자 사이를 비워 두면 컴포넌트 내부에서
+ * 중간 단계(예: raised+1)를 쓰지 않도록 유지하는 용도.
+ * - below~float: 일반 레이아웃·겹침
+ * - popover~toast: 떠 있는 패널·독·배너·토스트
+ * - header(999): 고정 헤더가 대부분의 본문·오버레이 위
+ * - modal(1000): 다이얼로그가 헤더 위(헤더 내 서브메뉴는 submenu 등으로 헤더 subtree 안에서 조정)
+ * - tooltip(10000): 툴팁·포인터 레이블이 최상단에 오도록 큰 값
+ */
 $z-layers: (
   below: -1,
   base: 0,
@@ -170,34 +177,6 @@ $z-layers: (
   modal: 1000,
   tooltip: 10000,
 );
-
-/* 테두리 방향 (믹스인·유틸에서 사용 예정) */
-$border-directions: (
-  all: null,
-  top: top,
-  right: right,
-  bottom: bottom,
-  left: left,
-  x: (
-    right,
-    left,
-  ),
-  y: (
-    top,
-    bottom,
-  ),
-);
-
-/* 말줄임 줄 수 */
-$ellipsis-types: (
-  single: 1,
-  line1: 1,
-  line2: 2,
-  line3: 3,
-  line4: 4,
-  line5: 5,
-);
-
 
 /* 폰트 크기 */
 @function fs($key) {
@@ -235,7 +214,7 @@ $ellipsis-types: (
   @return $v;
 }
 
-/* 쌓임 순서 */
+/// `$z-layers`에서 z-index 값 조회
 @function z($key) {
   $v: map.get($z-layers, $key);
   @if $v == null {

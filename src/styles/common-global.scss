@@ -1,0 +1,193 @@
+@use "@/styles/breakpoints" as bp;
+@use "@/styles/shadows" as sh;
+@use "@/styles/variables" as v;
+@use "@/styles/common-tools" as *;
+
+.bg-decoration-1 {
+  @extend %bg-decoration-base;
+  display: none;
+  top: -200px;
+  right: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--decoration-primary) 0%, transparent 70%);
+}
+
+.bg-decoration-2 {
+  @extend %bg-decoration-base;
+  display: none;
+  bottom: -300px;
+  left: -200px;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, var(--decoration-secondary) 0%, transparent 70%);
+}
+
+body.page--home .bg-decoration-1,
+body.page--home .bg-decoration-2 {
+  display: block;
+}
+
+.logo {
+  @extend %logo;
+}
+
+.logo-img {
+  display: block;
+  height: v.space(3xl);
+  width: auto;
+}
+
+.logo-icon {
+  font-size: v.fs(display-xs);
+  color: var(--color-primary);
+}
+
+.logo-text {
+  font-size: v.fs(base);
+  font-weight: v.fw(bold);
+  color: var(--color-text-heading);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  &.error {
+    background: linear-gradient(135deg, var(--color-error) 0%, var(--color-error-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+.visually-hidden {
+  @extend %visually-hidden;
+}
+
+.section-title {
+  text-align: center;
+  font-size: clamp(v.fs(2xl), 2.2vw, v.fs(3xl));
+  font-weight: v.fw(extrabold);
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+  color: var(--color-text-heading);
+  margin-bottom: v.space(3xl);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: v.space(md);
+  position: relative;
+}
+
+.label {
+  font-size: v.fs(body-sm);
+  font-weight: v.fw(semibold);
+  color: var(--color-text-secondary);
+}
+
+.input {
+  min-height: v.space(input-min-height);
+  padding: v.space(input-block) v.space(input-inline);
+  font-size: v.fs(base);
+  border: v.space(xxs) solid var(--color-input-border);
+  border-radius: v.rad(xl);
+  background: var(--color-input-bg);
+  color: var(--color-text);
+  -webkit-text-fill-color: var(--color-text);
+  @include v.transition-channels(
+    (border-color, background-color, box-shadow),
+    normal,
+    default
+  );
+  outline: none;
+
+  @include input-placeholder-tokens;
+
+  &:focus {
+    border-color: var(--color-primary);
+    background: var(--color-input-focus-bg);
+    @include sh.focus-ring-primary-xs;
+  }
+
+  &.error {
+    border-color: var(--color-error);
+    background: var(--color-error-bg);
+
+    &:focus {
+      @include sh.focus-ring-error-xs;
+    }
+  }
+}
+
+textarea.input {
+  min-height: v.space(6xl);
+  padding-top: v.space(lg);
+  padding-bottom: v.space(lg);
+  resize: vertical;
+  line-height: 1.55;
+}
+
+[data-theme="dark"] .input {
+  background-color: var(--color-input-bg) !important;
+  color: var(--color-text) !important;
+  -webkit-text-fill-color: var(--color-text) !important;
+}
+
+[data-theme="dark"] .input:focus,
+[data-theme="dark"] .input:focus-visible {
+  background-color: var(--color-input-focus-bg) !important;
+  color: var(--color-text) !important;
+  -webkit-text-fill-color: var(--color-text) !important;
+}
+
+[data-theme="dark"] .input:-webkit-autofill,
+[data-theme="dark"] .input:-webkit-autofill:hover,
+[data-theme="dark"] .input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-text);
+  @include sh.input-autofill-mask;
+}
+
+.error-message {
+  font-size: v.fs(xs);
+  color: var(--color-error);
+}
+
+.list-page-head {
+  text-align: center;
+  margin-bottom: v.space(4xl);
+
+  @include bp.below(bp.$md) {
+    margin-bottom: v.space(2xl);
+  }
+
+  .title-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .title {
+    font-size: clamp(v.fs(display-sm), 4vw, v.fs(display-lg));
+    font-weight: v.fw(extrabold);
+    line-height: 1.15;
+    color: var(--color-text-heading);
+    margin: 0 0 v.space(md);
+  }
+
+  .subtitle {
+    margin: 0;
+    font-size: v.fs(lead);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+
+    @include prose-strong-heading;
+  }
+}

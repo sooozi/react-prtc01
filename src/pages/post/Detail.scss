@@ -1,4 +1,4 @@
-@use "@/styles/common.scss" as *;
+@use "@/styles/common-tools" as *;
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 @use "@/styles/breakpoints" as bp;
@@ -90,7 +90,7 @@
 }
 
 .detail-content {
-  font-size: clamp(v.fs(lead), 0.35vw + v.fs(sm), v.fs(md));
+  font-size: clamp(v.fs(lead), 0.35vw + v.fs(sm), v.fs(lg));
   line-height: 1.85;
   color: var(--color-text);
   white-space: pre-wrap;
