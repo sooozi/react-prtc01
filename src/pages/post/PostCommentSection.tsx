@@ -14,15 +14,17 @@ const COMMENT_PAGE_SIZE = 5;
 // 목 API 지연(ms) — 무한 스크롤 테스트
 const MOCK_COMMENT_FETCH_DELAY_MS = 500;
 
-// DFS: 부모 직후 자식 순 — 플랫 페이지 경계와 트리 복원에 맞춤
+// DFS: 답글 및 대댓글 한 파트 → 옆 댓글. 한 줄로 자르고 트리로 돌릴 때 순서 유지
+// nodes: 지금 단계에서 처리할 댓글 배열, parentId: 부모 댓글 ID, out: 결과 배열
 function flattenCommentsDFS(nodes: readonly PreviewComment[], parentId: string | null, out: CommentFlatRow[]) {
   for (const n of nodes) {
-    const { replies, ...leaf } = n;
-    out.push({ ...leaf, parentId });
-    if (replies?.length) flattenCommentsDFS(replies, n.id, out);
-  }
+    const { replies, ...leaf } = n; // 답글 및 대댓글 제외한 댓글 정보
+    out.push({ ...leaf, parentId }); // 플랫 배열에 추가(한 줄로 쭉 이어진 배열)
+    if (replies?.length) flattenCommentsDFS(replies, n.id, out); // 답글 및 대댓글 재귀 처리
+  } // 모든 댓글 처리 완료
 }
 
+// 모든 댓글 플랫 배열
 const ALL_COMMENTS_FLAT: CommentFlatRow[] = [];
 flattenCommentsDFS(PREVIEW_COMMENTS, null, ALL_COMMENTS_FLAT);
 
@@ -51,13 +53,14 @@ function flatRowsToTrees(rows: readonly CommentFlatRow[]): PreviewComment[] {
 function fetchCommentsPageMock(offset: number): Promise<{ rows: CommentFlatRow[]; hasMore: boolean }> {
   return new Promise((resolve) => {
     window.setTimeout(() => {
-      const rows = ALL_COMMENTS_FLAT.slice(offset, offset + COMMENT_PAGE_SIZE);
-      const hasMore = offset + rows.length < ALL_COMMENTS_FLAT.length;
-      resolve({ rows, hasMore });
+      const rows = ALL_COMMENTS_FLAT.slice(offset, offset + COMMENT_PAGE_SIZE); // 플랫 배열에서 현재 페이지 행 추출
+      const hasMore = offset + rows.length < ALL_COMMENTS_FLAT.length; // 더 불러올 행이 있는지 확인  
+      resolve({ rows, hasMore }); // 결과 반환
     }, MOCK_COMMENT_FETCH_DELAY_MS);
   });
 }
 
+// 이름 첫 글자 추출
 function avatarInitial(name: string) {
   const t = name.trim();
   return t ? t[0]! : "?";
@@ -80,6 +83,7 @@ export default function PostCommentSection() {
 
   const commentTrees = useMemo(() => flatRowsToTrees(loadedRows), [loadedRows]);
 
+  // 무한 스크롤 로드 기능
   const loadPage = useCallback(async (offset: number, append: boolean, signal?: AbortSignal) => {
     setIsLoading(true);
     try {
@@ -96,12 +100,14 @@ export default function PostCommentSection() {
     }
   }, []);
 
+  // 마운트 시 첫 페이지만 요청(언마운트·재실행 시 이전 요청 취소)
   useEffect(() => {
     const ac = new AbortController();
     void loadPage(0, false, ac.signal);
     return () => ac.abort();
   }, [loadPage]);
 
+  // 첫 페이지가 그려진 직후: 무한스크롤 센티널이 처음부터 보이면 연속 자동 로드 방지(수동 '더 보기')
   useLayoutEffect(() => {
     if (firstPageMeasuredRef.current) return;
     if (isLoading) return;
@@ -131,11 +137,13 @@ export default function PostCommentSection() {
     setShowManualCommentLoad(inView);
   }, [loadedRows.length, hasMore, isLoading]);
 
+  // 다음 페이지 이어 붙이기
   const loadMore = useCallback(() => {
     if (!hasMore || isLoading) return;
     void loadPage(nextOffset, true);
   }, [hasMore, isLoading, loadPage, nextOffset]);
 
+  // 하단 센티널이 보이면 다음 페이지 로드(IntersectionObserver)
   useEffect(() => {
     const el = sentinelRef.current;
     if (!el || !hasMore) return;

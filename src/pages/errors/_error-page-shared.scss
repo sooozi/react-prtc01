@@ -26,7 +26,7 @@
 
 @mixin error-page-actions {
   display: flex;
-  gap: v.space(lg);
+  gap: v.space(btn-gap);
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: v.space(3xl);

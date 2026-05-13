@@ -174,7 +174,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
-  gap: v.space(lg);
+  gap: v.space(btn-gap);
   margin-bottom: v.space(xs);
 
   @include bp.below(bp.$md) {
@@ -324,8 +324,6 @@
     border-color: color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
   }
 
-  @include focus-ring-primary;
-
   &:active {
     transform: scale(0.99);
   }
@@ -436,12 +434,6 @@
 
 .board-page .tr-clickable {
   cursor: pointer;
-
-  &:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: -2px;
-    background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-card));
-  }
 }
 
 .board-page .empty-state,

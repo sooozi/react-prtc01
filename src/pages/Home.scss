@@ -137,7 +137,7 @@
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: v.space(md) v.space(lg);
+  gap: v.space(btn-gap);
   justify-content: center;
 
   @include bp.above(bp.$lg) {

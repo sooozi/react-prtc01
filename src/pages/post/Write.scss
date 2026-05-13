@@ -71,7 +71,7 @@
 .board-write-actions {
   display: flex;
   justify-content: flex-end;
-  gap: v.space(md);
+  gap: v.space(btn-gap);
   margin-top: v.space(3xl);
   padding-top: v.space(2xl);
   border-top: 1px solid var(--color-border);

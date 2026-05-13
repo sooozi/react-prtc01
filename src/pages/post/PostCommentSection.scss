@@ -5,18 +5,16 @@
 
 .post-comment-section {
   --pc-avatar: #{v.space(4xl)};
-  --pc-avatar-reply: #{v.space(3xl)};
   --pc-gap: #{v.space(md)};
   --pc-main-offset: calc(var(--pc-avatar) + var(--pc-gap));
   --pc-reply-pt: #{v.space(sm)};
   --pc-replies-gap: #{v.space(sm)};
-  --pc-comment-body-lines: 5;
-  --pc-comment-body-lh: 1.55;
+  --pc-comment-body-lines: 5; // 본문 줄 수
+  --pc-comment-body-lh: 1.55; // 본문 줄 높이
   --pc-well-bg: color-mix(in srgb, var(--color-bg-subtle) 88%, var(--color-primary-muted) 12%);
   --pc-composer-bg: var(--color-card);
 
   margin-top: v.space(4xl);
-  
   padding: v.space(xl) v.space(table-y);
   width: 100%;
   box-sizing: border-box;
@@ -74,7 +72,7 @@
 .post-comment-section__composer-actions {
   display: inline-flex;
   align-items: center;
-  gap: v.space(xs);
+  gap: v.space(btn-gap);
 }
 
 .post-comment-section__secret-comment-btn.btn {
@@ -96,6 +94,27 @@
 
 .post-comment-section__secret-comment-btn.post-comment-section__secret-comment-btn--on {
   color: var(--color-primary);
+  background: var(--color-primary-muted);
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-muted);
+    color: var(--color-primary);
+  }
+}
+
+.post-comment-section__composer-submit.btn.btn--sm {
+  box-sizing: border-box;
+  min-height: 1.625rem;
+  padding: v.space(xxs) v.space(sm);
+  font-size: v.fs(xs);
+  line-height: 1.2;
+  border-radius: v.rad(p8);
+
+  @include bp.below(bp.$md) {
+    min-height: 1.5rem;
+    padding: v.space(xxs) v.space(xs);
+    font-size: v.fs(xxs);
+  }
 }
 
 .post-comment-section__footnote {
@@ -244,11 +263,6 @@
     border-color: var(--color-primary);
     color: var(--color-primary);
   }
-
-  &:focus-visible {
-    outline: v.space(xxs) solid var(--color-primary);
-    outline-offset: v.space(xxs);
-  }
 }
 
 .post-comment-section__root {
@@ -286,18 +300,8 @@
 
 .post-comment-section__reply {
   position: relative;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--pc-gap);
+  display: block;
   padding-top: var(--pc-reply-pt);
-}
-
-.post-comment-section__reply-start {
-  display: flex;
-  align-items: flex-start;
-  flex-shrink: 0;
-  position: relative;
-  z-index: v.z(float);
 }
 
 .post-comment-section__avatar {
@@ -313,12 +317,6 @@
   color: var(--color-primary);
   background: var(--color-primary-muted);
   border: 1px solid color-mix(in srgb, var(--color-primary) 22%, var(--color-border-light));
-}
-
-.post-comment-section__avatar--reply {
-  width: var(--pc-avatar-reply);
-  height: var(--pc-avatar-reply);
-  font-size: v.fs(sm);
 }
 
 .post-comment-section__item-main {
@@ -400,7 +398,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: v.space(xs) v.space(sm);
+  gap: v.space(btn-gap);
 }
 
 .post-comment-section__action {
@@ -431,9 +429,23 @@
 }
 
 .post-comment-section__action--icon {
-  letter-spacing: 0.05em;
-  font-weight: v.fw(extrabold);
+  justify-content: center;
   color: var(--color-text-muted);
+}
+
+.post-comment-section__delete-icon {
+  display: block;
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.post-comment-section__action--delete {
+  cursor: pointer;
+  opacity: 1;
+
+  &:hover {
+    color: var(--color-error);
+  }
 }
 
 @include bp.below(bp.$md) {
@@ -445,7 +457,6 @@
     border-radius: v.rad(p10);
 
     --pc-avatar: #{v.space(3xl)};
-    --pc-avatar-reply: #{v.space(2xl)};
     --pc-gap: #{v.space(sm)};
     --pc-reply-pt: #{v.space(sm)};
     --pc-replies-gap: #{v.space(xs)};
@@ -487,7 +498,7 @@
     justify-content: flex-end;
     align-items: center;
     flex-wrap: wrap;
-    gap: v.space(sm);
+    gap: v.space(btn-gap);
     padding: v.space(sm) v.space(sm) v.space(md);
 
     .post-comment-section__composer-actions {
@@ -518,10 +529,6 @@
     font-size: v.fs(xs);
   }
 
-  .post-comment-section__avatar--reply {
-    font-size: v.fs(xs);
-  }
-
   .post-comment-section__author {
     font-size: v.fs(sm);
   }
@@ -539,7 +546,7 @@
   }
 
   .post-comment-section__actions {
-    gap: v.space(xs) v.space(xs);
+    gap: v.space(btn-gap);
   }
 
   .post-comment-section__action {

@@ -226,7 +226,7 @@ body.image-file-attach--reorder-active {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: v.space(sm);
+  gap: v.space(btn-gap);
   width: 100%;
   min-height: 2.5rem;
   padding: v.space(sm) v.space(lg) v.space(sm) v.space(md);
@@ -308,7 +308,7 @@ body.image-file-attach--reorder-active {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: v.space(sm);
+  gap: v.space(btn-gap);
   width: 100%;
   min-height: 2.5rem;
   padding: 0 v.space(px10) 0 0;

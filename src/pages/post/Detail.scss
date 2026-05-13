@@ -196,10 +196,10 @@
 .post-detail-actions {
   display: flex;
   justify-content: flex-end;
-  gap: v.space(md);
+  gap: v.space(btn-gap);
   margin-bottom: v.space(lg);
 
   @include bp.below(bp.$md) {
-    gap: v.space(sm);
+    gap: v.space(btn-gap);
   }
 }

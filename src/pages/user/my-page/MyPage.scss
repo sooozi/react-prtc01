@@ -286,7 +286,7 @@ $_mypage-dark-row-line: color-mix(in srgb, var(--color-text-on-primary) 10%, tra
 
 .mypage-actions {
   display: flex;
-  gap: v.space(md);
+  gap: v.space(btn-gap);
   justify-content: center;
   flex-wrap: wrap;
 }

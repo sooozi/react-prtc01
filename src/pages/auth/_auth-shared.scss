@@ -98,7 +98,5 @@
   &:hover {
     background: var(--color-primary-muted);
   }
-
-  @include focus-ring-primary;
 }
 

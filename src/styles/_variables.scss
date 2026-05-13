@@ -91,6 +91,8 @@ $spacing: (
   xxs: 0.125rem,
   xs: 0.25rem,
   sm: 0.5rem,
+  /** 인접 UI 버튼(취소/확인, 툴바 등) 사이 — 항상 0.5rem */
+  btn-gap: 0.5rem,
   md: 0.75rem,
   lg: 1rem,
   xl: 1.25rem,

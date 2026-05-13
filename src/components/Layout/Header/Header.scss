@@ -198,7 +198,7 @@
     .nav-links__top-bar {
       display: flex;
       align-items: center;
-      gap: v.space(2xl);
+      gap: v.space(btn-gap);
     }
 
     .nav-links__avatar,
@@ -248,14 +248,14 @@
     .nav-links__top-bar {
       display: flex;
       align-items: center;
-      gap: v.space(md);
+      gap: v.space(btn-gap);
     }
 
     .nav-links__profile {
       display: flex;
       flex: 1;
       align-items: center;
-      gap: v.space(md);
+      gap: v.space(btn-gap);
       min-width: 0;
       padding: 0;
       margin: 0;
@@ -469,8 +469,6 @@
   &:active {
     transform: scale(0.95);
   }
-
-  @include focus-ring-primary;
 
   @include bp.above(bp.$md) {
     display: inline-flex;

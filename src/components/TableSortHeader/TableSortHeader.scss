@@ -4,7 +4,7 @@
 .table-sort-th {
   display: inline-flex;
   align-items: center;
-  gap: v.space(sm);
+  gap: v.space(btn-gap);
   min-width: 0;
 }
 
@@ -70,6 +70,4 @@
   &:active {
     transform: scale(0.94);
   }
-
-  @include focus-ring-primary;
 }
