@@ -120,7 +120,7 @@ export default function MyPage() {
         </div>
 
 
-        <div className="mypage-card mypage-card--posts">
+        <div className="mypage-card">
           <div className="mypage-posts-head">
             <h2 className="mypage-card__title mypage-card__title--inline">내가 쓴 글</h2>
             {!postsLoading && posts.length > 0 && (

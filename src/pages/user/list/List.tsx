@@ -57,7 +57,7 @@ export default function UserList() {
     <div className="search-page">
       <div className="list-page-head">
         <div className="title-block">
-          <Badge>👥 User List</Badge>
+          <Badge>👥 User</Badge>
           <h1 className="title">사용자 목록</h1>
           <p className="subtitle">
             전체 <strong>{totalItems}</strong>명의 사용자

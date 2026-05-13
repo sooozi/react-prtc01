@@ -28,6 +28,8 @@ export function PostCommentRow({
   const [expanded, setExpanded] = useState(false); // 본문 접기/펼치기 상태
   const [canExpand, setCanExpand] = useState(false); // 본문 접기/펼치기 가능 여부
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false); // 댓글 삭제 확인 창 상태
+  const [likeCount, setLikeCount] = useState(likes);
+  const [dislikeCount, setDislikeCount] = useState(dislikes);
 
   // 본문 접기/펼치기 기능(버튼 노출)
   useLayoutEffect(() => {
@@ -81,14 +83,18 @@ export function PostCommentRow({
             </button>
           ) : null}
         </div>
-        <div className="post-comment-section__actions" role="group" aria-label="댓글 액션 (미연결)">
-          <button type="button" className="post-comment-section__action" disabled>
+        <div className="post-comment-section__actions" role="group">
+          <button type="button" className="post-comment-section__action" onClick={() => {
+            setLikeCount(likeCount + 1);
+          }}>
             <span aria-hidden>👍</span>{" "}
-            <span className="post-comment-section__action-count">{likes}</span>
+            <span className="post-comment-section__action-count">{likeCount}</span>
           </button>
-          <button type="button" className="post-comment-section__action" disabled>
+          <button type="button" className="post-comment-section__action" onClick={() => {
+            setDislikeCount(dislikeCount + 1);
+          }}>
             <span aria-hidden>👎</span>{" "}
-            <span className="post-comment-section__action-count">{dislikes}</span>
+            <span className="post-comment-section__action-count">{dislikeCount}</span>
           </button>
           <button type="button" className="post-comment-section__action post-comment-section__action--text" disabled>
             답글

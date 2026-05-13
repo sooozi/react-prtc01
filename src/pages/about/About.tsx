@@ -53,7 +53,7 @@ export default function About() {
   return (
     <div className="about-page">
       <section className="hero-section" aria-labelledby="about-hero-title">
-        <Badge>프로젝트 소개</Badge>
+        <Badge>About project</Badge>
         <h1 id="about-hero-title" className="title">
           Vite + React로 <span className="gradient-text">UI·API</span> 연습
         </h1>

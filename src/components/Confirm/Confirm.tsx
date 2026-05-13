@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import Button from "@/components/Button/Button";
 import "@/components/Confirm/Confirm.scss";
 
@@ -44,7 +45,11 @@ export default function Confirm({
 
   if (!open) return null;
 
-  return (
+  const root =
+    typeof document !== "undefined" && document.body ? document.body : null;
+  if (!root) return null;
+
+  return createPortal(
     <div
       className="confirm-overlay"
       role="dialog"
@@ -75,6 +80,7 @@ export default function Confirm({
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    root,
   );
 }
