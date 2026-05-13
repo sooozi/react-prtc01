@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Button from "@/components/Button/Button";
+import { getTabbableElements } from "@/utils/tabbable";
 import "@/components/Confirm/Confirm.scss";
 
 export type ConfirmVariant = "default" | "danger";
@@ -34,13 +35,54 @@ export default function Confirm({
   onConfirm,
   onCancel,
 }: ConfirmProps) {
-  useEffect(() => {
+  const modalPanelRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
     if (!open) return;
-    const handle = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCancel();
+
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+    const moveFocusIntoModal = () => {
+      const panel = modalPanelRef.current;
+      if (!panel) return;
+      const list = getTabbableElements(panel);
+      (list[0] ?? panel).focus();
     };
-    window.addEventListener("keydown", handle);
-    return () => window.removeEventListener("keydown", handle);
+    queueMicrotask(moveFocusIntoModal);
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onCancel();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const panel = modalPanelRef.current;
+      if (!panel) return;
+      const list = getTabbableElements(panel);
+      if (list.length === 0) return;
+      const active = document.activeElement;
+      if (!(active instanceof HTMLElement) || !panel.contains(active)) return;
+
+      const first = list[0]!;
+      const last = list[list.length - 1]!;
+      if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown, true);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown, true);
+      if (previouslyFocused?.isConnected) {
+        previouslyFocused.focus({ preventScroll: true });
+      }
+    };
   }, [open, onCancel]);
 
   if (!open) return null;
@@ -49,16 +91,34 @@ export default function Confirm({
     typeof document !== "undefined" && document.body ? document.body : null;
   if (!root) return null;
 
+  const labelledBy = title ? "confirm-title" : "confirm-message";
+  const describedBy = title ? "confirm-message" : undefined;
+
   return createPortal(
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- 배경 오버레이: role=dialog + 클릭·키보드로 닫기
     <div
       className="confirm-overlay"
       role="dialog"
       aria-modal="true"
-      aria-labelledby={title ? "confirm-title" : undefined}
-      aria-describedby="confirm-message"
+      aria-labelledby={labelledBy}
+      aria-describedby={describedBy}
       onClick={(e) => e.target === e.currentTarget && onCancel()}
+      onKeyDown={(e) => {
+        if (e.target !== e.currentTarget) return;
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onCancel();
+        }
+      }}
     >
-      <div className="confirm-modal" onClick={(e) => e.stopPropagation()}>
+      {/* 모달 면 클릭은 버블 차단용 — 키보드는 오버레이에서 처리 */}
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */}
+      <div
+        ref={modalPanelRef}
+        className="confirm-modal"
+        tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
+      >
         {title && (
           <h2 id="confirm-title" className="confirm-title">
             {title}

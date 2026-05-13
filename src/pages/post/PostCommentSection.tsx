@@ -165,6 +165,7 @@ export default function PostCommentSection() {
                 variant="outlinePrimary"
                 size="sm"
                 aria-pressed={isSecretComment}
+                aria-label={isSecretComment ? "비밀 댓글 켜짐" : "비밀 댓글 꺼짐"}
                 className={
                   isSecretComment
                     ? "post-comment-section__secret-comment-btn post-comment-section__secret-comment-btn--on"

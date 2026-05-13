@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components";
+import { getTabbableElements } from "@/utils/tabbable";
 import "@/components/Layout/Header/Header.scss";
 
 const iconProps = {
@@ -24,6 +25,10 @@ function DrawerNavIcon({ children }: { children: ReactNode }) {
   );
 }
 
+function isMobileDrawerLayout() {
+  return typeof window !== "undefined" && window.innerWidth < 768;
+}
+
 export default function Header() {
   const navigate = useNavigate();
   const userName = localStorage.getItem("userName");
@@ -31,6 +36,10 @@ export default function Header() {
     () => (document.documentElement.getAttribute("data-theme") as "light" | "dark") || "light"
   );
   const [menuOpen, setMenuOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
+  const navLinksRef = useRef<HTMLDivElement>(null);
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
+  const focusBeforeDrawerRef = useRef<HTMLElement | null>(null);
 
   // 메뉴 닫기
   const closeMenu = useCallback(() => {
@@ -68,10 +77,72 @@ export default function Header() {
     };
   }, [menuOpen, closeMenu]);
 
+  // 모바일 드로어: 열릴 때 포커스를 패널 안으로, 닫힐 때 햄버거(또는 이전 요소)로 복귀
+  useLayoutEffect(() => {
+    if (!menuOpen || !isMobileDrawerLayout()) return;
+
+    const toggleButton = menuToggleRef.current;
+
+    focusBeforeDrawerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+    const drawer = navLinksRef.current;
+    if (drawer) {
+      const list = getTabbableElements(drawer);
+      queueMicrotask(() => {
+        (list[0] ?? drawer).focus();
+      });
+    }
+
+    return () => {
+      if (toggleButton && window.getComputedStyle(toggleButton).display !== "none") {
+        toggleButton.focus({ preventScroll: true });
+        return;
+      }
+      const back = focusBeforeDrawerRef.current;
+      if (back?.isConnected && window.getComputedStyle(back).display !== "none") {
+        back.focus({ preventScroll: true });
+      }
+    };
+  }, [menuOpen]);
+
+  // 모바일 드로어: Esc로 닫기, Tab은 헤더 nav 안에서만 순환
+  useEffect(() => {
+    if (!menuOpen || !isMobileDrawerLayout()) return;
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeMenu();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const list = getTabbableElements(nav);
+      if (list.length === 0) return;
+      const active = document.activeElement;
+      if (!(active instanceof HTMLElement) || !nav.contains(active)) return;
+
+      const first = list[0]!;
+      const last = list[list.length - 1]!;
+      if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown, true);
+    return () => document.removeEventListener("keydown", onKeyDown, true);
+  }, [menuOpen, closeMenu]);
+
   return (
     <header className={`header ${menuOpen ? "is-menu-open" : ""}`}>
       <div className="header__bg" aria-hidden />
-      <nav className="nav">
+      <nav ref={navRef} className="nav">
         <Link to="/home" className="logo" onClick={closeMenu}>
           <img
             src="/logo-mark.png"
@@ -82,11 +153,13 @@ export default function Header() {
         </Link>
 
         <button
+          ref={menuToggleRef}
           type="button"
           className="nav-toggle"
           onClick={() => setMenuOpen((prev) => !prev)}
           aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
           aria-expanded={menuOpen}
+          aria-controls="header-mobile-nav-drawer"
         >
           <span className="nav-toggle-bar" />
           <span className="nav-toggle-bar" />
@@ -104,7 +177,14 @@ export default function Header() {
           tabIndex={menuOpen ? 0 : -1}
         />
 
-        <div className="nav-links" onClick={closeMenu}>
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events -- 드로어 내부 링크 선택 시 닫기; Esc·포커스 트랩은 별도 처리 */}
+        <div
+          id="header-mobile-nav-drawer"
+          ref={navLinksRef}
+          className="nav-links"
+          tabIndex={-1}
+          onClick={closeMenu}
+        >
           <div
             className={`nav-links__top${userName ? "" : " nav-links__top--guest"}`}
             role="group"

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { redirectUnauthorizedToLogin } from "@/api/auth/loginRedirectSession";
 import { selectBoardList, BoardApiError } from "@/api/board";
 import type { Post } from "@/api/board";
@@ -270,37 +270,30 @@ export default function List() {
 
               <ul className="post-list-cards" aria-label="게시글 목록">
                 {posts.map((post) => (
-                  <li
-                    key={`card-${post.postNumber}`}
-                    className="post-list-card"
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => openPostDetail(post.postNumber)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        openPostDetail(post.postNumber);
-                      }
-                    }}
-                  >
-                    <div className="post-list-card__head">
-                      <span className="post-list-card__number">{post.postNumber}</span>
-                      <span className="post-list-card__title">{post.title}</span>
-                    </div>
-                    <dl className="post-list-card__meta">
-                      <div className="post-list-card__row">
-                        <dt>등록자</dt>
-                        <dd>{post.rgtrInfo ?? "-"}</dd>
+                  <li key={`card-${post.postNumber}`}>
+                    <Link
+                      className="post-list-card"
+                      to={`/post/detail?id=${post.postNumber}&from=list`}
+                    >
+                      <div className="post-list-card__head">
+                        <span className="post-list-card__number">{post.postNumber}</span>
+                        <span className="post-list-card__title">{post.title}</span>
                       </div>
-                      <div className="post-list-card__row">
-                        <dt>조회</dt>
-                        <dd>{post.inqCnt ?? 0}</dd>
-                      </div>
-                      <div className="post-list-card__row">
-                        <dt>등록일시</dt>
-                        <dd className="post-list-card__date">{post.regDt}</dd>
-                      </div>
-                    </dl>
+                      <dl className="post-list-card__meta">
+                        <div className="post-list-card__row">
+                          <dt>등록자</dt>
+                          <dd>{post.rgtrInfo ?? "-"}</dd>
+                        </div>
+                        <div className="post-list-card__row">
+                          <dt>조회</dt>
+                          <dd>{post.inqCnt ?? 0}</dd>
+                        </div>
+                        <div className="post-list-card__row">
+                          <dt>등록일시</dt>
+                          <dd className="post-list-card__date">{post.regDt}</dd>
+                        </div>
+                      </dl>
+                    </Link>
                   </li>
                 ))}
               </ul>

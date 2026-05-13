@@ -83,18 +83,30 @@ export function PostCommentRow({
             </button>
           ) : null}
         </div>
-        <div className="post-comment-section__actions" role="group">
-          <button type="button" className="post-comment-section__action" onClick={() => {
+        <div className="post-comment-section__actions" role="group" aria-label="댓글 반응 및 작업">
+          <button
+            type="button"
+            className="post-comment-section__action"
+            aria-label={`좋아요 ${likeCount}개`}
+            onClick={() => {
             setLikeCount(likeCount + 1);
           }}>
             <span aria-hidden>👍</span>{" "}
-            <span className="post-comment-section__action-count">{likeCount}</span>
+            <span className="post-comment-section__action-count" aria-hidden>
+              {likeCount}
+            </span>
           </button>
-          <button type="button" className="post-comment-section__action" onClick={() => {
+          <button
+            type="button"
+            className="post-comment-section__action"
+            aria-label={`싫어요 ${dislikeCount}개`}
+            onClick={() => {
             setDislikeCount(dislikeCount + 1);
           }}>
             <span aria-hidden>👎</span>{" "}
-            <span className="post-comment-section__action-count">{dislikeCount}</span>
+            <span className="post-comment-section__action-count" aria-hidden>
+              {dislikeCount}
+            </span>
           </button>
           <button type="button" className="post-comment-section__action post-comment-section__action--text" disabled>
             답글
