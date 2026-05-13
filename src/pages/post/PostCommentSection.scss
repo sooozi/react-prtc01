@@ -86,17 +86,35 @@
   border-radius: v.rad(p8);
 }
 
+// 아이콘 토글: 전역 outlinePrimary(2px)는 이 컨텍스트에서만 유독 두껍게 보여서 완화
+.post-comment-section__secret-comment-btn.btn.btn--outlinePrimary {
+  border-width: 1px;
+  border-color: color-mix(in srgb, var(--color-border) 75%, transparent);
+  background: transparent;
+  color: var(--color-text-secondary);
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary-muted) 55%, transparent);
+  }
+}
+
 .post-comment-section__secret-lock-icon {
   display: block;
   width: 0.8125rem;
   height: 0.8125rem;
 }
 
-.post-comment-section__secret-comment-btn.post-comment-section__secret-comment-btn--on {
+// 켜짐: outlinePrimary 블록(3클래스)보다 특이도 높여 배경·테두리가 먹도록 btn·outline까지 포함
+.post-comment-section__secret-comment-btn.btn.btn--outlinePrimary.post-comment-section__secret-comment-btn--on {
+  border-width: 1px;
+  border-color: color-mix(in srgb, var(--color-primary) 35%, var(--color-border-light));
   color: var(--color-primary);
   background: var(--color-primary-muted);
 
   &:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--color-primary) 50%, var(--color-border-light));
     background: var(--color-primary-muted);
     color: var(--color-primary);
   }
@@ -104,15 +122,17 @@
 
 .post-comment-section__composer-submit.btn.btn--sm {
   box-sizing: border-box;
+  min-width: 3rem;
   min-height: 1.625rem;
-  padding: v.space(xxs) v.space(sm);
+  padding: v.space(xxs) v.space(md);
   font-size: v.fs(xs);
   line-height: 1.2;
   border-radius: v.rad(p8);
 
   @include bp.below(bp.$md) {
+    min-width: 2.5rem;
     min-height: 1.5rem;
-    padding: v.space(xxs) v.space(xs);
+    padding: v.space(xxs) v.space(sm);
     font-size: v.fs(xxs);
   }
 }
@@ -242,27 +262,6 @@
 .post-comment-section__infinite-end {
   font-weight: v.fw(medium);
   color: var(--color-text-secondary);
-}
-
-.post-comment-section__manual-load {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: v.space(sm);
-  padding: v.space(sm) v.space(lg);
-  border: 1px solid var(--color-border);
-  border-radius: v.rad(p10);
-  font: inherit;
-  font-size: v.fs(sm);
-  font-weight: v.fw(semibold);
-  color: var(--color-text-heading);
-  background: var(--color-card);
-  cursor: pointer;
-
-  &:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-  }
 }
 
 .post-comment-section__root {

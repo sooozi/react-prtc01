@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
 import { PostCommentRow } from "@/pages/post/PostCommentRow";
@@ -75,10 +75,6 @@ export default function PostCommentSection() {
   const [isLoading, setIsLoading] = useState(false);
   const [initialError, setInitialError] = useState<string | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
-  // 첫 페이지 직후 센티널이 뷰 안이면 IO 연속 로드 방지 — 한번 벗어나기 전까지 자동 로드 차단(ref는 IO 콜백에서 최신값)
-  const awaitSentinelLeaveRef = useRef(false);
-  const [showManualCommentLoad, setShowManualCommentLoad] = useState(false);
-  const firstPageMeasuredRef = useRef(false);
   const [isSecretComment, setIsSecretComment] = useState(false);
 
   const commentTrees = useMemo(() => flatRowsToTrees(loadedRows), [loadedRows]);
@@ -107,43 +103,13 @@ export default function PostCommentSection() {
     return () => ac.abort();
   }, [loadPage]);
 
-  // 첫 페이지가 그려진 직후: 무한스크롤 센티널이 처음부터 보이면 연속 자동 로드 방지(수동 '더 보기')
-  useLayoutEffect(() => {
-    if (firstPageMeasuredRef.current) return;
-    if (isLoading) return;
-    if (loadedRows.length === 0) return;
-
-    if (!hasMore) {
-      firstPageMeasuredRef.current = true;
-      awaitSentinelLeaveRef.current = false;
-      setShowManualCommentLoad(false);
-      return;
-    }
-
-    if (loadedRows.length < COMMENT_PAGE_SIZE) return;
-
-    if (loadedRows.length > COMMENT_PAGE_SIZE) {
-      firstPageMeasuredRef.current = true;
-      return;
-    }
-
-    firstPageMeasuredRef.current = true;
-    const el = sentinelRef.current;
-    if (!el || typeof window === "undefined") return;
-    const r = el.getBoundingClientRect();
-    const vh = window.innerHeight;
-    const inView = r.top < vh && r.bottom > 0;
-    awaitSentinelLeaveRef.current = inView;
-    setShowManualCommentLoad(inView);
-  }, [loadedRows.length, hasMore, isLoading]);
-
   // 다음 페이지 이어 붙이기
   const loadMore = useCallback(() => {
     if (!hasMore || isLoading) return;
     void loadPage(nextOffset, true);
   }, [hasMore, isLoading, loadPage, nextOffset]);
 
-  // 하단 센티널이 보이면 다음 페이지 로드(IntersectionObserver)
+  // 하단 센티널이 보이면 다음 페이지 로드
   useEffect(() => {
     const el = sentinelRef.current;
     if (!el || !hasMore) return;
@@ -151,13 +117,7 @@ export default function PostCommentSection() {
     const io = new IntersectionObserver(
       (entries) => {
         const hit = entries.some((e) => e.isIntersecting);
-        if (!hit) {
-          awaitSentinelLeaveRef.current = false;
-          setShowManualCommentLoad(false);
-          return;
-        }
-        if (awaitSentinelLeaveRef.current) return;
-        loadMore();
+        if (hit) loadMore();
       },
       { root: null, rootMargin: "0px", threshold: 0 },
     );
@@ -205,11 +165,6 @@ export default function PostCommentSection() {
                 variant="outlinePrimary"
                 size="sm"
                 aria-pressed={isSecretComment}
-                aria-label={
-                  isSecretComment
-                    ? "비밀댓글 사용 중. 누르면 일반 댓글로 전환합니다."
-                    : "비밀댓글로 작성합니다. 누르면 비밀댓글로 전환합니다."
-                }
                 className={
                   isSecretComment
                     ? "post-comment-section__secret-comment-btn post-comment-section__secret-comment-btn--on"
@@ -233,6 +188,7 @@ export default function PostCommentSection() {
         </div>
       </div>
 
+      {/* 첫 페이지 로드 실패 시 에러 메시지 표시 */}
       {initialError && loadedRows.length === 0 ? (
         <p className="post-comment-section__list-error" role="alert">
           {initialError}
@@ -280,19 +236,6 @@ export default function PostCommentSection() {
           <div ref={sentinelRef} className="post-comment-section__scroll-sentinel" aria-hidden />
 
           <div className="post-comment-section__infinite-status" aria-live="polite">
-            {showManualCommentLoad && hasMore && !isLoading ? (
-              <button
-                type="button"
-                className="post-comment-section__manual-load"
-                onClick={() => {
-                  awaitSentinelLeaveRef.current = false;
-                  setShowManualCommentLoad(false);
-                  loadMore();
-                }}
-              >
-                댓글 더 보기
-              </button>
-            ) : null}
             {isLoading ? <span className="post-comment-section__infinite-loading">댓글 불러오는 중…</span> : null}
             {!hasMore && loadedRows.length > 0 ? (
               <span className="post-comment-section__infinite-end">모든 댓글을 불러왔습니다.</span>
