@@ -135,6 +135,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
             buttonRef={yearBtnRef}
             popoverRef={yearPopoverRef}
             popoverId="month-calendar-year-picker"
+            listboxLabel="연도 선택"
             isOpen={isYearPopoverOpen}
             onDismiss={() => setIsYearPopoverOpen(false)}
             onTriggerClick={() => {
@@ -164,6 +165,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
             buttonRef={titleBtnRef}
             popoverRef={monthPopoverRef}
             popoverId="month-calendar-month-picker"
+            listboxLabel="월 선택"
             isOpen={isMonthPopoverOpen}
             onDismiss={() => setIsMonthPopoverOpen(false)}
             onTriggerClick={() => {

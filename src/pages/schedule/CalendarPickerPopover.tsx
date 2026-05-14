@@ -1,11 +1,13 @@
 import clsx from "clsx";
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import type { ReactNode, RefObject } from "react";
 
 type CalendarPickerPopoverProps = {
   buttonRef: RefObject<HTMLButtonElement | null>;
   popoverRef: RefObject<HTMLDivElement | null>;
   popoverId: string;
+  /** listbox 패널용 접근 가능 이름 (스크린 리더) */
+  listboxLabel: string;
   isOpen: boolean;
   /** Esc 또는 트리거·패널 바깥 pointerdown 시 호출 (이 팝오버만 닫기) */
   onDismiss: () => void;
@@ -23,6 +25,7 @@ export function CalendarPickerPopover({
   buttonRef,
   popoverRef,
   popoverId,
+  listboxLabel,
   isOpen,
   onDismiss,
   onTriggerClick,
@@ -37,6 +40,28 @@ export function CalendarPickerPopover({
   useEffect(() => {
     onDismissRef.current = onDismiss;
   }, [onDismiss]);
+
+  // 열릴 때: 선택된 옵션이 있으면 그쪽, 없으면 첫 옵션으로 포커스
+  useLayoutEffect(() => {
+    if (!isOpen) return;
+    const root = popoverRef.current;
+    if (!root) return;
+    const selected = root.querySelector<HTMLElement>('[role="option"][aria-selected="true"]');
+    const first = root.querySelector<HTMLElement>('[role="option"]');
+    (selected ?? first)?.focus();
+  }, [isOpen, popoverRef]);
+
+  // 닫힐 때: 포커스가 아직 패널 안에 있으면 트리거로 복귀 (다른 버튼으로 이미 옮긴 경우는 건드리지 않음)
+  useLayoutEffect(() => {
+    if (isOpen) return;
+    const root = popoverRef.current;
+    const trigger = buttonRef.current;
+    if (!root || !trigger) return;
+    const active = document.activeElement;
+    if (active instanceof Node && root.contains(active)) {
+      trigger.focus();
+    }
+  }, [isOpen, buttonRef, popoverRef]);
 
   // 팝오버 닫기
   useEffect(() => {
@@ -72,6 +97,9 @@ export function CalendarPickerPopover({
         ref={buttonRef}
         className={triggerClassName}
         onClick={onTriggerClick}
+        aria-expanded={isOpen}
+        aria-controls={popoverId}
+        aria-haspopup="listbox"
       >
         {triggerDisplay}
         <span
@@ -85,6 +113,8 @@ export function CalendarPickerPopover({
       <div
         id={popoverId}
         ref={popoverRef}
+        role="listbox"
+        aria-label={listboxLabel}
         className={clsx("month-calendar__month-popover", popoverExtraClassName)}
         hidden={!isOpen}
       >
@@ -100,15 +130,23 @@ type CalendarPopoverOptionProps = {
   children: ReactNode;
 };
 
-// 월 선택 옵션
+// 월·연도 선택 옵션 (부모 listbox의 option)
 export function CalendarPopoverOption({ selected, onSelect, children }: CalendarPopoverOptionProps) {
   return (
-    <button
-      type="button"
+    <div
+      role="option"
+      tabIndex={0}
+      aria-selected={selected}
       className={clsx("month-calendar__month-option", selected && "month-calendar__month-option--selected")}
       onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
     >
       {children}
-    </button>
+    </div>
   );
 }
