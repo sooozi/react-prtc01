@@ -1,4 +1,4 @@
-import { createRoot } from 'react-dom/client'
+import { createRoot } from "react-dom/client";
 import "@/styles/reset.scss";
 import "@/styles/common-global.scss";
 import App from "@/App";
@@ -8,6 +8,14 @@ const savedTheme = localStorage.getItem("theme");
 const theme = savedTheme === "dark" || savedTheme === "light" ? savedTheme : "light";
 document.documentElement.setAttribute("data-theme", theme);
 
-createRoot(document.getElementById('root')!).render(
-    <App />
-)
+const rootEl = document.getElementById("root")!;
+
+async function start() {
+  if (import.meta.env.DEV) {
+    const { bootstrapAxe } = await import("@/bootstrapAxe");
+    await bootstrapAxe();
+  }
+  createRoot(rootEl).render(<App />);
+}
+
+void start();
