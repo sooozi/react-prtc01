@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "yarn exec vite",
-    "build": "tsc -b && yarn exec vite build",
+    "dev": "vite",
+    "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "yarn exec vite preview"
+    "preview": "vite preview"
   },
   "dependencies": {
     "axios": "^1.13.4",
@@ -16,6 +16,7 @@
     "date-holidays": "^3.28.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-helmet-async": "^3.0.0",
     "react-hook-form": "^7.71.1",
     "react-router-dom": "^7.13.0"
   },
