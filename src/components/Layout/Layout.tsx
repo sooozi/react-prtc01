@@ -17,7 +17,7 @@ const BOTTOM_BUFFER_PX = 120; // 맨 아래 근처에서는 헤더 항상 표시
  * - 아래로 스크롤 시 헤더 숨김, 위로 스크롤 시 헤더 표시
  */
 export default function Layout() {
-  const [headerVisible, setHeaderVisible] = useState(true);
+  const [headerVisible, setHeaderVisible] = useState(true); // 헤더 표시 여부
   const lastScrollY = useRef(0);
   const rafId = useRef<number | null>(null);
 
@@ -64,7 +64,7 @@ export default function Layout() {
       <div className="bg-decoration-2" />
 
       {/* 헤더 (스크롤 시 숨김/표시) */}
-      <Header />
+      <Header scrollHidden={!headerVisible} />
 
       <ApiErrorBar />
 
