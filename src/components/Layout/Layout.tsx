@@ -56,6 +56,9 @@ export default function Layout() {
       className={`layout-container ${headerVisible ? "" : "layout-container--header-hidden"}`}
       style={{ "--header-height": `${HEADER_HEIGHT_PX}px` } as React.CSSProperties}
     >
+      <a href="#main-content" className="skip-to-main">
+        본문으로 건너뛰기
+      </a>
       {/* 배경 장식 */}
       <div className="bg-decoration-1" />
       <div className="bg-decoration-2" />
@@ -66,7 +69,7 @@ export default function Layout() {
       <ApiErrorBar />
 
       {/* 메인 콘텐츠 - 각 페이지가 여기에 렌더링됨 */}
-      <main className="layout-main">
+      <main id="main-content" className="layout-main" tabIndex={-1}>
         <Outlet />
       </main>
 

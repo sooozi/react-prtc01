@@ -32,12 +32,12 @@
     padding: v.space(md) v.space(2xl);
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
     color: var(--color-text-on-primary);
-    border: none;
     border-radius: v.rad(p10);
     font-size: v.fs(sm);
     font-weight: v.fw(semibold);
     cursor: pointer;
     transition: transform #{v.dur(normal)} #{v.ease(default)};
+    @include button-focus-ring-border-1px(color-mix(in srgb, var(--color-static-white) 82%, transparent));
 
     &:hover {
       transform: translateY(-2px);

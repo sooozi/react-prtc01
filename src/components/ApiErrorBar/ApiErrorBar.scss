@@ -1,3 +1,4 @@
+@use "@/styles/common-tools" as *;
 @use "@/styles/variables" as v;
 .api-error-bar {
   display: flex;
@@ -22,13 +23,13 @@
   flex-shrink: 0;
   margin: 0;
   padding: 0 v.space(xs);
-  border: none;
   background: transparent;
   color: var(--color-text-secondary);
   font-size: v.fs(xl);
   line-height: 1;
   cursor: pointer;
   border-radius: v.rad(xs);
+  @include button-focus-ring-border-1px;
 
   &:hover {
     color: var(--color-text);

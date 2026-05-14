@@ -15,7 +15,7 @@
   letter-spacing: -0.02em;
   text-decoration: none;
   border-radius: v.rad(p12);
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
   @include v.transition-channels(
     (
@@ -38,11 +38,6 @@
 
   &:active:not(:disabled) {
     transform: scale(0.98);
-  }
-
-  &:focus,
-  &:focus-visible {
-    outline: none !important;
   }
 
   color: inherit;
@@ -171,7 +166,7 @@
   letter-spacing: inherit;
   color: inherit;
   background: none;
-  border: none;
+  border: 1px solid transparent;
   @include sh.none;
 
   &:hover:not(:disabled) {
@@ -184,4 +179,15 @@
   margin-top: v.space(sm);
   padding: v.space(lg);
   width: 100%;
+}
+
+/* 변형별 기본 테두리 뒤에 공통 포커스 1px 실선 (채움 버튼은 대비용 밝은 테두리) */
+.btn:focus-visible:not(:disabled):not([aria-disabled="true"]) {
+  outline: none;
+  border: 1px solid var(--color-primary);
+}
+
+.btn--primary:focus-visible:not(:disabled):not([aria-disabled="true"]),
+.btn--danger:focus-visible:not(:disabled):not([aria-disabled="true"]) {
+  border-color: color-mix(in srgb, var(--color-static-white) 82%, transparent);
 }

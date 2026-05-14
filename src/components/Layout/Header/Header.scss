@@ -87,10 +87,8 @@
     transform: scale(0.96);
   }
 
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    outline-offset: 0;
+  &:focus-visible:not(:disabled) {
+    @include button-focus-ring-border-recolor;
   }
 
   @include bp.above(bp.$md) {
@@ -420,10 +418,10 @@
     background: var(--color-overlay-scrim);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    border: none;
     border-radius: 0;
     cursor: pointer;
-    
+    @include button-focus-ring-border-1px;
+
     z-index: v.z(curtain);
     opacity: 0;
     visibility: hidden;
@@ -446,7 +444,7 @@
 .theme-toggle {
   flex-shrink: 0;
   background: none;
-  border: none;
+  border: 1px solid transparent;
   padding: v.space(xs) v.space(sm);
   font-size: v.fs(xl);
   line-height: 1;
@@ -457,10 +455,12 @@
       background,
       transform,
       box-shadow,
+      border-color,
     ),
     normal,
     default
   );
+  @include button-focus-ring-border-recolor;
 
   &:hover {
     background: var(--color-primary-muted);
@@ -478,7 +478,7 @@
     height: 2.5rem;
     padding: 0;
     border-radius: v.rad(circle);
-    border: none;
+    border: 1px solid transparent;
     background: var(--color-bg-subtle);
     font-size: v.fs(xl);
     @include sh.md-plus-sm;

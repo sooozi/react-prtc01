@@ -50,13 +50,20 @@
   justify-content: center;
   margin: 0;
   padding: 0;
-  border: none;
   background: transparent;
   cursor: pointer;
   font: inherit;
   line-height: 0;
   border-radius: v.rad(p8);
-  transition: transform #{v.dur(instant)} #{v.ease(default)};
+  @include v.transition-channels(
+    (
+      transform,
+      border-color,
+    ),
+    instant,
+    default
+  );
+  @include button-focus-ring-border-1px;
 
   &:hover .table-sort-th__icon--neutral {
     opacity: 0.65;

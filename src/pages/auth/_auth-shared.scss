@@ -88,12 +88,12 @@
   align-items: center;
   justify-content: center;
   padding: v.space(xs);
-  border: none;
   background: none;
   font-size: v.fs(xl);
   cursor: pointer;
   border-radius: v.rad(p8);
   transition: background #{v.dur(normal)} #{v.ease(default)};
+  @include button-focus-ring-border-1px;
 
   &:hover {
     background: var(--color-primary-muted);

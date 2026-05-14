@@ -288,8 +288,8 @@ body.image-file-attach--reorder-active {
 }
 
 .image-file-attach__row--over {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 1px;
+  outline: 1px solid var(--color-primary);
+  outline-offset: 2px;
   background: var(--color-input-focus-bg);
   border-color: var(--color-primary);
   @include sh.focus-ring-primary-3;
@@ -421,17 +421,18 @@ body.image-file-attach--reorder-active {
   width: 1.5rem;
   height: 1.5rem;
   padding: 0;
-  border: none;
   border-radius: v.rad(p8);
   font-size: v.fs(lg);
   line-height: 1;
   cursor: pointer;
   color: var(--color-text-secondary);
   background: transparent;
+  @include button-focus-ring-border-1px;
   @include v.transition-channels(
     (
       color,
       background,
+      border-color,
     ),
     micro,
     default

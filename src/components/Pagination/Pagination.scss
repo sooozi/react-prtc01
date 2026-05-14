@@ -1,3 +1,4 @@
+@use "@/styles/common-tools" as *;
 @use "@/styles/breakpoints" as bp;
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
@@ -51,10 +52,9 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 
-  &:focus,
-  &:focus-visible {
-    outline: none;
+  &:focus-visible:not(:disabled) {
     @include sh.none;
+    @include button-focus-ring-border-recolor;
   }
 
   @include bp.below(bp.$md) {

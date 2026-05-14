@@ -475,7 +475,12 @@
     border-color #{v.dur(normal)} #{v.ease(default)},
     color #{v.dur(normal)} #{v.ease(default)};
 
-  @include focus-ring-primary(3px);
+  &:focus-visible:not(:disabled) {
+    outline: none;
+    border-color: var(--color-primary);
+    border-width: 1px;
+    border-style: solid;
+  }
 
   &:hover {
     border-color: var(--color-primary);

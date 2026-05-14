@@ -86,7 +86,7 @@
   border-radius: v.rad(p8);
 }
 
-// 아이콘 토글: 전역 outlinePrimary(2px)는 이 컨텍스트에서만 유독 두껍게 보여서 완화
+// 아이콘 토글: outlinePrimary와 동일하게 1px 테두리로 맞춤
 .post-comment-section__secret-comment-btn.btn.btn--outlinePrimary {
   border-width: 1px;
   border-color: color-mix(in srgb, var(--color-border) 75%, transparent);
@@ -374,7 +374,6 @@
   display: inline-block;
   margin-top: v.space(xs);
   padding: 0;
-  border: none;
   background: none;
   font: inherit;
   font-size: v.fs(xs);
@@ -383,13 +382,10 @@
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 0.15em;
+  @include button-focus-ring-border-1px;
 
   &:hover {
     color: var(--color-primary-hover);
-  }
-
-  &:focus-visible, &:focus {
-    outline: none;
   }
 }
 
@@ -405,7 +401,6 @@
   align-items: center;
   gap: v.space(xs);
   padding: v.space(xs) v.space(sm);
-  border: none;
   border-radius: v.rad(p8);
   font-family: inherit;
   font-size: v.fs(xs);
@@ -413,6 +408,7 @@
   color: var(--color-text-secondary);
   background: transparent;
   opacity: 0.85;
+  @include button-focus-ring-border-1px;
 }
 
 .post-comment-section__action-count {

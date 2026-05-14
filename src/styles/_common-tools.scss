@@ -47,10 +47,30 @@ $error-dark: var(--color-error-dark);
   white-space: nowrap;
 }
 
-@mixin focus-ring-primary($outline-offset: v.space(xxs)) {
+@mixin focus-ring-primary($outline-offset: 2px) {
   &:focus-visible {
-    outline: v.space(xxs) solid var(--color-primary);
+    outline: 1px solid var(--color-primary);
     outline-offset: $outline-offset;
+  }
+}
+
+/// `border: none` 대체: 투명 1px으로 박스 크기 유지 후, 키보드 포커스에서만 테두리 표시
+@mixin button-focus-ring-border-1px($color: var(--color-primary)) {
+  border: 1px solid transparent;
+
+  &:focus-visible:not(:disabled):not([aria-disabled="true"]) {
+    outline: none;
+    border-color: #{$color};
+  }
+}
+
+/// 이미 테두리가 있는 버튼: 포커스 시 1px 실선·색만 통일
+@mixin button-focus-ring-border-recolor($color: var(--color-primary)) {
+  &:focus-visible:not(:disabled):not([aria-disabled="true"]) {
+    outline: none;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #{$color};
   }
 }
 

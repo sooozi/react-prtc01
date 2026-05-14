@@ -46,17 +46,12 @@
   appearance: none;
   margin: 0;
   padding: 0;
-  border: none;
   background: transparent;
   cursor: pointer;
   line-height: 0;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-
-  &:focus,
-  &:focus-visible {
-    outline: none;
-  }
+  @include button-focus-ring-border-1px;
 }
 
 .month-calendar__week-start-switch-track {
@@ -197,7 +192,6 @@
   width: 1.5rem;
   height: 1.5rem;
   padding: 0;
-  border: none;
   border-radius: v.rad(circle);
   display: inline-flex;
   align-items: center;
@@ -210,9 +204,11 @@
     background #{v.dur(normal)} #{v.ease(default)},
     box-shadow #{v.dur(normal)} #{v.ease(default)},
     transform #{v.dur(micro)} #{v.ease(default)},
-    opacity #{v.dur(micro)} #{v.ease(default)};
+    opacity #{v.dur(micro)} #{v.ease(default)},
+    border-color #{v.dur(normal)} #{v.ease(default)};
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  @include button-focus-ring-border-1px(color-mix(in srgb, var(--color-static-white) 82%, transparent));
 
   &:hover {
     @include sh.primary-rest;
@@ -222,10 +218,6 @@
   &:active {
     transform: scale(0.96);
     filter: brightness(0.95);
-  }
-
-  &:focus-visible {
-    outline: none;
   }
 }
 
@@ -289,9 +281,7 @@
     border-color: color-mix(in srgb, var(--color-primary) 26%, color-mix(in srgb, var(--color-static-black) 9%, transparent));
   }
 
-  &:focus-visible {
-    outline: none;
-  }
+  @include button-focus-ring-border-recolor;
 
   &--active {
     background: color-mix(in srgb, var(--color-primary-muted) 78%, color-mix(in srgb, var(--color-static-white) 90%, transparent));
@@ -329,9 +319,7 @@
     @include sh.mc-today-dark-active;
   }
 
-  &:focus-visible {
-    outline: none;
-  }
+  @include button-focus-ring-border-recolor;
 }
 
 .month-calendar__title {
@@ -406,9 +394,7 @@
     background: var(--mc-chip-bg-active);
   }
 
-  &:focus-visible {
-    outline: none;
-  }
+  @include button-focus-ring-border-recolor;
 }
 
 .month-calendar__title-year,
@@ -505,7 +491,6 @@
 .month-calendar__month-option {
   width: 100%;
   appearance: none;
-  border: none;
   background: transparent;
   font: inherit;
   color: var(--color-text);
@@ -520,10 +505,12 @@
     (
       background-color,
       color,
+      border-color,
     ),
     fast,
     default
   );
+  @include button-focus-ring-border-1px;
 
   &:hover {
     background: var(--color-bg-subtle);
@@ -532,10 +519,6 @@
   &--selected {
     background: color-mix(in srgb, var(--color-primary-muted) 75%, var(--color-card));
     color: var(--color-text-heading);
-  }
-
-  &:focus-visible {
-    outline: none;
   }
 }
 
