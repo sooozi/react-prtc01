@@ -24,11 +24,9 @@ export default function AppRouter() {
       <BrowserRouter>
         <RouteHeadSync />
         <Routes>
-          {/* 루트 경로 → /home */}
-          <Route path="/" element={<Navigate to="/home" replace />} />
-
-          {/* 모든 페이지에 Layout(Header, Footer) 적용 */}
+          {/* Layout 밖에서 Navigate만 쓰면 그 순간 <main>이 없어 axe가 경고함 */}
           <Route element={<Layout />}>
+            <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<Home />} />
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/signup" element={<Signup />} />
@@ -48,10 +46,9 @@ export default function AppRouter() {
               <Route path="/user/mypage" element={<MyPage />} />
               <Route path="/schedule" element={<Schedule />} />
             </Route>
-          </Route>
 
-          {/* 정의되지 않은 경로 → 404 페이지 */}
-          <Route path="*" element={<Navigate to="/not-found" replace />} />
+            <Route path="*" element={<Navigate to="/not-found" replace />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </HelmetProvider>
