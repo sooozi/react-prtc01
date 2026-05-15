@@ -349,6 +349,14 @@
 }
 
 .nav-links__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  > li {
+    list-style: none;
+  }
+
   @include bp.below(bp.$md) {
     flex: 1;
     padding-bottom: v.space(sm);

@@ -71,17 +71,17 @@ export default function About() {
         <h2 id="about-mission-heading" className="visually-hidden">
           목적과 범위
         </h2>
-        <div className="mission-grid">
+        <ul className="mission-grid">
           {missionCards.map((card) => (
-            <div key={card.title} className="mission-card">
+            <li key={card.title} className="mission-card">
               <span className="mission-icon" aria-hidden>
                 {card.icon}
               </span>
               <h3 className="mission-title">{card.title}</h3>
               <p className="mission-text">{card.text}</p>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       <section className="tech-section" aria-labelledby="about-tech-heading">
@@ -104,18 +104,20 @@ export default function About() {
         <h2 id="about-scope-heading" className="section-title">
           연습 범위
         </h2>
-        <div className="scope-grid">
+        <ul className="scope-grid">
           {scopeHighlights.map((item) => (
-            <article key={item.title} className="scope-card">
-              <div className="scope-icon" aria-hidden>
-                {item.icon}
-              </div>
-              <h3 className="scope-title">{item.title}</h3>
-              <span className="scope-tag">{item.tag}</span>
-              <p className="scope-desc">{item.description}</p>
-            </article>
+            <li key={item.title}>
+              <article className="scope-card">
+                <div className="scope-icon" aria-hidden>
+                  {item.icon}
+                </div>
+                <h3 className="scope-title">{item.title}</h3>
+                <span className="scope-tag">{item.tag}</span>
+                <p className="scope-desc">{item.description}</p>
+              </article>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       <section className="cta-section" aria-labelledby="about-cta-title">

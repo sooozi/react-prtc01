@@ -133,7 +133,7 @@ export default function Pagination({
           onChange={(e) => setInputValue(e.target.value.replace(/\D/g, ""))} // 숫자가 아닌 문자 제거
           onBlur={applyPageInput} // 페이지 번호 입력 필드 값 변경 시 페이지 번호 적용
           onKeyDown={handleKeyDown} // 페이지 번호 입력 필드 값 변경 시 페이지 번호 적용
-          aria-label="페이지 번호"
+          aria-label={`페이지 번호 입력, 1부터 ${totalPages}까지. Enter 또는 포커스를 벗어나면 해당 페이지로 이동합니다.`}
         />
         {/* <span className="page-divider" aria-hidden="true" /> */}
         <span className="page-total">{totalPages}</span>

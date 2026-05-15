@@ -248,64 +248,78 @@ export default function Header({ scrollHidden = false }: HeaderProps) {
             </div>
           </div>
 
-          <div className="nav-links__list" role="presentation">
-            <p className="nav-links__section-label">Menu</p>
-            <Link to="/about" className="nav-link nav-link--drawer">
-              <DrawerNavIcon>
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 16v-4M12 8h.01" />
-              </DrawerNavIcon>
-              <span className="nav-link__label">About</span>
-            </Link>
-            <Link to="/user/list" className="nav-link nav-link--drawer">
-              <DrawerNavIcon>
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </DrawerNavIcon>
-              <span className="nav-link__label">User</span>
-            </Link>
-            <Link to="/post/list" className="nav-link nav-link--drawer">
-              <DrawerNavIcon>
-                <path d="M8 6h13M8 12h13M8 18h13" />
-                <path d="M3 6h.01M3 12h.01M3 18h.01" />
-              </DrawerNavIcon>
-              <span className="nav-link__label">Board</span>
-            </Link>
-            <Link to="/schedule" className="nav-link nav-link--drawer">
-              <DrawerNavIcon>
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                <line x1="16" x2="16" y1="2" y2="6" />
-                <line x1="8" x2="8" y1="2" y2="6" />
-                <line x1="3" x2="21" y1="10" y2="10" />
-              </DrawerNavIcon>
-              <span className="nav-link__label">Schedule</span>
-            </Link>
+          <p className="nav-links__section-label">Menu</p>
+          <ul className="nav-links__list" aria-label="메인 메뉴">
+            <li>
+              <Link to="/about" className="nav-link nav-link--drawer">
+                <DrawerNavIcon>
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4M12 8h.01" />
+                </DrawerNavIcon>
+                <span className="nav-link__label">About</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/user/list" className="nav-link nav-link--drawer">
+                <DrawerNavIcon>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </DrawerNavIcon>
+                <span className="nav-link__label">User</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/post/list" className="nav-link nav-link--drawer">
+                <DrawerNavIcon>
+                  <path d="M8 6h13M8 12h13M8 18h13" />
+                  <path d="M3 6h.01M3 12h.01M3 18h.01" />
+                </DrawerNavIcon>
+                <span className="nav-link__label">Board</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/schedule" className="nav-link nav-link--drawer">
+                <DrawerNavIcon>
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" x2="16" y1="2" y2="6" />
+                  <line x1="8" x2="8" y1="2" y2="6" />
+                  <line x1="3" x2="21" y1="10" y2="10" />
+                </DrawerNavIcon>
+                <span className="nav-link__label">Schedule</span>
+              </Link>
+            </li>
 
             {userName ? (
-              <Button variant="ghost" className="nav-link nav-link--drawer logout-btn" onClick={handleLogout}>
-                <DrawerNavIcon>
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" x2="9" y1="12" y2="12" />
-                </DrawerNavIcon>
-                <span className="nav-link__label">Logout</span>
-              </Button>
+              <li>
+                <Button variant="ghost" className="nav-link nav-link--drawer logout-btn" onClick={handleLogout}>
+                  <DrawerNavIcon>
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" x2="9" y1="12" y2="12" />
+                  </DrawerNavIcon>
+                  <span className="nav-link__label">Logout</span>
+                </Button>
+              </li>
             ) : (
               <>
-                <Link to="/auth/login" className="nav-link nav-link--drawer">
-                  <DrawerNavIcon>
-                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                    <polyline points="10 17 15 12 10 7" />
-                    <line x1="15" x2="3" y1="12" y2="12" />
-                  </DrawerNavIcon>
-                  <span className="nav-link__label">Login</span>
-                </Link>
-                <Link to="/auth/signup" className="nav-link nav-link--drawer-cta accent">
-                  Sign Up
-                </Link>
+                <li>
+                  <Link to="/auth/login" className="nav-link nav-link--drawer">
+                    <DrawerNavIcon>
+                      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                      <polyline points="10 17 15 12 10 7" />
+                      <line x1="15" x2="3" y1="12" y2="12" />
+                    </DrawerNavIcon>
+                    <span className="nav-link__label">Login</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/auth/signup" className="nav-link nav-link--drawer-cta accent">
+                    Sign Up
+                  </Link>
+                </li>
               </>
             )}
-          </div>
+          </ul>
         </div>
       </nav>
     </header>
