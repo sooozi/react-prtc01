@@ -2,12 +2,12 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPost } from "@/api/board";
 import {
-  Badge,
   Button,
   ImageFileAttachField,
   isAttachmentFileNameWithinLimit,
   itemsToFiles,
   MAX_ATTACHMENT_FILENAME_LENGTH,
+  PageHeader,
 } from "@/components";
 import type { FileWithId } from "@/components";
 import "@/pages/post/Write.scss";
@@ -65,13 +65,17 @@ export default function Write() {
 
   return (
     <div className="board-write-page">
-      <div className="board-write-header">
-        <Badge>✏️ 글쓰기</Badge>
-        <h1 className="title">게시글 등록</h1>
-        <p className="subtitle">제목과 내용을 입력한 뒤 등록해주세요.</p>
-      </div>
+      <PageHeader
+        badge="✏️ 글쓰기"
+        title="게시글 등록"
+        subtitle="제목과 내용을 입력한 뒤 등록해주세요."
+        variant="centered"
+      />
 
-      <form className="board-write-form" onSubmit={handleSubmit}>
+      <form className="board-write-form" onSubmit={handleSubmit} aria-labelledby="post-write-form-heading">
+        <h2 id="post-write-form-heading" className="visually-hidden">
+          게시글 입력
+        </h2>
         {error && (
           <div className="board-write-error" role="alert">
             {error}
@@ -108,9 +112,9 @@ export default function Write() {
         </div>
 
         <div className="form-group">
-          <span className="label">
+          <h2 className="label" id="post-attach-heading">
             첨부파일
-          </span>
+          </h2>
           <ImageFileAttachField
             fileInputId="post-file"
             items={attachFileItems} // 첨부된 이미지 목록

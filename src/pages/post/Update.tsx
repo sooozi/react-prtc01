@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, getPostFiles, updatePost } from "@/api/board";
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
-import { Badge, Button, Confirm, LoadingState } from "@/components";
+import { Button, Confirm, LoadingState, PageHeader } from "@/components";
 import { ImageFileAttachField } from "@/components/ImageFileAttachField/ImageFileAttachField";
 import {
   isAttachmentFileNameWithinLimit,
@@ -154,10 +154,7 @@ export default function Update() {
 
   return (
     <div className="post-detail-page">
-      <div className="post-detail-header">
-        <Badge>✏️ Edit</Badge>
-        <h1 className="title">게시글 수정</h1>
-      </div>
+      <PageHeader badge="✏️ Edit" title="게시글 수정" variant="centered" />
       <div className="post-detail-actions">
         <Button
           variant="secondary"
@@ -189,7 +186,10 @@ export default function Update() {
             </span>
           </div>
         ) : post ? (
-          <div className="post-update-form">
+          <div className="post-update-form" aria-labelledby="post-update-form-heading">
+            <h2 id="post-update-form-heading" className="visually-hidden">
+              게시글 수정 입력
+            </h2>
             <div className="detail-meta">
               <span className="detail-id">#{post.postNumber}</span>
               <span className="detail-author">{post.rgtrInfo ?? "-"}</span>
@@ -223,7 +223,9 @@ export default function Update() {
             </div>
 
             <div className="form-group">
-              <span className="label">첨부파일</span>
+              <h2 className="label" id="post-update-attach-heading">
+                첨부파일
+              </h2>
               <ImageFileAttachField
                 fileInputId="update-post-file"
                 fileInputRef={fileInputRef} // 파일 입력 요소 참조

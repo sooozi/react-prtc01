@@ -58,6 +58,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
 
   return (
     <div className="month-calendar">
+      <h2 className="visually-hidden">달력</h2>
       {/* 주 시작 */}
       <div className="month-calendar__week-start-row">
         <div className="month-calendar__week-start-switch-wrap">
@@ -77,6 +78,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
                 className={clsx("month-calendar__week-start-switch-thumb", {
                   "month-calendar__week-start-switch-thumb--right": weekStart === "sunday",
                 })}
+                aria-hidden
               />
               <span className="month-calendar__week-start-switch-labels">
                 <span
@@ -117,13 +119,14 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
         <button
           type="button"
           className="month-calendar__round-nav"
+          aria-label="이전 달"
           onClick={() => {
             onMonthChange(addMonths(monthStart, -1));
             setIsMonthPopoverOpen(false);
             setIsYearPopoverOpen(false);
           }}
         >
-          <span className="month-calendar__round-nav-icon">
+          <span className="month-calendar__round-nav-icon" aria-hidden>
             ‹
           </span>
         </button>
@@ -197,13 +200,14 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
         <button
           type="button"
           className="month-calendar__round-nav"
+          aria-label="다음 달"
           onClick={() => {
             onMonthChange(addMonths(monthStart, 1));
             setIsMonthPopoverOpen(false);
             setIsYearPopoverOpen(false);
           }}
         >
-          <span className="month-calendar__round-nav-icon">
+          <span className="month-calendar__round-nav-icon" aria-hidden>
             ›
           </span>
         </button>

@@ -7,7 +7,7 @@ import {
   viewCountUp,
 } from "@/api/board";
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
-import { Badge, Button, Confirm, LoadingState } from "@/components";
+import { Button, Confirm, LoadingState, PageHeader } from "@/components";
 import { listReturnPathFromFromQuery, postUpdatePath } from "@/pages/post/postDetailFromQuery";
 import { formatFileSize } from "@/utils/formatFileSize";
 import PostCommentSection from "@/pages/post/PostCommentSection";
@@ -123,10 +123,7 @@ export default function Detail() {
   return (
     <div className="post-detail-page">
       {/* 게시글 상세 헤더 */}
-      <div className="post-detail-header">
-        <Badge>📄 Detail</Badge>
-        <h1 className="title">게시글 상세</h1>
-      </div>
+      <PageHeader badge="📄 Detail" title="게시글 상세" variant="centered" />
 
       <div className="post-detail-actions">
         <Button
@@ -184,9 +181,11 @@ export default function Detail() {
             <h2 className="detail-title">{post.title}</h2>
             <div className="detail-content">{post.content || "내용 없음"}</div>
             {attachments.length > 0 && (
-              <section className="detail-attachments" aria-label="첨부파일">
+              <section className="detail-attachments" aria-labelledby="detail-attachments-heading">
                 <div className="detail-attachments__head">
-                  <h3 className="detail-attachments__heading">첨부파일</h3>
+                  <h3 id="detail-attachments-heading" className="detail-attachments__heading">
+                    첨부파일
+                  </h3>
                   <span
                     className="detail-attachments__total"
                     aria-label={

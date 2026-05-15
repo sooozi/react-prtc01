@@ -181,9 +181,9 @@ export default function Header({ scrollHidden = false }: HeaderProps) {
           aria-expanded={menuOpen}
           aria-controls="header-mobile-nav-drawer"
         >
-          <span className="nav-toggle-bar" />
-          <span className="nav-toggle-bar" />
-          <span className="nav-toggle-bar" />
+          <span className="nav-toggle-bar" aria-hidden />
+          <span className="nav-toggle-bar" aria-hidden />
+          <span className="nav-toggle-bar" aria-hidden />
         </button>
 
         <button
@@ -221,7 +221,7 @@ export default function Header({ scrollHidden = false }: HeaderProps) {
                 title={theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
                 aria-label={theme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
               >
-                {theme === "dark" ? "☀️" : "🌙"}
+                <span aria-hidden>{theme === "dark" ? "☀️" : "🌙"}</span>
               </button>
               {userName ? (
                 <Link
@@ -237,7 +237,8 @@ export default function Header({ scrollHidden = false }: HeaderProps) {
                     <span className="nav-links__profile-hint">My page</span>
                   </span>
                   <span className="nav-links__profile-desktop nav-link__text">
-                    🧑🏻‍💻 {userName}
+                    <span aria-hidden>🧑🏻‍💻 </span>
+                    {userName}
                   </span>
                   <span className="nav-link__tooltip" aria-hidden>
                     My Page

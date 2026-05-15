@@ -9,10 +9,6 @@
   @extend %auth-card;
 }
 
-.signup-header {
-  @extend %auth-header;
-}
-
 .signup-form {
   display: flex;
   flex-direction: column;

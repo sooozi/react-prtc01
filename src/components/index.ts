@@ -15,6 +15,8 @@ export type {
 } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
 export type { ImageFileAttachFieldProps } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
 export { default as Badge } from "@/components/Badge/Badge";
+export { default as PageHeader } from "@/components/PageHeader/PageHeader";
+export type { PageHeaderProps, PageHeaderVariant } from "@/components/PageHeader/PageHeader";
 export { default as Button } from "@/components/Button/Button";
 export { default as Confirm } from "@/components/Confirm/Confirm";
 export { default as LoadingState } from "@/components/LoadingState/LoadingState";

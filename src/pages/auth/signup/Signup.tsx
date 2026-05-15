@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { signup, checkUserId } from "@/api/auth";
 import { ApiError } from "@/api/http";
-import { Badge, Button } from "@/components";
+import { Button, PageHeader } from "@/components";
 import "@/pages/auth/signup/Signup.scss";
 
 interface SignupData {
@@ -101,11 +101,12 @@ export default function Signup() {
       <div className="bg-decoration-2" />
 
       <div className="signup-card">
-        <div className="signup-header">
-          <Badge>✨ Sign Up</Badge>
-          <h1 className="title">회원가입</h1>
-          <p className="subtitle">새로운 계정을 만들어보세요</p>
-        </div>
+        <PageHeader
+          badge="✨ Sign Up"
+          title="회원가입"
+          subtitle="새로운 계정을 만들어보세요"
+          variant="auth"
+        />
 
         <form className="signup-form" onSubmit={handleSubmit(onSubmit)}>
           {/* 아이디 */}
@@ -246,7 +247,7 @@ export default function Signup() {
                 aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
                 title={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
               >
-                {showPassword ? "🙈" : "👁️"}
+                <span aria-hidden>{showPassword ? "🙈" : "👁️"}</span>
               </button>
             </div>
             <div className="message-area">

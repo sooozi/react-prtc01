@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components";
+import { Button, PageHeader } from "@/components";
 import "./NotFound.scss";
 
 export default function NotFound() {
@@ -16,15 +16,25 @@ export default function NotFound() {
 
         <span className="not-found-code">404</span>
 
-        <h1 className="not-found-title">
-          페이지를 <span className="not-found-accent">찾을 수 없습니다</span>
-        </h1>
-
-        <p className="not-found-desc">
-          요청하신 주소가 존재하지 않거나 삭제되었을 수 있습니다.
-          <br />
-          URL을 다시 확인해 주세요.
-        </p>
+        <PageHeader
+          badge="404 Not Found"
+          title={
+            <>
+              페이지를 <span className="not-found-accent">찾을 수 없습니다</span>
+            </>
+          }
+          titleClassName="not-found-title"
+          subtitle={
+            <>
+              요청하신 주소가 존재하지 않거나 삭제되었을 수 있습니다.
+              <br />
+              URL을 다시 확인해 주세요.
+            </>
+          }
+          subtitleClassName="not-found-desc"
+          variant="inline"
+          as="div"
+        />
 
         <div className="not-found-actions">
           <Button variant="primary" onClick={() => navigate("/home")}>

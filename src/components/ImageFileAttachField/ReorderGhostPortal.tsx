@@ -31,7 +31,9 @@ export function ReorderGhostPortal({ ghost }: { ghost: ReorderGhostState | null 
         <span className="image-file-attach__drag-ghost-grip" aria-hidden>
           <GripHandleIcon className="image-file-attach__grip-icon" />
         </span>
-        <span className="image-file-attach__clip-emoji">📎</span>
+        <span className="image-file-attach__clip-emoji" aria-hidden>
+          📎
+        </span>
         <div className="image-file-attach__file-meta">
           <span className="image-file-attach__name">{ghost.fileName}</span>
           <span className="image-file-attach__size">{ghost.sizeLabel}</span>

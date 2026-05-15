@@ -9,6 +9,10 @@
 
 .not-found-content {
   @include err.error-page-inner;
+
+  .page-header .badge {
+    margin-bottom: v.space(md);
+  }
 }
 
 .not-found-icon-wrap {

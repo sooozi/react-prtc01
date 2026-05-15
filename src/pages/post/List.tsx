@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { redirectUnauthorizedToLogin } from "@/api/auth/loginRedirectSession";
 import { selectBoardList, BoardApiError } from "@/api/board";
 import type { Post } from "@/api/board";
-import { Badge, Button, LoadingState, Pagination, TableSortTh, Tooltip } from "@/components";
+import { Button, LoadingState, Pagination, PageHeader, TableSortTh, Tooltip } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import { useUrlQueryPage } from "@/hooks/useUrlQueryPage";
 import {
@@ -119,15 +119,15 @@ export default function List() {
 
   return (
     <div className="board-page">
-      <div className="list-page-head">
-        <div className="title-block">
-          <Badge>📋 Board</Badge>
-          <h1 className="title">게시판</h1>
-          <p className="subtitle">
+      <PageHeader
+        badge="📋 Board"
+        title="게시판"
+        subtitle={
+          <>
             전체 <strong>{totalItems}</strong>개의 게시글
-          </p>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       <div className="board-write-btn-container">
         <section className="board-search-panel" aria-label="게시글 검색">
@@ -246,6 +246,7 @@ export default function List() {
                       className="tr tr-clickable"
                       role="button"
                       tabIndex={0}
+                      aria-label={`게시글 ${post.postNumber}번, ${post.title}`}
                       onClick={() => openPostDetail(post.postNumber)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {

@@ -7,23 +7,6 @@
   @include padded-page-z;
 }
 
-.board-write-header {
-  text-align: center;
-  margin-bottom: v.space(3xl);
-}
-
-.title {
-  font-size: clamp(v.fs(3xl), 3vw, v.fs(display-md));
-  font-weight: v.fw(extrabold);
-  color: var(--color-text-heading);
-  margin-bottom: v.space(sm);
-}
-
-.subtitle {
-  font-size: v.fs(base);
-  color: var(--color-text-secondary);
-}
-
 .board-write-form {
   background: var(--color-card);
   border-radius: v.rad(p16);
@@ -52,7 +35,7 @@
 
 .form-group .label {
   display: block;
-  
+  margin: 0;
   font-size: v.fs(body-sm);
   font-weight: v.fw(semibold);
   color: var(--color-text-heading);

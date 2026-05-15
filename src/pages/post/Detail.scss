@@ -7,17 +7,6 @@
   @include narrow-centered-page(800px);
 }
 
-.post-detail-header {
-  margin-bottom: v.space(3xl);
-  text-align: center;
-}
-
-.post-detail-header .title {
-  font-size: clamp(v.fs(3xl), 3vw, v.fs(display-md));
-  font-weight: v.fw(extrabold);
-  color: var(--color-text-heading);
-}
-
 .post-detail-card {
   background: var(--color-card);
   border-radius: v.rad(p16);

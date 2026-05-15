@@ -156,21 +156,22 @@ button:hover {
   background-color: var(--color-button-bg-hover);
 }
 
-/* .btn 는 Button.scss 에서 :focus-visible 링 전용 처리 */
-button:focus:not(.btn),
-button:focus-visible:not(.btn),
-input[type="button"]:focus,
-input[type="button"]:focus-visible,
-input[type="submit"]:focus,
-input[type="submit"]:focus-visible,
-input[type="reset"]:focus,
-input[type="reset"]:focus-visible,
-[role="button"]:focus,
-[role="button"]:focus-visible {
-  outline: none !important;
+/* .btn 은 Button.scss — 마우스로 눌렀을 때만 생기는 :focus 링만 정리, 키보드 :focus-visible 링은 유지 */
+button:focus:not(:focus-visible):not(.btn),
+input[type="button"]:focus:not(:focus-visible),
+input[type="submit"]:focus:not(:focus-visible),
+input[type="reset"]:focus:not(:focus-visible),
+[role="button"]:focus:not(:focus-visible) {
+  outline: none;
 }
 
-button:focus-visible:not(.btn):not(:disabled):not([aria-disabled="true"]) {
+button:focus-visible:not(.btn):not(:disabled):not([aria-disabled="true"]),
+input[type="button"]:focus-visible:not(:disabled):not([aria-disabled="true"]),
+input[type="submit"]:focus-visible:not(:disabled):not([aria-disabled="true"]),
+input[type="reset"]:focus-visible:not(:disabled):not([aria-disabled="true"]),
+[role="button"]:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
   border-color: var(--color-primary);
 }
 

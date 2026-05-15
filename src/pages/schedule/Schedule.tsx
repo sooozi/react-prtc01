@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { Badge, Button } from "@/components";
+import { Button, PageHeader } from "@/components";
 import { useFloatingLayer } from "@/hooks/useFloatingLayer";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import MonthCalendar from "@/pages/schedule/MonthCalendar";
@@ -32,12 +32,7 @@ export default function Schedule() {
 
   return (
     <div className="schedule-page">
-      <div className="list-page-head">
-        <div className="title-block">
-          <Badge>📅 Schedule</Badge>
-          <h1 className="title">일정</h1>
-        </div>
-      </div>
+      <PageHeader badge="📅 Schedule" title="일정" />
 
       <div className="schedule-layout">
         <div

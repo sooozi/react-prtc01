@@ -40,10 +40,11 @@ function PageMoveButton({
       variant="ghost"
       className={clsx("page-move-btn", `page-${action}`, disabled && "disabled", className)}
       disabled={disabled}
+      aria-label={ACTION_TITLES[action]}
       title={ACTION_TITLES[action]}
       {...rest}
     >
-      {ACTION_ICONS[action]}
+      <span aria-hidden>{ACTION_ICONS[action]}</span>
     </Button>
   );
 }

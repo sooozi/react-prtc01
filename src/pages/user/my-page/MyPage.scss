@@ -17,12 +17,7 @@
   width: 100%;
 }
 
-.mypage-header {
-  margin-bottom: v.space(3xl);
-  text-align: center;
-}
-
-.mypage-page .title {
+.mypage-page .page-header .title {
   font-size: clamp(v.fs(3xl), 3vw, v.fs(display-md));
   font-weight: v.fw(extrabold);
   color: var(--color-text-heading);
@@ -34,7 +29,7 @@
   }
 }
 
-.mypage-page .subtitle {
+.mypage-page .page-header .subtitle {
   margin: 0;
   font-size: v.fs(base);
   color: var(--color-text-secondary);

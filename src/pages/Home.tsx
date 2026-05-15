@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Badge, Button } from "@/components";
+import { Button, PageHeader } from "@/components";
 import "@/pages/Home.scss";
 
 export default function Home() {
@@ -80,26 +80,36 @@ export default function Home() {
     <div className="home-page" ref={pageRef}>
       <section className="hero" aria-labelledby="home-hero-title">
         <div className="hero-inner">
-          <div className="hero-copy">
-            <Badge>Practice Project</Badge>
-            <h1 id="home-hero-title" className="hero-title">
-              더 빠르고, 더 아름다운
-              <br />
-              <span className="gradient-text">개발 경험</span>
-            </h1>
-            <p className="hero-description">
-              Vite · React · TypeScript 기반으로 게시판·회원·일정 UI를 붙여 본 저장소입니다.
-              <br />
-              일부 메뉴는 로그인 후에 이용할 수 있어요.
-            </p>
-            <div className="hero-actions">
-              <Button variant="primary" onClick={() => navigate("/auth/signup")}>
-                회원가입
-              </Button>
-              <Button variant="secondary" onClick={() => navigate("/about")}>
-                서비스 소개
-              </Button>
-            </div>
+          <PageHeader
+            badge="Practice Project"
+            title={
+              <>
+                더 빠르고, 더 아름다운
+                <br />
+                <span className="gradient-text">개발 경험</span>
+              </>
+            }
+            titleId="home-hero-title"
+            titleClassName="hero-title"
+            subtitle={
+              <>
+                Vite · React · TypeScript 기반으로 게시판·회원·일정 UI를 붙여 본 저장소입니다.
+                <br />
+                일부 메뉴는 로그인 후에 이용할 수 있어요.
+              </>
+            }
+            subtitleClassName="hero-description"
+            variant="inline"
+            className="hero-copy"
+            as="div"
+          />
+          <div className="hero-actions">
+            <Button variant="primary" onClick={() => navigate("/auth/signup")}>
+              회원가입
+            </Button>
+            <Button variant="secondary" onClick={() => navigate("/about")}>
+              서비스 소개
+            </Button>
           </div>
         </div>
       </section>

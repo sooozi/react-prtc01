@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Badge, Button } from "@/components";
+import { Button, PageHeader } from "@/components";
 import "@/pages/about/About.scss";
 
 export default function About() {
@@ -53,13 +53,18 @@ export default function About() {
   return (
     <div className="about-page">
       <section className="hero-section" aria-labelledby="about-hero-title">
-        <Badge>About project</Badge>
-        <h1 id="about-hero-title" className="title">
-          Vite + React로 <span className="gradient-text">UI·API</span> 연습
-        </h1>
-        <p className="subtitle">
-          React + TypeScript로 UI 컴포넌트·상태 관리·라우팅·API 연동까지 한 흐름으로 정리한 프론트엔드 포트폴리오 프로젝트입니다.
-        </p>
+        <PageHeader
+          badge="About project"
+          title={
+            <>
+              Vite + React로 <span className="gradient-text">UI·API</span> 연습
+            </>
+          }
+          titleId="about-hero-title"
+          subtitle="React + TypeScript로 UI 컴포넌트·상태 관리·라우팅·API 연동까지 한 흐름으로 정리한 프론트엔드 포트폴리오 프로젝트입니다."
+          variant="inline"
+          as="div"
+        />
       </section>
 
       <section className="mission-section" aria-labelledby="about-mission-heading">

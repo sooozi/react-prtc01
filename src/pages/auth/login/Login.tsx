@@ -4,7 +4,7 @@ import { useLocation, useNavigate, type Location } from "react-router-dom";
 import { consumeLoginRedirectSession } from "@/api/auth/loginRedirectSession";
 import { ApiError } from "@/api/http";
 import { LOGIN_SUCCESS_CODE, login } from "@/api/auth";
-import { Badge, Button } from "@/components";
+import { Button, PageHeader } from "@/components";
 import "@/pages/auth/login/Login.scss";
 
 interface LoginFormData {
@@ -134,10 +134,7 @@ export default function Login() {
       )}
 
       <div className="login-card">
-        <div className="login-header">
-          <Badge>🔐 Login</Badge>
-          <h1 className="title">로그인</h1>
-        </div>
+        <PageHeader badge="🔐 Login" title="로그인" variant="auth" />
 
         {apiAlert && (
           <div
@@ -197,7 +194,7 @@ export default function Login() {
                 aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
                 title={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
               >
-                {showPassword ? "🙈" : "👁️"}
+                <span aria-hidden>{showPassword ? "🙈" : "👁️"}</span>
               </button>
             </div>
             <div className="message-area">

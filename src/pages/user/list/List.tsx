@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { selectUserList, type UserItem } from "@/api/user";
-import { Badge, LoadingState, Pagination } from "@/components";
+import { LoadingState, PageHeader, Pagination } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import { useUrlQueryPage } from "@/hooks/useUrlQueryPage";
 import "./List.scss";
@@ -55,15 +55,15 @@ export default function UserList() {
 
   return (
     <div className="search-page">
-      <div className="list-page-head">
-        <div className="title-block">
-          <Badge>👥 User</Badge>
-          <h1 className="title">사용자 목록</h1>
-          <p className="subtitle">
+      <PageHeader
+        badge="👥 User"
+        title="사용자 목록"
+        subtitle={
+          <>
             전체 <strong>{totalItems}</strong>명의 사용자
-          </p>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       <div className="table-card">
         {loading ? (

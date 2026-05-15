@@ -31,7 +31,9 @@ export function AttachRowBody({
       >
         <GripHandleIcon className="image-file-attach__grip-icon" />
       </span>
-      <span className="image-file-attach__clip-emoji">📎</span>
+      <span className="image-file-attach__clip-emoji" aria-hidden>
+        📎
+      </span>
       <div className="image-file-attach__file-meta">
         <span className="image-file-attach__name" title={fileName}>
           {fileName}

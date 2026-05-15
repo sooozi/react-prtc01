@@ -12,7 +12,7 @@
   margin-bottom: v.space(6xl);
 }
 
-.about-page .title {
+.about-page .page-header .title {
   font-size: clamp(v.fs(display-sm), 5vw, v.fs(display-xl));
   font-weight: v.fw(extrabold);
   line-height: 1.2;
@@ -20,7 +20,7 @@
   color: var(--color-text-heading);
 }
 
-.about-page .subtitle {
+.about-page .page-header .subtitle {
   font-size: v.fs(lg);
   color: var(--color-text-secondary);
   line-height: 1.8;

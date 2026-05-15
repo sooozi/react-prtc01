@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { selectUserDetail, type UserItem } from "@/api/user";
-import { Badge, Button, LoadingState } from "@/components";
+import { Button, LoadingState, PageHeader } from "@/components";
 import "@/pages/post/Detail.scss";
 import "./Detail.scss";
 
@@ -54,10 +54,7 @@ export default function UserDetail() {
 
   return (
     <div className="post-detail-page">
-      <div className="post-detail-header">
-        <Badge>👤 Detail</Badge>
-        <h1 className="title">사용자 상세</h1>
-      </div>
+      <PageHeader badge="👤 Detail" title="사용자 상세" variant="centered" />
 
       <div className="post-detail-actions">
         <Button variant="secondary" size="sm" onClick={() => navigate("/user/list")}>

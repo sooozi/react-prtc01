@@ -366,10 +366,11 @@ export function ImageFileAttachFieldCreate({
                     <button
                       type="button"
                       className="image-file-attach__remove"
+                      aria-label={`${item.file.name} 첨부 제거`}
                       onClick={() => removeAt(index)}
                       onPointerDown={(e) => e.stopPropagation()}
                     >
-                      ×
+                      <span aria-hidden>×</span>
                     </button>
                   }
                 />

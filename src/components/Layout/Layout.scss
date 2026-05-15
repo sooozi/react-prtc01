@@ -56,6 +56,17 @@
   width: 100%;
   margin: 0 auto;
   @include padded-page-z;
+
+  /* tabIndex=-1 + 프로그램 포커스(건너뛰기 링크·헤더 숨김 등) 시에도 위치가 보이도록 */
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+    border-radius: v.rad(sm);
+  }
 }
 
 @keyframes layout-blob-float {

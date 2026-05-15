@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Badge, Button, LoadingState } from "@/components";
+import { Button, LoadingState, PageHeader } from "@/components";
 import { getMyPostList } from "@/api/board/boardApi";
 import type { Post } from "@/api/board";
 import "./MyPage.scss";
@@ -85,13 +85,16 @@ export default function MyPage() {
   return (
     <div className="mypage-page">
       <section className="mypage-section">
-        <header className="mypage-header">
-          <Badge>👤 MyPage</Badge>
-          <h1 className="title">
-            안녕하세요, <span className="highlight">{userName ?? "회원"}</span>님
-          </h1>
-          <p className="subtitle">회원 정보와 작성한 글을 한곳에서 확인하세요.</p>
-        </header>
+        <PageHeader
+          badge="👤 MyPage"
+          title={
+            <>
+              안녕하세요, <span className="highlight">{userName ?? "회원"}</span>님
+            </>
+          }
+          subtitle="회원 정보와 작성한 글을 한곳에서 확인하세요."
+          variant="centered"
+        />
         
         <div className="mypage-profile-grid">
           <div className="mypage-card">

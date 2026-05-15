@@ -129,10 +129,10 @@ export default function PostCommentSection() {
   return (
     <section className="post-comment-section" aria-labelledby="post-comment-heading">
       <div className="post-comment-section__page-head">
-        <h2 id="post-comment-heading" className="post-comment-section__heading">
+        <h3 id="post-comment-heading" className="post-comment-section__heading">
           댓글
           <span className="post-comment-section__count">{totalCount}</span>
-        </h2>
+        </h3>
         <div className="post-comment-section__sort">
           <label htmlFor="post-comment-sort" className="visually-hidden">
             정렬
@@ -145,9 +145,9 @@ export default function PostCommentSection() {
       </div>
 
       <div className="post-comment-section__write-block">
-        <h3 id="post-comment-write-heading" className="post-comment-section__subheading">
+        <h4 id="post-comment-write-heading" className="post-comment-section__subheading">
           댓글 작성
-        </h3>
+        </h4>
         <div className="post-comment-section__composer-card" aria-labelledby="post-comment-write-heading">
           <label htmlFor="post-comment-draft" className="visually-hidden">
             댓글 입력

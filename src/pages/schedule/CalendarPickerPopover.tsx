@@ -92,6 +92,7 @@ export function CalendarPickerPopover({
           className={clsx("month-calendar__title-caret", {
             "month-calendar__title-caret--open": isOpen,
           })}
+          aria-hidden
         />
       </button>
       

@@ -35,7 +35,7 @@ export default function ApiErrorBar() {
         onClick={() => clearGlobalApiError()}
         aria-label="오류 메시지 닫기"
       >
-        ×
+        <span aria-hidden>×</span>
       </button>
     </div>
   );
