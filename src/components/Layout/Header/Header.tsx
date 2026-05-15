@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components";
+import { useBodyScrollLock, useFloatingLayer } from "@/hooks/useFloatingLayer";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { getTabbableElements } from "@/utils/tabbable";
 import "@/components/Layout/Header/Header.scss";
 
@@ -25,16 +27,13 @@ function DrawerNavIcon({ children }: { children: ReactNode }) {
   );
 }
 
-function isMobileDrawerLayout() {
-  return typeof window !== "undefined" && window.innerWidth < 768;
-}
-
 export type HeaderProps = {
   /** 레이아웃에서 스크롤로 헤더를 숨긴 경우: 포커스·포인터·보조공학 트리에서 제외 */
   scrollHidden?: boolean;
 };
 
 export default function Header({ scrollHidden = false }: HeaderProps) {
+  const isMobileDrawerLayout = useMediaQuery("(max-width: 767px)");
   const navigate = useNavigate();
   const userName = localStorage.getItem("userName");
   const [theme, setTheme] = useState<"light" | "dark">(
@@ -75,18 +74,27 @@ export default function Header({ scrollHidden = false }: HeaderProps) {
     closeMenu();
   };
 
+  useFloatingLayer({
+    open: menuOpen,
+    enabled: isMobileDrawerLayout,
+    layerRootRef: navRef,
+    onEscape: closeMenu,
+    lockScroll: false,
+    trapTab: true,
+    focusInitial: null,
+    restoreFocusMode: null,
+  });
+
   useEffect(() => {
     if (!menuOpen) return;
-    document.body.style.overflow = "hidden";
     const onResize = () => {
       if (window.innerWidth >= 768) closeMenu();
     };
     window.addEventListener("resize", onResize);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("resize", onResize);
-    };
+    return () => window.removeEventListener("resize", onResize);
   }, [menuOpen, closeMenu]);
+
+  useBodyScrollLock(menuOpen);
 
   // 스크롤로 헤더가 숨겨진 동안 포커스가 헤더 안에 남지 않도록 본문으로 이동
   useLayoutEffect(() => {
@@ -103,7 +111,7 @@ export default function Header({ scrollHidden = false }: HeaderProps) {
 
   // 모바일 드로어: 열릴 때 포커스를 패널 안으로, 닫힐 때 햄버거(또는 이전 요소)로 복귀
   useLayoutEffect(() => {
-    if (!menuOpen || !isMobileDrawerLayout()) return;
+    if (!menuOpen || !isMobileDrawerLayout) return;
 
     const toggleButton = menuToggleRef.current;
 
@@ -135,39 +143,16 @@ export default function Header({ scrollHidden = false }: HeaderProps) {
         back.focus({ preventScroll: true });
       }
     };
-  }, [menuOpen]);
+  }, [menuOpen, isMobileDrawerLayout]);
 
-  // 모바일 드로어: Esc로 닫기, Tab은 헤더 nav 안에서만 순환
+  // 드로어 안 클릭 시 닫기 — div에 onClick을 두면 jsx-a11y가 막아서 DOM 리스너로 처리
   useEffect(() => {
-    if (!menuOpen || !isMobileDrawerLayout()) return;
-    const nav = navRef.current;
-    if (!nav) return;
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        closeMenu();
-        return;
-      }
-      if (e.key !== "Tab") return;
-      const list = getTabbableElements(nav);
-      if (list.length === 0) return;
-      const active = document.activeElement;
-      if (!(active instanceof HTMLElement) || !nav.contains(active)) return;
-
-      const first = list[0]!;
-      const last = list[list.length - 1]!;
-      if (!e.shiftKey && active === last) {
-        e.preventDefault();
-        first.focus();
-      } else if (e.shiftKey && active === first) {
-        e.preventDefault();
-        last.focus();
-      }
-    };
-
-    document.addEventListener("keydown", onKeyDown, true);
-    return () => document.removeEventListener("keydown", onKeyDown, true);
+    if (!menuOpen) return;
+    const el = navLinksRef.current;
+    if (!el) return;
+    const onClick = () => closeMenu();
+    el.addEventListener("click", onClick);
+    return () => el.removeEventListener("click", onClick);
   }, [menuOpen, closeMenu]);
 
   return (
@@ -212,13 +197,11 @@ export default function Header({ scrollHidden = false }: HeaderProps) {
           tabIndex={menuOpen ? 0 : -1}
         />
 
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events -- 드로어 내부 링크 선택 시 닫기; Esc·포커스 트랩은 별도 처리 */}
         <div
           id="header-mobile-nav-drawer"
           ref={navLinksRef}
           className="nav-links"
           tabIndex={-1}
-          onClick={closeMenu}
         >
           <div
             className={`nav-links__top${userName ? "" : " nav-links__top--guest"}`}

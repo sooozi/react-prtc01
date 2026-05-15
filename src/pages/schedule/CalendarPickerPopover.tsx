@@ -1,6 +1,7 @@
 import clsx from "clsx";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import type { ReactNode, RefObject } from "react";
+import { useFloatingLayer } from "@/hooks/useFloatingLayer";
 
 type CalendarPickerPopoverProps = {
   buttonRef: RefObject<HTMLButtonElement | null>;
@@ -34,12 +35,17 @@ export function CalendarPickerPopover({
   triggerDisplay,
   children,
 }: CalendarPickerPopoverProps) {
-  const onDismissRef = useRef(onDismiss); // 팝오버 닫기 함수 참조
-
-  // 팝오버 닫기 함수 참조
-  useEffect(() => {
-    onDismissRef.current = onDismiss;
-  }, [onDismiss]);
+  useFloatingLayer({
+    open: isOpen,
+    layerRootRef: popoverRef,
+    onEscape: onDismiss,
+    lockScroll: false,
+    trapTab: false,
+    focusInitial: "none",
+    restoreFocusMode: "target-if-inside",
+    restoreLayerRef: popoverRef,
+    restoreTargetRef: buttonRef,
+  });
 
   // 열릴 때: 선택된 옵션이 있으면 그쪽, 없으면 첫 옵션으로 포커스
   useLayoutEffect(() => {
@@ -51,43 +57,23 @@ export function CalendarPickerPopover({
     (selected ?? first)?.focus();
   }, [isOpen, popoverRef]);
 
-  // 닫힐 때: 포커스가 아직 패널 안에 있으면 트리거로 복귀 (다른 버튼으로 이미 옮긴 경우는 건드리지 않음)
-  useLayoutEffect(() => {
-    if (isOpen) return;
-    const root = popoverRef.current;
-    const trigger = buttonRef.current;
-    if (!root || !trigger) return;
-    const active = document.activeElement;
-    if (active instanceof Node && root.contains(active)) {
-      trigger.focus();
-    }
-  }, [isOpen, buttonRef, popoverRef]);
-
-  // 팝오버 닫기
+  // 트리거·패널 밖을 누르면 닫기
   useEffect(() => {
     if (!isOpen) return;
 
-    // Esc 키 누르면 팝오버 닫기
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") onDismissRef.current();
-    }
-
-    // 트리거·패널 밖을 누르면 닫기
     function handlePointerDown(e: PointerEvent) {
       const t = e.target as Node | null;
       if (!t) return;
       if (buttonRef.current?.contains(t)) return;
       if (popoverRef.current?.contains(t)) return;
-      onDismissRef.current();
+      onDismiss();
     }
 
-    window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("pointerdown", handlePointerDown, { passive: true });
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("pointerdown", handlePointerDown);
     };
-  }, [isOpen, buttonRef, popoverRef]);
+  }, [isOpen, onDismiss, buttonRef, popoverRef]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import "@/components/Tooltip/Tooltip.scss";
 
@@ -61,8 +61,19 @@ export default function Tooltip({
     }
   };
   
-  // 툴팁 숨기기
-  const hide = () => setState({ visible: false, top: 0, left: 0 });
+  const hide = useCallback(() => setState({ visible: false, top: 0, left: 0 }), []);
+
+  useEffect(() => {
+    if (!state.visible) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        hide();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown, true);
+    return () => document.removeEventListener("keydown", onKeyDown, true);
+  }, [state.visible, hide]);
 
   // 툴팁 요소 생성
   const tooltipEl =
