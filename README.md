@@ -2,7 +2,33 @@
 
 Vite + React + TypeScript 기반 프론트엔드 연습·포트폴리오 프로젝트입니다.  
 로그인·회원가입·사용자 목록·상세(목 데이터)·마이페이지(내가 쓴 글)·게시판(목록·상세·작성·수정·삭제·조회수·검색·정렬·모바일 카드 / 데스크톱 테이블·댓글 UI·이미지 첨부)·일정(월 달력·연·월 선택·주 시작·한국 공휴일 표시·좌측 입력 패널 / 좁은 화면에서는 시트)·다크 모드·접근성(페이지 제목·스킵 링크·라우트 안내 등)을 다룹니다.  
-레이아웃은 스크롤 방향에 따라 헤더를 숨겼다 보였다 합니다.
+
+---
+
+## 프로젝트 범위
+
+React + TypeScript + Vite로 인증/게시판/마이페이지/일정 화면을 구현한 개인 프로젝트입니다. 게시판은 CRUD, 검색, 정렬, 페이지네이션, 이미지 첨부·순서 기능까지 포함했고, 목록은 데스크톱 테이블·모바일 카드로 반응형 처리했습니다. Axios로 외부 REST API에 연동하고 401 처리, 토스트, 예외 상황 UX를 정리했습니다. 사용자 목록·상세, 댓글 일부는 mock/데모 데이터로 구성했고 백엔드는 프로젝트 범위에서 제외했습니다.
+
+---
+
+### 데이터·백엔드 경계
+
+| 구분 | 방식 | 비고 |
+|------|------|------|
+| 로그인·회원가입·게시판·내 글 목록 등 | **실 HTTP** | `VITE_API_BASE_URL` 필요 |
+| 사용자 목록·사용자 상세 | **프론트 mock** | `src/mocks/user.ts`, API 없이 목록 형태 학습용 |
+| 댓글 영역·무한 스크롤 | **프론트 데모** | 목 데이터·추후 실 API 교체 가능한 구조 |
+| 일정 입력 패널 | **UI만** | 저장·서버 동기화 없음 |
+
+### 실험·미연결 코드 (레포 상태)
+
+아래는 현재 기준으로 “파일은 있지만 기본 플로우에서는 사용하지 않는 항목”입니다.
+
+| 항목 | 상태 |
+|------|------|
+| `pages/schedule/WorkTimeBar.tsx` | **존재하나 현재 `Schedule.tsx`에서 import 되지 않음** (예비·실험 컴포넌트) |
+| `backstop.json` | **선택** 시각 회귀용. 로컬에만 두거나, 팀/제출 정책에 따라 커밋. `package.json`에 `backstopjs`가 있어도 `yarn` 스크립트로는 자동 실행하지 않음 |
+| SCSS 마이그레이션 스크립트 (`scripts/apply-*.py`) | **제거됨** — 스타일은 수동 토큰(`v.fs` 등) 사용 |
 
 ---
 
@@ -194,7 +220,7 @@ src/
 
 ## 기타
 
-- **BackstopJS**: 루트 `backstop.json` — 시각 회귀 테스트(선택). `yarn dev` 후 `npx backstop reference` / `test`. 프로젝트가 `"type": "module"` 이면 엔진 `onBefore`/`onReady`에서 CommonJS `require` 를 쓰면 충돌할 수 있으니 설정 시 유의합니다. `package.json` 의존성에 `backstopjs` 포함.
+- **BackstopJS**: 선택 도구. `backstop.json`이 있으면 `yarn dev` 실행 후 `npx backstop reference` / `npx backstop test` 로 시각 회귀 테스트 가능합니다. 레포마다 파일을 버전에 포함할지(로컬 전용일지)는 본인에게 맡깁니다. `"type": "module"` 과 엔진 `onBefore`/`onReady`의 `require` 혼용 시 충돌할 수 있습니다. 의존성: `package.json`의 `backstopjs`.
 - **ESLint**: `eslint-plugin-react-hooks`, `eslint-plugin-jsx-a11y` 포함.
 - **React Compiler 관련 규칙**: 일부 훅/라이브러리 조합에서 `react-hooks/` 규칙 경고가 날 수 있음 — 레포 상태에 따라 허용·제외 처리됨.
 
