@@ -318,6 +318,7 @@
       flex-shrink: 0;
       width: 2.75rem;
       height: 2.75rem;
+      margin: 0;
       padding: 0;
       border-radius: v.rad(pill);
       border: 1px solid var(--color-border);
@@ -459,6 +460,7 @@
   flex-shrink: 0;
   background: none;
   border: 1px solid transparent;
+  margin-right: 1rem;
   padding: v.space(xs) v.space(sm);
   font-size: v.fs(xl);
   line-height: 1;
