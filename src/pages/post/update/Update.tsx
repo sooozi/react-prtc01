@@ -9,10 +9,10 @@ import {
   MAX_ATTACHMENT_FILENAME_LENGTH,
 } from "@/components/ImageFileAttachField/fileAttachItemUtils";
 import type { ImageFileUnifiedRow } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
-import { postDetailPath } from "@/pages/post/postDetailFromQuery";
-import "@/pages/post/Detail.scss";
-import "@/pages/post/Write.scss";
-import "@/pages/post/Update.scss";
+import { postDetailPath } from "@/lib/post/postDetailFromQuery";
+import "@/pages/post/detail/Detail.scss";
+import "@/pages/post/write/Write.scss";
+import "@/pages/post/update/Update.scss";
 
 export default function Update() {
   const navigate = useNavigate();

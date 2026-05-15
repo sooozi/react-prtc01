@@ -15,8 +15,8 @@ import {
   nextBoardListSortState,
   type BoardListSortState,
   type BoardSortColumn,
-} from "@/pages/post/boardListSort";
-import "@/pages/post/List.scss";
+} from "@/lib/post/boardListSort";
+import "@/pages/post/list/List.scss";
 
 //[검색] API에 실제로 넘긴 검색어가 하나라도 있으면 true (빈 목록 문구용)
 function hasAppliedSearch(title: string, rgtrId: string, rgtrName: string): boolean {

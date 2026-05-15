@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { selectUserDetail, type UserItem } from "@/api/user";
 import { Button, LoadingState, PageHeader } from "@/components";
-import "@/pages/post/Detail.scss";
+import "@/pages/post/detail/Detail.scss";
 import "./Detail.scss";
 
 export default function UserDetail() {

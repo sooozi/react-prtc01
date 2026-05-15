@@ -8,10 +8,10 @@ import {
 } from "@/api/board";
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
 import { Button, Confirm, LoadingState, PageHeader } from "@/components";
-import { listReturnPathFromFromQuery, postUpdatePath } from "@/pages/post/postDetailFromQuery";
+import { listReturnPathFromFromQuery, postUpdatePath } from "@/lib/post/postDetailFromQuery";
+import CommentSection from "@/pages/post/components/CommentSection";
 import { formatFileSize } from "@/utils/formatFileSize";
-import PostCommentSection from "@/pages/post/PostCommentSection";
-import "@/pages/post/Detail.scss";
+import "@/pages/post/detail/Detail.scss";
 
 export default function Detail() {
   const navigate = useNavigate();
@@ -222,7 +222,7 @@ export default function Detail() {
                 </ul>
               </section>
             )}
-            <PostCommentSection />
+            <CommentSection />
           </>
         ) : null}
       </div>

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, PageHeader } from "@/components";
-import "@/pages/Home.scss";
+import "@/pages/home/Home.scss";
 
 export default function Home() {
   const navigate = useNavigate();

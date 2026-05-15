@@ -1,13 +1,13 @@
 @use "@/styles/common-tools" as *;
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
-@use "./error-page-shared" as err;
+@use "@/pages/errors/styles/error-page-shared" as err;
 
-.forbidden-container {
+.not-found-container {
   @extend %viewport-centered-pad;
 }
 
-.content {
+.not-found-content {
   @include err.error-page-inner;
 
   .page-header .badge {
@@ -15,47 +15,55 @@
   }
 }
 
-.icon-wrapper {
+.not-found-icon-wrap {
   width: 120px;
   height: 120px;
-  background: linear-gradient(135deg, var(--color-error-bg) 0%, color-mix(in srgb, var(--color-error) 16%, transparent) 100%);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-primary) 12%, var(--color-bg-subtle)) 0%,
+    color-mix(in srgb, var(--color-primary) 22%, transparent) 100%
+  );
   border-radius: v.rad(circle);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto v.space(2xl);
-  @include sh.error-sheet-danger;
+  @include sh.error-sheet-primary;
 }
 
-.icon {
+.not-found-icon {
   font-size: v.fs(display-2xl);
 }
 
-.error-code {
+.not-found-code {
   display: inline-block;
   padding: v.space(sm) v.space(lg);
-  background: var(--color-error-bg);
+  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg-subtle));
   border-radius: v.rad(pill);
   font-size: v.fs(sm);
   font-weight: v.fw(semibold);
-  color: var(--color-error-dark);
+  color: var(--color-primary);
   margin-bottom: v.space(lg);
-  border: 1px solid var(--color-error-border);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 28%, var(--color-border));
   letter-spacing: 0.1em;
 }
 
-.forbidden-container .title {
+.not-found-title {
   @include err.error-page-title;
 }
 
-.description {
+.not-found-accent {
+  color: var(--color-primary);
+}
+
+.not-found-desc {
   @include err.error-page-description;
 }
 
-.button-group {
+.not-found-actions {
   @include err.error-page-actions;
 }
 
-.help-text {
+.not-found-hint {
   @include err.error-page-hint;
 }

@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { Confirm } from "@/components";
 import { CommentDeleteIcon } from "@/components/icons/CommentDeleteIcon";
 
-export type PostCommentRowProps = {
+export type CommentRowProps = {
   variant: "root" | "reply";
   avatarLetter: string;
   commentKey: string;
@@ -14,7 +14,7 @@ export type PostCommentRowProps = {
 };
 
 /** 댓글 한 줄(루트·답글) — 레이아웃 + 본문 접기/펼치기 + 액션 */
-export function PostCommentRow({
+export function CommentRow({
   variant,
   avatarLetter,
   commentKey, // 댓글 고유 ID
@@ -23,7 +23,7 @@ export function PostCommentRow({
   body, // 본문
   likes,
   dislikes,
-}: PostCommentRowProps) {
+}: CommentRowProps) {
   const bodyRef = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false); // 본문 접기/펼치기 상태
   const [canExpand, setCanExpand] = useState(false); // 본문 접기/펼치기 가능 여부
@@ -53,21 +53,21 @@ export function PostCommentRow({
   }, [body, commentKey, expanded]); // 의존성 배열: 본문 요소 크기 변경 감지
 
   const commentRow = (
-    <div className="post-comment-section__item-inner">
-      <div className="post-comment-section__avatar" aria-hidden>
+    <div className="comment-section__item-inner">
+      <div className="comment-section__avatar" aria-hidden>
         {avatarLetter}
       </div>
-      <div className="post-comment-section__item-main">
-        <div className="post-comment-section__item-meta">
-          <span className="post-comment-section__author">{author}</span>
-          <span className="post-comment-section__date">{dateLabel}</span>
+      <div className="comment-section__item-main">
+        <div className="comment-section__item-meta">
+          <span className="comment-section__author">{author}</span>
+          <span className="comment-section__date">{dateLabel}</span>
         </div>
-        <div className="post-comment-section__body-block">
+        <div className="comment-section__body-block">
           <p
             ref={bodyRef}
             className={[
-              "post-comment-section__body",
-              expanded ? "post-comment-section__body--expanded" : "post-comment-section__body--collapsed",
+              "comment-section__body",
+              expanded ? "comment-section__body--expanded" : "comment-section__body--collapsed",
             ].join(" ")}
           >
             {body}
@@ -75,7 +75,7 @@ export function PostCommentRow({
           {canExpand ? (
             <button
               type="button"
-              className="post-comment-section__expand-toggle"
+              className="comment-section__expand-toggle"
               onClick={() => setExpanded((v) => !v)}
               aria-expanded={expanded}
             >
@@ -83,41 +83,41 @@ export function PostCommentRow({
             </button>
           ) : null}
         </div>
-        <div className="post-comment-section__actions" role="group" aria-label="댓글 반응 및 작업">
+        <div className="comment-section__actions" role="group" aria-label="댓글 반응 및 작업">
           <button
             type="button"
-            className="post-comment-section__action"
+            className="comment-section__action"
             aria-label={`좋아요 ${likeCount}개`}
             onClick={() => {
             setLikeCount(likeCount + 1);
           }}>
             <span aria-hidden>👍</span>{" "}
-            <span className="post-comment-section__action-count" aria-hidden>
+            <span className="comment-section__action-count" aria-hidden>
               {likeCount}
             </span>
           </button>
           <button
             type="button"
-            className="post-comment-section__action"
+            className="comment-section__action"
             aria-label={`싫어요 ${dislikeCount}개`}
             onClick={() => {
             setDislikeCount(dislikeCount + 1);
           }}>
             <span aria-hidden>👎</span>{" "}
-            <span className="post-comment-section__action-count" aria-hidden>
+            <span className="comment-section__action-count" aria-hidden>
               {dislikeCount}
             </span>
           </button>
-          <button type="button" className="post-comment-section__action post-comment-section__action--text" disabled>
+          <button type="button" className="comment-section__action comment-section__action--text" disabled>
             답글
           </button>
           <button
             type="button"
-            className="post-comment-section__action post-comment-section__action--icon post-comment-section__action--delete"
+            className="comment-section__action comment-section__action--icon comment-section__action--delete"
             aria-label="댓글 삭제"
             onClick={() => setDeleteConfirmOpen(true)}
           >
-            <CommentDeleteIcon className="post-comment-section__delete-icon" />
+            <CommentDeleteIcon className="comment-section__delete-icon" />
           </button>
         </div>
       </div>

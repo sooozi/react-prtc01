@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Button } from "@/components";
-import "@/pages/schedule/ScheduleSidePanel.scss";
+import "@/pages/schedule/components/side-panel/SidePanel.scss";
 
 const CATEGORY_OPTIONS = [
   { value: "work", label: "업무", theme: "work" as const },
@@ -14,7 +14,7 @@ type CategoryValue = (typeof CATEGORY_OPTIONS)[number]["value"];
 /**
  * 일정 페이지 우측 패널 — 카테고리·날짜·내용 UI만 (저장 등 로직 미연결)
  */
-export default function ScheduleSidePanel() {
+export default function SidePanel() {
   const todayISO = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const [category, setCategory] = useState<CategoryValue>("work");
   const [date, setDate] = useState<string>(todayISO);

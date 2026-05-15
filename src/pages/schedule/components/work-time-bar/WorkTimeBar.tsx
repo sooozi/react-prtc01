@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ClockOutlineIcon } from "@/components/icons/ClockOutlineIcon";
-import { computeClockOut, normalizeTimeHHmm } from "./workTimeUtils";
-import "./WorkTimeBar.scss";
+import { computeClockOut, normalizeTimeHHmm } from "@/lib/schedule/workTimeUtils";
+import "@/pages/schedule/components/work-time-bar/WorkTimeBar.scss";
 
 const CLOCK_IN_STORAGE_KEY = "react-practice.schedule.clockIn";
 

@@ -10,7 +10,7 @@ import {
   PageHeader,
 } from "@/components";
 import type { FileWithId } from "@/components";
-import "@/pages/post/Write.scss";
+import "@/pages/post/write/Write.scss";
 
 export default function Write() {
   const navigate = useNavigate();

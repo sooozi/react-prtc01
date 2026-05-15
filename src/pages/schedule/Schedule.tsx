@@ -2,9 +2,9 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { Button, PageHeader } from "@/components";
 import { useFloatingLayer } from "@/hooks/useFloatingLayer";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import MonthCalendar from "@/pages/schedule/MonthCalendar";
-import ScheduleSidePanel from "@/pages/schedule/ScheduleSidePanel";
-import { startOfMonth } from "@/pages/schedule/calendarUtils";
+import MonthCalendar from "@/pages/schedule/components/calendar/MonthCalendar";
+import SidePanel from "@/pages/schedule/components/side-panel/SidePanel";
+import { startOfMonth } from "@/lib/schedule/calendarUtils";
 import "@/pages/schedule/Schedule.scss";
 
 export default function Schedule() {
@@ -67,7 +67,7 @@ export default function Schedule() {
             tabIndex={isNarrowWorkspace && mobilePanelOpen ? -1 : undefined}
             inert={isNarrowWorkspace && !mobilePanelOpen ? true : undefined}
           >
-            <ScheduleSidePanel />
+            <SidePanel />
           </div>
         </div>
       </div>

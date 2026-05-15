@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
-import { PostCommentRow } from "@/pages/post/PostCommentRow";
-import { countPreviewComments, PREVIEW_COMMENTS, type PreviewComment } from "@/pages/post/postCommentMockData";
-import "@/pages/post/PostCommentSection.scss";
+import { CommentRow } from "@/pages/post/components/CommentRow";
+import { countPreviewComments, PREVIEW_COMMENTS, type PreviewComment } from "@/mocks/comment";
+import "@/pages/post/components/CommentSection.scss";
 
 // API 한 행(댓글·대댓글 공통) — 무한 스크롤은 플랫 단위로 페이지네이션
 type CommentFlatRow = Omit<PreviewComment, "replies"> & { parentId: string | null };
@@ -67,7 +67,7 @@ function avatarInitial(name: string) {
 }
 
 // 게시글 상세 댓글 영역 — 플랫 5개 단위 무한 스크롤(목 API), 이후 실 API로 교체
-export default function PostCommentSection() {
+export default function CommentSection() {
   const totalCount = countPreviewComments(PREVIEW_COMMENTS);
   const [loadedRows, setLoadedRows] = useState<CommentFlatRow[]>([]);
   const [nextOffset, setNextOffset] = useState(0);
@@ -127,39 +127,39 @@ export default function PostCommentSection() {
   }, [hasMore, loadMore]);
 
   return (
-    <section className="post-comment-section" aria-labelledby="post-comment-heading">
-      <div className="post-comment-section__page-head">
-        <h3 id="post-comment-heading" className="post-comment-section__heading">
+    <section className="comment-section" aria-labelledby="comment-heading">
+      <div className="comment-section__page-head">
+        <h3 id="comment-heading" className="comment-section__heading">
           댓글
-          <span className="post-comment-section__count">{totalCount}</span>
+          <span className="comment-section__count">{totalCount}</span>
         </h3>
-        <div className="post-comment-section__sort">
-          <label htmlFor="post-comment-sort" className="visually-hidden">
+        <div className="comment-section__sort">
+          <label htmlFor="comment-sort" className="visually-hidden">
             정렬
           </label>
-          <select id="post-comment-sort" className="post-comment-section__select" defaultValue="recent" disabled>
+          <select id="comment-sort" className="comment-section__select" defaultValue="recent" disabled>
             <option value="recent">최신순</option>
             <option value="old">오래된순</option>
           </select>
         </div>
       </div>
 
-      <div className="post-comment-section__write-block">
-        <h4 id="post-comment-write-heading" className="post-comment-section__subheading">
+      <div className="comment-section__write-block">
+        <h4 id="comment-write-heading" className="comment-section__subheading">
           댓글 작성
         </h4>
-        <div className="post-comment-section__composer-card" aria-labelledby="post-comment-write-heading">
-          <label htmlFor="post-comment-draft" className="visually-hidden">
+        <div className="comment-section__composer-card" aria-labelledby="comment-write-heading">
+          <label htmlFor="comment-draft" className="visually-hidden">
             댓글 입력
           </label>
           <textarea
-            id="post-comment-draft"
-            className="post-comment-section__draft"
+            id="comment-draft"
+            className="comment-section__draft"
             rows={5}
             placeholder="댓글을 입력하세요."
           />
-          <div className="post-comment-section__composer-foot">
-            <div className="post-comment-section__composer-actions">
+          <div className="comment-section__composer-foot">
+            <div className="comment-section__composer-actions">
               <Button
                 type="button"
                 variant="outlinePrimary"
@@ -168,8 +168,8 @@ export default function PostCommentSection() {
                 aria-label={isSecretComment ? "비밀 댓글 켜짐" : "비밀 댓글 꺼짐"}
                 className={
                   isSecretComment
-                    ? "post-comment-section__secret-comment-btn post-comment-section__secret-comment-btn--on"
-                    : "post-comment-section__secret-comment-btn"
+                    ? "comment-section__secret-comment-btn comment-section__secret-comment-btn--on"
+                    : "comment-section__secret-comment-btn"
                 }
                 onClick={() => {
                   setIsSecretComment((prev) => {
@@ -179,9 +179,9 @@ export default function PostCommentSection() {
                   });
                 }}
               >
-                <SecretCommentLockIcon locked={isSecretComment} className="post-comment-section__secret-lock-icon" />
+                <SecretCommentLockIcon locked={isSecretComment} className="comment-section__secret-lock-icon" />
               </Button>
-              <Button type="button" variant="primary" size="sm" className="post-comment-section__composer-submit" disabled>
+              <Button type="button" variant="primary" size="sm" className="comment-section__composer-submit" disabled>
                 등록
               </Button>
             </div>
@@ -191,16 +191,16 @@ export default function PostCommentSection() {
 
       {/* 첫 페이지 로드 실패 시 에러 메시지 표시 */}
       {initialError && loadedRows.length === 0 ? (
-        <p className="post-comment-section__list-error" role="alert">
+        <p className="comment-section__list-error" role="alert">
           {initialError}
         </p>
       ) : (
         <>
-          <ul className="post-comment-section__list" aria-label="댓글 목록">
+          <ul className="comment-section__list" aria-label="댓글 목록">
             {commentTrees.map((comment) => (
-              <li key={comment.id} className="post-comment-section__root">
-                <div className="post-comment-section__root-thread">
-                  <PostCommentRow
+              <li key={comment.id} className="comment-section__root">
+                <div className="comment-section__root-thread">
+                  <CommentRow
                     variant="root"
                     avatarLetter={avatarInitial(comment.author)}
                     commentKey={comment.id}
@@ -212,10 +212,10 @@ export default function PostCommentSection() {
                   />
 
                   {comment.replies && comment.replies.length > 0 ? (
-                    <ul className="post-comment-section__replies" aria-label="답글">
+                    <ul className="comment-section__replies" aria-label="답글">
                       {comment.replies.map((reply) => (
-                        <li key={reply.id} className="post-comment-section__reply">
-                          <PostCommentRow
+                        <li key={reply.id} className="comment-section__reply">
+                          <CommentRow
                             variant="reply"
                             avatarLetter={avatarInitial(reply.author)}
                             commentKey={reply.id}
@@ -234,12 +234,12 @@ export default function PostCommentSection() {
             ))}
           </ul>
 
-          <div ref={sentinelRef} className="post-comment-section__scroll-sentinel" aria-hidden />
+          <div ref={sentinelRef} className="comment-section__scroll-sentinel" aria-hidden />
 
-          <div className="post-comment-section__infinite-status" aria-live="polite">
-            {isLoading ? <span className="post-comment-section__infinite-loading">댓글 불러오는 중…</span> : null}
+          <div className="comment-section__infinite-status" aria-live="polite">
+            {isLoading ? <span className="comment-section__infinite-loading">댓글 불러오는 중…</span> : null}
             {!hasMore && loadedRows.length > 0 ? (
-              <span className="post-comment-section__infinite-end">모든 댓글을 불러왔습니다.</span>
+              <span className="comment-section__infinite-end">모든 댓글을 불러왔습니다.</span>
             ) : null}
           </div>
         </>

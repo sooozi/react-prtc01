@@ -6,10 +6,10 @@ import {
   isSameCalendarDay,
   startOfMonth,
   type CalendarWeekStart,
-} from "./calendarUtils";
-import { CalendarPickerPopover, CalendarPopoverOption } from "./CalendarPickerPopover";
+} from "@/lib/schedule/calendarUtils";
+import { CalendarPickerPopover, CalendarPopoverOption } from "@/pages/schedule/components/calendar/CalendarPickerPopover";
 import { getKrHolidayName } from "@/lib/holidayUtils";
-import "./MonthCalendar.scss";
+import "@/pages/schedule/components/calendar/MonthCalendar.scss";
 
 // 그리드 열 순서는 weekStart 에 맞출 것 — 월 시작 / 일 시작
 const WEEKDAYS_ORDER: Record<CalendarWeekStart, readonly string[]> = {
