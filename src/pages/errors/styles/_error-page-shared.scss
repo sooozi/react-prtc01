@@ -1,3 +1,4 @@
+@use "@/styles/breakpoints" as bp;
 @use "@/styles/common-tools" as *;
 @use "@/styles/variables" as v;
 
@@ -15,6 +16,11 @@
   line-height: 1.3;
   margin-bottom: v.space(lg);
   color: var(--color-text-heading);
+
+  @include bp.below(bp.$md) {
+    font-size: v.fs(2xl);
+    margin-bottom: v.space(md);
+  }
 }
 
 @mixin error-page-description {
@@ -22,6 +28,12 @@
   color: $text-secondary;
   line-height: 1.8;
   margin-bottom: v.space(3xl);
+
+  @include bp.below(bp.$md) {
+    font-size: v.fs(body-sm);
+    line-height: 1.55;
+    margin-bottom: v.space(2xl);
+  }
 }
 
 @mixin error-page-actions {

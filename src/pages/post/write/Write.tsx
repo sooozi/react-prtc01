@@ -5,9 +5,11 @@ import {
   Button,
   ImageFileAttachField,
   isAttachmentFileNameWithinLimit,
+  isQuillContentEmpty,
   itemsToFiles,
   MAX_ATTACHMENT_FILENAME_LENGTH,
   PageHeader,
+  RichTextEditor,
 } from "@/components";
 import type { FileWithId } from "@/components";
 import "@/pages/post/write/Write.scss";
@@ -30,8 +32,8 @@ export default function Write() {
       setError("제목을 입력해주세요.");
       return;
     }
-    // 내용 유효성 검사
-    if (!content.trim()) {
+    // 내용 유효성 검사 (Quill 빈 HTML: `<p><br></p>` 등)
+    if (isQuillContentEmpty(content)) {
       setError("내용을 입력해주세요.");
       return;
     }
@@ -48,7 +50,7 @@ export default function Write() {
       const files = itemsToFiles(attachFileItems);
       const res = await createPost({
         title: title.trim(),
-        content: content.trim(),
+        content,
         attachFiles: files.length > 0 ? files : undefined,
         attachFileOrderList:
           files.length > 0
@@ -77,19 +79,19 @@ export default function Write() {
           게시글 입력
         </h2>
         {error && (
-          <div className="board-write-error" role="alert">
+          <div className="post-form-alert" role="alert">
             {error}
           </div>
         )}
 
-        <div className="form-group">
-          <label className="label" htmlFor="post-title">
+        <div className="post-form-group post-form-group--stacked">
+          <label className="post-form-label" htmlFor="post-title">
             제목
           </label>
           <input
             id="post-title"
             type="text"
-            className="input"
+            className="post-form-control"
             placeholder="제목을 입력하세요 (100자 이내)"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -97,22 +99,20 @@ export default function Write() {
           />
         </div>
 
-        <div className="form-group">
-          <label className="label" htmlFor="post-content">
+        <div className="post-form-group post-form-group--stacked">
+          <label className="post-form-label" id="post-content-label" htmlFor="post-content">
             내용
           </label>
-          <textarea
+          <RichTextEditor
             id="post-content"
-            className="input textarea"
-            placeholder="내용을 입력하세요"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={12}
+            onChange={setContent}
+            placeholder="내용을 입력하세요"
           />
         </div>
 
-        <div className="form-group">
-          <h2 className="label" id="post-attach-heading">
+        <div className="post-form-group post-form-group--stacked">
+          <h2 className="post-form-label" id="post-attach-heading">
             첨부파일
           </h2>
           <ImageFileAttachField

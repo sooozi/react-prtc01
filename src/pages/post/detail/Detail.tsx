@@ -7,7 +7,7 @@ import {
   viewCountUp,
 } from "@/api/board";
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
-import { Button, Confirm, LoadingState, PageHeader } from "@/components";
+import { Button, Confirm, LoadingState, PageHeader, PostHtmlContent } from "@/components";
 import { listReturnPathFromFromQuery, postUpdatePath } from "@/lib/post/postDetailFromQuery";
 import CommentSection from "@/pages/post/components/CommentSection";
 import { formatFileSize } from "@/utils/formatFileSize";
@@ -179,7 +179,7 @@ export default function Detail() {
               <span className="detail-view">조회 {post.inqCnt ?? 0}</span>
             </div>
             <h2 className="detail-title">{post.title}</h2>
-            <div className="detail-content">{post.content || "내용 없음"}</div>
+            <PostHtmlContent html={post.content ?? ""} />
             {attachments.length > 0 && (
               <section className="detail-attachments" aria-labelledby="detail-attachments-heading">
                 <div className="detail-attachments__head">

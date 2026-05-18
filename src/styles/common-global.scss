@@ -1,4 +1,5 @@
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/form-shared" as form;
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 @use "@/styles/common-tools" as *;
@@ -78,50 +79,15 @@ body.page--home .bg-decoration-2 {
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: v.space(md);
-  position: relative;
+  @include form.form-group;
 }
 
 .label {
-  font-size: v.fs(body-sm);
-  font-weight: v.fw(semibold);
-  color: var(--color-text-secondary);
+  @include form.form-label;
 }
 
 .input {
-  min-height: v.space(input-min-height);
-  padding: v.space(input-block) v.space(input-inline);
-  font-size: v.fs(base);
-  border: v.space(xxs) solid var(--color-input-border);
-  border-radius: v.rad(xl);
-  background: var(--color-input-bg);
-  color: var(--color-text);
-  -webkit-text-fill-color: var(--color-text);
-  @include v.transition-channels(
-    (border-color, background-color, box-shadow),
-    normal,
-    default
-  );
-  outline: none;
-
-  @include input-placeholder-tokens;
-
-  &:focus {
-    border-color: var(--color-primary);
-    background: var(--color-input-focus-bg);
-    @include sh.focus-ring-primary-xs;
-  }
-
-  &.error {
-    border-color: var(--color-error);
-    background: var(--color-error-bg);
-
-    &:focus {
-      @include sh.focus-ring-error-xs;
-    }
-  }
+  @include form.form-control;
 }
 
 textarea.input {

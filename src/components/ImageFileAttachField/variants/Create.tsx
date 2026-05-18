@@ -1,18 +1,22 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { arrayMove } from "@/utils/arrayMove";
+import { useCallback, useMemo } from "react";
 import { formatFileSize } from "@/utils/formatFileSize";
 import type { ImageFileAttachFieldCreateProps } from "../types";
 import {
+  buildDuplicateSkipMessage,
+  buildTooLongNameMessages,
+  splitFilesByMaxNameLength,
+} from "../lib/fileAddMessages";
+import {
   filesToItemsWithIds,
-  MAX_ATTACHMENT_FILENAME_LENGTH,
   partitionByAttachmentIdentity,
 } from "../lib/fileAttachItemUtils";
 import { filterImageFiles } from "../lib/filterImageFiles";
+import { useFileAddNotice } from "../hooks/useFileAddNotice";
+import { useImageAttachReorder } from "../hooks/useImageAttachReorder";
 import { AttachRowBody } from "../ui/AttachRowBody";
-import { ReorderGhostPortal, type ReorderGhostState } from "../ui/ReorderGhostPortal";
+import { ImageFileAttachFieldShell } from "../ui/ImageFileAttachFieldShell";
 import "../ImageFileAttachField.scss";
 
-// 게시글 등록: 새로 고른 파일을 한 줄 목록에서 순서 변경·삭제할 때 사용
 export function ImageFileAttachFieldCreate({
   fileInputId,
   items,
@@ -21,369 +25,110 @@ export function ImageFileAttachFieldCreate({
   accept = "image/*",
   rootClassName = "",
 }: ImageFileAttachFieldCreateProps) {
-  const hasListInBlock = items.length > 0;
-  const [overIndex, setOverIndex] = useState<number | null>(null);
-  const [reorderFromIndex, setReorderFromIndex] = useState<number | null>(null);
-  const reorderFromRef = useRef<number | null>(null);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const itemsRef = useRef(items);
-  const onChangeRef = useRef(onChange);
-  const overIndexRef = useRef<number | null>(null);
-  const pointerReorderDetachRef = useRef<(() => void) | null>(null);
-  const [fileAddNoticeMessage, setFileAddNoticeMessage] = useState("");
-  const fileAddNoticeClearTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { message: fileAddNoticeMessage, showNotice } = useFileAddNotice();
 
-  const [reorderGhost, setReorderGhost] = useState<ReorderGhostState | null>(null);
-  const reorderGhostRef = useRef<ReorderGhostState | null>(null);
-  const ghostMoveRafRef = useRef<number | null>(null);
-  const pendingGhostPointerRef = useRef<{ x: number; y: number } | null>(null);
-
-  // 순서 드래그 중에도 방금 그 목록과, 목록을 바꾸는 함수를 쓰게 ref에 계속 맞춰 둠
-  useLayoutEffect(() => {
-    itemsRef.current = items;
-    onChangeRef.current = onChange;
-  }, [items, onChange]);
-
-  // 이 블록이 사라질 때(뒤로 가기 등) 드래그 때문에 화면 전체에 걸어 둔 리스너를 떼 줌
-  useEffect(() => {
-    return () => {
-      pointerReorderDetachRef.current?.();
-      pointerReorderDetachRef.current = null;
-    };
-  }, []);
-
-  // 드래그 고스트 초기화
-  const clearReorderGhost = () => {
-    if (ghostMoveRafRef.current != null) {
-      cancelAnimationFrame(ghostMoveRafRef.current);
-      ghostMoveRafRef.current = null;
-    }
-    pendingGhostPointerRef.current = null;
-    reorderGhostRef.current = null;
-    setReorderGhost(null);
-  };
-
-  // 드래그 고스트 시각적 초기화
-  const clearReorderVisual = () => {
-    clearReorderGhost();
-    reorderFromRef.current = null;
-    overIndexRef.current = null;
-    setReorderFromIndex(null);
-    setOverIndex(null);
-  };
-
-  // 드래그 고스트 이동 예약
-  const scheduleReorderGhostMove = (clientX: number, clientY: number) => {
-    pendingGhostPointerRef.current = { x: clientX, y: clientY };
-    if (ghostMoveRafRef.current != null) return;
-    ghostMoveRafRef.current = requestAnimationFrame(() => {
-      ghostMoveRafRef.current = null;
-      const p = pendingGhostPointerRef.current;
-      const g = reorderGhostRef.current;
-      if (!p || !g) return;
-      const next: ReorderGhostState = {
-        ...g,
-        left: p.x - g.offsetX,
-        top: p.y - g.offsetY,
-      };
-      reorderGhostRef.current = next;
-      setReorderGhost(next);
-    });
-  };
-
-  const updateOverFromPoint = (clientX: number, clientY: number) => {
-    const root = rootRef.current;
-    if (!root) {
-      overIndexRef.current = null;
-      setOverIndex(null);
-      return;
-    }
-    const el = document.elementFromPoint(clientX, clientY);
-    if (!el || !root.contains(el)) {
-      overIndexRef.current = null;
-      setOverIndex(null);
-      return;
-    }
-    const row = el.closest("[data-reorder-index]") as HTMLElement | null;
-    if (!row) {
-      overIndexRef.current = null;
-      setOverIndex(null);
-      return;
-    }
-    const raw = row.getAttribute("data-reorder-index");
-    const idx = raw == null ? NaN : parseInt(raw, 10);
-    if (Number.isNaN(idx)) {
-      overIndexRef.current = null;
-      setOverIndex(null);
-      return;
-    }
-    overIndexRef.current = idx;
-    setOverIndex(idx);
-  };
-
-  const bindPointerReorderSession = (startIndex: number, pointerId: number) => {
-    pointerReorderDetachRef.current?.();
-
-    document.body.classList.add("image-file-attach--reorder-active");
-
-    reorderFromRef.current = startIndex;
-    overIndexRef.current = null;
-    setReorderFromIndex(startIndex);
-    setOverIndex(null);
-
-    let ended = false;
-
-    /** 손가락/마우스 움직임(pointermove)마다 불리는데, 여기서는 스크롤을 막지 않는다고 표시(passive) */
-    const moveOpts: AddEventListenerOptions = { passive: true };
-
-    const detach = () => {
-      if (ended) return;
-      ended = true;
-      document.removeEventListener("pointermove", onMove, moveOpts);
-      document.removeEventListener("pointerup", onUp, true);
-      document.removeEventListener("pointercancel", onUp, true);
-      document.body.classList.remove("image-file-attach--reorder-active");
-      pointerReorderDetachRef.current = null;
-      clearReorderVisual();
-    };
-
-    const onMove = (ev: PointerEvent) => {
-      if (ev.pointerId !== pointerId) return;
-      scheduleReorderGhostMove(ev.clientX, ev.clientY);
-      updateOverFromPoint(ev.clientX, ev.clientY);
-    };
-
-    const onUp = (ev: PointerEvent) => {
-      if (ev.pointerId !== pointerId) return;
-      const from = reorderFromRef.current;
-      const to = overIndexRef.current;
-      detach();
-      if (from != null && to != null && from !== to) {
-        onChangeRef.current(arrayMove(itemsRef.current, from, to));
-      }
-    };
-
-    pointerReorderDetachRef.current = detach;
-
-    document.addEventListener("pointermove", onMove, moveOpts);
-    document.addEventListener("pointerup", onUp, true); // 손·버튼을 뗐을 때(정상 종료)
-    document.addEventListener("pointercancel", onUp, true); // 포인터가 끊겼을 때(터치 취소·방해 등)
-  };
-
-  const handleReorderHandlePointerDown =
-    (index: number) => (e: React.PointerEvent<HTMLSpanElement>) => {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
-      if (items.length < 2) return;
-      e.preventDefault();
-      e.stopPropagation();
-      const row = (e.currentTarget as HTMLElement).closest("[data-reorder-index]") as HTMLElement | null;
-      if (!row) return;
-      const rect = row.getBoundingClientRect();
-      const item = items[index];
-      if (!item) return;
-      const offsetX = e.clientX - rect.left;
-      const offsetY = e.clientY - rect.top;
-      const initial: ReorderGhostState = {
-        left: e.clientX - offsetX,
-        top: e.clientY - offsetY,
-        width: rect.width,
-        offsetX,
-        offsetY,
+  const { rootRef, reorderGhost, getRowClassName, handleReorderPointerDown } =
+    useImageAttachReorder({
+      items,
+      onReorder: onChange,
+      getRowDisplay: (item) => ({
         fileName: item.file.name,
         sizeLabel: formatFileSize(item.file.size),
-      };
-      reorderGhostRef.current = initial;
-      setReorderGhost(initial);
-      bindPointerReorderSession(index, e.pointerId);
-    };
-
-  /** 안내 메시지를 9초 뒤에 비우도록 예약(이전 예약은 취소) */
-  const scheduleFileAddNoticeClear = () => {
-    if (fileAddNoticeClearTimeoutRef.current)
-      clearTimeout(fileAddNoticeClearTimeoutRef.current);
-    fileAddNoticeClearTimeoutRef.current = setTimeout(() => {
-      setFileAddNoticeMessage("");
-      fileAddNoticeClearTimeoutRef.current = null;
-    }, 9000);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (fileAddNoticeClearTimeoutRef.current) {
-        clearTimeout(fileAddNoticeClearTimeoutRef.current);
-      }
-    };
-  }, []);
+      }),
+    });
 
   const totalSizeBytes = useMemo(
     () => items.reduce((sum, i) => sum + i.file.size, 0),
     [items]
   );
 
-  const onFilesAdded = (files: File[]) => {
-    if (files.length === 0) return;
+  const onFilesAdded = useCallback(
+    (files: File[]) => {
+      if (files.length === 0) return;
 
-    const okLength: File[] = [];
-    const tooLong: File[] = [];
-    for (const f of files) {
-      if (f.name.length > MAX_ATTACHMENT_FILENAME_LENGTH) tooLong.push(f);
-      else okLength.push(f);
-    }
+      const { okLength, tooLong } = splitFilesByMaxNameLength(files);
+      const messageParts = buildTooLongNameMessages(tooLong);
 
-    const messageParts: string[] = [];
-    if (tooLong.length > 0) {
-      if (tooLong.length === 1) {
-        const n = tooLong[0]!.name;
-        const shown = n.length > 50 ? `${n.slice(0, 50)}…` : n;
-        messageParts.push(
-          `파일명(확장자 포함)은 ${MAX_ATTACHMENT_FILENAME_LENGTH}자 이하여야 합니다. 추가하지 않음: “${shown}”`
-        );
-      } else {
-        messageParts.push(
-          `파일명(확장자 포함)이 ${MAX_ATTACHMENT_FILENAME_LENGTH}자를 넘는 ${tooLong.length}개는 추가하지 않았습니다.`
-        );
+      if (okLength.length === 0) {
+        showNotice(messageParts);
+        return;
       }
-    }
 
-    // 이름 길이를 통과한 파일이 하나도 없으면 목록은 바꾸지 않고 안내 메시지만 보여 주고 끝
-    if (okLength.length === 0) {
-      if (messageParts.length > 0) {
-        setFileAddNoticeMessage(messageParts.join(" "));
-        scheduleFileAddNoticeClear();
+      const { add, skip } = partitionByAttachmentIdentity(okLength, items, undefined);
+      const dupMsg = buildDuplicateSkipMessage(skip);
+      if (dupMsg) messageParts.push(dupMsg);
+
+      if (add.length > 0) {
+        onChange([...items, ...filesToItemsWithIds(add)]);
       }
-      return;
-    }
 
-    // 현재 목록에서 로컬 파일과 서버 파일 분리
-    const { add, skip } = partitionByAttachmentIdentity(okLength, items, undefined);
+      showNotice(messageParts);
+    },
+    [items, onChange, showNotice]
+  );
 
-    // 이미 있는 파일 목록
-    if (skip.length > 0) {
-      const list =
-        skip.length === 1
-          ? `“${skip[0]!.name.length > 50 ? `${skip[0]!.name.slice(0, 50)}…` : skip[0]!.name}”`
-          : `(${skip.length}개)`;
-      messageParts.push(
-        `같은 파일명(확장자는 소문자로 비교)이 이미 있어 추가하지 않았습니다. ${list}`
-      );
-    }
-    // 이름 길이를 통과한 파일이 하나라도 있으면 목록을 바꾸고 추가
-    if (add.length > 0) {
-      onChange([...items, ...filesToItemsWithIds(add)]);
-    }
-    // 누적된 안내 문장이 있으면 표시 후 자동 지움 예약
-    if (messageParts.length > 0) {
-      setFileAddNoticeMessage(messageParts.join(" "));
-      scheduleFileAddNoticeClear();
-    }
-  };
+  const handleFileInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const list = e.target.files;
+      if (list) onFilesAdded(filterImageFiles(list));
+      e.target.value = "";
+    },
+    [onFilesAdded]
+  );
 
-  // 파일 선택 시 처리
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const list = e.target.files;
-    if (list) onFilesAdded(filterImageFiles(list));
-    e.target.value = "";
-  };
-
-  // 파일 삭제 시 처리
-  const removeAt = (index: number) => {
-    const next = items.filter((_, i) => i !== index);
-    onChange(next);
-    if (next.length === 0 && fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
+  const removeAt = useCallback(
+    (index: number) => {
+      const next = items.filter((_, i) => i !== index);
+      onChange(next);
+      if (next.length === 0 && fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    },
+    [items, onChange, fileInputRef]
+  );
 
   return (
-    <div
-      ref={rootRef}
-      className={["image-file-attach", rootClassName].filter(Boolean).join(" ")}
-    >
-      <input
-        ref={fileInputRef}
-        id={fileInputId}
-        className="image-file-attach__input-hidden"
-        type="file"
-        accept={accept}
-        multiple
-        onChange={handleFileInputChange}
-        aria-labelledby={`${fileInputId}-add-title`}
-        aria-describedby={`${fileInputId}-add-hint`}
-      />
-
-      <label htmlFor={fileInputId} className="image-file-attach__add">
-        <span id={`${fileInputId}-add-title`} className="image-file-attach__add-title">
-          이미지 추가
-        </span>
-        <span id={`${fileInputId}-add-hint`} className="image-file-attach__add-sub">
-          해당 영역을 클릭해 PNG, JPG, GIF, WebP 등의 이미지를 선택하세요. 파일명(확장자 포함)은{" "}
-          {MAX_ATTACHMENT_FILENAME_LENGTH}자 이하만 가능합니다.
-        </span>
-      </label>
-
-      {fileAddNoticeMessage && (
-        <p className="image-file-attach__add-notice-message" role="alert">
-          {fileAddNoticeMessage}
+    <ImageFileAttachFieldShell
+      rootRef={rootRef}
+      rootClassName={rootClassName}
+      fileInputId={fileInputId}
+      fileInputRef={fileInputRef}
+      accept={accept}
+      onFileInputChange={handleFileInputChange}
+      fileAddNoticeMessage={fileAddNoticeMessage}
+      hasList={items.length > 0}
+      reorderHint={
+        <p className="image-file-attach__reorder-hint">
+          아래 핸들을 <strong>드래그</strong>하여 이미지 <strong>순서</strong>를 바꿀 수 있어요
         </p>
-      )}
-
-      {hasListInBlock && (
-        <div className="image-file-attach__reorder-block">
-          <div className="image-file-attach__reorder-block-top">
-            <div className="image-file-attach__reorder-headline">
-              <h3 className="image-file-attach__reorder-block-title">첨부 이미지 순서</h3>
-            </div>
-            {items.length > 0 && (
-              <div className="image-file-attach__reorder-hint-row">
-                <p className="image-file-attach__reorder-hint">
-                  아래 핸들을 <strong>드래그</strong>하여 이미지 <strong>순서</strong>를 바꿀 수 있어요
-                </p>
-                <span className="image-file-attach__reorder-total">
-                  총 {formatFileSize(totalSizeBytes)}
-                </span>
-              </div>
-            )}
-          </div>
-          <ol className="image-file-attach__list" aria-label="첨부된 이미지">
-            {items.map((item, index) => (
-              <li
-                key={item.id}
-                data-reorder-index={index}
-                className={[
-                  "image-file-attach__row",
-                  "image-file-attach__row--reorder",
-                  overIndex === index &&
-                  reorderFromIndex != null &&
-                  reorderFromIndex !== index
-                    ? "image-file-attach__row--over"
-                    : "",
-                  reorderFromIndex === index ? "image-file-attach__row--dragging" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
+      }
+      totalSizeLabel={`총 ${formatFileSize(totalSizeBytes)}`}
+      reorderGhost={reorderGhost}
+    >
+      {items.map((item, index) => (
+        <li
+          key={item.id}
+          data-reorder-index={index}
+          className={getRowClassName(index)}
+        >
+          <AttachRowBody
+            fileName={item.file.name}
+            sizeLabel={formatFileSize(item.file.size)}
+            onHandlePointerDown={handleReorderPointerDown(index)}
+            trailing={
+              <button
+                type="button"
+                className="image-file-attach__remove"
+                aria-label={`${item.file.name} 첨부 제거`}
+                onClick={() => removeAt(index)}
+                onPointerDown={(e) => e.stopPropagation()}
               >
-                <AttachRowBody
-                  fileName={item.file.name}
-                  sizeLabel={formatFileSize(item.file.size)}
-                  onHandlePointerDown={handleReorderHandlePointerDown(index)}
-                  trailing={
-                    <button
-                      type="button"
-                      className="image-file-attach__remove"
-                      aria-label={`${item.file.name} 첨부 제거`}
-                      onClick={() => removeAt(index)}
-                      onPointerDown={(e) => e.stopPropagation()}
-                    >
-                      <span aria-hidden>×</span>
-                    </button>
-                  }
-                />
-              </li>
-            ))}
-          </ol>
-        </div>
-      )}
-      <ReorderGhostPortal ghost={reorderGhost} />
-    </div>
+                <span aria-hidden>×</span>
+              </button>
+            }
+          />
+        </li>
+      ))}
+    </ImageFileAttachFieldShell>
   );
 }

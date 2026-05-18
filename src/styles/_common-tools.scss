@@ -1,4 +1,5 @@
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/form-shared" as form;
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
@@ -75,38 +76,11 @@ $error-dark: var(--color-error-dark);
 }
 
 @mixin post-form-control {
-  width: 100%;
-  padding: v.space(input-block) v.space(lg);
-  font-size: v.fs(sm);
-  border: v.space(xxs) solid var(--color-input-border);
-  border-radius: v.rad(lg);
-  background: var(--color-input-bg);
-  color: var(--color-text);
-  outline: none;
-  @include v.transition-channels(
-    (
-      border-color,
-      box-shadow,
-    ),
-    normal,
-    default
-  );
-
-  &:focus {
-    border-color: var(--color-primary);
-    background: var(--color-input-focus-bg);
-    @include sh.focus-ring-primary-xs;
-  }
+  @include form.form-control;
 }
 
 @mixin input-placeholder-tokens {
-  &::placeholder {
-    color: var(--color-input-placeholder);
-  }
-
-  &::-webkit-input-placeholder {
-    color: var(--color-input-placeholder);
-  }
+  @include form.form-placeholder;
 }
 
 @mixin prose-strong-heading {

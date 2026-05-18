@@ -102,7 +102,7 @@ export default function Signup() {
 
       <div className="signup-card">
         <PageHeader
-          badge="✨ Sign Up"
+          badge="Sign Up"
           title="회원가입"
           subtitle="새로운 계정을 만들어보세요"
           variant="auth"
@@ -148,16 +148,18 @@ export default function Signup() {
                 {(idCheckStatus === "대기" || idCheckStatus === "사용불가") && "중복 확인"}
               </Button>
             </div>
-            <div className="message-area">
-              {errors.userId && ( //유효성 검사 에러 메시지
-                <span className="error-message">{errors.userId.message}</span>
-              )}
-              {idCheckMessage && ( // 중복확인 결과 메시지
-                <span className={`check-message ${idCheckStatus}`}>
-                  {idCheckMessage}
-                </span>
-              )}
-            </div>
+            {(errors.userId || idCheckMessage) && (
+              <div className="message-area">
+                {errors.userId && (
+                  <span className="error-message" role="alert">{errors.userId.message}</span>
+                )}
+                {idCheckMessage && (
+                  <span className={`check-message ${idCheckStatus}`}>
+                    {idCheckMessage}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           {/* 이름 */}
@@ -181,11 +183,11 @@ export default function Signup() {
                 },
               })}
             />
-            <div className="message-area">
-              {errors.userName && (
+            {errors.userName && (
+              <p className="message-area" role="alert">
                 <span className="error-message">{errors.userName.message}</span>
-              )}
-            </div>
+              </p>
+            )}
           </div>
 
           {/* 이메일 */}
@@ -211,11 +213,11 @@ export default function Signup() {
                   })}
                   />
             </div>
-            <div className="message-area">
-              {errors.email && (
+            {errors.email && (
+              <p className="message-area" role="alert">
                 <span className="error-message">{errors.email.message}</span>
-              )}
-            </div>
+              </p>
+            )}
           </div>
 
           {/* 비밀번호 */}
@@ -250,11 +252,11 @@ export default function Signup() {
                 <span aria-hidden>{showPassword ? "🙈" : "👁️"}</span>
               </button>
             </div>
-            <div className="message-area">
-              {errors.password && (
+            {errors.password && (
+              <p className="message-area" role="alert">
                 <span className="error-message">{errors.password.message}</span>
-              )}
-            </div>
+              </p>
+            )}
           </div>
 
           {/* 회원가입 버튼: isSubmitDisabled가 true면 클릭 불가 */}

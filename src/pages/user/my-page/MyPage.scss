@@ -17,23 +17,8 @@
   width: 100%;
 }
 
-.mypage-page .page-header .title {
-  font-size: clamp(v.fs(3xl), 3vw, v.fs(display-md));
-  font-weight: v.fw(extrabold);
-  color: var(--color-text-heading);
-  margin-bottom: v.space(sm);
-  line-height: 1.2;
-
-  .highlight {
-    color: var(--color-primary);
-  }
-}
-
-.mypage-page .page-header .subtitle {
-  margin: 0;
-  font-size: v.fs(base);
-  color: var(--color-text-secondary);
-  line-height: 1.5;
+.mypage-page .page-header .title .highlight {
+  color: var(--color-primary);
 }
 
 .mypage-profile-grid {

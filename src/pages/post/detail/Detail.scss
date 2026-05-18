@@ -82,7 +82,6 @@
   font-size: clamp(v.fs(lead), 0.35vw + v.fs(sm), v.fs(lg));
   line-height: 1.85;
   color: var(--color-text);
-  white-space: pre-wrap;
   word-break: break-word;
   min-height: 20em;
 
@@ -93,10 +92,61 @@
   }
 }
 
-.detail-content:empty::before {
-  content: "내용 없음";
-  color: var(--color-text-muted);
-  font-style: italic;
+// Quill·legacy HTML 본문 (PostHtmlContent)
+.detail-content--prose {
+  :where(p, ul, ol, blockquote) {
+    margin: 0 0 1em;
+  }
+
+  :where(p:last-child, ul:last-child, ol:last-child) {
+    margin-bottom: 0;
+  }
+
+  :where(h1, h2, h3) {
+    margin: 1.25em 0 0.5em;
+    font-weight: v.fw(bold);
+    color: var(--color-text-heading);
+    line-height: 1.35;
+  }
+
+  :where(h1) {
+    font-size: v.fs(xl);
+  }
+
+  :where(h2) {
+    font-size: v.fs(lg);
+  }
+
+  :where(h3) {
+    font-size: v.fs(lead);
+  }
+
+  :where(ul, ol) {
+    padding-left: 1.5em;
+  }
+
+  :where(li + li) {
+    margin-top: 0.35em;
+  }
+
+  :where(a) {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &:hover {
+      color: var(--color-primary-hover);
+    }
+  }
+
+  :where(strong) {
+    font-weight: v.fw(bold);
+    color: var(--color-text-heading);
+  }
+
+  :where(em) {
+    font-style: italic;
+  }
 }
 
 .detail-attachments {

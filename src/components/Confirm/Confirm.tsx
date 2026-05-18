@@ -65,17 +65,14 @@ export default function Confirm({
         onCancel();
       }
     };
-    const onModalClick = (e: MouseEvent) => {
-      e.stopPropagation();
-    };
 
+    // 모달 패널에 stopPropagation을 걸면 클릭이 body까지 버블링되지 않아
+    // createPortal(document.body)의 React 이벤트 위임이 동작하지 않는다.
     overlay.addEventListener("click", onOverlayClick);
     overlay.addEventListener("keydown", onOverlayKeyDown);
-    modal.addEventListener("click", onModalClick);
     return () => {
       overlay.removeEventListener("click", onOverlayClick);
       overlay.removeEventListener("keydown", onOverlayKeyDown);
-      modal.removeEventListener("click", onModalClick);
     };
   }, [open, onCancel]);
 

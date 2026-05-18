@@ -176,9 +176,17 @@
 }
 
 .submit-button {
-  margin-top: v.space(sm);
-  padding: v.space(lg);
+  margin-top: v.space(lg);
+  min-height: v.space(input-min-height);
+  padding: 0 v.space(xl);
   width: 100%;
+  font-size: v.fs(base);
+  border-radius: v.rad(p12);
+
+  @include bp.below(bp.$md) {
+    min-height: v.space(input-min-height-mobile);
+    font-size: v.fs(body-sm);
+  }
 }
 
 /* 변형별 기본 테두리 뒤에 공통 포커스 1px 실선 (채움 버튼은 대비용 밝은 테두리) */

@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import Home from "@/pages/home/Home";
@@ -6,17 +7,26 @@ import UserList from "@/pages/user/list/List";
 import UserDetail from "@/pages/user/detail/Detail";
 import List from "@/pages/post/list/List";
 import Detail from "@/pages/post/detail/Detail";
-import Write from "@/pages/post/write/Write";
-import Update from "@/pages/post/update/Update";
 import MyPage from "@/pages/user/my-page/MyPage";
 import Schedule from "@/pages/schedule/Schedule";
 import Forbidden from "@/pages/errors/forbidden/Forbidden";
 import NotFound from "@/pages/errors/not-found/NotFound";
 import Login from "@/pages/auth/login/Login";
 import Signup from "@/pages/auth/signup/Signup";
-import { Layout } from "@/components";
+import { Layout, LoadingState } from "@/components";
 import RequireAuth from "@/router/RequireAuth";
 import RouteHeadSync from "@/router/RouteHeadSync";
+
+const Write = lazy(() => import("@/pages/post/write/Write"));
+const Update = lazy(() => import("@/pages/post/update/Update"));
+
+function LazyPage({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<LoadingState message="불러오는 중..." variant="compact" />}>
+      {children}
+    </Suspense>
+  );
+}
 
 export default function AppRouter() {
   return (
@@ -41,8 +51,22 @@ export default function AppRouter() {
             <Route element={<RequireAuth />}>
               <Route path="/post/list" element={<List />} />
               <Route path="/post/detail" element={<Detail />} />
-              <Route path="/post/update" element={<Update />} />
-              <Route path="/post/write" element={<Write />} />
+              <Route
+                path="/post/update"
+                element={
+                  <LazyPage>
+                    <Update />
+                  </LazyPage>
+                }
+              />
+              <Route
+                path="/post/write"
+                element={
+                  <LazyPage>
+                    <Write />
+                  </LazyPage>
+                }
+              />
               <Route path="/user/mypage" element={<MyPage />} />
               <Route path="/schedule" element={<Schedule />} />
             </Route>

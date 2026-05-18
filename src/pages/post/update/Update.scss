@@ -1,45 +1,14 @@
+@use "@/pages/post/styles/post-form-shared";
 @use "@/styles/common-tools" as *;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 @use "@/styles/breakpoints" as bp;
 
-.post-update-form {
-  .detail-meta {
-    margin-bottom: v.space(2xl);
-  }
-}
-
-.post-update-form-group {
-  margin-bottom: v.space(2xl);
-}
-
-.post-update-label {
-  display: block;
-  margin-bottom: v.space(sm);
-  font-size: v.fs(body-sm);
-  font-weight: v.fw(semibold);
-  color: var(--color-text-heading);
-}
-
-.post-update-input,
-.post-update-textarea {
-  @include post-form-control;
-}
-
-.post-update-textarea {
+.post-form-textarea {
   resize: none;
   min-height: 300px;
 
   @include bp.below(bp.$md) {
     min-height: 200px;
   }
-}
-
-.post-update-error {
-  padding: v.space(md) v.space(lg);
-  margin-top: v.space(lg);
-  background: var(--color-error-bg);
-  border: 1px solid var(--color-error-border);
-  border-radius: v.rad(p10);
-  font-size: v.fs(body-sm);
-  color: var(--color-error-dark);
 }

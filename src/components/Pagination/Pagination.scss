@@ -145,27 +145,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 0.7rem;
-  height: var(--pg-ctl-h);
-  line-height: var(--pg-ctl-h);
-
-  &::before {
-    content: "";
-    width: 3px;
-    height: 3px;
-    border-radius: v.rad(pill);
-    background: color-mix(in srgb, var(--color-text-muted) 65%, transparent);
-  }
-
-  @include bp.below(bp.$md) {
-    height: var(--pg-ctl-h-sm);
-    line-height: var(--pg-ctl-h-sm);
-
-    &::before {
-      width: 3px;
-      height: 3px;
-    }
-  }
+  padding: 0 v.space(xxs);
+  font-size: v.fs(body-sm);
+  font-weight: v.fw(medium);
+  line-height: 1;
+  color: var(--color-text-muted);
+  user-select: none;
 }
 
 .page-total {

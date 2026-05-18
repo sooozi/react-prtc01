@@ -1,0 +1,103 @@
+// 토스형 폼 토큰 — auth(.input), post-form, 공통 .form-group 에서 공유
+@use "@/styles/breakpoints" as bp;
+@use "@/styles/shadows" as sh;
+@use "@/styles/variables" as v;
+
+@mixin form-control-height {
+  min-height: v.space(input-min-height);
+
+  @include bp.below(bp.$md) {
+    min-height: v.space(input-min-height-mobile);
+  }
+}
+
+@mixin form-placeholder {
+  &::placeholder {
+    color: var(--color-input-placeholder);
+  }
+
+  &::-webkit-input-placeholder {
+    color: var(--color-input-placeholder);
+  }
+}
+
+@mixin form-label {
+  display: block;
+  font-size: v.fs(body-sm);
+  font-weight: v.fw(semibold);
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  color: var(--color-text-heading);
+}
+
+@mixin form-hint {
+  display: block;
+  font-size: v.fs(xs);
+  font-weight: v.fw(regular);
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+
+@mixin form-control {
+  width: 100%;
+  box-sizing: border-box;
+  @include form-control-height;
+  padding: 0 v.space(input-inline);
+  font-family: inherit;
+  font-size: v.fs(base);
+
+  @include bp.below(bp.$md) {
+    font-size: v.fs(body-sm);
+    padding: 0 v.space(lg);
+  }
+  font-weight: v.fw(regular);
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  border: 1px solid var(--color-input-border);
+  border-radius: v.rad(p12);
+  background: var(--color-input-bg);
+  color: var(--color-text);
+  -webkit-text-fill-color: var(--color-text);
+  outline: none;
+  @include v.transition-channels(
+    (border-color, background-color, box-shadow),
+    normal,
+    default
+  );
+  @include form-placeholder;
+
+  &:focus {
+    border-color: var(--color-primary);
+    background: var(--color-input-focus-bg);
+    @include sh.focus-ring-primary-xs;
+  }
+
+  &.error {
+    border-color: var(--color-error);
+    background: var(--color-error-bg);
+
+    &:focus {
+      @include sh.focus-ring-error-xs;
+    }
+  }
+}
+
+@mixin form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: v.space(sm);
+}
+
+@mixin form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: v.space(xl);
+}
+
+@mixin form-field-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: v.space(xs);
+}

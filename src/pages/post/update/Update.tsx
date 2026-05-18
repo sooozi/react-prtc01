@@ -7,14 +7,18 @@ import {
   Confirm,
   ImageFileAttachField,
   isAttachmentFileNameWithinLimit,
+  isQuillContentEmpty,
   LoadingState,
   MAX_ATTACHMENT_FILENAME_LENGTH,
   PageHeader,
+  RichTextEditor,
 } from "@/components";
 import type { ImageFileUnifiedRow } from "@/components";
-import { postDetailPath } from "@/lib/post/postDetailFromQuery";
+import {
+  listReturnPathFromFromQuery,
+  postDetailPath,
+} from "@/lib/post/postDetailFromQuery";
 import "@/pages/post/detail/Detail.scss";
-import "@/pages/post/write/Write.scss";
 import "@/pages/post/update/Update.scss";
 
 export default function Update() {
@@ -23,6 +27,9 @@ export default function Update() {
   const idRaw = searchParams.get("id"); // 게시글 번호
   const postNumber = idRaw ? parseInt(idRaw, 10) : NaN; // 게시글 번호
   const invalidId = Number.isNaN(postNumber) || postNumber < 1; // 게시글 번호 유효성 검사
+  const listReturnPath = listReturnPathFromFromQuery(searchParams.get("from"));
+  const listReturnLabel = listReturnPath === "/user/mypage" ? "마이페이지" : "목록";
+  const listReturnTo = listReturnPath === "/user/mypage" ? "마이페이지로" : "목록으로";
 
   const [post, setPost] = useState<PostDetail | null>(null);
   const [editAttachmentRows, setEditAttachmentRows] = useState<ImageFileUnifiedRow[]>([]); // 첨부 파일 목록
@@ -38,10 +45,7 @@ export default function Update() {
 
   // 상세 + 기존 첨부 목록
   useEffect(() => {
-    if (invalidId) { // 게시글 번호 유효성 검사
-      setLoading(false);
-      return;
-    }
+    if (invalidId) return;
 
     let cancelled = false;
 
@@ -91,7 +95,7 @@ export default function Update() {
       setError("제목을 입력해주세요.");
       return;
     }
-    if (!content.trim()) {
+    if (isQuillContentEmpty(content)) {
       setError("내용을 입력해주세요.");
       return;
     }
@@ -130,7 +134,7 @@ export default function Update() {
 
       const ok = await updatePost(postNumber, { // 게시글 수정 요청 
         title: title.trim(),
-        content: content.trim(),
+        content,
         addAttachFiles: newFiles.length > 0 ? newFiles : undefined, // 새로 추가한 첨부 파일 파일 목록
         deleteFileIdList: deleteFileIdList.length > 0 ? deleteFileIdList : undefined, // 삭제할 파일 ID 목록
         attachFileOrderList, // 첨부 파일 순서 목록
@@ -145,10 +149,10 @@ export default function Update() {
     }
   };
 
-  // 취소 버튼 클릭 시 처리
+  // 목록 버튼 확인 시 처리
   const handleCancelConfirm = () => {
     setShowCancelConfirm(false);
-    navigate(postDetailPath(postNumber, searchParams.get("from")), { replace: true });
+    navigate(listReturnPath, { replace: true });
   };
 
   const showLoading = loading && !invalidId;
@@ -165,7 +169,7 @@ export default function Update() {
           onClick={() => setShowCancelConfirm(true)}
           disabled={submitLoading}
         >
-          취소
+          {listReturnLabel}
         </Button>
         <Button
           variant="primary"
@@ -198,35 +202,33 @@ export default function Update() {
               <span className="detail-author">{post.rgtrInfo ?? "-"}</span>
               <span className="detail-date">{post.regDt}</span>
             </div>
-            <div className="post-update-form-group">
-              <label className="post-update-label" htmlFor="update-title">
+            <div className="post-form-group">
+              <label className="post-form-label" htmlFor="update-title">
                 제목
               </label>
               <input
                 id="update-title"
                 type="text"
-                className="post-update-input"
+                className="post-form-control"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="제목"
               />
             </div>
-            <div className="post-update-form-group">
-              <label className="post-update-label" htmlFor="update-content">
+            <div className="post-form-group">
+              <label className="post-form-label" id="update-content-label" htmlFor="update-content">
                 내용
               </label>
-              <textarea
+              <RichTextEditor
                 id="update-content"
-                className="post-update-textarea"
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onChange={setContent}
                 placeholder="내용"
-                rows={12}
               />
             </div>
 
-            <div className="form-group">
-              <h2 className="label" id="post-update-attach-heading">
+            <div className="post-form-group post-form-group--stacked">
+              <h2 className="post-form-label" id="post-update-attach-heading">
                 첨부파일
               </h2>
               <ImageFileAttachField
@@ -238,7 +240,7 @@ export default function Update() {
             </div>
 
             {error && (
-              <div className="post-update-error" role="alert">
+              <div className="post-form-alert post-form-alert--after" role="alert">
                 {error}
               </div>
             )}
@@ -254,7 +256,7 @@ export default function Update() {
       />
       <Confirm
         open={showCancelConfirm}
-        message="취소하시겠습니까?"
+        message={`수정 내용을 저장하지 않고 ${listReturnTo} 이동하시겠습니까?`}
         onConfirm={handleCancelConfirm}
         onCancel={() => setShowCancelConfirm(false)}
       />

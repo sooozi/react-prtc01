@@ -1,3 +1,4 @@
+@use "@/pages/post/styles/post-form-shared";
 @use "@/styles/common-tools" as *;
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
@@ -9,46 +10,20 @@
 
 .board-write-form {
   background: var(--color-card);
-  border-radius: v.rad(p16);
+  border-radius: v.rad(p20);
   padding: v.space(3xl);
   @include sh.card-ambient-lg;
-  border: 1px solid var(--color-card-border);
+  border: none;
 
   @include bp.below(bp.$md) {
     padding: v.space(xl);
   }
 }
 
-.board-write-error {
-  padding: v.space(md) v.space(lg);
-  margin-bottom: v.space(xl);
-  background: var(--color-error-bg);
-  border: 1px solid var(--color-error-border);
-  border-radius: v.rad(p12);
-  font-size: v.fs(body-sm);
-  color: var(--color-error-dark);
-}
-
-.form-group {
-  margin-bottom: v.space(2xl);
-}
-
-.form-group .label {
-  display: block;
-  margin: 0;
-  font-size: v.fs(body-sm);
-  font-weight: v.fw(semibold);
-  color: var(--color-text-heading);
-}
-
-.form-group .input {
-  @include post-form-control;
-
-  &.textarea {
-    min-height: 200px;
-    max-height: 400px;
-    resize: vertical;
-  }
+.post-form-textarea {
+  min-height: 200px;
+  max-height: 400px;
+  resize: vertical;
 }
 
 .board-write-actions {

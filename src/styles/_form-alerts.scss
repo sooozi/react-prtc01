@@ -1,0 +1,77 @@
+@use "@/styles/variables" as v;
+
+/// 폼·인라인 상태 알림 박스 (에러/성공)
+@mixin inline-alert-box(
+  $variant: error,
+  $margin-bottom: null,
+  $margin-top: null,
+  $radius: p12,
+  $padding-y: md,
+  $padding-x: lg,
+  $font-size: body-sm,
+  $font-weight: null
+) {
+  padding: v.space($padding-y) v.space($padding-x);
+
+  @if $margin-bottom {
+    margin-bottom: v.space($margin-bottom);
+  }
+
+  @if $margin-top {
+    margin-top: v.space($margin-top);
+  }
+
+  border-radius: v.rad($radius);
+  font-size: v.fs($font-size);
+  line-height: 1.4;
+
+  @if $font-weight {
+    font-weight: v.fw($font-weight);
+  }
+
+  @if $variant == success {
+    background: var(--color-success-bg);
+    color: var(--color-success-dark);
+    border: 1px solid var(--color-success-border);
+  } @else {
+    background: var(--color-error-bg);
+    color: var(--color-error-dark);
+    border: 1px solid var(--color-error-border);
+  }
+}
+
+/// 로그인 등 아이콘+문구 알림 (BEM `__icon`, `__text` 중첩)
+@mixin inline-alert-with-icon($variant: error) {
+  display: flex;
+  align-items: center;
+  gap: v.space(sm);
+  margin-bottom: v.space(lg);
+  @include inline-alert-box(
+    $variant,
+    $radius: p8,
+    $font-weight: medium
+  );
+
+  &__icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: v.rad(circle);
+    font-size: v.fs(xs);
+    font-weight: v.fw(bold);
+    color: var(--color-text-on-primary);
+
+    @if $variant == success {
+      background: var(--color-success);
+    } @else {
+      background: var(--color-error);
+    }
+  }
+
+  &__text {
+    line-height: 1.4;
+  }
+}

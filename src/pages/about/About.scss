@@ -1,3 +1,4 @@
+@use "@/styles/breakpoints" as bp;
 @use "@/styles/common-tools" as *;
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
@@ -10,22 +11,16 @@
 .hero-section {
   text-align: center;
   margin-bottom: v.space(6xl);
-}
 
-.about-page .page-header .title {
-  font-size: clamp(v.fs(display-sm), 5vw, v.fs(display-xl));
-  font-weight: v.fw(extrabold);
-  line-height: 1.2;
-  margin-bottom: v.space(2xl);
-  color: var(--color-text-heading);
+  @include bp.below(bp.$md) {
+    margin-bottom: v.space(3xl);
+  }
 }
 
 .about-page .page-header .subtitle {
-  font-size: v.fs(lg);
-  color: var(--color-text-secondary);
-  line-height: 1.8;
   max-width: 640px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .mission-section {

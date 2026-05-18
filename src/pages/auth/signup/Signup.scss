@@ -1,5 +1,8 @@
 @use "@/pages/auth/styles/auth-shared" as *;
+@use "@/styles/form-alerts" as alerts;
+@use "@/styles/form-shared" as form;
 @use "@/styles/variables" as v;
+@use "@/styles/breakpoints" as bp;
 
 .signup-container {
   @extend %auth-container;
@@ -9,32 +12,24 @@
   @extend %auth-card;
 }
 
-.signup-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.signup-form .form-group {
-  position: relative;
-}
-
-.message {
-  padding: v.space(input-block) v.space(lg);
-  border-radius: v.rad(p12);
-  font-size: v.fs(body-sm);
-  font-weight: v.fw(medium);
+.signup-container .message {
   margin-bottom: v.space(lg);
+  font-weight: v.fw(medium);
 
   &.success {
-    background: var(--color-success-bg);
-    color: var(--color-success-dark);
-    border: 1px solid var(--color-success-border);
+    @include alerts.inline-alert-box(
+      success,
+      $radius: p12,
+      $padding-y: input-block
+    );
   }
 
   &.error {
-    background: var(--color-error-bg);
-    color: var(--color-error-dark);
-    border: 1px solid var(--color-error-border);
+    @include alerts.inline-alert-box(
+      error,
+      $radius: p12,
+      $padding-y: input-block
+    );
   }
 }
 
@@ -46,33 +41,39 @@
   color: var(--color-error);
 }
 
-.label-row {
-  display: flex;
-  align-items: center;
-  gap: v.space(sm);
+.signup-form .label-row {
+  @include form.form-field-header;
 }
 
-.hint-text {
-  font-size: v.fs(xs);
-  font-weight: v.fw(regular);
-  color: var(--color-text-muted);
+.signup-form .hint-text {
+  @include form.form-hint;
 }
 
-.input-with-button {
+.signup-form .input-with-button {
   display: flex;
+  align-items: stretch;
   gap: v.space(sm);
 
   .input {
     flex: 1;
+    min-width: 0;
+  }
+
+  .btn {
+    flex-shrink: 0;
+    align-self: stretch;
+    @include form.form-control-height;
+    border-radius: v.rad(p12);
+
+    @include bp.below(bp.$md) {
+      padding-left: v.space(md);
+      padding-right: v.space(md);
+      font-size: v.fs(body-sm);
+    }
   }
 }
 
-.message-area {
-  position: absolute;
-  bottom: -23px;
-}
-
-.check-message {
+.signup-form .check-message {
   font-size: v.fs(xs);
   font-weight: v.fw(medium);
 

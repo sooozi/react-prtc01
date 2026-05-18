@@ -134,7 +134,7 @@ export default function Login() {
       )}
 
       <div className="login-card">
-        <PageHeader badge="🔐 Login" title="로그인" variant="auth" />
+        <PageHeader badge="Login" title="로그인" variant="auth" />
 
         {apiAlert && (
           <div
@@ -165,11 +165,11 @@ export default function Login() {
                 required: "아이디를 입력해주세요.",
               })}
             />
-            <div className="message-area">
-              {errors.userId && (
+            {errors.userId && (
+              <p className="message-area" role="alert">
                 <span className="error-message">{errors.userId.message}</span>
-              )}
-            </div>
+              </p>
+            )}
           </div>
 
           {/* 비밀번호 */}
@@ -197,11 +197,11 @@ export default function Login() {
                 <span aria-hidden>{showPassword ? "🙈" : "👁️"}</span>
               </button>
             </div>
-            <div className="message-area">
-              {errors.password && (
+            {errors.password && (
+              <p className="message-area" role="alert">
                 <span className="error-message">{errors.password.message}</span>
-              )}
-            </div>
+              </p>
+            )}
           </div>
 
           <Button

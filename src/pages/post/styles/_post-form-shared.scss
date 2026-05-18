@@ -1,0 +1,42 @@
+@use "@/styles/common-tools" as *;
+@use "@/styles/form-alerts" as alerts;
+@use "@/styles/form-shared" as form;
+@use "@/styles/variables" as v;
+
+@mixin post-form-group-spacing {
+  margin-bottom: v.space(2xl);
+}
+
+.post-form-group {
+  @include post-form-group-spacing;
+  @include form.form-group;
+}
+
+.post-form-group--stacked {
+  @include post-form-group-spacing;
+  @include form.form-group;
+  gap: v.space(md);
+}
+
+.post-form-label {
+  @include form.form-label;
+  margin-bottom: 0;
+}
+
+.post-form-group:not(.post-form-group--stacked) > .post-form-label {
+  margin-bottom: v.space(xs);
+}
+
+.post-form-control {
+  @include post-form-control;
+}
+
+.post-form-alert {
+  @include alerts.inline-alert-box(error, $margin-bottom: xl, $radius: p12);
+}
+
+.post-form-alert--after {
+  margin-bottom: 0;
+  margin-top: v.space(lg);
+  border-radius: v.rad(p10);
+}
