@@ -36,15 +36,11 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-top: var(--header-height, 90px);
-  transition: padding-top #{v.dur(medium)} #{v.ease(default)};
+  --header-height: 84px;
+  padding-top: var(--header-height);
 
   @include bp.below(bp.$md) {
     padding-top: v.space(px64);
-  }
-
-  &.layout-container--header-hidden {
-    padding-top: 0;
   }
 }
 
@@ -57,7 +53,7 @@
   margin: 0 auto;
   @include padded-page-z;
 
-  /* tabIndex=-1 + 프로그램 포커스(건너뛰기 링크·헤더 숨김 등) 시에도 위치가 보이도록 */
+  /* tabIndex=-1 + 프로그램 포커스(건너뛰기 링크 등) 시에도 위치가 보이도록 */
   &:focus {
     outline: none;
   }

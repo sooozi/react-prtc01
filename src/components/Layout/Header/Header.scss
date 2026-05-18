@@ -12,7 +12,6 @@
   z-index: v.z(header);
   background: transparent;
   @include sh.header-border-bottom;
-  transition: transform #{v.dur(medium)} #{v.ease(default)};
 
   @include bp.above(bp.$md) {
     padding: v.space(lg) v.space(3xl);
@@ -27,16 +26,6 @@
   background: var(--color-header-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-}
-
-.layout-container--header-hidden .header {
-  transform: translateY(-100%);
-}
-
-/* 스크롤로만 숨긴 상태(드로어 비활성): inert와 함께 상호작용·보이기 이중 차단 */
-.header.header--scroll-offscreen {
-  pointer-events: none;
-  visibility: hidden;
 }
 
 .nav {

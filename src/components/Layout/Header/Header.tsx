@@ -27,12 +27,7 @@ function DrawerNavIcon({ children }: { children: ReactNode }) {
   );
 }
 
-export type HeaderProps = {
-  /** 레이아웃에서 스크롤로 헤더를 숨긴 경우: 포커스·포인터·보조공학 트리에서 제외 */
-  scrollHidden?: boolean;
-};
-
-export default function Header({ scrollHidden = false }: HeaderProps) {
+export default function Header() {
   const isMobileDrawerLayout = useMediaQuery("(max-width: 767px)");
   const navigate = useNavigate();
   const userName = localStorage.getItem("userName");
@@ -44,12 +39,6 @@ export default function Header({ scrollHidden = false }: HeaderProps) {
   const navLinksRef = useRef<HTMLDivElement>(null);
   const menuToggleRef = useRef<HTMLButtonElement>(null);
   const focusBeforeDrawerRef = useRef<HTMLElement | null>(null);
-  const headerRootRef = useRef<HTMLElement>(null);
-  const scrollHiddenRef = useRef(scrollHidden);
-
-  useLayoutEffect(() => {
-    scrollHiddenRef.current = scrollHidden;
-  }, [scrollHidden]);
 
   // 메뉴 닫기
   const closeMenu = useCallback(() => {
@@ -96,19 +85,6 @@ export default function Header({ scrollHidden = false }: HeaderProps) {
 
   useBodyScrollLock(menuOpen);
 
-  // 스크롤로 헤더가 숨겨진 동안 포커스가 헤더 안에 남지 않도록 본문으로 이동
-  useLayoutEffect(() => {
-    if (!scrollHidden) return;
-    const root = headerRootRef.current;
-    if (!root) return;
-    const active = document.activeElement;
-    if (!(active instanceof Node) || !root.contains(active)) return;
-    const main = document.getElementById("main-content");
-    if (main instanceof HTMLElement) {
-      queueMicrotask(() => main.focus({ preventScroll: true }));
-    }
-  }, [scrollHidden]);
-
   // 모바일 드로어: 열릴 때 포커스를 패널 안으로, 닫힐 때 햄버거(또는 이전 요소)로 복귀
   useLayoutEffect(() => {
     if (!menuOpen || !isMobileDrawerLayout) return;
@@ -127,13 +103,6 @@ export default function Header({ scrollHidden = false }: HeaderProps) {
     }
 
     return () => {
-      if (scrollHiddenRef.current) {
-        const main = document.getElementById("main-content");
-        if (main instanceof HTMLElement) {
-          queueMicrotask(() => main.focus({ preventScroll: true }));
-        }
-        return;
-      }
       if (toggleButton && window.getComputedStyle(toggleButton).display !== "none") {
         toggleButton.focus({ preventScroll: true });
         return;
@@ -156,11 +125,7 @@ export default function Header({ scrollHidden = false }: HeaderProps) {
   }, [menuOpen, closeMenu]);
 
   return (
-    <header
-      ref={headerRootRef}
-      className={`header ${menuOpen ? "is-menu-open" : ""}${scrollHidden && !menuOpen ? " header--scroll-offscreen" : ""}`}
-      inert={scrollHidden && !menuOpen ? true : undefined}
-    >
+    <header className={`header ${menuOpen ? "is-menu-open" : ""}`}>
       <div className="header__bg" aria-hidden />
       <nav ref={navRef} className="nav">
         <Link to="/home" className="logo" onClick={closeMenu}>
