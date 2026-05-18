@@ -100,7 +100,16 @@ src/
 │   ├── auth/          # 로그인, 회원가입, 토큰, 로그인 리다이렉트 세션
 │   ├── board/         # 게시판 API·타입
 │   └── user/          # 사용자 API 래퍼(목록·상세는 mock)
-├── components/        # 앱 전역 UI (Layout, Button, ImageFileAttachField, icons/ …)
+├── components/        # 앱 전역 UI (index.ts 배럴)
+│   ├── Layout/, Button/, PageHeader/, …
+│   ├── ImageFileAttachField/
+│   │   ├── index.ts              # 공개 API (컴포넌트·타입·유틸 re-export)
+│   │   ├── ImageFileAttachField.tsx
+│   │   ├── types.ts
+│   │   ├── variants/             # Create(등록), UnifiedEdit(수정)
+│   │   ├── ui/                   # AttachRowBody, ReorderGhostPortal
+│   │   └── lib/                  # fileAttachItemUtils, filterImageFiles
+│   └── icons/
 ├── hooks/             # 커스텀 훅 (usePagination, useUrlQueryPage, useFloatingLayer, useMediaQuery)
 ├── lib/               # UI 없는 순수 TS (도메인별 하위 폴더)
 │   ├── holidayUtils.ts, krHolidays.ts
@@ -148,8 +157,10 @@ src/
 | `src/lib/` | 여러 페이지·컴포넌트가 쓰는 순수 로직 |
 | `src/mocks/` | mock·데모 데이터 |
 | `src/hooks/` | 재사용 커스텀 훅 |
+| `components/ImageFileAttachField/` | `variants/`(등록·수정), `ui/`(행·드래그 고스트), `lib/`(파일명·중복·필터) |
 
 - **경로 별칭**: `@` → `src`
+- **배럴**: `@/components` — `ImageFileAttachField` 및 `filesToItemsWithIds`, `MAX_ATTACHMENT_FILENAME_LENGTH` 등 첨부 유틸 export
 
 ---
 
@@ -200,7 +211,8 @@ src/
 | **Button**                                            | variant / size, `to`·`href` 지원                                    |
 | **Badge, Confirm, LoadingState, Pagination, Tooltip** | 각 화면에서 공통 패턴                                                      |
 | **TableSortTh** 등                                     | 게시판 목록 정렬                                                         |
-| **ImageFileAttachField**                              | 등록(create)·수정(unified rows) 첨부                                    |
+| **ImageFileAttachField**                              | 등록(`variants/Create`)·수정(`variants/UnifiedEdit`, unified rows) 이미지 첨부·순서 변경 |
+| **ImageFileAttachField 유틸** (`@/components` export) | `filesToItemsWithIds`, `itemsToFiles`, `isAttachmentFileNameWithinLimit`, `MAX_ATTACHMENT_FILENAME_LENGTH` 등 |
 | **Layout / Header / Footer**                          | 네비·테마·푸터                                                          |
 
 

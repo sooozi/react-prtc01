@@ -1,4 +1,4 @@
-import type { FileWithId, ImageFilePreviousEntry } from "./ImageFileAttachField.types";
+import type { FileWithId, ImageFilePreviousEntry } from "../types";
 
 // 첨부 파일 전체 파일명(확장자 포함) 최대 길이
 export const MAX_ATTACHMENT_FILENAME_LENGTH = 300;

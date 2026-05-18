@@ -1,38 +1,33 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { arrayMove } from "@/utils/arrayMove";
 import { formatFileSize } from "@/utils/formatFileSize";
-import type {
-  FileWithId,
-  ImageFileAttachFieldUnifiedProps,
-  ImageFilePreviousEntry,
-  ImageFileUnifiedRow,
-} from "./ImageFileAttachField.types";
+import type { ImageFileAttachFieldCreateProps } from "../types";
 import {
   filesToItemsWithIds,
   MAX_ATTACHMENT_FILENAME_LENGTH,
   partitionByAttachmentIdentity,
-} from "./fileAttachItemUtils";
-import { filterImageFiles } from "./filterImageFiles";
-import { AttachRowBody } from "./AttachRowBody";
-import { ReorderGhostPortal, type ReorderGhostState } from "./ReorderGhostPortal";
-import "./ImageFileAttachField.scss";
+} from "../lib/fileAttachItemUtils";
+import { filterImageFiles } from "../lib/filterImageFiles";
+import { AttachRowBody } from "../ui/AttachRowBody";
+import { ReorderGhostPortal, type ReorderGhostState } from "../ui/ReorderGhostPortal";
+import "../ImageFileAttachField.scss";
 
-// 게시글 수정: 서버 첨부 + 신규를 한 목록에서 순서·삭제 처리
-export function ImageFileAttachFieldUnifiedEdit({
+// 게시글 등록: 새로 고른 파일을 한 줄 목록에서 순서 변경·삭제할 때 사용
+export function ImageFileAttachFieldCreate({
   fileInputId,
+  items,
+  onChange,
   fileInputRef,
   accept = "image/*",
   rootClassName = "",
-  unifiedRows: rows,
-  onUnifiedRowsChange: onRowsChange,
-}: ImageFileAttachFieldUnifiedProps) {
-  const hasListInBlock = rows.length > 0;
+}: ImageFileAttachFieldCreateProps) {
+  const hasListInBlock = items.length > 0;
   const [overIndex, setOverIndex] = useState<number | null>(null);
   const [reorderFromIndex, setReorderFromIndex] = useState<number | null>(null);
   const reorderFromRef = useRef<number | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
-  const rowsRef = useRef(rows);
-  const onRowsChangeRef = useRef(onRowsChange);
+  const itemsRef = useRef(items);
+  const onChangeRef = useRef(onChange);
   const overIndexRef = useRef<number | null>(null);
   const pointerReorderDetachRef = useRef<(() => void) | null>(null);
   const [fileAddNoticeMessage, setFileAddNoticeMessage] = useState("");
@@ -43,11 +38,11 @@ export function ImageFileAttachFieldUnifiedEdit({
   const ghostMoveRafRef = useRef<number | null>(null);
   const pendingGhostPointerRef = useRef<{ x: number; y: number } | null>(null);
 
-  // 순서 드래그 중에도 이전 목록과 현재 목록을 바꾸는 함수를 쓰게 ref에 계속 맞춤
+  // 순서 드래그 중에도 방금 그 목록과, 목록을 바꾸는 함수를 쓰게 ref에 계속 맞춰 둠
   useLayoutEffect(() => {
-    rowsRef.current = rows;
-    onRowsChangeRef.current = onRowsChange;
-  }, [rows, onRowsChange]);
+    itemsRef.current = items;
+    onChangeRef.current = onChange;
+  }, [items, onChange]);
 
   // 이 블록이 사라질 때(뒤로 가기 등) 드래그 때문에 화면 전체에 걸어 둔 리스너를 떼 줌
   useEffect(() => {
@@ -86,7 +81,6 @@ export function ImageFileAttachFieldUnifiedEdit({
       const p = pendingGhostPointerRef.current;
       const g = reorderGhostRef.current;
       if (!p || !g) return;
-
       const next: ReorderGhostState = {
         ...g,
         left: p.x - g.offsetX,
@@ -97,7 +91,6 @@ export function ImageFileAttachFieldUnifiedEdit({
     });
   };
 
-  // 드래그 고스트 위치 업데이트
   const updateOverFromPoint = (clientX: number, clientY: number) => {
     const root = rootRef.current;
     if (!root) {
@@ -128,7 +121,6 @@ export function ImageFileAttachFieldUnifiedEdit({
     setOverIndex(idx);
   };
 
-  // 드래그 고스트 세션 바인딩
   const bindPointerReorderSession = (startIndex: number, pointerId: number) => {
     pointerReorderDetachRef.current?.();
 
@@ -141,10 +133,9 @@ export function ImageFileAttachFieldUnifiedEdit({
 
     let ended = false;
 
-    /** 손가락/마우스 움직임(pointermove)마다 불리며 스크롤을 막지 않는다고 표시(passive) */
+    /** 손가락/마우스 움직임(pointermove)마다 불리는데, 여기서는 스크롤을 막지 않는다고 표시(passive) */
     const moveOpts: AddEventListenerOptions = { passive: true };
 
-    // 드래그 고스트 세션 종료 함수
     const detach = () => {
       if (ended) return;
       ended = true;
@@ -156,50 +147,40 @@ export function ImageFileAttachFieldUnifiedEdit({
       clearReorderVisual();
     };
 
-    // 드래그 고스트 이동 시 이벤트 핸들러
     const onMove = (ev: PointerEvent) => {
       if (ev.pointerId !== pointerId) return;
       scheduleReorderGhostMove(ev.clientX, ev.clientY);
       updateOverFromPoint(ev.clientX, ev.clientY);
     };
 
-    // 드래그 고스트 세션 종료 함수
     const onUp = (ev: PointerEvent) => {
       if (ev.pointerId !== pointerId) return;
       const from = reorderFromRef.current;
       const to = overIndexRef.current;
       detach();
       if (from != null && to != null && from !== to) {
-        onRowsChangeRef.current(arrayMove(rowsRef.current, from, to));
+        onChangeRef.current(arrayMove(itemsRef.current, from, to));
       }
     };
 
     pointerReorderDetachRef.current = detach;
 
-    document.addEventListener("pointermove", onMove, moveOpts); // 드래그 고스트 이동 시 이벤트 핸들러
+    document.addEventListener("pointermove", onMove, moveOpts);
     document.addEventListener("pointerup", onUp, true); // 손·버튼을 뗐을 때(정상 종료)
     document.addEventListener("pointercancel", onUp, true); // 포인터가 끊겼을 때(터치 취소·방해 등)
   };
 
-  // 드래그 고스트 핸들 클릭 시 처리
   const handleReorderHandlePointerDown =
     (index: number) => (e: React.PointerEvent<HTMLSpanElement>) => {
-      if (e.pointerType === "mouse" && e.button !== 0) return; // 마우스 오른쪽 버튼 클릭 시 처리
-      if (rows.length < 2) return; // 첨부 이미지가 2개 미만인 경우 처리
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (items.length < 2) return;
       e.preventDefault();
-      e.stopPropagation(); // 이벤트 버블링 방지
-      const rowEl = (e.currentTarget as HTMLElement).closest("[data-reorder-index]") as HTMLElement | null;
-      if (!rowEl) return;
-      const rect = rowEl.getBoundingClientRect();
-      const row = rows[index];
+      e.stopPropagation();
+      const row = (e.currentTarget as HTMLElement).closest("[data-reorder-index]") as HTMLElement | null;
       if (!row) return;
-      const fileName = row.kind === "server" ? row.name : row.file.name;
-      const sizeLabel =
-        row.kind === "server"
-          ? row.sizeBytes != null
-            ? formatFileSize(row.sizeBytes)
-            : "?"
-          : formatFileSize(row.file.size);
+      const rect = row.getBoundingClientRect();
+      const item = items[index];
+      if (!item) return;
       const offsetX = e.clientX - rect.left;
       const offsetY = e.clientY - rect.top;
       const initial: ReorderGhostState = {
@@ -208,8 +189,8 @@ export function ImageFileAttachFieldUnifiedEdit({
         width: rect.width,
         offsetX,
         offsetY,
-        fileName,
-        sizeLabel,
+        fileName: item.file.name,
+        sizeLabel: formatFileSize(item.file.size),
       };
       reorderGhostRef.current = initial;
       setReorderGhost(initial);
@@ -226,7 +207,6 @@ export function ImageFileAttachFieldUnifiedEdit({
     }, 9000);
   };
 
-  /** 언마운트 시 안내 메시지 자동 지움 타이머 정리 */
   useEffect(() => {
     return () => {
       if (fileAddNoticeClearTimeoutRef.current) {
@@ -235,31 +215,22 @@ export function ImageFileAttachFieldUnifiedEdit({
     };
   }, []);
 
-  // 로컬 File.size + 서버 API의 sizeBytes(있을 때만 합산)
   const totalSizeBytes = useMemo(
-    () =>
-      rows.reduce((sum: number, r: ImageFileUnifiedRow) => {
-        if (r.kind === "local") return sum + r.file.size;
-        return sum + (r.sizeBytes ?? 0);
-      }, 0),
-    [rows]
+    () => items.reduce((sum, i) => sum + i.file.size, 0),
+    [items]
   );
 
-  // 파일 추가 시 처리
   const onFilesAdded = (files: File[]) => {
     if (files.length === 0) return;
 
-    const okLength: File[] = []; // 이름 길이를 통과한 파일 목록
-    const tooLong: File[] = []; // 이름 길이를 초과한 파일 목록
+    const okLength: File[] = [];
+    const tooLong: File[] = [];
     for (const f of files) {
       if (f.name.length > MAX_ATTACHMENT_FILENAME_LENGTH) tooLong.push(f);
       else okLength.push(f);
     }
 
-    // 파일 추가 안내 메시지 문장 조각
     const messageParts: string[] = [];
-
-    // 파일 이름 길이 초과 시 처리
     if (tooLong.length > 0) {
       if (tooLong.length === 1) {
         const n = tooLong[0]!.name;
@@ -284,17 +255,7 @@ export function ImageFileAttachFieldUnifiedEdit({
     }
 
     // 현재 목록에서 로컬 파일과 서버 파일 분리
-    const currentItems: FileWithId[] = rows
-      .filter((r): r is Extract<ImageFileUnifiedRow, { kind: "local" }> => r.kind === "local")
-      .map((r) => ({ id: r.id, file: r.file }));
-
-    // 기존 첨부 파일 목록
-    const previous: ImageFilePreviousEntry[] = rows
-      .filter((r): r is Extract<ImageFileUnifiedRow, { kind: "server" }> => r.kind === "server")
-      .map((r) => ({ id: r.fileId, name: r.name }));
-
-    // 현재 목록에서 로컬 파일과 서버 파일 분리
-    const { add, skip } = partitionByAttachmentIdentity(okLength, currentItems, previous);
+    const { add, skip } = partitionByAttachmentIdentity(okLength, items, undefined);
 
     // 이미 있는 파일 목록
     if (skip.length > 0) {
@@ -306,15 +267,9 @@ export function ImageFileAttachFieldUnifiedEdit({
         `같은 파일명(확장자는 소문자로 비교)이 이미 있어 추가하지 않았습니다. ${list}`
       );
     }
-    
     // 이름 길이를 통과한 파일이 하나라도 있으면 목록을 바꾸고 추가
     if (add.length > 0) {
-      const newLocals = filesToItemsWithIds(add).map((it) => ({
-        kind: "local" as const,
-        id: it.id,
-        file: it.file,
-      }));
-      onRowsChange([...rows, ...newLocals]);
+      onChange([...items, ...filesToItemsWithIds(add)]);
     }
     // 누적된 안내 문장이 있으면 표시 후 자동 지움 예약
     if (messageParts.length > 0) {
@@ -323,7 +278,7 @@ export function ImageFileAttachFieldUnifiedEdit({
     }
   };
 
-  // 파일 추가 시 처리
+  // 파일 선택 시 처리
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const list = e.target.files;
     if (list) onFilesAdded(filterImageFiles(list));
@@ -332,10 +287,9 @@ export function ImageFileAttachFieldUnifiedEdit({
 
   // 파일 삭제 시 처리
   const removeAt = (index: number) => {
-    const next = rows.filter((_row: ImageFileUnifiedRow, i: number) => i !== index);
-    onRowsChange(next);
-    const stillHasLocal = next.some((r: ImageFileUnifiedRow) => r.kind === "local");
-    if (!stillHasLocal && fileInputRef.current) {
+    const next = items.filter((_, i) => i !== index);
+    onChange(next);
+    if (next.length === 0 && fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
@@ -379,28 +333,21 @@ export function ImageFileAttachFieldUnifiedEdit({
             <div className="image-file-attach__reorder-headline">
               <h3 className="image-file-attach__reorder-block-title">첨부 이미지 순서</h3>
             </div>
-            {rows.length > 0 && (
+            {items.length > 0 && (
               <div className="image-file-attach__reorder-hint-row">
-                {rows.length >= 2 ? (
-                  <p className="image-file-attach__reorder-hint">
-                    아래 핸들을 <strong>드래그</strong>하여 이미지 <strong>순서</strong>를 바꿀 수 있어요
-                  </p>
-                ) : (
-                  <span className="image-file-attach__reorder-hint" aria-hidden="true" />
-                )}
+                <p className="image-file-attach__reorder-hint">
+                  아래 핸들을 <strong>드래그</strong>하여 이미지 <strong>순서</strong>를 바꿀 수 있어요
+                </p>
                 <span className="image-file-attach__reorder-total">
-                  총{" "}
-                  {totalSizeBytes > 0
-                    ? formatFileSize(totalSizeBytes)
-                    : "—"}
+                  총 {formatFileSize(totalSizeBytes)}
                 </span>
               </div>
             )}
           </div>
           <ol className="image-file-attach__list" aria-label="첨부된 이미지">
-            {rows.map((row: ImageFileUnifiedRow, index: number) => (
+            {items.map((item, index) => (
               <li
-                key={row.kind === "server" ? `srv-${row.fileId}` : row.id}
+                key={item.id}
                 data-reorder-index={index}
                 className={[
                   "image-file-attach__row",
@@ -416,22 +363,14 @@ export function ImageFileAttachFieldUnifiedEdit({
                   .join(" ")}
               >
                 <AttachRowBody
-                  fileName={row.kind === "server" ? row.name : row.file.name} // 파일 이름
-                  sizeLabel={ // 파일 크기 레이블
-                    row.kind === "server"
-                      ? row.sizeBytes != null // 서버 파일 크기가 있으면 포맷팅
-                        ? formatFileSize(row.sizeBytes)
-                        : "?"
-                      : formatFileSize(row.file.size) // 로컬 파일 크기 포맷팅
-                  }
-                  onHandlePointerDown={handleReorderHandlePointerDown(index)} // 순서 변경: 드래그하여 놓기
+                  fileName={item.file.name}
+                  sizeLabel={formatFileSize(item.file.size)}
+                  onHandlePointerDown={handleReorderHandlePointerDown(index)}
                   trailing={
                     <button
                       type="button"
                       className="image-file-attach__remove"
-                      aria-label={`${
-                        row.kind === "server" ? row.name : row.file.name
-                      } 첨부 제거`}
+                      aria-label={`${item.file.name} 첨부 제거`}
                       onClick={() => removeAt(index)}
                       onPointerDown={(e) => e.stopPropagation()}
                     >

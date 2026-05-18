@@ -2,13 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, getPostFiles, updatePost } from "@/api/board";
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
-import { Button, Confirm, LoadingState, PageHeader } from "@/components";
-import { ImageFileAttachField } from "@/components/ImageFileAttachField/ImageFileAttachField";
 import {
+  Button,
+  Confirm,
+  ImageFileAttachField,
   isAttachmentFileNameWithinLimit,
+  LoadingState,
   MAX_ATTACHMENT_FILENAME_LENGTH,
-} from "@/components/ImageFileAttachField/fileAttachItemUtils";
-import type { ImageFileUnifiedRow } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
+  PageHeader,
+} from "@/components";
+import type { ImageFileUnifiedRow } from "@/components";
 import { postDetailPath } from "@/lib/post/postDetailFromQuery";
 import "@/pages/post/detail/Detail.scss";
 import "@/pages/post/write/Write.scss";

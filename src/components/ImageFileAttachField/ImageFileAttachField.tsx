@@ -1,8 +1,8 @@
-import type { ImageFileAttachFieldProps } from "./ImageFileAttachField.types";
-import { ImageFileAttachFieldCreate } from "./ImageFileAttachFieldCreate";
-import { ImageFileAttachFieldUnifiedEdit } from "./ImageFileAttachFieldUnifiedEdit";
+import type { ImageFileAttachFieldProps } from "./types";
+import { ImageFileAttachFieldCreate } from "./variants/Create";
+import { ImageFileAttachFieldUnifiedEdit } from "./variants/UnifiedEdit";
 
-export type { ImageFileAttachFieldProps } from "./ImageFileAttachField.types";
+export type { ImageFileAttachFieldProps } from "./types";
 
 export function ImageFileAttachField(props: ImageFileAttachFieldProps) {
   if ("unifiedRows" in props) {

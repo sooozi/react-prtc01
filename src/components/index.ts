@@ -2,18 +2,18 @@
 export { ChevronThinIcon } from "@/components/icons/ChevronThinIcon";
 export { ClockOutlineIcon } from "@/components/icons/ClockOutlineIcon";
 export { GripHandleIcon } from "@/components/icons/GripHandleIcon";
-export { ImageFileAttachField } from "@/components/ImageFileAttachField/ImageFileAttachField";
 export {
   filesToItemsWithIds,
+  ImageFileAttachField,
+  isAttachmentFileNameWithinLimit,
   itemsToFiles,
   MAX_ATTACHMENT_FILENAME_LENGTH,
-  isAttachmentFileNameWithinLimit,
-} from "@/components/ImageFileAttachField/fileAttachItemUtils";
+} from "@/components/ImageFileAttachField";
 export type {
   FileWithId,
+  ImageFileAttachFieldProps,
   ImageFileUnifiedRow,
-} from "@/components/ImageFileAttachField/ImageFileAttachField.types";
-export type { ImageFileAttachFieldProps } from "@/components/ImageFileAttachField/ImageFileAttachField.types";
+} from "@/components/ImageFileAttachField";
 export { default as Badge } from "@/components/Badge/Badge";
 export { default as PageHeader } from "@/components/PageHeader/PageHeader";
 export type { PageHeaderProps, PageHeaderVariant } from "@/components/PageHeader/PageHeader";
