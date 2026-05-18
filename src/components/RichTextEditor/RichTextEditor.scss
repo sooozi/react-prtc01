@@ -26,6 +26,10 @@
       font-synthesis: style;
       font-style: italic;
     }
+
+    p:empty {
+      min-height: 1lh;
+    }
   }
 
   .ql-editor.ql-blank::before {

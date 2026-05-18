@@ -94,11 +94,16 @@
 
 // Quill·legacy HTML 본문 (PostHtmlContent)
 .detail-content--prose {
-  :where(p, ul, ol, blockquote) {
+  // Quill은 줄마다 <p> 하나 — 에디터와 같이 margin 없이 line-height만 사용
+  :where(p) {
+    margin: 0;
+  }
+
+  :where(ul, ol, blockquote) {
     margin: 0 0 1em;
   }
 
-  :where(p:last-child, ul:last-child, ol:last-child) {
+  :where(ul:last-child, ol:last-child, blockquote:last-child) {
     margin-bottom: 0;
   }
 

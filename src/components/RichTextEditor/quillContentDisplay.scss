@@ -2,6 +2,15 @@
 // 상세(PostHtmlContent)처럼 .ql-editor 밖에서 렌더할 때는 동일 규칙을 본문 래퍼에 맞춰 둔다.
 
 .detail-content--prose {
+  // Quill 빈 줄: <p></p> 는 높이 0 → margin collapse로 여백도 사라짐
+  p:empty {
+    min-height: 1lh;
+  }
+
+  p:has(> br:only-child) {
+    min-height: 1lh;
+  }
+
   .ql-align-center {
     text-align: center;
   }
