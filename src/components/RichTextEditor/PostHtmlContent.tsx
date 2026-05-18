@@ -3,6 +3,7 @@
  */
 import { isQuillContentEmpty } from "./isQuillContentEmpty";
 import { preparePostHtmlForDisplay } from "./preparePostHtmlForDisplay";
+import "./quillContentDisplay.scss";
 
 type PostHtmlContentProps = {
   html: string;

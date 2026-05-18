@@ -19,6 +19,13 @@
     min-height: 200px;
     color: var(--color-text);
     line-height: 1.55;
+
+    // :root { font-synthesis: none } 때문에 <em> 이탤릭이 합성되지 않음
+    em,
+    i {
+      font-synthesis: style;
+      font-style: italic;
+    }
   }
 
   .ql-editor.ql-blank::before {
