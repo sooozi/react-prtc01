@@ -13,6 +13,7 @@
 | 폼·버튼 | `aria-invalid`, `role="alert"`, 라벨 연결 | 각 페이지·`Button` 등 |
 | 모달 | 포커스 트랩, ESC, `aria-modal` | `Confirm`, `useFloatingLayer` (일정 시트 등) |
 | 툴팁 | `role="tooltip"`, `aria-describedby`, 포커스·터치 | `Tooltip` — hover + focus + 터치(비인터랙티브 영역) |
+| 달력 | `aria-label`(이전/다음 달), `role="switch"`·`aria-checked`(주 시작) | `MonthCalendar` |
 | 정적 검사 | JSX a11y 규칙 | `eslint-plugin-jsx-a11y` (`yarn lint`) |
 | 런타임 검사 (DEV) | axe 위반 콘솔 로그 | `src/bootstrapAxe.ts` |
 | 컴포넌트 검사 | Storybook Accessibility 패널 | `@storybook/addon-a11y` |
@@ -55,7 +56,3 @@ yarn storybook
 | 헤더·모바일 메뉴 | Tab / Enter / Esc |
 | Confirm | 열기 → Tab 순환 → Esc 닫기 |
 | 일정 시트 (좁은 화면) | 일정 입력 → 시트 → Esc 닫기 |
-
-## 5. PR / README에 쓸 한 줄 (포폴)
-
-> ESLint jsx-a11y, DEV axe, RouteHeadSync(제목·라이브 안내), 스킵 링크, 모달 포커스 트랩을 적용했고, Storybook a11y addon으로 공통 컴포넌트를 점검했습니다.

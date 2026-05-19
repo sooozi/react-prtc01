@@ -56,6 +56,11 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
   // 오늘 날짜가 있는 달인지 확인
   const isViewingTodayMonth = today.getFullYear() === y && today.getMonth() === m;
 
+  const weekStartSunday = weekStart === "sunday";
+  const weekStartSwitchLabel = weekStartSunday
+    ? "주 시작 요일, 일요일부터. 월요일부터로 바꾸려면 선택"
+    : "주 시작 요일, 월요일부터. 일요일부터로 바꾸려면 선택";
+
   return (
     <div className="month-calendar">
       <h2 className="visually-hidden">달력</h2>
@@ -65,32 +70,35 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
           <button
             type="button"
             className="month-calendar__week-start-switch"
+            role="switch"
+            aria-checked={weekStartSunday}
+            aria-label={weekStartSwitchLabel}
             onClick={() => {
               setWeekStart((prev) => (prev === "monday" ? "sunday" : "monday"));
             }}
           >
             <span
               className={clsx("month-calendar__week-start-switch-track", {
-                "month-calendar__week-start-switch-track--sunday": weekStart === "sunday",
+                "month-calendar__week-start-switch-track--sunday": weekStartSunday,
               })}
+              aria-hidden
             >
               <span
                 className={clsx("month-calendar__week-start-switch-thumb", {
-                  "month-calendar__week-start-switch-thumb--right": weekStart === "sunday",
+                  "month-calendar__week-start-switch-thumb--right": weekStartSunday,
                 })}
-                aria-hidden
               />
               <span className="month-calendar__week-start-switch-labels">
                 <span
                   className={clsx("month-calendar__week-start-switch-text", {
-                    "month-calendar__week-start-switch-text--active": weekStart === "monday",
+                    "month-calendar__week-start-switch-text--active": !weekStartSunday,
                   })}
                 >
                   월요일
                 </span>
                 <span
                   className={clsx("month-calendar__week-start-switch-text", {
-                    "month-calendar__week-start-switch-text--active": weekStart === "sunday",
+                    "month-calendar__week-start-switch-text--active": weekStartSunday,
                   })}
                 >
                   일요일
