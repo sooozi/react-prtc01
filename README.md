@@ -256,6 +256,22 @@ src/
 
 ---
 
+## 접근성 (Accessibility)
+
+
+| 도구                         | 역할                             | 확인                                 |
+| -------------------------- | ------------------------------ | ---------------------------------- |
+| **eslint-plugin-jsx-a11y** | 마크업·ARIA 규칙 정적 검사              | `yarn lint`                        |
+| **@axe-core/react**        | 개발 중 DOM 접근성 로그                | `yarn dev` + 브라우저 콘솔               |
+| **Storybook addon-a11y**   | 컴포넌트 단위 Violations / Passes    | `yarn storybook` → Accessibility 탭 |
+| **RouteHeadSync**          | `<title>` + 라우트 `aria-live` 안내 | `src/router/RouteHeadSync.tsx`     |
+| **스킵 링크**                  | `#main-content` 본문 바로가기        | `Layout` · Tab으로 확인                |
+
+
+**상세 가이드**: [docs/accessibility.md](docs/accessibility.md)
+
+---
+
 ## 공통 컴포넌트 (배럴 기준 발췌)
 
 

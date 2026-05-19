@@ -14,7 +14,14 @@ const preview: Preview = {
       },
     },
     a11y: {
+      /** Storybook UI·Tests 탭에서 위반 표시 (빌드 실패는 하지 않음) */
       test: 'todo',
+      config: {
+        rules: {
+          /** Storybook centered 레이아웃에서 region 누락은 스토리 단위 한계 — 앱 Layout에서 보완 */
+          region: { enabled: false },
+        },
+      },
     },
     options: {
       storySort: {
