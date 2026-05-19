@@ -18,8 +18,15 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    content: '마우스를 올리면 툴팁이 표시됩니다.',
-    children: <button type="button">호버해 보세요</button>,
+    content: '마우스를 올리거나, 버튼에 포커스하면 툴팁이 표시됩니다.',
+    children: <button type="button">호버 · Tab 포커스</button>,
+  },
+};
+
+export const KeyboardFocus: Story = {
+  args: {
+    content: '키보드 포커스 시에도 동일한 설명이 연결됩니다.',
+    children: <button type="button">Tab으로 포커스</button>,
   },
 };
 

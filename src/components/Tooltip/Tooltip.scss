@@ -5,15 +5,15 @@
   max-width: 100%;
   cursor: default;
 
-  &:hover > :is(button, .btn) {
+  :is(button, .btn):hover {
+    border-color: transparent;
     background-color: var(--color-primary-muted);
-    border: none;
   }
 }
 
 .tooltip-bubble {
   transform: translate(-50%, -100%);
-  margin-top: calc(-1 * v.space(px8));
+  margin-top: calc(-1 * (v.space(px8) + v.space(px5) + v.space(px5)));
   padding: v.space(sm) v.space(md);
   max-width: 320px;
   font-size: v.fs(sm);
