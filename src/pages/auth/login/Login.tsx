@@ -7,6 +7,7 @@ import { consumeLoginRedirectSession } from "@/api/auth/loginRedirectSession";
 import { ApiError } from "@/api/http";
 import { LOGIN_SUCCESS_CODE, login } from "@/api/auth";
 import { Button, PageHeader } from "@/components";
+import { formDescribedBy } from "@/lib/a11y/formDescribedBy";
 import "@/pages/auth/login/Login.scss";
 
 /** RequireAuth 등에서 로그인으로 보낼 때 넘기는 state */
@@ -160,11 +161,13 @@ export default function Login() {
               id="userId"
               className={`input ${errors.userId ? "error" : ""}`}
               placeholder="아이디를 입력하세요"
+              aria-invalid={!!errors.userId}
+              aria-describedby={formDescribedBy(errors.userId && "login-userId-error")}
               {...register("userId")}
             />
             {errors.userId && (
-              <p className="message-area" role="alert">
-                <span className="error-message">{errors.userId.message}</span>
+              <p id="login-userId-error" className="message-area error-message" role="alert">
+                {errors.userId.message}
               </p>
             )}
           </div>
@@ -180,6 +183,8 @@ export default function Login() {
                 id="password"
                 className={`input ${errors.password ? "error" : ""}`}
                 placeholder="비밀번호를 입력하세요"
+                aria-invalid={!!errors.password}
+                aria-describedby={formDescribedBy(errors.password && "login-password-error")}
                 {...register("password")}
               />
               <button
@@ -193,8 +198,8 @@ export default function Login() {
               </button>
             </div>
             {errors.password && (
-              <p className="message-area" role="alert">
-                <span className="error-message">{errors.password.message}</span>
+              <p id="login-password-error" className="message-area error-message" role="alert">
+                {errors.password.message}
               </p>
             )}
           </div>

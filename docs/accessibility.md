@@ -10,8 +10,9 @@
 | 라우트 안내 | `aria-live="polite"` 짧은 문구 | `RouteHeadSync` |
 | 본문 바로가기 | 스킵 링크 → `#main-content` | `src/components/Layout/Layout.tsx` |
 | 랜드마크 | `main`, `header`, `footer` | `Layout`, `Header`, `Footer` |
-| 폼·버튼 | `aria-invalid`, `role="alert"`, 라벨 연결 | 각 페이지·`Button` 등 |
+| 폼·버튼 | `aria-invalid`, `aria-describedby`(힌트·에러 id), `role="alert"`, 라벨 연결 | `Signup`, `Login` 등 |
 | 모달 | 포커스 트랩, ESC, `aria-modal` | `Confirm`, `useFloatingLayer` (일정 시트 등) |
+| 알림 | `window.alert` 미사용 — 확인은 `Confirm`, API·검증 오류는 `role="alert"` | `Signup`, `Login`, ESLint `no-alert` |
 | 툴팁 | `role="tooltip"`, `aria-describedby`, 포커스·터치 | `Tooltip` — hover + focus + 터치(비인터랙티브 영역) |
 | 달력 | `aria-label`(이전/다음 달), `role="switch"`·`aria-checked`(주 시작) | `MonthCalendar` |
 | 페이지네이션 | `aria-label`로 이동 동작 설명 (`title`은 호버 보조) | `Pagination` `PageMoveButton` |

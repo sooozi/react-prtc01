@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { signup, checkUserId } from "@/api/auth";
 import { ApiError } from "@/api/http";
 import { Button, Confirm, PageHeader } from "@/components";
+import { formDescribedBy } from "@/lib/a11y/formDescribedBy";
 import { signupSchema, type SignupFormValues } from "@/schemas/auth";
 import "@/pages/auth/signup/Signup.scss";
 
@@ -18,8 +19,7 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
   const [showSuccessConfirm, setShowSuccessConfirm] = useState(false);
-  const [showErrorConfirm, setShowErrorConfirm] = useState(false);
-  const [errorConfirmMessage, setErrorConfirmMessage] = useState("");
+  const [submitError, setSubmitError] = useState("");
   const [pendingSignupData, setPendingSignupData] = useState<SignupFormValues | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -81,6 +81,7 @@ export default function Signup() {
   };  
 
   const onSubmit = (data: SignupFormValues) => {
+    setSubmitError("");
     setPendingSignupData(data);
     setShowSubmitConfirm(true);
   };
@@ -89,6 +90,7 @@ export default function Signup() {
     setShowSubmitConfirm(false);
     if (!pendingSignupData) return;
 
+    setSubmitError("");
     setIsSubmitting(true);
     try {
       await signup(pendingSignupData);
@@ -103,8 +105,7 @@ export default function Signup() {
           : e instanceof Error
             ? e.message
             : "회원가입에 실패했습니다. 다시 시도해주세요.";
-      setErrorConfirmMessage(message);
-      setShowErrorConfirm(true);
+      setSubmitError(message);
     } finally {
       setIsSubmitting(false);
       setPendingSignupData(null);
@@ -121,11 +122,6 @@ export default function Signup() {
     navigate("/auth/login");
   };
 
-  const handleErrorConfirmClose = () => {
-    setShowErrorConfirm(false);
-    setErrorConfirmMessage("");
-  };
-
   return (
     <div className="signup-container">
       {/* 배경 장식 */}
@@ -140,12 +136,24 @@ export default function Signup() {
           variant="auth"
         />
 
-        <form className="signup-form" onSubmit={handleSubmit(onSubmit)}>
+        {submitError && (
+          <div className="message error" id="signup-submit-error" role="alert">
+            {submitError}
+          </div>
+        )}
+
+        <form
+          className="signup-form"
+          onSubmit={handleSubmit(onSubmit)}
+          aria-describedby={submitError ? "signup-submit-error" : undefined}
+        >
           {/* 아이디 */}
           <div className="form-group">
             <div className="label-row">
               <label className="label" htmlFor="userId">아이디</label>
-              <span className="hint-text">1~30자/영문, 숫자 조합</span>
+              <span id="signup-userId-hint" className="hint-text">
+                1~30자/영문, 숫자 조합
+              </span>
             </div>
             <div className="input-with-button">
               <input
@@ -154,7 +162,12 @@ export default function Signup() {
                 className={`input ${errors.userId ? "error" : ""}`} // 에러일 때 error 클래스 추가
                 placeholder="아이디를 입력하세요"
                 maxLength={30}
-                aria-invalid={!!errors.userId} // 스크린 리더에게 유효하지 않음을 알림
+                aria-invalid={!!errors.userId}
+                aria-describedby={formDescribedBy(
+                  "signup-userId-hint",
+                  errors.userId && "signup-userId-error",
+                  idCheckMessage && "signup-userId-check"
+                )}
                 {...register("userId", {
                   onChange: () => {
                     setIdCheckStatus("대기");
@@ -178,12 +191,18 @@ export default function Signup() {
             {(errors.userId || idCheckMessage) && (
               <div className="message-area">
                 {errors.userId && (
-                  <span className="error-message" role="alert">{errors.userId.message}</span>
+                  <p id="signup-userId-error" className="error-message" role="alert">
+                    {errors.userId.message}
+                  </p>
                 )}
                 {idCheckMessage && (
-                  <span className={`check-message ${idCheckStatus}`}>
+                  <p
+                    id="signup-userId-check"
+                    className={`check-message ${idCheckStatus}`}
+                    role={idCheckStatus === "사용불가" ? "alert" : "status"}
+                  >
                     {idCheckMessage}
-                  </span>
+                  </p>
                 )}
               </div>
             )}
@@ -193,7 +212,9 @@ export default function Signup() {
           <div className="form-group">
             <div className="label-row">
               <label className="label" htmlFor="userName">이름</label>
-              <span className="hint-text">1~30자</span>
+              <span id="signup-userName-hint" className="hint-text">
+                1~30자
+              </span>
             </div>
             <input
               type="text"
@@ -202,11 +223,15 @@ export default function Signup() {
               placeholder="이름을 입력하세요"
               maxLength={30}
               aria-invalid={!!errors.userName}
+              aria-describedby={formDescribedBy(
+                "signup-userName-hint",
+                errors.userName && "signup-userName-error"
+              )}
               {...register("userName")}
             />
             {errors.userName && (
-              <p className="message-area" role="alert">
-                <span className="error-message">{errors.userName.message}</span>
+              <p id="signup-userName-error" className="message-area error-message" role="alert">
+                {errors.userName.message}
               </p>
             )}
           </div>
@@ -215,7 +240,9 @@ export default function Signup() {
           <div className="form-group">
             <div className="label-row">
               <label className="label" htmlFor="email">이메일</label>
-              <span className="hint-text">최대 64자/이메일 형식</span>
+              <span id="signup-email-hint" className="hint-text">
+                최대 64자/이메일 형식
+              </span>
             </div>
             <div className="input-with-button">
                 <input
@@ -225,12 +252,16 @@ export default function Signup() {
                   placeholder="test@gmail.com"
                   maxLength={64}
                   aria-invalid={!!errors.email}
+                  aria-describedby={formDescribedBy(
+                    "signup-email-hint",
+                    errors.email && "signup-email-error"
+                  )}
                   {...register("email")}
                   />
             </div>
             {errors.email && (
-              <p className="message-area" role="alert">
-                <span className="error-message">{errors.email.message}</span>
+              <p id="signup-email-error" className="message-area error-message" role="alert">
+                {errors.email.message}
               </p>
             )}
           </div>
@@ -239,7 +270,9 @@ export default function Signup() {
           <div className="form-group">
             <div className="label-row">
               <label className="label" htmlFor="password">비밀번호</label>
-              <span className="hint-text">1~30자/영문, 대문자, 숫자, 특수문자 조합</span>
+              <span id="signup-password-hint" className="hint-text">
+                1~30자/영문, 대문자, 숫자, 특수문자 조합
+              </span>
             </div>
             <div className="password-field">
               <input
@@ -249,6 +282,10 @@ export default function Signup() {
                 placeholder="비밀번호를 입력하세요"
                 maxLength={30}
                 aria-invalid={!!errors.password}
+                aria-describedby={formDescribedBy(
+                  "signup-password-hint",
+                  errors.password && "signup-password-error"
+                )}
                 {...register("password")}
               />
               <button
@@ -262,8 +299,8 @@ export default function Signup() {
               </button>
             </div>
             {errors.password && (
-              <p className="message-area" role="alert">
-                <span className="error-message">{errors.password.message}</span>
+              <p id="signup-password-error" className="message-area error-message" role="alert">
+                {errors.password.message}
               </p>
             )}
           </div>
@@ -304,15 +341,6 @@ export default function Signup() {
         cancelLabel="닫기"
         onConfirm={handleSuccessConfirm}
         onCancel={() => setShowSuccessConfirm(false)}
-      />
-      <Confirm
-        open={showErrorConfirm}
-        title="회원가입 실패"
-        message={errorConfirmMessage}
-        confirmLabel="확인"
-        cancelLabel="닫기"
-        onConfirm={handleErrorConfirmClose}
-        onCancel={handleErrorConfirmClose}
       />
     </div>
   );

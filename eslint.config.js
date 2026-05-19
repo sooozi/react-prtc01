@@ -22,6 +22,11 @@ export default defineConfig([globalIgnores(['dist']), {
     globals: globals.browser,
   },
 }, {
+  files: ['src/**/*.{ts,tsx}'],
+  rules: {
+    'no-alert': 'error',
+  },
+}, {
   files: ['**/*.{ts,tsx}'],
   ...jsxA11y.flatConfigs.recommended,
   languageOptions: {
