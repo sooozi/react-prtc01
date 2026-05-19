@@ -77,14 +77,16 @@ export default function UserDetail() {
         ) : user ? (
           <>
             <div className="user-detail-hero">
-              <img
-                className="user-detail-avatar"
-                src={profileImageSrc}
-                alt=""
-                width={96}
-                height={96}
-                decoding="async"
-              />
+              <figure className="user-detail-avatar-wrap">
+                <img
+                  className="user-detail-avatar"
+                  src={profileImageSrc}
+                  alt={`${user.userFlnm} 프로필`}
+                  width={80}
+                  height={80}
+                  decoding="async"
+                />
+              </figure>
               <div className="user-detail-hero__body">
                 <div className="detail-meta">
                   <span className="detail-id">{user.userId}</span>
