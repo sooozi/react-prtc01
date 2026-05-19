@@ -27,6 +27,14 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
+    docs: {
+      description: {
+        component:
+          '앱 전역 API 오류 문구를 상단 배너로 표시합니다. `reportApiErrorToUser` / `setGlobalApiErrorText`로 메시지가 설정됩니다.',
+      },
+      // Docs STORIES: 인라인이면 전역 state가 스토리 간 공유되어 동일한 문구로 보일 수 있음
+      story: { inline: false },
+    },
   },
   beforeEach: () => {
     clearGlobalApiError();

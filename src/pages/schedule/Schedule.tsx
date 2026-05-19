@@ -67,7 +67,11 @@ export default function Schedule() {
             tabIndex={isNarrowWorkspace && mobilePanelOpen ? -1 : undefined}
             inert={isNarrowWorkspace && !mobilePanelOpen ? true : undefined}
           >
-            <SidePanel />
+            <SidePanel
+              onClose={
+                isNarrowWorkspace ? () => setMobilePanelOpen(false) : undefined
+              }
+            />
           </div>
         </div>
       </div>

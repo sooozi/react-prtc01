@@ -11,10 +11,15 @@ const CATEGORY_OPTIONS = [
 
 type CategoryValue = (typeof CATEGORY_OPTIONS)[number]["value"];
 
+type SidePanelProps = {
+  /** 좁은 화면 시트 등 — 닫기 버튼 표시 및 호출 */
+  onClose?: () => void;
+};
+
 /**
  * 일정 페이지 우측 패널 — 카테고리·날짜·내용 UI만 (저장 등 로직 미연결)
  */
-export default function SidePanel() {
+export default function SidePanel({ onClose }: SidePanelProps) {
   const todayISO = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const [category, setCategory] = useState<CategoryValue>("work");
   const [date, setDate] = useState<string>(todayISO);
@@ -36,9 +41,21 @@ export default function SidePanel() {
     <aside className="schedule-side-panel" aria-labelledby="schedule-side-panel-title">
       <div className="schedule-side-panel__card">
         <header className="schedule-side-panel__hero">
-          <h2 id="schedule-side-panel-title" className="schedule-side-panel__title">
-            일정 입력
-          </h2>
+          <div className="schedule-side-panel__hero-row">
+            <h2 id="schedule-side-panel-title" className="schedule-side-panel__title">
+              일정 입력
+            </h2>
+            {onClose ? (
+              <button
+                type="button"
+                className="schedule-side-panel__close"
+                onClick={onClose}
+                aria-label="일정 입력 닫기"
+              >
+                <span aria-hidden>×</span>
+              </button>
+            ) : null}
+          </div>
         </header>
 
         <div className="schedule-side-panel__body">

@@ -100,9 +100,15 @@
   z-index: v.z(modal);
   max-height: min(88vh, 640px);
   overflow: auto;
+  padding-bottom: env(safe-area-inset-bottom, 0);
   border-radius: v.rad(p16) v.rad(p16) 0 0;
   border-top: none;
   box-shadow: 0 -8px 32px color-mix(in srgb, var(--color-text-heading) 12%, transparent);
+}
+
+/* layout-main·footer가 동일 z-index(dock)일 때 푸터가 fixed 시트를 덮음 → 시트 열림 시 main 쌓임 상승 */
+@at-root .layout-main:has(.schedule-workspace--narrow-sheet-open) {
+  z-index: v.z(modal);
 }
 
 [data-theme="dark"] .schedule-workspace__panel {

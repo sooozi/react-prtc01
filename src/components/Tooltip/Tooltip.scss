@@ -1,9 +1,14 @@
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
+
 .tooltip-trigger {
-  
   max-width: 100%;
   cursor: default;
+
+  &:hover > :is(button, .btn) {
+    background-color: var(--color-primary-muted);
+    border: none;
+  }
 }
 
 .tooltip-bubble {

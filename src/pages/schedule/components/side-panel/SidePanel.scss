@@ -35,13 +35,48 @@
   }
 }
 
+.schedule-side-panel__hero-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: v.space(md);
+  min-height: 2.25rem;
+}
+
 .schedule-side-panel__title {
   margin: 0;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
   font-size: clamp(v.fs(lg), 2.2vw, v.fs(xl));
   font-weight: v.fw(extrabold);
   letter-spacing: -0.04em;
   line-height: 1.25;
   color: var(--color-text-heading);
+}
+
+.schedule-side-panel__close {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: v.rad(p10);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: v.fs(xl);
+  line-height: 1;
+  cursor: pointer;
+  @include button-focus-ring-border-1px;
+
+  &:hover {
+    color: var(--color-text);
+    background: var(--color-primary-muted);
+  }
 }
 
 .schedule-side-panel__subtitle {
