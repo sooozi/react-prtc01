@@ -41,14 +41,6 @@ export default function List() {
 
   const { totalItems, setTotalItems, totalPages, pageSize } = usePagination();
 
-  // 게시글 상세 보기
-  const openPostDetail = useCallback(
-    (id: number) => {
-      navigate(`/post/detail?id=${id}&from=list`);
-    },
-    [navigate]
-  );
-
   // 검색
   const applySearch = () => {
     setAppliedTitle(draftTitle.trim());
@@ -241,24 +233,16 @@ export default function List() {
                 </thead>
                 <tbody>
                   {posts.map((post) => (
-                    <tr
-                      key={post.postNumber}
-                      className="tr tr-clickable"
-                      role="button"
-                      tabIndex={0}
-                      aria-label={`게시글 ${post.postNumber}번, ${post.title}`}
-                      onClick={() => openPostDetail(post.postNumber)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          openPostDetail(post.postNumber);
-                        }
-                      }}
-                    >
+                    <tr key={post.postNumber} className="tr">
                       <td className="td td-number">{post.postNumber}</td>
                       <td className="td td-title">
                         <Tooltip content={post.title} onlyWhenTruncated>
-                          <span className="list-title-text">{post.title}</span>
+                          <Link
+                            className="list-title-link"
+                            to={`/post/detail?id=${post.postNumber}&from=list`}
+                          >
+                            {post.title}
+                          </Link>
                         </Tooltip>
                       </td>
                       <td className="td td-rgtr">{post.rgtrInfo ?? "-"}</td>

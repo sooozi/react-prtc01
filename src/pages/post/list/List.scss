@@ -421,12 +421,30 @@
   font-weight: v.fw(medium);
   color: var(--color-text-heading);
 
-  .list-title-text {
+  .list-title-link {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     min-width: 0;
+    font-weight: inherit;
+    color: inherit;
+    text-decoration: none;
+    @include v.transition-channels((color, text-decoration-color), fast, default);
+
+    &:hover {
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    &:focus-visible {
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    @include focus-ring-primary(2px);
   }
 }
 
@@ -438,10 +456,6 @@
 .board-page .td-date {
   color: var(--color-text-secondary);
   font-size: v.fs(body-sm);
-}
-
-.board-page .tr-clickable {
-  cursor: pointer;
 }
 
 .board-page .empty-state,

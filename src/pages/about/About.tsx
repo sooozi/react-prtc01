@@ -54,7 +54,7 @@ export default function About() {
     <div className="about-page">
       <section className="hero-section" aria-labelledby="about-hero-title">
         <PageHeader
-          badge="About project"
+          badge="ℹ️ About project"
           title={
             <>
               Vite + React로 <span className="gradient-text">UI·API</span> 연습
