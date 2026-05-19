@@ -1,12 +1,8 @@
 import { api } from "../http/http";
+import type { SignupFormValues } from "@/schemas/auth/signupSchema";
 
-//프론트 → 서버
-export type SignupRequest = {
-  userId: string;
-  userName: string;
-  email: string;
-  password: string;
-};
+/** POST /auth/join body — 폼 스키마와 동일 */
+export type SignupRequest = SignupFormValues;
 
 // 회원가입 요청
 // [POST] /auth/join

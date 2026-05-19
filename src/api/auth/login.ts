@@ -1,10 +1,8 @@
 import { api } from "../http/http";
+import type { LoginFormValues } from "@/schemas/auth/loginSchema";
 
-//프론트 → 서버
-export type LoginRequest = {
-  userId: string;
-  password: string;
-};
+/** POST /auth/login body — 폼 스키마와 동일 */
+export type LoginRequest = LoginFormValues;
 
 /** 로그인 성공 시 data 안에 오는 값 */
 export type LoginResponseData = {

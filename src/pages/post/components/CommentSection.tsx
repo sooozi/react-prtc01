@@ -171,13 +171,7 @@ export default function CommentSection() {
                     ? "comment-section__secret-comment-btn comment-section__secret-comment-btn--on"
                     : "comment-section__secret-comment-btn"
                 }
-                onClick={() => {
-                  setIsSecretComment((prev) => {
-                    const next = !prev;
-                    console.log("[댓글 작성] 비밀댓글:", next);
-                    return next;
-                  });
-                }}
+                onClick={() => setIsSecretComment((prev) => !prev)}
               >
                 <SecretCommentLockIcon locked={isSecretComment} className="comment-section__secret-lock-icon" />
               </Button>

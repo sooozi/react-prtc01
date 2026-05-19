@@ -1,17 +1,12 @@
 import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { signup, checkUserId } from "@/api/auth";
 import { ApiError } from "@/api/http";
-import { Button, PageHeader } from "@/components";
+import { Button, Confirm, PageHeader } from "@/components";
+import { signupSchema, type SignupFormValues } from "@/schemas/auth";
 import "@/pages/auth/signup/Signup.scss";
-
-interface SignupData {
-  userId: string;
-  userName: string;
-  email: string;
-  password: string;
-}
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -21,6 +16,12 @@ export default function Signup() {
   const [idCheckMessage, setIdCheckMessage] = useState("");
   /** 비밀번호 보기/숨기기 */
   const [showPassword, setShowPassword] = useState(false);
+  const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
+  const [showSuccessConfirm, setShowSuccessConfirm] = useState(false);
+  const [showErrorConfirm, setShowErrorConfirm] = useState(false);
+  const [errorConfirmMessage, setErrorConfirmMessage] = useState("");
+  const [pendingSignupData, setPendingSignupData] = useState<SignupFormValues | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // React Hook Form 설정 / mode: "onChange" - 입력할 때마다 유효성 검사 실행 (실시간 검사)
   const {
@@ -28,7 +29,10 @@ export default function Signup() {
     handleSubmit,  // 폼 제출 처리
     watch,         // 입력값 실시간 감시
     formState: { errors, isValid },  // errors: 에러 정보, isValid: 모든 필드 유효한지
-  } = useForm<SignupData>({ mode: "onChange" });
+  } = useForm<SignupFormValues>({
+    mode: "onChange",
+    resolver: zodResolver(signupSchema),
+  });
 
   // 아이디 입력값 (입력값을 실시간으로 가져옴)
   const userId = watch("userId");
@@ -62,7 +66,9 @@ export default function Signup() {
         setIdCheckMessage("이미 사용 중인 아이디입니다.");
       }
     } catch (e: unknown) {
-      console.error("아이디 중복 확인 실패:", e);
+      if (import.meta.env.DEV) {
+        console.error("아이디 중복 확인 실패:", e);
+      }
       setIdCheckStatus("사용불가");
       const message =
         e instanceof ApiError
@@ -74,24 +80,50 @@ export default function Signup() {
     }
   };  
 
-  // 회원가입 제출
-  const onSubmit = async (data: SignupData) => {
-    alert("회원가입을 진행하시겠습니까?");
+  const onSubmit = (data: SignupFormValues) => {
+    setPendingSignupData(data);
+    setShowSubmitConfirm(true);
+  };
+
+  const handleSubmitConfirm = async () => {
+    setShowSubmitConfirm(false);
+    if (!pendingSignupData) return;
+
+    setIsSubmitting(true);
     try {
-      const res = await signup(data);
-      console.log("회원가입 응답:", res);
-      alert("회원가입이 완료되었습니다!");
-      navigate("/auth/login");
+      await signup(pendingSignupData);
+      setShowSuccessConfirm(true);
     } catch (e: unknown) {
-      console.error("회원가입 실패:", e);
+      if (import.meta.env.DEV) {
+        console.error("회원가입 실패:", e);
+      }
       const message =
         e instanceof ApiError
           ? e.message
           : e instanceof Error
             ? e.message
             : "회원가입에 실패했습니다. 다시 시도해주세요.";
-      alert(message);
+      setErrorConfirmMessage(message);
+      setShowErrorConfirm(true);
+    } finally {
+      setIsSubmitting(false);
+      setPendingSignupData(null);
     }
+  };
+
+  const handleSubmitConfirmCancel = () => {
+    setShowSubmitConfirm(false);
+    setPendingSignupData(null);
+  };
+
+  const handleSuccessConfirm = () => {
+    setShowSuccessConfirm(false);
+    navigate("/auth/login");
+  };
+
+  const handleErrorConfirmClose = () => {
+    setShowErrorConfirm(false);
+    setErrorConfirmMessage("");
   };
 
   return (
@@ -123,13 +155,8 @@ export default function Signup() {
                 placeholder="아이디를 입력하세요"
                 maxLength={30}
                 aria-invalid={!!errors.userId} // 스크린 리더에게 유효하지 않음을 알림
-                {...register("userId", { //input을 제어할 수 있게 연결해주는 함수!
-                  required: "아이디를 입력해주세요.",  // 비어있으면 에러 + 메시지 표시
-                  pattern: { // 정규식 검사
-                    value: /^[a-zA-Z0-9]{1,30}$/,
-                    message: "영문, 숫자 1~30자만 가능합니다.",
-                  },
-                  onChange: () => { // 입력값이 바뀔 때마다 실행할 커스텀 함수
+                {...register("userId", {
+                  onChange: () => {
                     setIdCheckStatus("대기");
                     setIdCheckMessage("");
                   },
@@ -175,13 +202,7 @@ export default function Signup() {
               placeholder="이름을 입력하세요"
               maxLength={30}
               aria-invalid={!!errors.userName}
-              {...register("userName", {
-                required: "이름을 입력해주세요.",
-                pattern: {
-                  value: /^[a-zA-Z0-9가-힣\s.-]{1,30}$/,
-                  message: "영문, 숫자, 한글, 공백, 특수문자(.-) 1~30자만 가능합니다.",
-                },
-              })}
+              {...register("userName")}
             />
             {errors.userName && (
               <p className="message-area" role="alert">
@@ -204,13 +225,7 @@ export default function Signup() {
                   placeholder="test@gmail.com"
                   maxLength={64}
                   aria-invalid={!!errors.email}
-                  {...register("email", {
-                    required: "이메일을 입력해주세요.",
-                    pattern: {
-                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                      message: "올바른 이메일 형식이 아닙니다.",
-                    },
-                  })}
+                  {...register("email")}
                   />
             </div>
             {errors.email && (
@@ -234,13 +249,7 @@ export default function Signup() {
                 placeholder="비밀번호를 입력하세요"
                 maxLength={30}
                 aria-invalid={!!errors.password}
-                {...register("password", {
-                  required: "비밀번호를 입력해주세요.",
-                  pattern: {
-                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9!@.]{5,30}$/,
-                    message: "영문, 숫자 포함 5~30자 (특수문자 !@. 허용)",
-                  },
-                })}
+                {...register("password")}
               />
               <button
                 type="button"
@@ -264,9 +273,9 @@ export default function Signup() {
             type="submit"
             variant="primary"
             className="submit-button"
-            disabled={isSubmitDisabled}
+            disabled={isSubmitDisabled || isSubmitting}
           >
-            회원가입
+            {isSubmitting ? "가입 처리 중..." : "회원가입"}
           </Button>
         </form>
 
@@ -277,6 +286,34 @@ export default function Signup() {
           </a>
         </div>
       </div>
+
+      <Confirm
+        open={showSubmitConfirm}
+        title="회원가입"
+        message="회원가입을 진행하시겠습니까?"
+        confirmLabel="가입하기"
+        cancelLabel="취소"
+        onConfirm={handleSubmitConfirm}
+        onCancel={handleSubmitConfirmCancel}
+      />
+      <Confirm
+        open={showSuccessConfirm}
+        title="회원가입 완료"
+        message="회원가입이 완료되었습니다!"
+        confirmLabel="로그인하기"
+        cancelLabel="닫기"
+        onConfirm={handleSuccessConfirm}
+        onCancel={() => setShowSuccessConfirm(false)}
+      />
+      <Confirm
+        open={showErrorConfirm}
+        title="회원가입 실패"
+        message={errorConfirmMessage}
+        confirmLabel="확인"
+        cancelLabel="닫기"
+        onConfirm={handleErrorConfirmClose}
+        onCancel={handleErrorConfirmClose}
+      />
     </div>
   );
 }

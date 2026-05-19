@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate, type Location } from "react-router-dom";
+import { loginSchema, type LoginFormValues } from "@/schemas/auth";
 import { consumeLoginRedirectSession } from "@/api/auth/loginRedirectSession";
 import { ApiError } from "@/api/http";
 import { LOGIN_SUCCESS_CODE, login } from "@/api/auth";
 import { Button, PageHeader } from "@/components";
 import "@/pages/auth/login/Login.scss";
-
-interface LoginFormData {
-  userId: string;
-  password: string;
-}
 
 /** RequireAuth 등에서 로그인으로 보낼 때 넘기는 state */
 type LoginLocationState = { toast?: string; from?: Location };
@@ -72,7 +69,9 @@ export default function Login() {
     handleSubmit, // 폼 제출 처리
     watch, // 폼 필드 값 구독(변경 시 리렌더)
     formState: { errors }, // errors: 에러 정보
-  } = useForm<LoginFormData>();
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
 
   // 아이디/비밀번호 현재 값
   const userId = watch("userId");
@@ -80,7 +79,7 @@ export default function Login() {
   // 둘 다 한 글자 이상 입력 시 로그인 버튼 활성화 (공백만 있으면 비활성)
   const isFormFilled = Boolean(userId?.trim() && password?.trim());
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: LoginFormValues) => {
     setApiAlert(null);
     setIsLoading(true);
     try {
@@ -161,9 +160,7 @@ export default function Login() {
               id="userId"
               className={`input ${errors.userId ? "error" : ""}`}
               placeholder="아이디를 입력하세요"
-              {...register("userId", {
-                required: "아이디를 입력해주세요.",
-              })}
+              {...register("userId")}
             />
             {errors.userId && (
               <p className="message-area" role="alert">
@@ -183,9 +180,7 @@ export default function Login() {
                 id="password"
                 className={`input ${errors.password ? "error" : ""}`}
                 placeholder="비밀번호를 입력하세요"
-                {...register("password", {
-                  required: "비밀번호를 입력해주세요.",
-                })}
+                {...register("password")}
               />
               <button
                 type="button"

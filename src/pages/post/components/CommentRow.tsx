@@ -15,7 +15,6 @@ export type CommentRowProps = {
 
 /** 댓글 한 줄(루트·답글) — 레이아웃 + 본문 접기/펼치기 + 액션 */
 export function CommentRow({
-  variant,
   avatarLetter,
   commentKey, // 댓글 고유 ID
   author,
@@ -135,10 +134,7 @@ export function CommentRow({
         cancelLabel="취소"
         variant="danger"
         onCancel={() => setDeleteConfirmOpen(false)}
-        onConfirm={() => {
-          setDeleteConfirmOpen(false);
-          console.log("[댓글 삭제]", { commentId: commentKey, variant, 삭제: true });
-        }}
+        onConfirm={() => setDeleteConfirmOpen(false)}
       />
     </>
   );

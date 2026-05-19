@@ -29,12 +29,14 @@ export default function SidePanel({ onClose }: SidePanelProps) {
     CATEGORY_OPTIONS.find((c) => c.value === category)?.label ?? category;
 
   function handleSubmit() {
-    console.log({
-      category,
-      categoryLabel: selectedCategoryLabel,
-      date,
-      note,
-    });
+    if (import.meta.env.DEV) {
+      console.debug("[일정 입력] 제출(미연동)", {
+        category,
+        categoryLabel: selectedCategoryLabel,
+        date,
+        note,
+      });
+    }
   }
 
   return (
