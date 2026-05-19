@@ -14,12 +14,12 @@ const ACTION_ICONS: Record<PageAction, string> = {
   last: "»",
 };
 
-/** 액션별 title 매핑 */
-const ACTION_TITLES: Record<PageAction, string> = {
-  first: "첫 페이지",
-  prev: "이전 페이지",
-  next: "다음 페이지",
-  last: "마지막 페이지",
+/** 액션별 접근 가능 이름 (aria-label). title은 마우스 호버 보조용 */
+const ACTION_LABELS: Record<PageAction, string> = {
+  first: "첫 페이지로 이동",
+  prev: "이전 페이지로 이동",
+  next: "다음 페이지로 이동",
+  last: "마지막 페이지로 이동",
 };
 
 interface PageMoveButtonProps
@@ -34,15 +34,18 @@ function PageMoveButton({
   className,
   ...rest
 }: PageMoveButtonProps) {
+  const actionLabel = ACTION_LABELS[action];
+  const ariaLabel = disabled ? `${actionLabel}, 사용할 수 없음` : actionLabel;
+
   return (
     <Button
       type="button"
       variant="ghost"
       className={clsx("page-move-btn", `page-${action}`, disabled && "disabled", className)}
       disabled={disabled}
-      aria-label={ACTION_TITLES[action]}
-      title={ACTION_TITLES[action]}
       {...rest}
+      aria-label={ariaLabel}
+      title={actionLabel}
     >
       <span aria-hidden>{ACTION_ICONS[action]}</span>
     </Button>

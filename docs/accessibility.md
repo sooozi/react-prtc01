@@ -14,6 +14,7 @@
 | 모달 | 포커스 트랩, ESC, `aria-modal` | `Confirm`, `useFloatingLayer` (일정 시트 등) |
 | 툴팁 | `role="tooltip"`, `aria-describedby`, 포커스·터치 | `Tooltip` — hover + focus + 터치(비인터랙티브 영역) |
 | 달력 | `aria-label`(이전/다음 달), `role="switch"`·`aria-checked`(주 시작) | `MonthCalendar` |
+| 페이지네이션 | `aria-label`로 이동 동작 설명 (`title`은 호버 보조) | `Pagination` `PageMoveButton` |
 | 정적 검사 | JSX a11y 규칙 | `eslint-plugin-jsx-a11y` (`yarn lint`) |
 | 런타임 검사 (DEV) | axe 위반 콘솔 로그 | `src/bootstrapAxe.ts` |
 | 컴포넌트 검사 | Storybook Accessibility 패널 | `@storybook/addon-a11y` |
