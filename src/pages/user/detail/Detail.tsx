@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { selectUserDetail, type UserItem } from "@/api/user";
 import { Button, LoadingState, PageHeader } from "@/components";
+import { pickProfileImage } from "@/pages/user/detail/profileImages";
 import "@/pages/post/detail/Detail.scss";
 import "./Detail.scss";
 
@@ -14,12 +15,10 @@ export default function UserDetail() {
 
   const userId = searchParams.get("userId")?.trim() ?? "";
   const invalidId = !userId;
+  const profileImageSrc = useMemo(() => pickProfileImage(userId), [userId]);
 
   useEffect(() => {
-    if (invalidId) {
-      setLoading(false);
-      return;
-    }
+    if (invalidId) return;
 
     let cancelled = false;
 
@@ -78,21 +77,23 @@ export default function UserDetail() {
         ) : user ? (
           <>
             <div className="user-detail-hero">
-              <div className="detail-meta">
-                <span className="detail-id">{user.userId}</span>
-                <span className="detail-author">{user.userSe}</span>
-                <span className="detail-date">{user.userJbgdNm}</span>
+              <img
+                className="user-detail-avatar"
+                src={profileImageSrc}
+                alt=""
+                width={96}
+                height={96}
+                decoding="async"
+              />
+              <div className="user-detail-hero__body">
+                <div className="detail-meta">
+                  <span className="detail-id">{user.userId}</span>
+                  <span className="detail-author">{user.userSe}</span>
+                  <span className="detail-date">{user.userJbgdNm}</span>
+                </div>
+                <h2 className="detail-title">{user.userFlnm}</h2>
               </div>
-              <h2 className="detail-title">{user.userFlnm}</h2>
             </div>
-
-            <p className="user-detail-lead">
-              <strong>{user.userFlnm}</strong>님은 <strong>{user.userJbgdNm}</strong> 직급의{" "}
-              <strong>{user.userSe}</strong> 계정입니다.
-              {user.eml
-                ? " 아래 연락처로 메일을 보낼 수 있습니다."
-                : " 등록된 이메일이 없어 메일 연락은 불가합니다."}
-            </p>
 
             <div className="user-detail-spec-wrap">
               <h3 className="user-detail-subheading">상세 정보</h3>
