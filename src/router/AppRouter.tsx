@@ -1,32 +1,26 @@
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import Home from "@/pages/home/Home";
 import About from "@/pages/about/About";
 import UserList from "@/pages/user/list/List";
 import UserDetail from "@/pages/user/detail/Detail";
-import List from "@/pages/post/list/List";
-import Detail from "@/pages/post/detail/Detail";
 import MyPage from "@/pages/user/my-page/MyPage";
-import Schedule from "@/pages/schedule/Schedule";
 import Forbidden from "@/pages/errors/forbidden/Forbidden";
 import NotFound from "@/pages/errors/not-found/NotFound";
 import Login from "@/pages/auth/login/Login";
 import Signup from "@/pages/auth/signup/Signup";
-import { Layout, LoadingState } from "@/components";
+import { Layout } from "@/components";
 import RequireAuth from "@/router/RequireAuth";
 import RouteHeadSync from "@/router/RouteHeadSync";
+import LazyRoute from "@/router/LazyRoute";
 
-const Write = lazy(() => import("@/pages/post/write/Write"));
-const Update = lazy(() => import("@/pages/post/update/Update"));
-
-function LazyPage({ children }: { children: React.ReactNode }) {
-  return (
-    <Suspense fallback={<LoadingState message="불러오는 중..." variant="compact" />}>
-      {children}
-    </Suspense>
-  );
-}
+/** 무거운 페이지·Quill 등 — 방문 시점에 청크 로드 */
+const PostList = lazy(() => import("@/pages/post/list/List"));
+const PostDetail = lazy(() => import("@/pages/post/detail/Detail"));
+const PostWrite = lazy(() => import("@/pages/post/write/Write"));
+const PostUpdate = lazy(() => import("@/pages/post/update/Update"));
+const Schedule = lazy(() => import("@/pages/schedule/Schedule"));
 
 export default function AppRouter() {
   return (
@@ -49,26 +43,47 @@ export default function AppRouter() {
 
             {/* 로그인 필요 — 토큰 없으면 RequireAuth에서 /auth/login 으로 이동 */}
             <Route element={<RequireAuth />}>
-              <Route path="/post/list" element={<List />} />
-              <Route path="/post/detail" element={<Detail />} />
+              <Route
+                path="/post/list"
+                element={
+                  <LazyRoute fallback="post-list">
+                    <PostList />
+                  </LazyRoute>
+                }
+              />
+              <Route
+                path="/post/detail"
+                element={
+                  <LazyRoute fallback="post-detail">
+                    <PostDetail />
+                  </LazyRoute>
+                }
+              />
               <Route
                 path="/post/update"
                 element={
-                  <LazyPage>
-                    <Update />
-                  </LazyPage>
+                  <LazyRoute fallback="rich-text">
+                    <PostUpdate />
+                  </LazyRoute>
                 }
               />
               <Route
                 path="/post/write"
                 element={
-                  <LazyPage>
-                    <Write />
-                  </LazyPage>
+                  <LazyRoute fallback="rich-text">
+                    <PostWrite />
+                  </LazyRoute>
                 }
               />
               <Route path="/user/mypage" element={<MyPage />} />
-              <Route path="/schedule" element={<Schedule />} />
+              <Route
+                path="/schedule"
+                element={
+                  <LazyRoute fallback="schedule">
+                    <Schedule />
+                  </LazyRoute>
+                }
+              />
             </Route>
 
             <Route path="*" element={<Navigate to="/not-found" replace />} />

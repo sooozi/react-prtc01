@@ -189,6 +189,9 @@ src/
 │           ├── calendar/       # MonthCalendar, CalendarPickerPopover
 │           └── side-panel/     # SidePanel
 ├── router/
+│   ├── AppRouter.tsx           # lazy 라우트 + LazyRoute
+│   └── LazyRoute.tsx           # Suspense + 스켈레톤 fallback
+├── components/RouteSkeleton/   # 라우트 lazy 로딩용 스켈레톤
 ├── styles/
 ├── utils/
 ├── bootstrapAxe.ts
@@ -243,6 +246,7 @@ src/
 - **다크 모드**: `data-theme`, `localStorage.theme`, `_color.scss` 변수.
 - **문서 제목·접근성 보조**: `RouteHeadSync` + `routeDocumentMeta` — `<title>` 갱신, 라우트 변경 시 `aria-live="polite"` 짧은 안내.
 - **레이아웃**: 본문으로 건너뛰기 링크, `ApiErrorBar`, `Layout`의 `ErrorBoundary`(페이지 렌더 크래시 시 폴백 UI), 스크롤 시 헤더 `inert` 처리 등.
+- **코드 스플리팅**: 게시판 목록·상세·작성·수정(Quill)·일정은 `React.lazy` + `LazyRoute`(페이지별 `RouteSkeleton` fallback). 홈·로그인 등 가벼운 라우트는 즉시 로드.
 - **페이지 헤더**: `PageHeader`로 화면당 대표 문구와 **단일 `h1`** 패턴 통일 (상세·목록 포함).
 - **게시판**: 검색(제목·등록자 ID·이름), 정렬·페이지네이션, 표/카드 반응, 상세 첨부·**댓글 UI(목 데이터·무한 스크롤 데모)**, 이미지 첨부·순서.
 - **일정**: `MonthCalendar`(공휴일 이름), `SidePanel` 입력 UI, 좁은 뷰에서 하단 시트(`useFloatingLayer`, 닫기·스크림·Esc).

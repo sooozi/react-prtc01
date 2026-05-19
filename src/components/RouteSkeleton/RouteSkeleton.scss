@@ -1,0 +1,219 @@
+@use "@/styles/common-tools" as *;
+@use "@/styles/breakpoints" as bp;
+@use "@/styles/variables" as v;
+
+@keyframes route-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.route-skeleton__block {
+  display: block;
+  border-radius: v.rad(p8);
+  background: color-mix(in srgb, var(--color-border) 45%, var(--color-bg-subtle));
+  animation: route-skeleton-pulse 1.35s ease-in-out infinite;
+}
+
+.route-skeleton {
+  @extend %page-container;
+}
+
+.route-skeleton__header {
+  margin-bottom: v.space(xl);
+}
+
+.route-skeleton__badge {
+  width: 6.5rem;
+  height: 1.75rem;
+  border-radius: v.rad(pill);
+  margin-bottom: v.space(md);
+}
+
+.route-skeleton__title {
+  width: min(12rem, 55%);
+  height: 2rem;
+  margin-bottom: v.space(sm);
+}
+
+.route-skeleton__subtitle {
+  width: min(10rem, 40%);
+  height: 1rem;
+}
+
+.route-skeleton--post-list .route-skeleton__search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.space(md);
+  margin-bottom: v.space(xl);
+  padding: v.space(lg);
+  border-radius: v.rad(p16);
+  background: var(--color-card);
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+}
+
+.route-skeleton--post-list .route-skeleton__search-field {
+  flex: 1 1 10rem;
+  height: 2.75rem;
+}
+
+.route-skeleton--post-list .route-skeleton__search-btn {
+  width: 4.5rem;
+  height: 2.25rem;
+  margin-left: auto;
+}
+
+.route-skeleton--post-list .route-skeleton__table {
+  border-radius: v.rad(p16);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  background: var(--color-card);
+}
+
+.route-skeleton--post-list .route-skeleton__table-head {
+  height: 2.75rem;
+  border-radius: 0;
+}
+
+.route-skeleton--post-list .route-skeleton__row {
+  height: 3rem;
+  border-radius: 0;
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.route-skeleton--schedule .route-skeleton__workspace {
+  display: grid;
+  grid-template-columns: 1fr minmax(min(100%, 260px), 340px);
+  gap: 0;
+  border-radius: v.rad(p16);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  background: var(--color-card);
+
+  @include bp.below(bp.$lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.route-skeleton--schedule .route-skeleton__calendar {
+  padding: v.space(xl);
+}
+
+.route-skeleton--schedule .route-skeleton__cal-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: v.space(md);
+  margin-bottom: v.space(lg);
+}
+
+.route-skeleton--schedule .route-skeleton__cal-toolbar-btn {
+  width: 5rem;
+  height: 2.25rem;
+}
+
+.route-skeleton--schedule .route-skeleton__cal-title {
+  width: 8rem;
+  height: 2rem;
+  margin: 0 auto;
+}
+
+.route-skeleton--schedule .route-skeleton__cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: v.space(sm);
+}
+
+.route-skeleton--schedule .route-skeleton__cal-cell {
+  aspect-ratio: 1;
+  min-height: 2.5rem;
+}
+
+.route-skeleton--schedule .route-skeleton__panel {
+  min-height: 20rem;
+  border-left: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
+  padding: v.space(xl);
+
+  @include bp.below(bp.$lg) {
+    border-left: none;
+    border-top: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
+    min-height: 12rem;
+  }
+}
+
+.route-skeleton--post-detail .route-skeleton__actions {
+  display: flex;
+  gap: v.space(md);
+  margin-bottom: v.space(xl);
+}
+
+.route-skeleton--post-detail .route-skeleton__action-btn {
+  width: 5.5rem;
+  height: 2.25rem;
+}
+
+.route-skeleton--post-detail .route-skeleton__card {
+  padding: v.space(xl);
+  border-radius: v.rad(p16);
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  background: var(--color-card);
+  margin-bottom: v.space(xl);
+}
+
+.route-skeleton--post-detail .route-skeleton__meta-line {
+  height: 1rem;
+  margin-bottom: v.space(md);
+
+  &--short {
+    width: 40%;
+  }
+
+  &--medium {
+    width: 65%;
+  }
+}
+
+.route-skeleton--post-detail .route-skeleton__body-line {
+  height: 0.875rem;
+  margin-bottom: v.space(sm);
+
+  &:nth-child(odd) {
+    width: 100%;
+  }
+
+  &:nth-child(even) {
+    width: 92%;
+  }
+}
+
+.route-skeleton--rich-text .route-skeleton__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.space(sm);
+  margin-bottom: v.space(md);
+  padding: v.space(md);
+  border-radius: v.rad(p12) v.rad(p12) 0 0;
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  border-bottom: none;
+  background: var(--color-card);
+}
+
+.route-skeleton--rich-text .route-skeleton__tool {
+  width: 2rem;
+  height: 2rem;
+  border-radius: v.rad(p8);
+}
+
+.route-skeleton--rich-text .route-skeleton__editor {
+  height: min(420px, 50vh);
+  border-radius: 0 0 v.rad(p12) v.rad(p12);
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+}
