@@ -13,7 +13,7 @@ export const PROFILE_IMAGE_PATHS = [
 
 /** seed(예: userId)마다 같은 이미지가 나오도록 선택 */
 export function pickProfileImage(seed: string): string {
-  if (!seed || PROFILE_IMAGE_PATHS.length === 0) return PROFILE_IMAGE_PATHS[0];
+  if (!seed) return PROFILE_IMAGE_PATHS[0];
 
   let hash = 0;
   for (let i = 0; i < seed.length; i++) {
