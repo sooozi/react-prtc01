@@ -8,16 +8,6 @@ import {
   TableSortTh,
 } from './TableSortHeader';
 
-const meta = {
-  title: 'Components/TableSortHeader',
-  component: TableSortTh,
-  tags: ['autodocs'],
-  parameters: { layout: 'padded' },
-} satisfies Meta<typeof TableSortTh>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
 function SortThInTable(props: ComponentProps<typeof TableSortTh>) {
   return (
     <table className="table" style={{ width: '100%', maxWidth: 480 }}>
@@ -32,44 +22,58 @@ function SortThInTable(props: ComponentProps<typeof TableSortTh>) {
   );
 }
 
+const meta = {
+  title: 'Components/TableSortHeader',
+  component: TableSortTh,
+  tags: ['autodocs'],
+  parameters: { layout: 'padded' },
+  render: (args) => <SortThInTable {...args} />,
+} satisfies Meta<typeof TableSortTh>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
 export const Neutral: Story = {
-  render: () => (
-    <SortThInTable align="start" active={false}>
-      제목
-    </SortThInTable>
-  ),
+  args: {
+    align: 'start',
+    active: false,
+    children: '제목',
+  },
 };
 
 export const ActiveDesc: Story = {
-  render: () => (
-    <SortThInTable align="start" active sortDirection="DESC">
-      등록일
-    </SortThInTable>
-  ),
+  args: {
+    align: 'start',
+    active: true,
+    sortDirection: 'DESC',
+    children: '등록일',
+  },
 };
 
 export const ActiveAsc: Story = {
-  render: () => (
-    <SortThInTable align="center" active sortDirection="ASC">
-      조회수
-    </SortThInTable>
-  ),
+  args: {
+    align: 'center',
+    active: true,
+    sortDirection: 'ASC',
+    children: '조회수',
+  },
 };
 
 export const WithIconButton: Story = {
-  render: () => (
-    <SortThInTable
-      align="start"
-      active={false}
-      onIconClick={fn()}
-      iconButtonAriaLabel="제목 정렬"
-    >
-      제목
-    </SortThInTable>
-  ),
+  args: {
+    align: 'start',
+    active: false,
+    children: '제목',
+    onIconClick: fn(),
+    iconButtonAriaLabel: '제목 정렬',
+  },
 };
 
 export const Icons: Story = {
+  args: {
+    align: 'start',
+    children: '',
+  },
   render: () => (
     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
       <TableSortIconNeutral />
