@@ -126,7 +126,7 @@
   min-height: 1.625rem;
   padding: v.space(xxs) v.space(md);
   font-size: v.fs(xs);
-  line-height: 1.2;
+  line-height: 1;
   border-radius: v.rad(p8);
 
   @include bp.below(bp.$md) {

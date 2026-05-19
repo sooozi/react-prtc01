@@ -189,13 +189,35 @@
   }
 }
 
-/* 변형별 기본 테두리 뒤에 공통 포커스 1px 실선 (채움 버튼은 대비용 밝은 테두리) */
+/* outline 대신 테두리·box-shadow로 포커스 (채움 버튼은 명도 대비 링) */
 .btn:focus-visible:not(:disabled):not([aria-disabled="true"]) {
   outline: none;
-  border: 1px solid var(--color-primary);
 }
 
-.btn--primary:focus-visible:not(:disabled):not([aria-disabled="true"]),
+.btn--secondary:focus-visible:not(:disabled):not([aria-disabled="true"]),
+.btn--outlinePrimary:focus-visible:not(:disabled):not([aria-disabled="true"]) {
+  border-color: var(--color-primary);
+  @include sh.focus-ring-primary-3;
+}
+
+.btn--primary:focus-visible:not(:disabled):not([aria-disabled="true"]) {
+  border-color: transparent;
+  @include sh.btn-filled-focus-ring(
+    var(--color-btn-primary-focus-ring),
+    0 2px 10px var(--color-primary-shadow)
+  );
+}
+
 .btn--danger:focus-visible:not(:disabled):not([aria-disabled="true"]) {
-  border-color: color-mix(in srgb, var(--color-static-white) 82%, transparent);
+  border-color: transparent;
+  @include sh.btn-filled-focus-ring(
+    var(--color-btn-danger-focus-ring),
+    0 2px 10px var(--color-error-border)
+  );
+}
+
+.btn--primaryInverse:focus-visible:not(:disabled):not([aria-disabled="true"]),
+.btn--secondaryInverse:focus-visible:not(:disabled):not([aria-disabled="true"]) {
+  outline: 2px solid var(--color-btn-primary-focus-ring);
+  outline-offset: 2px;
 }

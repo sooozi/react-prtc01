@@ -119,6 +119,13 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 28%, transparent);
 }
 
+@mixin btn-filled-focus-ring($ring-color, $elevation-shadow: none) {
+  box-shadow:
+    0 0 0 2px var(--color-btn-focus-gap),
+    0 0 0 4px #{$ring-color},
+    $elevation-shadow;
+}
+
 @mixin input-autofill-mask {
   -webkit-box-shadow: 0 0 0 1000px var(--color-input-bg) inset;
   box-shadow: 0 0 0 1000px var(--color-input-bg) inset;

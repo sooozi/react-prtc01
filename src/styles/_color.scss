@@ -101,6 +101,12 @@
   /* Common “on-color” / inverse surfaces */
   --color-text-on-primary: var(--color-static-white);
   --color-surface-inverse: var(--color-static-white);
+
+  /* 채움 버튼 키보드 포커스 — 각 배경색·페이지 배경과 명도 대비되는 링 색 */
+  --color-btn-focus-gap: var(--color-bg);
+  --color-btn-primary-focus-ring: #facc15;
+  /* danger: 흰 페이지 위에서도 보이도록 진한 링 (빨간 버튼 위에서도 대비됨) */
+  --color-btn-danger-focus-ring: #0f172a;
 }
 
 [data-theme="dark"] {
@@ -181,4 +187,8 @@
   /* Common “on-color” / inverse surfaces */
   --color-text-on-primary: var(--color-static-white);
   --color-surface-inverse: var(--color-static-white);
+
+  --color-btn-focus-gap: var(--color-bg);
+  --color-btn-primary-focus-ring: #fde047;
+  --color-btn-danger-focus-ring: var(--color-static-white);
 }
