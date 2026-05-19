@@ -25,6 +25,8 @@ export { default as PageHeader } from "@/components/PageHeader/PageHeader";
 export type { PageHeaderProps, PageHeaderVariant } from "@/components/PageHeader/PageHeader";
 export { default as Button } from "@/components/Button/Button";
 export { default as Confirm } from "@/components/Confirm/Confirm";
+export { ErrorBoundary, ErrorFallback } from "@/components/ErrorBoundary";
+export type { ErrorBoundaryProps, ErrorFallbackProps } from "@/components/ErrorBoundary";
 export { default as LoadingState } from "@/components/LoadingState/LoadingState";
 export { default as Header } from "@/components/Layout/Header/Header";
 export { default as Footer } from "@/components/Layout/Footer/Footer";

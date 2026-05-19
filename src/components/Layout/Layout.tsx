@@ -1,8 +1,19 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary";
 import Header from "@/components/Layout/Header/Header";
 import Footer from "@/components/Layout/Footer/Footer";
 import ApiErrorBar from "@/components/ApiErrorBar/ApiErrorBar";
 import "@/components/Layout/Layout.scss";
+
+/** main 안 페이지 영역 — 경로 변경 시 Error Boundary 상태 초기화 */
+function MainOutlet() {
+  const { pathname } = useLocation();
+  return (
+    <ErrorBoundary resetKey={pathname}>
+      <Outlet />
+    </ErrorBoundary>
+  );
+}
 
 /**
  * 공통 레이아웃 컴포넌트
@@ -23,7 +34,7 @@ export default function Layout() {
       <ApiErrorBar />
 
       <main id="main-content" className="layout-main" tabIndex={-1}>
-        <Outlet />
+        <MainOutlet />
       </main>
 
       <Footer />
