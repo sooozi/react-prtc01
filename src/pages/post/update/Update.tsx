@@ -14,12 +14,24 @@ import {
   RichTextEditor,
 } from "@/components";
 import type { ImageFileUnifiedRow } from "@/components";
+import { formDescribedBy } from "@/lib/a11y/formDescribedBy";
 import {
   listReturnPathFromFromQuery,
   postDetailPath,
 } from "@/lib/post/postDetailFromQuery";
+import {
+  clearPostFormFieldError,
+  type PostFormFieldErrors,
+} from "@/lib/post/postFormFieldErrors";
 import "@/pages/post/detail/Detail.scss";
 import "@/pages/post/update/Update.scss";
+
+const FIELD_IDS = {
+  titleHint: "post-update-title-hint",
+  titleError: "post-update-title-error",
+  contentError: "post-update-content-error",
+  attachError: "post-update-attach-error",
+} as const;
 
 export default function Update() {
   const navigate = useNavigate();
@@ -37,7 +49,7 @@ export default function Update() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<PostFormFieldErrors>({});
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [showSaveConfirm, setShowSaveConfirm] = useState(false);
@@ -91,25 +103,26 @@ export default function Update() {
   // 저장 버튼 클릭 시 처리
   const handleSaveConfirm = async () => {
     setShowSaveConfirm(false);
+    setFieldErrors({});
+
     if (!title.trim()) {
-      setError("제목을 입력해주세요.");
+      setFieldErrors({ title: "제목을 입력해주세요." });
       return;
     }
     if (isQuillContentEmpty(content)) {
-      setError("내용을 입력해주세요.");
+      setFieldErrors({ content: "내용을 입력해주세요." });
       return;
     }
     if (
-      editAttachmentRows.some( // 새로 추가한 첨부 파일 유효성 검사
+      editAttachmentRows.some(
         (r) => r.kind === "local" && !isAttachmentFileNameWithinLimit(r.file.name)
       )
     ) {
-      setError(
-        `첨부 파일명(확장자 포함)은 ${MAX_ATTACHMENT_FILENAME_LENGTH}자 이하여야 합니다.`
-      );
+      setFieldErrors({
+        attach: `첨부 파일명(확장자 포함)은 ${MAX_ATTACHMENT_FILENAME_LENGTH}자 이하여야 합니다.`,
+      });
       return;
     }
-    setError("");
     setSubmitLoading(true);
     try {
       const initialIds = initialServerFileIdsRef.current; // 로드 시점의 서버 fileId 목록
@@ -157,7 +170,7 @@ export default function Update() {
 
   const showLoading = loading && !invalidId;
   const missingAfterLoad = !showLoading && !post && !invalidId;
-  const showErrorSection = invalidId || Boolean(error) || missingAfterLoad;
+  const showErrorSection = invalidId || missingAfterLoad;
 
   return (
     <div className="post-detail-page">
@@ -189,7 +202,9 @@ export default function Update() {
             <span className="error-message">
               {invalidId
                 ? "잘못된 게시글 번호입니다."
-                : error || (missingAfterLoad ? "게시글을 불러오지 못했습니다." : "")}
+                : missingAfterLoad
+                  ? "게시글을 불러오지 못했습니다."
+                  : ""}
             </span>
           </div>
         ) : post ? (
@@ -202,48 +217,89 @@ export default function Update() {
               <span className="detail-author">{post.rgtrInfo ?? "-"}</span>
               <span className="detail-date">{post.regDt}</span>
             </div>
-            <div className="post-form-group">
-              <label className="post-form-label" htmlFor="update-title">
-                제목
-              </label>
+            <div className="post-form-group post-form-group--stacked">
+              <div className="post-form-label-row">
+                <label className="post-form-label" htmlFor="update-title">
+                  제목
+                </label>
+                <span id={FIELD_IDS.titleHint} className="post-form-hint">
+                  100자 이내
+                </span>
+              </div>
               <input
                 id="update-title"
                 type="text"
-                className="post-form-control"
+                className={`post-form-control${fieldErrors.title ? " error" : ""}`}
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                  setFieldErrors((prev) => clearPostFormFieldError(prev, "title"));
+                }}
                 placeholder="제목"
+                maxLength={100}
+                aria-invalid={!!fieldErrors.title}
+                aria-describedby={formDescribedBy(
+                  FIELD_IDS.titleHint,
+                  fieldErrors.title && FIELD_IDS.titleError,
+                )}
               />
+              {fieldErrors.title ? (
+                <p id={FIELD_IDS.titleError} className="post-form-field-error error-message" role="alert">
+                  {fieldErrors.title}
+                </p>
+              ) : null}
             </div>
-            <div className="post-form-group">
+            <div className="post-form-group post-form-group--stacked">
               <label className="post-form-label" id="update-content-label" htmlFor="update-content">
                 내용
               </label>
               <RichTextEditor
                 id="update-content"
+                labelledBy="update-content-label"
+                describedBy={formDescribedBy(
+                  fieldErrors.content && FIELD_IDS.contentError,
+                )}
+                invalid={!!fieldErrors.content}
                 value={content}
-                onChange={setContent}
+                onChange={(value) => {
+                  setContent(value);
+                  setFieldErrors((prev) => clearPostFormFieldError(prev, "content"));
+                }}
                 placeholder="내용"
               />
+              {fieldErrors.content ? (
+                <p id={FIELD_IDS.contentError} className="post-form-field-error error-message" role="alert">
+                  {fieldErrors.content}
+                </p>
+              ) : null}
             </div>
 
-            <div className="post-form-group post-form-group--stacked">
+            <div
+              className="post-form-group post-form-group--stacked"
+              role="group"
+              aria-labelledby="post-update-attach-heading"
+              aria-describedby={formDescribedBy(
+                fieldErrors.attach && FIELD_IDS.attachError,
+              )}
+            >
               <h2 className="post-form-label" id="post-update-attach-heading">
                 첨부파일
               </h2>
               <ImageFileAttachField
                 fileInputId="update-post-file"
-                fileInputRef={fileInputRef} // 파일 입력 요소 참조
-                unifiedRows={editAttachmentRows} // 첨부 파일 목록
-                onUnifiedRowsChange={setEditAttachmentRows} // 첨부 파일 목록 변경 시 처리
+                fileInputRef={fileInputRef}
+                unifiedRows={editAttachmentRows}
+                onUnifiedRowsChange={(rows) => {
+                  setEditAttachmentRows(rows);
+                  setFieldErrors((prev) => clearPostFormFieldError(prev, "attach"));
+                }}
               />
+              {fieldErrors.attach ? (
+                <p id={FIELD_IDS.attachError} className="post-form-field-error error-message" role="alert">
+                  {fieldErrors.attach}
+                </p>
+              ) : null}
             </div>
-
-            {error && (
-              <div className="post-form-alert post-form-alert--after" role="alert">
-                {error}
-              </div>
-            )}
           </div>
         ) : null}
       </div>

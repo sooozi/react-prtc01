@@ -16,6 +16,19 @@
   }
 }
 
+.post-form-label-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: v.space(xs) v.space(md);
+}
+
+.post-form-hint {
+  font-size: v.fs(sm);
+  color: var(--color-text-muted);
+}
+
 .post-form-label {
   @include form.form-label;
   margin-bottom: 0;
@@ -37,4 +50,9 @@
   margin-bottom: 0;
   margin-top: v.space(lg);
   border-radius: v.rad(p10);
+}
+
+.post-form-field-error {
+  margin: v.space(xs) 0 0;
+  font-size: v.fs(sm);
 }

@@ -12,40 +12,49 @@ import {
   RichTextEditor,
 } from "@/components";
 import type { FileWithId } from "@/components";
+import { formDescribedBy } from "@/lib/a11y/formDescribedBy";
+import {
+  clearPostFormFieldError,
+  type PostFormFieldErrors,
+} from "@/lib/post/postFormFieldErrors";
 import "@/pages/post/write/Write.scss";
+
+const FIELD_IDS = {
+  titleHint: "post-write-title-hint",
+  titleError: "post-write-title-error",
+  contentError: "post-write-content-error",
+  attachError: "post-write-attach-error",
+} as const;
 
 export default function Write() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [attachFileItems, setAttachFileItems] = useState<FileWithId[]>([]);
-  const fileInputRef = useRef<HTMLInputElement>(null); // 파일 입력 요소 참조
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<PostFormFieldErrors>({});
 
-  // 등록 버튼 클릭 시 처리
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    // 제목 유효성 검사
+    setFieldErrors({});
+
     if (!title.trim()) {
-      setError("제목을 입력해주세요.");
+      setFieldErrors({ title: "제목을 입력해주세요." });
       return;
     }
-    // 내용 유효성 검사 (Quill 빈 HTML: `<p><br></p>` 등)
     if (isQuillContentEmpty(content)) {
-      setError("내용을 입력해주세요.");
+      setFieldErrors({ content: "내용을 입력해주세요." });
       return;
     }
-    // 첨부 파일 유효성 검사
     if (attachFileItems.some((i) => !isAttachmentFileNameWithinLimit(i.file.name))) {
-      setError(
-        `첨부 파일명(확장자 포함)은 ${MAX_ATTACHMENT_FILENAME_LENGTH}자 이하여야 합니다.`
-      );
+      setFieldErrors({
+        attach: `첨부 파일명(확장자 포함)은 ${MAX_ATTACHMENT_FILENAME_LENGTH}자 이하여야 합니다.`,
+      });
       return;
     }
 
-    setLoading(true); // 로딩 상태 설정
+    setLoading(true);
     try {
       const files = itemsToFiles(attachFileItems);
       const res = await createPost({
@@ -54,14 +63,14 @@ export default function Write() {
         attachFiles: files.length > 0 ? files : undefined,
         attachFileOrderList:
           files.length > 0
-            ? attachFileItems.map((item) => item.file.name) // 첨부 파일 이름 목록 배열
+            ? attachFileItems.map((item) => item.file.name)
             : undefined,
       });
       if (res) {
-        navigate("/post/list", { replace: true }); // 게시글 목록 페이지로 이동
+        navigate("/post/list", { replace: true });
       }
     } finally {
-      setLoading(false); // 로딩 상태 초기화
+      setLoading(false);
     }
   };
 
@@ -78,25 +87,38 @@ export default function Write() {
         <h2 id="post-write-form-heading" className="visually-hidden">
           게시글 입력
         </h2>
-        {error && (
-          <div className="post-form-alert" role="alert">
-            {error}
-          </div>
-        )}
 
         <div className="post-form-group post-form-group--stacked">
-          <label className="post-form-label" htmlFor="post-title">
-            제목
-          </label>
+          <div className="post-form-label-row">
+            <label className="post-form-label" htmlFor="post-title">
+              제목
+            </label>
+            <span id={FIELD_IDS.titleHint} className="post-form-hint">
+              100자 이내
+            </span>
+          </div>
           <input
             id="post-title"
             type="text"
-            className="post-form-control"
+            className={`post-form-control${fieldErrors.title ? " error" : ""}`}
             placeholder="제목을 입력하세요 (100자 이내)"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setFieldErrors((prev) => clearPostFormFieldError(prev, "title"));
+            }}
             maxLength={100}
+            aria-invalid={!!fieldErrors.title}
+            aria-describedby={formDescribedBy(
+              FIELD_IDS.titleHint,
+              fieldErrors.title && FIELD_IDS.titleError,
+            )}
           />
+          {fieldErrors.title ? (
+            <p id={FIELD_IDS.titleError} className="post-form-field-error error-message" role="alert">
+              {fieldErrors.title}
+            </p>
+          ) : null}
         </div>
 
         <div className="post-form-group post-form-group--stacked">
@@ -105,22 +127,50 @@ export default function Write() {
           </label>
           <RichTextEditor
             id="post-content"
+            labelledBy="post-content-label"
+            describedBy={formDescribedBy(
+              fieldErrors.content && FIELD_IDS.contentError,
+            )}
+            invalid={!!fieldErrors.content}
             value={content}
-            onChange={setContent}
+            onChange={(value) => {
+              setContent(value);
+              setFieldErrors((prev) => clearPostFormFieldError(prev, "content"));
+            }}
             placeholder="내용을 입력하세요"
           />
+          {fieldErrors.content ? (
+            <p id={FIELD_IDS.contentError} className="post-form-field-error error-message" role="alert">
+              {fieldErrors.content}
+            </p>
+          ) : null}
         </div>
 
-        <div className="post-form-group post-form-group--stacked">
+        <div
+          className="post-form-group post-form-group--stacked"
+          role="group"
+          aria-labelledby="post-attach-heading"
+          aria-describedby={formDescribedBy(
+            fieldErrors.attach && FIELD_IDS.attachError,
+          )}
+        >
           <h2 className="post-form-label" id="post-attach-heading">
             첨부파일
           </h2>
           <ImageFileAttachField
             fileInputId="post-file"
-            items={attachFileItems} // 첨부된 이미지 목록
-            onChange={setAttachFileItems} // 첨부된 이미지 목록 변경
-            fileInputRef={fileInputRef} // 파일 입력 요소 참조
+            items={attachFileItems}
+            onChange={(items) => {
+              setAttachFileItems(items);
+              setFieldErrors((prev) => clearPostFormFieldError(prev, "attach"));
+            }}
+            fileInputRef={fileInputRef}
           />
+          {fieldErrors.attach ? (
+            <p id={FIELD_IDS.attachError} className="post-form-field-error error-message" role="alert">
+              {fieldErrors.attach}
+            </p>
+          ) : null}
         </div>
 
         <div className="board-write-actions">

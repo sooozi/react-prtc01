@@ -2,6 +2,10 @@
 @use "@/styles/variables" as v;
 
 .rich-text-editor {
+  &--invalid .ql-container.ql-snow {
+    border-color: var(--color-error);
+  }
+
   .ql-toolbar.ql-snow {
     border-radius: v.rad(p12) v.rad(p12) 0 0;
     border-color: var(--color-input-border);

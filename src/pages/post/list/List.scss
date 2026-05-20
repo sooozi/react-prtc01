@@ -361,6 +361,7 @@
 
 .board-page .tr-clickable {
   cursor: pointer;
+  @include clickable-table-row-focus;
 }
 
 .board-page .td-title {
