@@ -359,34 +359,19 @@
   text-align: center;
 }
 
+.board-page .tr-clickable {
+  cursor: pointer;
+}
+
 .board-page .td-title {
   font-weight: v.fw(medium);
-  color: var(--color-text-heading);
 
-  .list-title-link {
+  .list-title-text {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     min-width: 0;
-    font-weight: inherit;
-    color: inherit;
-    text-decoration: none;
-    @include v.transition-channels((color, text-decoration-color), fast, default);
-
-    &:hover {
-      color: var(--color-primary);
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    &:focus-visible {
-      color: var(--color-primary);
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    @include focus-ring-primary(2px);
   }
 }
 

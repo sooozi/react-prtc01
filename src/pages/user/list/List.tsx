@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { selectUserList, type UserItem } from "@/api/user";
 import { LoadingState, PageHeader, Pagination } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
@@ -53,6 +53,9 @@ export default function UserList() {
 
   const startIndex = (currentPage - 1) * pageSize;
 
+  const userDetailPath = (userId: string) =>
+    `/user/detail?userId=${encodeURIComponent(userId)}`;
+
   return (
     <div className="search-page">
       <PageHeader
@@ -97,17 +100,16 @@ export default function UserList() {
                   <tr
                     key={`${user.userId}-${index}`}
                     className="tr tr-clickable"
-                    role="button"
                     tabIndex={0}
-                    onClick={() =>
-                      navigate(`/user/detail?userId=${encodeURIComponent(user.userId)}`)
-                    }
+                    aria-label={`${user.userFlnm}(${user.userId}) 상세 보기`}
+                    onClick={() => navigate(userDetailPath(user.userId))}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        navigate(`/user/detail?userId=${encodeURIComponent(user.userId)}`);
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        navigate(userDetailPath(user.userId));
                       }
                     }}
-                    >
+                  >
                     <td className="td td-number">{startIndex + index + 1}</td>
                     <td className="td td-user-id">{user.userId}</td>
                     <td className="td td-user-se">{user.userSe}</td>
@@ -121,7 +123,8 @@ export default function UserList() {
 
             <ul className="search-user-cards">
               {users.map((user, index) => (
-                <li key={`card-${user.userId}-${index}`} className="search-user-card">
+                <li key={`card-${user.userId}-${index}`}>
+                  <Link to={userDetailPath(user.userId)} className="search-user-card">
                   <div className="search-user-card__head">
                     <span className="search-user-card__index">{startIndex + index + 1}</span>
                     <span
@@ -152,6 +155,7 @@ export default function UserList() {
                       <dd className="search-user-card__email">{user.eml}</dd>
                     </div>
                   </dl>
+                  </Link>
                 </li>
               ))}
             </ul>

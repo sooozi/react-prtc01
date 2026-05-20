@@ -143,15 +143,15 @@
 
 .user-detail-avatar {
   display: block;
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   object-fit: cover;
   border-radius: 50%;
   background: color-mix(in srgb, var(--color-bg-subtle) 50%, var(--color-card) 50%);
 
   @include bp.below(bp.$sm) {
-    width: 72px;
-    height: 72px;
+    width: 65px;
+    height: 65px;
   }
 }
 

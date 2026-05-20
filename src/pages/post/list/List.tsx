@@ -57,6 +57,13 @@ export default function List() {
     [setCurrentPage]
   );
 
+  const goToPostDetail = useCallback(
+    (postNumber: number) => {
+      navigate(`/post/detail?id=${postNumber}&from=list`);
+    },
+    [navigate]
+  );
+
   // 게시글 목록 조회
   useEffect(() => {
     const fetchData = async () => {
@@ -233,16 +240,23 @@ export default function List() {
                 </thead>
                 <tbody>
                   {posts.map((post) => (
-                    <tr key={post.postNumber} className="tr">
+                    <tr
+                      key={post.postNumber}
+                      className="tr tr-clickable"
+                      tabIndex={0}
+                      aria-label={`${post.title} 상세 보기`}
+                      onClick={() => goToPostDetail(post.postNumber)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          goToPostDetail(post.postNumber);
+                        }
+                      }}
+                    >
                       <td className="td td-number">{post.postNumber}</td>
                       <td className="td td-title">
                         <Tooltip content={post.title} onlyWhenTruncated>
-                          <Link
-                            className="list-title-link"
-                            to={`/post/detail?id=${post.postNumber}&from=list`}
-                          >
-                            {post.title}
-                          </Link>
+                          <span className="list-title-text">{post.title}</span>
                         </Tooltip>
                       </td>
                       <td className="td td-rgtr">{post.rgtrInfo ?? "-"}</td>

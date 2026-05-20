@@ -125,7 +125,18 @@
   }
 
   .search-user-card {
-    @include mlc.mobile-list-card-surface;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    @include mlc.mobile-list-card-surface($interactive: true);
+
+    &:hover {
+      background: var(--color-bg-subtle-2);
+      border-color: color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
+    }
 
     &__head {
       @include mlc.mobile-list-card-head;
