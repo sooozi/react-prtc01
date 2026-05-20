@@ -14,7 +14,6 @@
   @include sh.card-stack-lg-sm;
   border: 1px solid var(--color-card-border);
   margin-bottom: v.space(3xl);
-  
   overflow: visible;
 
   @include bp.below(bp.$md) {

@@ -15,6 +15,16 @@
   }
 }
 
+.schedule-layout__fab-row {
+  display: none;
+
+  @include bp.below(bp.$lg) {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: v.space(md);
+  }
+}
+
 .schedule-workspace {
   display: grid;
   grid-template-columns: 1fr minmax(min(100%, 260px), 340px);
@@ -46,32 +56,6 @@
 
   @include bp.below(bp.$sm) {
     padding: v.space(md) v.space(sm) v.space(lg);
-  }
-}
-
-.schedule-workspace__fab-row {
-  display: none;
-  min-width: 0;
-
-  @include bp.below(bp.$lg) {
-    display: flex;
-    justify-content: flex-end;
-    padding: clamp(#{v.space(lg)}, 2.2vw, #{v.space(xl)}) clamp(#{v.space(lg)}, 2.5vw, #{v.space(xl)}) 0;
-    margin-bottom: v.space(md);
-  }
-
-  @include bp.below(bp.$md) {
-    padding: v.space(md) v.space(md) 0;
-  }
-
-  @include bp.below(bp.$sm) {
-    padding: v.space(md) v.space(sm) 0;
-  }
-}
-
-.schedule-workspace__fab-row + .schedule-workspace__calendar {
-  @include bp.below(bp.$lg) {
-    padding-top: 0;
   }
 }
 

@@ -35,16 +35,16 @@ export default function Schedule() {
       <PageHeader badge="📅 Schedule" title="일정" />
 
       <div className="schedule-layout">
+        {isNarrowWorkspace ? (
+          <div className="schedule-layout__fab-row">
+            <Button type="button" variant="secondary" size="sm" onClick={() => setMobilePanelOpen(true)}>
+              일정 입력
+            </Button>
+          </div>
+        ) : null}
         <div
           className={`schedule-workspace${isNarrowWorkspace && mobilePanelOpen ? " schedule-workspace--narrow-sheet-open" : ""}`}
         >
-          {isNarrowWorkspace ? (
-            <div className="schedule-workspace__fab-row">
-              <Button type="button" variant="secondary" size="sm" onClick={() => setMobilePanelOpen(true)}>
-                일정 입력
-              </Button>
-            </div>
-          ) : null}
           <div className="schedule-workspace__calendar">
             <MonthCalendar month={month} onMonthChange={setMonth} />
           </div>

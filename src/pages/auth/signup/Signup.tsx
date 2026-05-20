@@ -271,7 +271,7 @@ export default function Signup() {
             <div className="label-row">
               <label className="label" htmlFor="password">비밀번호</label>
               <span id="signup-password-hint" className="hint-text">
-                1~30자/영문, 대문자, 숫자, 특수문자 조합
+                5~30자/영문 대·소문자, 숫자, 특수문자(!@.) 조합
               </span>
             </div>
             <div className="password-field">

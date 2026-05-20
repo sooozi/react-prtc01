@@ -82,8 +82,8 @@ export default function UserDetail() {
                   className="user-detail-avatar"
                   src={profileImageSrc}
                   alt={`${user.userFlnm} 프로필`}
-                  width={80}
-                  height={80}
+                  width={70}
+                  height={70}
                   decoding="async"
                 />
               </figure>

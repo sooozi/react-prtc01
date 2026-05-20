@@ -130,42 +130,40 @@
 }
 
 .user-detail-avatar-wrap {
+  --user-detail-avatar-size: 70px;
+
   position: relative;
   flex-shrink: 0;
+  width: var(--user-detail-avatar-size);
+  height: var(--user-detail-avatar-size);
   margin: 0;
   line-height: 0;
   border-radius: 50%;
+  overflow: hidden;
+  isolation: isolate;
+  background: color-mix(in srgb, var(--color-bg-subtle) 50%, var(--color-card) 50%);
   box-shadow:
-    0 2px 6px color-mix(in srgb, var(--color-static-black) 8%, transparent),
-    0 10px 22px -6px color-mix(in srgb, var(--color-static-black) 18%, transparent),
-    0 16px 36px -10px color-mix(in srgb, var(--color-primary) 14%, transparent);
+    0 4px 14px -4px color-mix(in srgb, var(--color-static-black) 14%, transparent),
+    0 10px 24px -8px color-mix(in srgb, var(--color-primary) 12%, transparent);
+
+  @include bp.below(bp.$sm) {
+    --user-detail-avatar-size: 65px;
+  }
 }
 
 .user-detail-avatar {
   display: block;
-  width: 70px;
-  height: 70px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--color-bg-subtle) 50%, var(--color-card) 50%);
-
-  @include bp.below(bp.$sm) {
-    width: 65px;
-    height: 65px;
-  }
-}
-
-[data-theme="dark"] .user-detail-avatar {
-  border-color: var(--color-card);
-  background: color-mix(in srgb, var(--color-bg-subtle) 35%, var(--color-card) 65%);
+  vertical-align: top;
 }
 
 [data-theme="dark"] .user-detail-avatar-wrap {
-  background: color-mix(in srgb, var(--color-border) 75%, var(--color-primary) 25%);
+  background: color-mix(in srgb, var(--color-border) 40%, var(--color-primary) 20%);
   box-shadow:
-    0 2px 8px color-mix(in srgb, var(--color-static-black) 35%, transparent),
-    0 12px 28px -8px color-mix(in srgb, var(--color-static-black) 45%, transparent),
-    0 18px 40px -12px color-mix(in srgb, var(--color-primary) 22%, transparent);
+    0 4px 16px -4px color-mix(in srgb, var(--color-static-black) 40%, transparent),
+    0 12px 28px -8px color-mix(in srgb, var(--color-primary) 18%, transparent);
 }
 
 .user-detail-hero__body {

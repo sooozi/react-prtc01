@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest --config vitest.config.ts",
     "preview": "vite preview",
     "storybook": "node scripts/check-node-version.mjs && storybook dev -p 6006",
     "build-storybook": "node scripts/check-node-version.mjs && storybook build"

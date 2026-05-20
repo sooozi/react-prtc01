@@ -508,6 +508,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero-inner {
+    animation: none;
+  }
+
   .hero .gradient-text {
     animation: none;
     background-size: 100% auto;

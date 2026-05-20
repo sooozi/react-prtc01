@@ -2,6 +2,7 @@ import type { StorybookConfig } from '@storybook/react-vite';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { mergeConfig } from 'vite';
+import { resolveAliases } from '../resolveAliases';
 
 const dirname =
   typeof __dirname !== 'undefined'
@@ -21,9 +22,7 @@ const config: StorybookConfig = {
   async viteFinal(config) {
     return mergeConfig(config, {
       resolve: {
-        alias: {
-          '@': path.resolve(dirname, '../src'),
-        },
+        alias: resolveAliases(path.resolve(dirname, '..')),
       },
     });
   },
