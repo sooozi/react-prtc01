@@ -51,19 +51,5 @@
 }
 
 .login-footer {
-  margin-top: v.space(2xl);
-  text-align: center;
-  font-size: v.fs(body-sm);
-  color: $text-secondary;
-
-  .signup-link {
-    color: $primary-color;
-    font-weight: v.fw(semibold);
-    text-decoration: none;
-    margin-left: v.space(sm);
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
+  @extend %auth-footer;
 }

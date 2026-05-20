@@ -33,20 +33,25 @@
   }
 }
 
-%auth-header {
+%auth-footer {
+  margin-top: v.space(2xl);
   text-align: center;
-  margin-bottom: v.space(3xl);
+  font-size: v.fs(body-sm);
+  color: $text-secondary;
 
-  .title {
-    font-size: v.fs(3xl);
-    font-weight: v.fw(extrabold);
-    color: var(--color-text-heading);
-    margin-bottom: v.space(sm);
-  }
+  a,
+  button {
+    color: $primary-color;
+    font-weight: v.fw(semibold);
+    text-decoration: none;
+    margin-left: v.space(sm);
+    background: transparent;
+    padding: 0;
 
-  .subtitle {
-    font-size: v.fs(sm);
-    color: var(--color-text-secondary);
+    &:hover {
+      text-decoration: underline;
+      color: $primary-dark;
+    }
   }
 }
 

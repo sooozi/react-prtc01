@@ -1,5 +1,4 @@
 @use "@/styles/common-tools" as *;
-@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 @use "@/pages/errors/styles/error-page-shared" as err;
 
@@ -20,36 +19,15 @@
 }
 
 .error-fallback__icon-wrap {
-  width: 120px;
-  height: 120px;
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-error) 10%, var(--color-bg-subtle)) 0%,
-    color-mix(in srgb, var(--color-error) 18%, transparent) 100%
-  );
-  border-radius: v.rad(circle);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto v.space(2xl);
-  @include sh.error-sheet-primary;
+  @include err.error-page-icon-wrap(error);
 }
 
 .error-fallback__icon {
-  font-size: v.fs(display-2xl);
+  @include err.error-page-icon;
 }
 
 .error-fallback__code {
-  display: inline-block;
-  padding: v.space(sm) v.space(lg);
-  background: color-mix(in srgb, var(--color-error) 8%, var(--color-bg-subtle));
-  border-radius: v.rad(pill);
-  font-size: v.fs(sm);
-  font-weight: v.fw(semibold);
-  color: var(--color-error);
-  margin-bottom: v.space(lg);
-  border: 1px solid color-mix(in srgb, var(--color-error) 24%, var(--color-border));
-  letter-spacing: 0.1em;
+  @include err.error-page-code-badge(error);
 }
 
 .error-fallback__title {

@@ -1,5 +1,6 @@
 @use "@/styles/common-tools" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/mobile-list-card" as mlc;
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
@@ -120,55 +121,18 @@
   }
 
   .search-user-cards {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: none;
-
-    @include bp.below(bp.$md) {
-      display: flex;
-      flex-direction: column;
-      gap: v.space(md);
-    }
+    @include mlc.mobile-list-cards;
   }
 
   .search-user-card {
-    background: var(--color-bg-subtle);
-    border: 1px solid var(--color-border);
-    border-radius: v.rad(p14);
-    padding: v.space(lg) v.space(table-y);
-    @include v.transition-channels(
-      (
-        background,
-        border-color,
-      ),
-      normal,
-      default
-    );
-
-    @include bp.below(bp.$md) {
-      @include sh.card-ambient-lg;
-    }
+    @include mlc.mobile-list-card-surface;
 
     &__head {
-      display: flex;
-      align-items: center;
-      gap: v.space(md);
-      margin-bottom: v.space(md);
-      padding-bottom: v.space(md);
-      border-bottom: 1px solid var(--color-border-light);
+      @include mlc.mobile-list-card-head;
     }
 
     &__index {
-      flex-shrink: 0;
-      min-width: 2.25rem;
-      text-align: center;
-      font-size: v.fs(sm);
-      font-weight: v.fw(bold);
-      color: var(--color-text-muted);
-      background: var(--color-bg-subtle-2);
-      padding: v.space(xs) v.space(sm);
-      border-radius: v.rad(p8);
+      @include mlc.mobile-list-card-index-badge;
     }
 
     &__se {
@@ -178,10 +142,7 @@
     }
 
     &__meta {
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: v.space(sm);
+      @include mlc.mobile-list-card-meta;
 
       dd.search-user-card__name {
         font-size: v.fs(sm);
@@ -192,28 +153,7 @@
     }
 
     &__row {
-      display: grid;
-      grid-template-columns: 3.25rem 1fr;
-      gap: v.space(sm) v.space(md);
-      align-items: start;
-
-      dt {
-        margin: 0;
-        font-size: v.fs(xs);
-        font-weight: v.fw(bold);
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: var(--color-text-muted);
-        padding-top: v.space(xs);
-      }
-
-      dd {
-        margin: 0;
-        font-size: v.fs(body-sm);
-        color: var(--color-text);
-        line-height: 1.45;
-        min-width: 0;
-      }
+      @include mlc.mobile-list-card-definition-row(3.25rem);
     }
 
     &__email {

@@ -229,9 +229,7 @@
 }
 
 .features-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  @extend %list-reset;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   gap: v.space(xl) v.space(2xl);
@@ -439,9 +437,7 @@
 }
 
 .links-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  @extend %list-reset;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
   gap: v.space(input-block);

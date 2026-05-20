@@ -1,5 +1,6 @@
 @use "@/styles/breakpoints" as bp;
 @use "@/styles/common-tools" as *;
+@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
 @mixin error-page-inner {
@@ -8,6 +9,67 @@
   position: relative;
   z-index: v.z(dock);
   max-width: 500px;
+}
+
+@mixin error-page-icon-wrap($variant: primary) {
+  width: 120px;
+  height: 120px;
+  border-radius: v.rad(circle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto v.space(2xl);
+
+  @if $variant == danger {
+    background: linear-gradient(
+      135deg,
+      var(--color-error-bg) 0%,
+      color-mix(in srgb, var(--color-error) 16%, transparent) 100%
+    );
+    @include sh.error-sheet-danger;
+  } @else if $variant == error {
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-error) 10%, var(--color-bg-subtle)) 0%,
+      color-mix(in srgb, var(--color-error) 18%, transparent) 100%
+    );
+    @include sh.error-sheet-primary;
+  } @else {
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-primary) 12%, var(--color-bg-subtle)) 0%,
+      color-mix(in srgb, var(--color-primary) 22%, transparent) 100%
+    );
+    @include sh.error-sheet-primary;
+  }
+}
+
+@mixin error-page-icon {
+  font-size: v.fs(display-2xl);
+}
+
+@mixin error-page-code-badge($variant: primary) {
+  display: inline-block;
+  padding: v.space(sm) v.space(lg);
+  border-radius: v.rad(pill);
+  font-size: v.fs(sm);
+  font-weight: v.fw(semibold);
+  margin-bottom: v.space(lg);
+  letter-spacing: 0.1em;
+
+  @if $variant == danger {
+    background: var(--color-error-bg);
+    color: var(--color-error-dark);
+    border: 1px solid var(--color-error-border);
+  } @else if $variant == error {
+    background: color-mix(in srgb, var(--color-error) 8%, var(--color-bg-subtle));
+    color: var(--color-error);
+    border: 1px solid color-mix(in srgb, var(--color-error) 24%, var(--color-border));
+  } @else {
+    background: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg-subtle));
+    color: var(--color-primary);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 28%, var(--color-border));
+  }
 }
 
 @mixin error-page-title {

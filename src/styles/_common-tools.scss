@@ -90,10 +90,38 @@ $error-dark: var(--color-error-dark);
   }
 }
 
-%tech-grid-base {
+%list-reset {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+@mixin state-center-base($gap) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: v.space(6xl) v.space(3xl);
+  gap: $gap;
+}
+
+@mixin spinner($size: 40px, $duration: 1s) {
+  width: $size;
+  height: $size;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: v.rad(circle);
+  animation: spin $duration linear infinite;
+}
+
+@mixin flex-actions-end {
+  display: flex;
+  justify-content: flex-end;
+  gap: v.space(btn-gap);
+}
+
+%tech-grid-base {
+  @extend %list-reset;
   display: flex;
 }
 
@@ -155,21 +183,11 @@ $error-dark: var(--color-error-dark);
 }
 
 %error-state-base {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: v.space(6xl) v.space(3xl);
-  gap: v.space(md);
+  @include state-center-base(v.space(md));
 }
 
 %empty-state-base {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: v.space(6xl) v.space(3xl);
-  gap: v.space(lg);
+  @include state-center-base(v.space(lg));
 }
 
 %page-container {

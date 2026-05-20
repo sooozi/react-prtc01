@@ -1,5 +1,4 @@
 @use "@/styles/common-tools" as *;
-@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 @use "@/pages/errors/styles/error-page-shared" as err;
 
@@ -16,36 +15,15 @@
 }
 
 .not-found-icon-wrap {
-  width: 120px;
-  height: 120px;
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-primary) 12%, var(--color-bg-subtle)) 0%,
-    color-mix(in srgb, var(--color-primary) 22%, transparent) 100%
-  );
-  border-radius: v.rad(circle);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto v.space(2xl);
-  @include sh.error-sheet-primary;
+  @include err.error-page-icon-wrap(primary);
 }
 
 .not-found-icon {
-  font-size: v.fs(display-2xl);
+  @include err.error-page-icon;
 }
 
 .not-found-code {
-  display: inline-block;
-  padding: v.space(sm) v.space(lg);
-  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg-subtle));
-  border-radius: v.rad(pill);
-  font-size: v.fs(sm);
-  font-weight: v.fw(semibold);
-  color: var(--color-primary);
-  margin-bottom: v.space(lg);
-  border: 1px solid color-mix(in srgb, var(--color-primary) 28%, var(--color-border));
-  letter-spacing: 0.1em;
+  @include err.error-page-code-badge(primary);
 }
 
 .not-found-title {

@@ -1,0 +1,101 @@
+@use "@/styles/breakpoints" as bp;
+@use "@/styles/shadows" as sh;
+@use "@/styles/variables" as v;
+
+@mixin mobile-list-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: none;
+
+  @include bp.below(bp.$md) {
+    display: flex;
+    flex-direction: column;
+    gap: v.space(md);
+  }
+}
+
+@mixin mobile-list-card-surface($interactive: false) {
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: v.rad(p14);
+  padding: v.space(lg) v.space(table-y);
+
+  @if $interactive {
+    @include v.transition-channels(
+      (
+        background,
+        border-color,
+        box-shadow,
+      ),
+      normal,
+      default
+    );
+  } @else {
+    @include v.transition-channels(
+      (
+        background,
+        border-color,
+      ),
+      normal,
+      default
+    );
+  }
+
+  @include bp.below(bp.$md) {
+    @include sh.card-ambient-lg;
+  }
+}
+
+@mixin mobile-list-card-head($align-items: center) {
+  display: flex;
+  align-items: $align-items;
+  gap: v.space(md);
+  margin-bottom: v.space(md);
+  padding-bottom: v.space(md);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+@mixin mobile-list-card-index-badge {
+  flex-shrink: 0;
+  min-width: 2.25rem;
+  text-align: center;
+  font-size: v.fs(sm);
+  font-weight: v.fw(bold);
+  color: var(--color-text-muted);
+  background: var(--color-bg-subtle-2);
+  padding: v.space(xs) v.space(sm);
+  border-radius: v.rad(p8);
+}
+
+@mixin mobile-list-card-meta {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: v.space(sm);
+}
+
+@mixin mobile-list-card-definition-row($label-width: 3.25rem) {
+  display: grid;
+  grid-template-columns: $label-width 1fr;
+  gap: v.space(sm) v.space(md);
+  align-items: start;
+
+  dt {
+    margin: 0;
+    font-size: v.fs(xs);
+    font-weight: v.fw(bold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    padding-top: v.space(xs);
+  }
+
+  dd {
+    margin: 0;
+    font-size: v.fs(body-sm);
+    color: var(--color-text);
+    line-height: 1.45;
+    min-width: 0;
+  }
+}

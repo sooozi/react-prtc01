@@ -29,9 +29,7 @@
 }
 
 .mission-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  @extend %list-reset;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: v.space(2xl);
@@ -116,9 +114,7 @@
 }
 
 .scope-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  @extend %list-reset;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: v.space(2xl);

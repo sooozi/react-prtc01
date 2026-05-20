@@ -100,9 +100,7 @@
 }
 
 .mypage-posts-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  @extend %list-reset;
   display: flex;
   flex-direction: column;
   gap: v.space(sm);

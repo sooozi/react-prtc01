@@ -10,12 +10,10 @@
 .post-form-group {
   @include post-form-group-spacing;
   @include form.form-group;
-}
 
-.post-form-group--stacked {
-  @include post-form-group-spacing;
-  @include form.form-group;
-  gap: v.space(md);
+  &--stacked {
+    gap: v.space(md);
+  }
 }
 
 .post-form-label {

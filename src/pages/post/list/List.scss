@@ -1,5 +1,6 @@
 @use "@/styles/common-tools" as *;
 @use "@/styles/breakpoints" as bp;
+@use "@/styles/mobile-list-card" as mlc;
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
@@ -286,15 +287,9 @@
 }
 
 .board-page .post-list-cards {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: none;
+  @include mlc.mobile-list-cards;
 
   @include bp.below(bp.$md) {
-    display: flex;
-    flex-direction: column;
-    gap: v.space(md);
     padding: 0;
   }
 }
@@ -308,24 +303,8 @@
   color: inherit;
   text-align: left;
   text-decoration: none;
-  background: var(--color-bg-subtle);
-  border: 1px solid var(--color-border);
-  border-radius: v.rad(p14);
-  padding: v.space(lg) v.space(table-y);
   cursor: pointer;
-  @include v.transition-channels(
-    (
-      background,
-      border-color,
-      box-shadow,
-    ),
-    normal,
-    default
-  );
-
-  @include bp.below(bp.$md) {
-    @include sh.card-ambient-lg;
-  }
+  @include mlc.mobile-list-card-surface($interactive: true);
 
   &:hover {
     background: var(--color-bg-subtle-2);
@@ -337,24 +316,11 @@
   }
 
   &__head {
-    display: flex;
-    align-items: flex-start;
-    gap: v.space(md);
-    margin-bottom: v.space(md);
-    padding-bottom: v.space(md);
-    border-bottom: 1px solid var(--color-border-light);
+    @include mlc.mobile-list-card-head(flex-start);
   }
 
   &__number {
-    flex-shrink: 0;
-    min-width: 2.25rem;
-    text-align: center;
-    font-size: v.fs(sm);
-    font-weight: v.fw(bold);
-    color: var(--color-text-muted);
-    background: var(--color-bg-subtle-2);
-    padding: v.space(xs) v.space(sm);
-    border-radius: v.rad(p8);
+    @include mlc.mobile-list-card-index-badge;
   }
 
   &__title {
@@ -377,35 +343,11 @@
   }
 
   &__meta {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: v.space(sm);
+    @include mlc.mobile-list-card-meta;
   }
 
   &__row {
-    display: grid;
-    grid-template-columns: 4.25rem 1fr;
-    gap: v.space(sm) v.space(md);
-    align-items: start;
-
-    dt {
-      margin: 0;
-      font-size: v.fs(xs);
-      font-weight: v.fw(bold);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--color-text-muted);
-      padding-top: v.space(xs);
-    }
-
-    dd {
-      margin: 0;
-      font-size: v.fs(body-sm);
-      color: var(--color-text);
-      line-height: 1.45;
-      min-width: 0;
-    }
+    @include mlc.mobile-list-card-definition-row(4.25rem);
   }
 
   &__date {

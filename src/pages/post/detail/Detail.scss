@@ -238,9 +238,7 @@
 }
 
 .post-detail-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: v.space(btn-gap);
+  @include flex-actions-end;
   margin-bottom: v.space(lg);
 
   @include bp.below(bp.$md) {

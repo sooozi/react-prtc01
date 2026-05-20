@@ -1,5 +1,4 @@
 @use "@/styles/common-tools" as *;
-@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 @use "@/pages/errors/styles/error-page-shared" as err;
 
@@ -16,32 +15,15 @@
 }
 
 .icon-wrapper {
-  width: 120px;
-  height: 120px;
-  background: linear-gradient(135deg, var(--color-error-bg) 0%, color-mix(in srgb, var(--color-error) 16%, transparent) 100%);
-  border-radius: v.rad(circle);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto v.space(2xl);
-  @include sh.error-sheet-danger;
+  @include err.error-page-icon-wrap(danger);
 }
 
 .icon {
-  font-size: v.fs(display-2xl);
+  @include err.error-page-icon;
 }
 
 .error-code {
-  display: inline-block;
-  padding: v.space(sm) v.space(lg);
-  background: var(--color-error-bg);
-  border-radius: v.rad(pill);
-  font-size: v.fs(sm);
-  font-weight: v.fw(semibold);
-  color: var(--color-error-dark);
-  margin-bottom: v.space(lg);
-  border: 1px solid var(--color-error-border);
-  letter-spacing: 0.1em;
+  @include err.error-page-code-badge(danger);
 }
 
 .forbidden-container .title {
