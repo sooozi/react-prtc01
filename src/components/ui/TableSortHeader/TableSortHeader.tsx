@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { SortOrder } from "@/api/board";
-import "@/components/TableSortHeader/TableSortHeader.scss";
+import "./TableSortHeader.scss";
 
 // 위·아래 셰브론
 export function TableSortIconNeutral() {

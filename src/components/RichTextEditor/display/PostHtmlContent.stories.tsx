@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostHtmlContent } from './PostHtmlContent';
 
 const meta = {
-  title: 'Components/PostHtmlContent',
+  title: 'Components/RichTextEditor/Display',
   component: PostHtmlContent,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

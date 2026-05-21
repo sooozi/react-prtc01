@@ -1,5 +1,5 @@
 import { Suspense, type ReactNode } from "react";
-import LoadingState from "@/components/LoadingState/LoadingState";
+import LoadingState from "@/components/ui/LoadingState/LoadingState";
 import {
   PostDetailRouteSkeleton,
   PostListRouteSkeleton,

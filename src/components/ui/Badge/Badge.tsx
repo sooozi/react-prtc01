@@ -1,4 +1,4 @@
-import "@/components/Badge/Badge.scss";
+import "./Badge.scss";
 
 type BadgeProps = {
   children: React.ReactNode;

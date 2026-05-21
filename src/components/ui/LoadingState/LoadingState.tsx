@@ -1,4 +1,4 @@
-import "@/components/LoadingState/LoadingState.scss";
+import "./LoadingState.scss";
 
 type LoadingStateVariant = "default" | "compact";
 

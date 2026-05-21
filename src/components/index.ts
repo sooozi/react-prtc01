@@ -20,19 +20,19 @@ export {
   RichTextEditor,
 } from "@/components/RichTextEditor";
 export type { RichTextEditorProps } from "@/components/RichTextEditor";
-export { default as Badge } from "@/components/Badge/Badge";
-export { default as PageHeader } from "@/components/PageHeader/PageHeader";
-export type { PageHeaderProps, PageHeaderVariant } from "@/components/PageHeader/PageHeader";
-export { default as Button } from "@/components/Button/Button";
-export { default as Confirm } from "@/components/Confirm/Confirm";
+export { default as Badge } from "@/components/ui/Badge/Badge";
+export { default as PageHeader } from "@/components/ui/PageHeader/PageHeader";
+export type { PageHeaderProps, PageHeaderVariant } from "@/components/ui/PageHeader/PageHeader";
+export { default as Button } from "@/components/ui/Button/Button";
+export { default as Confirm } from "@/components/ui/Confirm/Confirm";
 export { ErrorBoundary, ErrorFallback } from "@/components/ErrorBoundary";
 export type { ErrorBoundaryProps, ErrorFallbackProps } from "@/components/ErrorBoundary";
-export { default as LoadingState } from "@/components/LoadingState/LoadingState";
+export { default as LoadingState } from "@/components/ui/LoadingState/LoadingState";
 export { default as Header } from "@/components/Layout/Header/Header";
 export { default as Footer } from "@/components/Layout/Footer/Footer";
 export { default as Layout } from "@/components/Layout/Layout";
-export { default as Pagination } from "@/components/Pagination/Pagination";
-export { default as Tooltip } from "@/components/Tooltip/Tooltip";
+export { default as Pagination } from "@/components/ui/Pagination/Pagination";
+export { default as Tooltip } from "@/components/ui/Tooltip/Tooltip";
 export {
   TableSortIconActiveAsc,
   TableSortIconActiveDesc,
@@ -40,4 +40,4 @@ export {
   TableSortTh,
   type TableSortThAlign,
   type TableSortThProps,
-} from "@/components/TableSortHeader/TableSortHeader";
+} from "@/components/ui/TableSortHeader/TableSortHeader";

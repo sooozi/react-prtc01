@@ -1,8 +1,8 @@
 import { useLayoutEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import Button from "@/components/Button/Button";
+import Button from "@/components/ui/Button/Button";
 import { useFloatingLayer } from "@/hooks/useFloatingLayer";
-import "@/components/Confirm/Confirm.scss";
+import "./Confirm.scss";
 
 export type ConfirmVariant = "default" | "danger";
 

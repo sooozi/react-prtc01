@@ -8,7 +8,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { createPortal } from "react-dom";
-import "@/components/Tooltip/Tooltip.scss";
+import "./Tooltip.scss";
 
 interface TooltipProps {
   /** 툴팁에 표시할 내용 */

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import Button from "@/components/Button/Button";
-import PageHeader from "@/components/PageHeader/PageHeader";
+import Button from "@/components/ui/Button/Button";
+import PageHeader from "@/components/ui/PageHeader/PageHeader";
 import "@/components/ErrorBoundary/ErrorFallback.scss";
 
 export type ErrorFallbackProps = {

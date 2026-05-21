@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import clsx from "clsx";
-import Badge from "@/components/Badge/Badge";
+import Badge from "@/components/ui/Badge/Badge";
 import "./PageHeader.scss";
 
 export type PageHeaderVariant = "list" | "centered" | "auth" | "inline";

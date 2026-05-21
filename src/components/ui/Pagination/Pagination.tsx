@@ -1,7 +1,7 @@
 import { useState } from "react";
 import clsx from "clsx";
 import { Button } from "@/components";
-import "@/components/Pagination/Pagination.scss";
+import "./Pagination.scss";
 
 /** 페이지 이동 버튼 액션 타입 */
 type PageAction = "first" | "prev" | "next" | "last";

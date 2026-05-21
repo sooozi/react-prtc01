@@ -1,8 +1,8 @@
 /**
- * 게시글 상세 본문 — Quill HTML 또는 legacy plain text 를 안전하게 렌더.
+ * 게시글 상세 본문 — Quill HTML 또는 legacy plain text 를 안전하게 렌더
  */
-import { isQuillContentEmpty } from "./isQuillContentEmpty";
-import { preparePostHtmlForDisplay } from "./preparePostHtmlForDisplay";
+import { isQuillContentEmpty } from "../lib/isQuillContentEmpty";
+import { preparePostHtmlForDisplay } from "../lib/preparePostHtmlForDisplay";
 import "./quillContentDisplay.scss";
 
 type PostHtmlContentProps = {

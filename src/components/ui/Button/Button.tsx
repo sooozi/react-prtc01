@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { Link } from "react-router-dom";
-import "@/components/Button/Button.scss";
+import "./Button.scss";
 
 export type ButtonVariant =
   | "primary"
