@@ -1,6 +1,6 @@
 # 폴더 구조·역할 분리 규칙
 
-`react-practice`에서 새 파일을 둘 때 따르는 규칙입니다. 회사 `react-app`(Trombone)과 같은 **역할 분리**를 목표로 하되, 이 프로젝트 규모에 맞게 단순하게 유지합니다.
+`react-practice`에서 새 파일을 둘 때 따르는 규칙입니다. 참고 레이아웃인 **react-app** 과 같은 **역할 분리**를 목표로 하되, 이 프로젝트 규모에 맞게 단순하게 유지합니다.
 
 ## 한눈에 보기
 
@@ -120,9 +120,9 @@ api/
 5. 재사용 UI인가? → `components/` (+ Storybook `.stories.tsx` 권장)
 6. React 없이 테스트 가능한 로직인가? → `lib/` + `*.test.ts`
 
-## react-app과의 대응
+## 참고: Trombone(react-app)과의 대응
 
-| react-practice | react-app (Trombone) |
+| react-practice | Trombone (react-app) |
 |----------------|----------------------|
 | `pages/<domain>/` | `pages/common/`, `workflow/`, … |
 | `components/` | `ui/common/` |

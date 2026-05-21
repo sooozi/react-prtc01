@@ -111,6 +111,10 @@
 
 .scope-section {
   margin-bottom: v.space(6xl);
+
+  .section-title {
+    animation: section-title-in 0.5s ease-out 0.25s both;
+  }
 }
 
 .scope-grid {
@@ -206,4 +210,10 @@
   gap: v.space(btn-gap);
   justify-content: center;
   flex-wrap: wrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scope-section .section-title {
+    animation: none;
+  }
 }

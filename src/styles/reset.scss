@@ -165,8 +165,8 @@ input[type="button"]:focus-visible:not(:disabled):not([aria-disabled="true"]),
 input[type="submit"]:focus-visible:not(:disabled):not([aria-disabled="true"]),
 input[type="reset"]:focus-visible:not(:disabled):not([aria-disabled="true"]),
 [role="button"]:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  outline: 1px solid var(--color-primary);
+  outline-offset: 1px;
   border-color: var(--color-primary);
 }
 
