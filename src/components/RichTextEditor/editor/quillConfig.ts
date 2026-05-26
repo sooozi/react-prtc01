@@ -6,7 +6,8 @@ export const quillModules = {
     [{ color: [] }, { background: [] }],
     [{ align: [] }],
     [{ list: "ordered" }, { list: "bullet" }],
-    ["blockquote"],
+    ["image"],
+    ["blockquote"], // 인용 블록
     ["link"],
     ["clean"],
   ],
@@ -23,6 +24,8 @@ export const quillFormats = [
 
   "color",
   "background",
+  
+  "image",
 
   "align",
 
