@@ -599,6 +599,15 @@
   }
 }
 
+/* .btn:focus-visible { outline: none } 보다 우선 — nav Link와 동일한 키보드 포커스 */
+.nav-links__list button.btn.nav-link--drawer.logout-btn:focus-visible:not(:disabled):not(
+    [aria-disabled="true"]
+  ) {
+  outline: 1px solid var(--color-primary);
+  outline-offset: 2px;
+  @include sh.focus-ring-primary-3;
+}
+
 @include bp.above(bp.$md) {
   .nav-links__list button.btn.nav-link--drawer.logout-btn {
     padding: 0;

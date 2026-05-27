@@ -194,6 +194,12 @@
   outline: none;
 }
 
+.btn--ghost:focus-visible:not(:disabled):not([aria-disabled="true"]) {
+  outline: 1px solid var(--color-primary);
+  outline-offset: 2px;
+  @include sh.focus-ring-primary-3;
+}
+
 .btn--secondary:focus-visible:not(:disabled):not([aria-disabled="true"]),
 .btn--outlinePrimary:focus-visible:not(:disabled):not([aria-disabled="true"]) {
   border-color: var(--color-primary);
