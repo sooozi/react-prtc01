@@ -9,6 +9,9 @@ const dirname =
     ? __dirname
     : path.dirname(fileURLToPath(import.meta.url));
 
+/** GitHub Pages 등 서브경로 배포 시 CI에서 `/react-prtc01/` 형태로 설정 */
+const storybookBase = process.env.STORYBOOK_BASE_PATH ?? '/';
+
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
@@ -21,6 +24,7 @@ const config: StorybookConfig = {
   framework: '@storybook/react-vite',
   async viteFinal(config) {
     return mergeConfig(config, {
+      base: storybookBase,
       resolve: {
         alias: resolveAliases(path.resolve(dirname, '..')),
       },

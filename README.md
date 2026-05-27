@@ -1,7 +1,57 @@
 # React Practice
 
 Vite + React + TypeScript 기반 프론트엔드 연습·포트폴리오 프로젝트입니다.  
-로그인·회원가입·사용자 목록·상세(목 데이터)·마이페이지(내가 쓴 글)·게시판(목록·상세·작성·수정·삭제·조회수·검색·정렬·모바일 카드 / 데스크톱 테이블·댓글 UI·이미지 첨부)·일정(월 달력·연·월 선택·주 시작·한국 공휴일 표시·좌측 입력 패널 / 좁은 화면에서는 시트)·다크 모드·접근성(페이지 제목·스킵 링크·라우트 안내 등)을 다룹니다.  
+로그인·회원가입·사용자 목록·상세(목 데이터)·마이페이지(내가 쓴 글)·게시판(목록·상세·작성·수정·삭제·조회수·검색·정렬·모바일 카드 / 데스크톱 테이블·댓글 UI·이미지 첨부)·일정(월 달력·연·월 선택·주 시작·한국 공휴일 표시·좌측 입력 패널 / 좁은 화면에서는 시트)·다크 모드·접근성(페이지 제목·스킵 링크·라우트 안내 등)을 다룹니다.
+
+## 링크
+
+| | URL |
+| --- | --- |
+| **Storybook (배포)** | https://sooozi.github.io/react-prtc01/ |
+| **Storybook (로컬)** | http://localhost:6006 — `yarn storybook` (Node 20.19+) |
+
+`main` 브랜치 push 시 [`.github/workflows/deploy-storybook.yml`](.github/workflows/deploy-storybook.yml)로 Storybook 정적 사이트가 GitHub Pages에 올라갑니다. 최초 1회는 저장소 **Settings → Pages → Build and deployment → Source: GitHub Actions** 를 켜야 합니다.
+
+---
+
+## 아키텍처 (pages / api / components)
+
+```mermaid
+flowchart TB
+  subgraph entry["진입"]
+    R["router/<br/>AppRouter · RequireAuth"]
+  end
+
+  subgraph ui["UI"]
+    P["pages/<br/>화면·라우트·페이지 SCSS"]
+    PC["pages/.../components/<br/>도메인 전용 UI"]
+    C["components/<br/>공용 UI · Storybook"]
+  end
+
+  subgraph logic["로직·데이터"]
+    A["api/<br/>auth · board · user"]
+    L["lib · hooks"]
+    M["mocks/<br/>목·데모"]
+  end
+
+  R --> P
+  P --> C
+  P --> PC
+  P --> A
+  P --> L
+  P --> M
+  A --> H["api/http<br/>axios · ApiError"]
+  H --> API[("VITE_API_BASE_URL")]
+  M -.->|user · comment 등| P
+```
+
+| 계층 | 폴더 | 역할 |
+| --- | --- | --- |
+| **pages** | `src/pages/{도메인}/` | URL에 대응하는 화면. 한 도메인만 쓰는 UI는 `pages/.../components/` |
+| **components** | `src/components/` | 여러 화면에서 재사용하는 UI (`Button`, `Layout`, `Pagination` …) |
+| **api** | `src/api/{도메인}/` | HTTP 호출만 (JSX·훅 없음). 공통 클라이언트는 `api/http/` |
+
+상세 트리·파일 배치 규칙은 아래 [프로젝트 구조](#프로젝트-구조), [docs/folder-structure.md](docs/folder-structure.md) 를 참고하세요.
 
 ---
 
@@ -87,6 +137,9 @@ yarn build-storybook  # storybook-static/ 정적 빌드
 ## Storybook
 
 공통 UI 컴포넌트를 앱 전체를 띄우지 않고 **Canvas / Docs**에서 확인·문서화합니다.
+
+- **배포 URL**: https://sooozi.github.io/react-prtc01/ (위 [링크](#링크)와 동일)
+- **로컬**: `yarn storybook` → http://localhost:6006
 
 ### 실행
 
