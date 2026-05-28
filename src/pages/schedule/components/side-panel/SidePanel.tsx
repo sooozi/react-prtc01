@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components";
 import "@/pages/schedule/components/side-panel/SidePanel.scss";
 
+const STORAGE_KEY = "scheduleItems";
+
 const CATEGORY_OPTIONS = [
   { value: "work", label: "업무", theme: "work" as const },
   { value: "meeting", label: "회의", theme: "meeting" as const },
@@ -16,6 +18,26 @@ type SidePanelProps = {
   onClose?: () => void;
 };
 
+type ScheduleDraftItem = {
+  id: string;
+  category: CategoryValue;
+  categoryLabel: string;
+  date: string; // YYYY-MM-DD
+  note: string;
+  createdAt: number;
+};
+
+function safeReadScheduleItems(): ScheduleDraftItem[] {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    return Array.isArray(parsed) ? (parsed as ScheduleDraftItem[]) : [];
+  } catch {
+    return [];
+  }
+}
+
 /**
  * 일정 페이지 우측 패널 — 카테고리·날짜·내용 UI만 (저장 등 로직 미연결)
  */
@@ -29,14 +51,23 @@ export default function SidePanel({ onClose }: SidePanelProps) {
     CATEGORY_OPTIONS.find((c) => c.value === category)?.label ?? category;
 
   function handleSubmit() {
-    if (import.meta.env.DEV) {
-      console.debug("[일정 입력] 제출(미연동)", {
-        category,
-        categoryLabel: selectedCategoryLabel,
-        date,
-        note,
-      });
-    }
+    const item: ScheduleDraftItem = {
+      id: crypto.randomUUID(),
+      category,
+      categoryLabel: selectedCategoryLabel,
+      date,
+      note,
+      createdAt: Date.now(),
+    };
+
+    const prev = safeReadScheduleItems();
+    const next = [item, ...prev];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    window.dispatchEvent(new Event("schedule-items-updated"));
+
+    console.log("[일정 입력] 로컬스토리지 저장됨", { saved: item, total: next.length });
+
+    setNote("");
   }
 
   return (

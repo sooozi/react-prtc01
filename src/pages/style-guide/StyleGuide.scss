@@ -91,20 +91,10 @@
     background: color-mix(in srgb, var(--color-bg-subtle) 65%, var(--color-card));
   }
 
-  &.is-active {
-    color: var(--color-text-heading);
-    background: var(--color-card);
-    box-shadow: 0 1px 3px color-mix(in srgb, var(--color-text) 8%, transparent);
-  }
-
   &:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 1px;
   }
-}
-
-[data-theme="dark"] .sg-jump__link.is-active {
-  background: var(--color-bg-subtle-2);
 }
 
 .sg-section__head {

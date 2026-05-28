@@ -1,3 +1,4 @@
+import { ALLOWED_ATTACHMENT_EXTENSIONS_LABEL } from "./attachmentAllowlist";
 import { MAX_ATTACHMENT_FILENAME_LENGTH } from "./fileAttachItemUtils";
 
 const MESSAGE_NAME_MAX_LEN = 50;
@@ -31,6 +32,21 @@ export function buildTooLongNameMessages(tooLong: File[]): string[] {
 
   return [
     `파일명(확장자 포함)이 ${MAX_ATTACHMENT_FILENAME_LENGTH}자를 넘는 ${tooLong.length}개는 추가하지 않았습니다.`,
+  ];
+}
+
+export function buildRejectedAllowlistMessages(rejected: File[]): string[] {
+  if (rejected.length === 0) return [];
+
+  if (rejected.length === 1) {
+    const shown = truncateFileNameForMessage(rejected[0]!.name);
+    return [
+      `허용되지 않는 파일 형식이라 추가하지 않았습니다. (${ALLOWED_ATTACHMENT_EXTENSIONS_LABEL}만 가능) “${shown}”`,
+    ];
+  }
+
+  return [
+    `허용되지 않는 파일 형식 ${rejected.length}개는 추가하지 않았습니다. (${ALLOWED_ATTACHMENT_EXTENSIONS_LABEL}만 가능)`,
   ];
 }
 

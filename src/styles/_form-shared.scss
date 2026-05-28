@@ -44,10 +44,10 @@
   @include form-control-height;
   padding: 0 v.space(input-inline);
   font-family: inherit;
-  font-size: v.fs(base);
+  font-size: 0.9rem;
 
   @include bp.below(bp.$md) {
-    font-size: v.fs(body-sm);
+    font-size: 0.9rem;
     padding: 0 v.space(lg);
   }
   font-weight: v.fw(regular);

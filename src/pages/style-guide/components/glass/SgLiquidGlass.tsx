@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "@/pages/style-guide/components/SgLiquidGlass.scss";
+import "@/pages/style-guide/components/glass/SgLiquidGlass.scss";
 
 const NAV_ITEMS = ["Toast", "Tabs"] as const;
 

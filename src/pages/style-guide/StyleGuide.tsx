@@ -39,36 +39,6 @@ const NAV_ANCHORS = [
 export default function StyleGuide() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [page, setPage] = useState(1);
-  const [activeAnchor, setActiveAnchor] = useState<string>(NAV_ANCHORS[0].href);
-
-  useEffect(() => {
-    const sectionIds = NAV_ANCHORS.map((item) => item.href.slice(1));
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el != null);
-
-    if (sections.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        const top = visible[0];
-        if (top?.target.id) {
-          setActiveAnchor(`#${top.target.id}`);
-        }
-      },
-      {
-        root: null,
-        rootMargin: "-42% 0px -48% 0px",
-        threshold: [0, 0.15, 0.35, 0.55],
-      }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -113,10 +83,7 @@ export default function StyleGuide() {
               <li key={item.href} className="sg-jump__item">
                 <a
                   href={item.href}
-                  className={
-                    activeAnchor === item.href ? "sg-jump__link is-active" : "sg-jump__link"
-                  }
-                  aria-current={activeAnchor === item.href ? "location" : undefined}
+                  className="sg-jump__link"
                 >
                   {item.label}
                 </a>

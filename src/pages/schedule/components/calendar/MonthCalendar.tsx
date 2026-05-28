@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
 import {
   addMonths,
@@ -9,7 +9,11 @@ import {
 } from "@/lib/schedule/calendarUtils";
 import { CalendarPickerPopover, CalendarPopoverOption } from "@/pages/schedule/components/calendar/CalendarPickerPopover";
 import { getKrHolidayName } from "@/lib/holidayUtils";
+import { Tooltip } from "@/components";
 import "@/pages/schedule/components/calendar/MonthCalendar.scss";
+
+const STORAGE_KEY = "scheduleItems";
+const SCHEDULE_ITEMS_UPDATED_EVENT = "schedule-items-updated";
 
 // 그리드 열 순서는 weekStart 에 맞출 것 — 월 시작 / 일 시작
 const WEEKDAYS_ORDER: Record<CalendarWeekStart, readonly string[]> = {
@@ -25,6 +29,34 @@ type Props = {
   onMonthChange: (nextMonthStart: Date) => void; // 달 바꿀 때 호출
 };
 
+type ScheduleDraftItem = {
+  id: string;
+  category: "work" | "meeting" | "personal" | "other";
+  categoryLabel?: string;
+  date: string; // YYYY-MM-DD
+  note: string;
+  createdAt: number;
+};
+
+function pad2(n: number): string {
+  return n < 10 ? `0${n}` : String(n);
+}
+
+function toISODateLocal(d: Date): string {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+function safeReadScheduleItems(): ScheduleDraftItem[] {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    return Array.isArray(parsed) ? (parsed as ScheduleDraftItem[]) : [];
+  } catch {
+    return [];
+  }
+}
+
 export default function MonthCalendar({ month, onMonthChange }: Props) {
   const [weekStart, setWeekStart] = useState<CalendarWeekStart>("monday");
   const [isMonthPopoverOpen, setIsMonthPopoverOpen] = useState(false); // 월 선택 팝오버 열려있는지 확인
@@ -33,6 +65,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
   const titleBtnRef = useRef<HTMLButtonElement | null>(null); // 월 트리거 버튼
   const monthPopoverRef = useRef<HTMLDivElement | null>(null); // 월 팝오버
   const yearPopoverRef = useRef<HTMLDivElement | null>(null); // 연도 팝오버
+  const [scheduleItems, setScheduleItems] = useState<ScheduleDraftItem[]>([]);
 
   const monthStart = useMemo(() => startOfMonth(month), [month]); // 지금 보는 달의 1일
   const y = monthStart.getFullYear(); // 년
@@ -60,6 +93,38 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
   const weekStartSwitchLabel = weekStartSunday
     ? "주 시작 요일, 일요일부터. 월요일부터로 바꾸려면 선택"
     : "주 시작 요일, 월요일부터. 일요일부터로 바꾸려면 선택";
+
+  useEffect(() => {
+    const sync = () => setScheduleItems(safeReadScheduleItems());
+    sync();
+
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEY) sync();
+    };
+    const onUpdated = () => sync();
+
+    window.addEventListener("storage", onStorage);
+    window.addEventListener(SCHEDULE_ITEMS_UPDATED_EVENT, onUpdated);
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener(SCHEDULE_ITEMS_UPDATED_EVENT, onUpdated);
+    };
+  }, []);
+
+  const scheduleByDate = useMemo(() => {
+    const map = new Map<string, ScheduleDraftItem[]>();
+    for (const it of scheduleItems) {
+      if (!it?.date) continue;
+      const list = map.get(it.date) ?? [];
+      list.push(it);
+      map.set(it.date, list);
+    }
+    for (const [k, list] of map.entries()) {
+      list.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
+      map.set(k, list);
+    }
+    return map;
+  }, [scheduleItems]);
 
   return (
     <div className="month-calendar">
@@ -236,6 +301,10 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
           const dow = cell.date.getDay();
           const isSaturday = dow === 6;
           const isSunday = dow === 0;
+          const isoDate = toISODateLocal(cell.date);
+          const dayItems = scheduleByDate.get(isoDate) ?? [];
+          const visibleItems = dayItems.slice(0, 4);
+          const overflow = Math.max(0, dayItems.length - visibleItems.length);
           const holidayName = getKrHolidayName(
             cell.date.getFullYear(),
             cell.date.getMonth() + 1,
@@ -263,6 +332,25 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
                 <span className="month-calendar__holiday-name" aria-label={`공휴일: ${holidayName}`}>
                   {holidayName}
                 </span>
+              ) : null}
+
+              {visibleItems.length > 0 ? (
+                <div className="month-calendar__events" aria-label={`${isoDate} 일정`}>
+                  {visibleItems.map((it) => (
+                    <Tooltip key={it.id} content={it.note || "제목 없음"} onlyWhenTruncated>
+                      <span
+                        className={clsx("month-calendar__event", `month-calendar__event--${it.category}`)}
+                      >
+                        <span className="month-calendar__event-text">{it.note || "제목 없음"}</span>
+                      </span>
+                    </Tooltip>
+                  ))}
+                  {overflow > 0 ? (
+                    <div className="month-calendar__event month-calendar__event--overflow" aria-label={`일정 ${overflow}개 더 있음`}>
+                      +{overflow}
+                    </div>
+                  ) : null}
+                </div>
               ) : null}
             </div>
           );

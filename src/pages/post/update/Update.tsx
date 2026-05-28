@@ -3,9 +3,11 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPostDetail, getPostFiles, updatePost } from "@/api/board";
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
 import {
+  ATTACHMENT_ALLOWLIST_FORM_ERROR,
   Button,
   Confirm,
   ImageFileAttachField,
+  isAllowedAttachmentFile,
   isAttachmentFileNameWithinLimit,
   isQuillContentEmpty,
   LoadingState,
@@ -111,6 +113,12 @@ export default function Update() {
     }
     if (isQuillContentEmpty(content)) {
       setFieldErrors({ content: "내용을 입력해주세요." });
+      return;
+    }
+    if (
+      editAttachmentRows.some((r) => r.kind === "local" && !isAllowedAttachmentFile(r.file))
+    ) {
+      setFieldErrors({ attach: ATTACHMENT_ALLOWLIST_FORM_ERROR });
       return;
     }
     if (

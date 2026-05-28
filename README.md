@@ -129,6 +129,8 @@ yarn dev      # http://localhost:5173
 yarn build    # tsc -b && vite build
 yarn preview
 yarn lint     # ESLint (jsx-a11y 포함)
+yarn format:check  # Prettier 포맷 검사 (CI·PR 전 확인용)
+yarn format        # Prettier로 일괄 포맷 (필요할 때만 실행)
 
 # Storybook (Node 20.19+ 필요 — 먼저 nvm use)
 yarn storybook        # http://localhost:6006
@@ -375,6 +377,9 @@ src/
 | `yarn build`           | `tsc -b && vite build`                 |
 | `yarn preview`         | 프로덕션 빌드 미리보기                           |
 | `yarn lint`            | ESLint                                 |
+| `yarn lint:fix`        | ESLint 자동 수정 가능 항목만 수정                  |
+| `yarn format:check`    | Prettier 포맷 일치 여부 검사 (변경 없음)           |
+| `yarn format`          | Prettier로 소스 일괄 포맷                       |
 | `yarn storybook`       | Storybook 개발 서버 (`:6006`, Node 20.19+) |
 | `yarn build-storybook` | Storybook 정적 빌드 (`storybook-static/`)  |
 
@@ -384,7 +389,8 @@ src/
 ## 기타
 
 - **BackstopJS**: 선택 도구. `backstop.json`이 있으면 `yarn dev` 실행 후 `npx backstop reference` / `npx backstop test` 로 시각 회귀 테스트 가능합니다. 레포마다 파일을 버전에 포함할지(로컬 전용일지)는 본인에게 맡깁니다. `"type": "module"` 과 엔진 `onBefore`/`onReady`의 `require` 혼용 시 충돌할 수 있습니다. 의존성: `package.json`의 `backstopjs`.
-- **ESLint**: `eslint-plugin-react-hooks`, `eslint-plugin-jsx-a11y` 포함.
+- **ESLint**: `eslint-plugin-react-hooks`, `eslint-plugin-jsx-a11y` 포함. Prettier와 겹치는 스타일 규칙은 `eslint-config-prettier`로 비활성화.
+- **Prettier**: `.prettierrc.json` 기준. 커밋 훅(husky)은 없음 — `yarn format` / `yarn format:check`는 필요할 때 수동 실행.
 - **React Compiler 관련 규칙**: 일부 훅/라이브러리 조합에서 `react-hooks/` 규칙 경고가 날 수 있음 — 레포 상태에 따라 허용·제외 처리됨.
 
 ---

@@ -559,7 +559,7 @@
 .month-calendar__cell {
   position: relative;
   min-height: 5rem;
-  padding: v.space(sm);
+  padding: v.space(sm) 0;
   display: flex;
   flex-direction: column;
   gap: v.space(xs);
@@ -567,6 +567,9 @@
   justify-content: flex-start;
   background: var(--color-card);
   color: var(--color-text-heading);
+  overflow: hidden;
+  outline: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
+  outline-offset: -1px;
   @include v.transition-channels(
     (
       background,
@@ -578,13 +581,14 @@
 
   @include bp.below(bp.$sm) {
     min-height: 3.15rem;
-    padding: v.space(xs) v.space(xxs);
+    padding: v.space(xs) 0;
   }
 }
 
 .month-calendar__holiday-name {
   display: block;
   max-width: 100%;
+  padding: 0 v.space(sm);
   font-size: v.fs(xs);
   font-weight: v.fw(bold);
   letter-spacing: -0.02em;
@@ -594,8 +598,83 @@
   text-overflow: ellipsis;
 
   @include bp.below(bp.$sm) {
+    padding: 0 v.space(xxs);
     font-size: v.fs(xs);
   }
+}
+
+.month-calendar__events {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: v.space(xxs);
+  margin-top: v.space(xxs);
+  min-height: 0;
+}
+
+.month-calendar__event {
+  --event-bd: color-mix(in srgb, var(--color-border) 55%, transparent);
+  --event-bg: color-mix(in srgb, var(--color-bg-subtle) 72%, var(--color-card));
+  --event-fg: var(--color-text-secondary);
+
+  width: calc(100% - 4px);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: v.space(xs);
+  margin-left: 2px;
+  padding: 0.18rem v.space(xs);
+  border: none;
+  background: var(--event-bg);
+  color: var(--event-fg);
+  font-size: v.fs(xs);
+  font-weight: v.fw(bold);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.month-calendar__event-text {
+  display: block;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* SidePanel 카테고리 색상과 동일 계열 */
+.month-calendar__event--work {
+  --event-fg: color-mix(in srgb, var(--color-primary) 92%, var(--color-text-heading) 8%);
+  --event-bg: color-mix(in srgb, var(--color-card) 35%, color-mix(in srgb, var(--color-primary) 18%, var(--color-input-bg)));
+  --event-bd: color-mix(in srgb, var(--color-primary) 38%, var(--color-border));
+}
+
+.month-calendar__event--meeting {
+  --event-fg: color-mix(in srgb, var(--color-primary-hover) 88%, var(--color-text-heading) 12%);
+  --event-bg: color-mix(in srgb, var(--color-card) 35%, color-mix(in srgb, var(--color-primary-hover) 18%, var(--color-input-bg)));
+  --event-bd: color-mix(in srgb, var(--color-primary-hover) 38%, var(--color-border));
+}
+
+.month-calendar__event--personal {
+  --event-fg: color-mix(in srgb, var(--color-secondary) 88%, var(--color-text-heading) 12%);
+  --event-bg: color-mix(in srgb, var(--color-card) 35%, color-mix(in srgb, var(--color-secondary) 16%, var(--color-input-bg)));
+  --event-bd: color-mix(in srgb, var(--color-secondary) 42%, var(--color-border));
+}
+
+.month-calendar__event--other {
+  --event-fg: var(--color-text-secondary);
+  --event-bg: color-mix(in srgb, var(--color-card) 45%, color-mix(in srgb, var(--color-text-muted) 10%, var(--color-input-bg)));
+  --event-bd: color-mix(in srgb, var(--color-text-muted) 26%, var(--color-border));
+}
+
+.month-calendar__event--overflow {
+  justify-content: center;
+  font-weight: v.fw(extrabold);
+  color: var(--color-text-muted);
+  background: color-mix(in srgb, var(--color-border) 24%, var(--color-card));
+  border-color: color-mix(in srgb, var(--color-border) 48%, transparent);
 }
 
 .month-calendar__cell--muted {
@@ -609,6 +688,10 @@
 
   .month-calendar__holiday-name {
     opacity: 0.7;
+  }
+
+  .month-calendar__event {
+    opacity: 0.72;
   }
 }
 
@@ -626,9 +709,11 @@
   font-size: v.fs(sm);
   font-variant-numeric: tabular-nums;
   line-height: 1.2;
+  padding: 0 v.space(sm);
 
   @include bp.below(bp.$sm) {
     font-size: v.fs(xs);
+    padding: 0 v.space(xxs);
   }
 }
 

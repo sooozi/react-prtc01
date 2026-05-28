@@ -3,8 +3,10 @@ export { ChevronThinIcon } from "@/components/icons/ChevronThinIcon";
 export { ClockOutlineIcon } from "@/components/icons/ClockOutlineIcon";
 export { GripHandleIcon } from "@/components/icons/GripHandleIcon";
 export {
+  ATTACHMENT_ALLOWLIST_FORM_ERROR,
   filesToItemsWithIds,
   ImageFileAttachField,
+  isAllowedAttachmentFile,
   isAttachmentFileNameWithinLimit,
   itemsToFiles,
   MAX_ATTACHMENT_FILENAME_LENGTH,

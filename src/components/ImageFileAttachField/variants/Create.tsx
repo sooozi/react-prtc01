@@ -1,8 +1,10 @@
 import { useCallback, useMemo } from "react";
 import { formatFileSize } from "@/utils/formatFileSize";
 import type { ImageFileAttachFieldCreateProps } from "../types";
+import { ATTACHMENT_FILE_INPUT_ACCEPT } from "../lib/attachmentAllowlist";
 import {
   buildDuplicateSkipMessage,
+  buildRejectedAllowlistMessages,
   buildTooLongNameMessages,
   splitFilesByMaxNameLength,
 } from "../lib/fileAddMessages";
@@ -10,7 +12,7 @@ import {
   filesToItemsWithIds,
   partitionByAttachmentIdentity,
 } from "../lib/fileAttachItemUtils";
-import { filterImageFiles } from "../lib/filterImageFiles";
+import { partitionFileListByAttachmentAllowlist } from "../lib/filterImageFiles";
 import { useFileAddNotice } from "../hooks/useFileAddNotice";
 import { useImageAttachReorder } from "../hooks/useImageAttachReorder";
 import { AttachRowBody } from "../ui/AttachRowBody";
@@ -22,7 +24,7 @@ export function ImageFileAttachFieldCreate({
   items,
   onChange,
   fileInputRef,
-  accept = "image/*",
+  accept = ATTACHMENT_FILE_INPUT_ACCEPT,
   rootClassName = "",
 }: ImageFileAttachFieldCreateProps) {
   const { message: fileAddNoticeMessage, showNotice } = useFileAddNotice();
@@ -43,11 +45,14 @@ export function ImageFileAttachFieldCreate({
   );
 
   const onFilesAdded = useCallback(
-    (files: File[]) => {
-      if (files.length === 0) return;
+    (files: File[], initialMessages: string[] = []) => {
+      if (files.length === 0) {
+        if (initialMessages.length > 0) showNotice(initialMessages);
+        return;
+      }
 
       const { okLength, tooLong } = splitFilesByMaxNameLength(files);
-      const messageParts = buildTooLongNameMessages(tooLong);
+      const messageParts = [...initialMessages, ...buildTooLongNameMessages(tooLong)];
 
       if (okLength.length === 0) {
         showNotice(messageParts);
@@ -70,8 +75,10 @@ export function ImageFileAttachFieldCreate({
   const handleFileInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const list = e.target.files;
-      if (list) onFilesAdded(filterImageFiles(list));
       e.target.value = "";
+      if (!list) return;
+      const { allowed, rejected } = partitionFileListByAttachmentAllowlist(list);
+      onFilesAdded(allowed, buildRejectedAllowlistMessages(rejected));
     },
     [onFilesAdded]
   );

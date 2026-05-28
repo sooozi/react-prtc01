@@ -2,8 +2,10 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPost } from "@/api/board";
 import {
+  ATTACHMENT_ALLOWLIST_FORM_ERROR,
   Button,
   ImageFileAttachField,
+  isAllowedAttachmentFile,
   isAttachmentFileNameWithinLimit,
   isQuillContentEmpty,
   itemsToFiles,
@@ -45,6 +47,10 @@ export default function Write() {
     }
     if (isQuillContentEmpty(content)) {
       setFieldErrors({ content: "내용을 입력해주세요." });
+      return;
+    }
+    if (attachFileItems.some((i) => !isAllowedAttachmentFile(i.file))) {
+      setFieldErrors({ attach: ATTACHMENT_ALLOWLIST_FORM_ERROR });
       return;
     }
     if (attachFileItems.some((i) => !isAttachmentFileNameWithinLimit(i.file.name))) {
