@@ -1,0 +1,27 @@
+@use "@/styles/breakpoints" as bp;
+@use "@/styles/variables" as v;
+
+.board-list-data-skeleton {
+  padding: v.space(xl);
+
+  @include bp.below(bp.$md) {
+    padding: 0;
+  }
+}
+
+.board-list-data-skeleton__table {
+  border-radius: v.rad(p16);
+  overflow: hidden;
+}
+
+.board-list-data-skeleton__head {
+  height: 2.75rem;
+  border-radius: 0;
+}
+
+.board-list-data-skeleton__row {
+  height: 3.25rem;
+  border-radius: 0;
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 45%, transparent);
+}
+

@@ -7,9 +7,10 @@ import {
   viewCountUp,
 } from "@/api/board";
 import type { PostAttachmentItem, PostDetail } from "@/api/board";
-import { Button, Confirm, LoadingState, PageHeader, PostHtmlContent } from "@/components";
+import { Button, Confirm, PageHeader, PostHtmlContent } from "@/components";
 import { listReturnPathFromFromQuery, postUpdatePath } from "@/lib/post/postDetailFromQuery";
 import CommentSection from "@/pages/post/components/CommentSection";
+import { PostDetailDataSkeleton } from "@/components";
 import { formatFileSize } from "@/utils/formatFileSize";
 import "@/pages/post/detail/Detail.scss";
 
@@ -164,7 +165,7 @@ export default function Detail() {
       <div className="post-detail-card">
         {/* 로딩 상태 표시 */}
         {showLoading ? (
-          <LoadingState message="불러오는 중..." variant="compact" />
+          <PostDetailDataSkeleton />
         ) : showErrorSection ? (
           <div className="detail-error">
             <span className="error-icon">⚠️</span>

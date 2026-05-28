@@ -5,16 +5,12 @@
 
 .about-page {
   @extend %page-container;
+  @extend %page-sections-stack;
   margin: 0 auto;
 }
 
 .hero-section {
   text-align: center;
-  margin-bottom: v.space(6xl);
-
-  @include bp.below(bp.$md) {
-    margin-bottom: v.space(3xl);
-  }
 }
 
 .about-page .page-header .subtitle {
@@ -25,7 +21,6 @@
 
 .mission-section {
   position: relative;
-  margin-bottom: v.space(6xl);
 }
 
 .mission-grid {
@@ -67,10 +62,6 @@
   line-height: 1.7;
 }
 
-.about-page .tech-section {
-  margin-bottom: v.space(6xl);
-}
-
 .about-page .section-title {
   margin: 0 0 v.space(2xl);
   font-size: clamp(v.fs(xl), 2.5vw, v.fs(3xl));
@@ -110,8 +101,6 @@
 }
 
 .scope-section {
-  margin-bottom: v.space(6xl);
-
   .section-title {
     animation: section-title-in 0.5s ease-out 0.25s both;
   }
@@ -178,10 +167,6 @@
   font-size: v.fs(body-sm);
   color: var(--color-text-secondary);
   line-height: 1.5;
-}
-
-.cta-section {
-  margin-bottom: v.space(3xl);
 }
 
 .cta-card {

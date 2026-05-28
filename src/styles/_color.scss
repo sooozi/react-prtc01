@@ -13,7 +13,10 @@
   color: var(--color-text);
   background-color: var(--color-bg);
 
-  
+  --section-gap: #{v.space(section-gap)};
+  --section-gap-mobile: #{v.space(section-gap-mobile)};
+  --section-head-gap: #{v.space(section-head-gap)};
+
   --color-text: #1e293b;
   --color-text-heading: #0f172a;
   --color-text-secondary: #64748b;

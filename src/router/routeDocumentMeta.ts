@@ -35,6 +35,11 @@ export function getRouteDocumentMeta(pathname: string): RouteDocumentMeta {
         title: withSuffix("소개"),
         announce: "소개 페이지로 이동했습니다.",
       };
+    case "/style-guide":
+      return {
+        title: withSuffix("스타일 가이드"),
+        announce: "스타일 가이드 페이지로 이동했습니다.",
+      };
     case "/user/list":
       return {
         title: withSuffix("사용자 목록"),

@@ -103,6 +103,11 @@ $spacing: (
   5xl: 3rem,
   6xl: 4rem,
   7xl: 5rem,
+  /** 페이지 주요 섹션 사이 — About·Style Guide·홈 블록 등 */
+  section-gap: 5rem,
+  section-gap-mobile: 3rem,
+  /** 섹션 제목(헤드) 아래 본문·카드까지 */
+  section-head-gap: 2rem,
   9xl: 6.75rem,
   input-inline: 1.125rem,
   input-block: 0.875rem,
@@ -154,6 +159,11 @@ $layout-base: 0.25rem;
 $layout-max-width: (
   content: 1200px,
 );
+
+/* 고정 헤더 — .header 실측과 .layout-container padding-top 공통 (Header.scss·Layout.scss) */
+$layout-header-pad-block: map.get($spacing, lg);
+$layout-header-inner-mobile: 35px; /* .nav-toggle height */
+$layout-header-inner-desktop: 2.5rem; /* .theme-toggle @md+ */
 
 /* 쌓임 순서 (z-index는 항상 v.z(키)만 사용)
  * 아래 → 위로 올라갈수록 위에 그려짐. 숫자 사이를 비워 두면 컴포넌트 내부에서

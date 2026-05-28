@@ -75,7 +75,7 @@ body.page--home .bg-decoration-2 {
   letter-spacing: -0.03em;
   line-height: 1.25;
   color: var(--color-text-heading);
-  margin-bottom: v.space(3xl);
+  margin-bottom: var(--section-head-gap);
 }
 
 .form-group {

@@ -36,11 +36,15 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  --header-height: 84px;
+
+  /* 헤더 세로 padding + 한 줄 콘텐츠 높이 — _variables.scss $layout-header-* 와 동기 */
+  --layout-header-pad-block: #{v.space(lg)};
+  --layout-header-inner: 35px;
+  --header-height: calc(var(--layout-header-pad-block) * 2 + var(--layout-header-inner));
   padding-top: var(--header-height);
 
-  @include bp.below(bp.$md) {
-    padding-top: v.space(px64);
+  @include bp.above(bp.$md) {
+    --layout-header-inner: 2.5rem;
   }
 }
 
@@ -63,6 +67,12 @@
     outline-offset: 4px;
     border-radius: v.rad(sm);
   }
+}
+
+/* 스타일 가이드 — 풀폭 배경(main 패딩 영역까지 동일 톤, 흰 띠 방지) */
+.layout-main--style-guide {
+  @include layout-main-bleed-inline;
+  background: var(--color-bg-subtle);
 }
 
 @keyframes layout-blob-float {

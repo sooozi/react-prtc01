@@ -34,11 +34,50 @@ $error-dark: var(--color-error-dark);
   }
 }
 
-@mixin narrow-centered-page($max-width: 800px) {
+/// layout-main — 좌우만 풀블리드(배경·스티키 바), 세로 패딩은 padded-page-z 유지
+@mixin layout-main-bleed-inline {
+  max-width: none;
+  margin-inline: 0;
+  padding-inline: 0;
+}
+
+%page-width-shell {
+  width: 100%;
+  max-width: v.layout-max(content);
+  margin-inline: auto;
+}
+
+/// 페이지 내 주요 섹션 세로 간격 (CSS 변수 — _color.scss :root)
+@mixin page-section-gap {
+  gap: var(--section-gap);
+
+  @include bp.below(bp.$md) {
+    gap: var(--section-gap-mobile);
+  }
+}
+
+%page-sections-stack {
+  display: flex;
+  flex-direction: column;
+  @include page-section-gap;
+}
+
+@mixin narrow-centered-page($max-width: 800px, $with-page-pad: true) {
   width: 100%;
   max-width: $max-width;
   margin: 0 auto;
-  @include padded-page-z;
+
+  @if $with-page-pad {
+    @include padded-page-z;
+  }
+}
+
+/// 게시 상세·마이페이지 등 — layout-main 패딩만 사용(중첩 padding 방지)
+@mixin card-surface-shell($radius-key: p16) {
+  background: var(--color-card);
+  border: 1px solid var(--color-card-border);
+  border-radius: v.rad($radius-key);
+  @include sh.card-surface;
 }
 
 @mixin text-ellipsis-nowrap {
@@ -201,7 +240,7 @@ $error-dark: var(--color-error-dark);
 }
 
 %page-container {
-  max-width: v.layout-max(content);
+  @extend %page-width-shell;
   @include padded-page-z;
 }
 

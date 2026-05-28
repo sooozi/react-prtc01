@@ -71,11 +71,12 @@
 
 .btn--primary {
   color: var(--color-text-on-primary);
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  background: var(--color-primary);
   @include sh.primary-rest;
 
   &:hover:not(:disabled) {
     color: var(--color-text-on-primary);
+    background: var(--color-primary-hover);
     @include sh.primary-hover;
   }
 
@@ -88,7 +89,7 @@
 .btn--secondary {
   color: var(--color-text-secondary);
   background: var(--color-card);
-  border: 2px solid var(--color-border);
+  border: 1px solid var(--color-border);
 
   &:hover:not(:disabled) {
     border-color: var(--color-primary);
@@ -98,11 +99,12 @@
 
 .btn--danger {
   color: var(--color-text-on-primary);
-  background: linear-gradient(135deg, var(--color-error) 0%, var(--color-error-dark) 100%);
+  background: var(--color-error);
   @include sh.danger-rest;
 
   &:hover:not(:disabled) {
     color: var(--color-text-on-primary);
+    background: var(--color-error-dark);
     @include sh.danger-hover;
   }
 

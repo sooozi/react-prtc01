@@ -9,7 +9,7 @@
 
 .login-toast {
   position: fixed;
-  top: calc(var(--header-height, 84px) + #{v.space(lg)});
+  top: calc(var(--header-height) + #{v.space(lg)});
   left: 50%;
   transform: translateX(-50%);
   z-index: v.z(toast);

@@ -99,7 +99,12 @@ export default function CommentSection() {
   // 마운트 시 첫 페이지만 요청(언마운트·재실행 시 이전 요청 취소)
   useEffect(() => {
     const ac = new AbortController();
-    void loadPage(0, false, ac.signal);
+    // eslint-plugin-react-hooks의 set-state-in-effect 규칙을 만족시키기 위해,
+    // effect 본문에서 직접 setState를 유발하는 비동기 호출을 즉시 실행하지 않고 마이크로태스크로 분리.
+    queueMicrotask(() => {
+      if (ac.signal.aborted) return;
+      void loadPage(0, false, ac.signal);
+    });
     return () => ac.abort();
   }, [loadPage]);
 

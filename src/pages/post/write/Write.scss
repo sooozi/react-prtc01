@@ -5,7 +5,7 @@
 @use "@/styles/breakpoints" as bp;
 
 .board-write-page {
-  @include padded-page-z;
+  @extend %page-width-shell;
 }
 
 .board-write-form {

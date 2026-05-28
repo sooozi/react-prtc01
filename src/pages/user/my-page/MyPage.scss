@@ -1,6 +1,5 @@
 @use "@/styles/common-tools" as *;
 @use "@/styles/breakpoints" as bp;
-@use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
 @mixin mypage-flex-between {
@@ -10,7 +9,7 @@
 }
 
 .mypage-page {
-  @include narrow-centered-page(800px);
+  @include narrow-centered-page(800px, false);
 }
 
 .mypage-section {
@@ -37,13 +36,10 @@
 
 // 게시글 상세 `.post-detail-card`와 동일 토큰으로 통일
 .mypage-card {
-  background: var(--color-card);
-  border: 1px solid var(--color-card-border);
-  border-radius: v.rad(p16);
+  @include card-surface-shell(p16);
   padding: v.space(2xl) v.space(loft);
   margin-bottom: v.space(2xl);
   text-align: left;
-  @include sh.card-stack-lg-sm;
 
   @include bp.below(bp.$md) {
     padding: v.space(xl);

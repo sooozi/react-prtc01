@@ -1,0 +1,41 @@
+@use "@/styles/variables" as v;
+
+.post-detail-data-skeleton {
+  padding: 0;
+}
+
+.post-detail-data-skeleton__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.space(sm);
+  margin-bottom: v.space(lg);
+}
+
+.post-detail-data-skeleton__meta-chip {
+  height: 1rem;
+  width: 7.5rem;
+
+  &--short {
+    width: 5rem;
+  }
+}
+
+.post-detail-data-skeleton__title {
+  height: 1.75rem;
+  width: min(28rem, 92%);
+  margin-bottom: v.space(lg);
+}
+
+.post-detail-data-skeleton__body {
+  display: grid;
+  gap: v.space(sm);
+}
+
+.post-detail-data-skeleton__line {
+  height: 0.875rem;
+
+  &:nth-child(3n) {
+    width: 86%;
+  }
+}
+

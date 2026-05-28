@@ -39,14 +39,14 @@
 }
 
 .page-header--centered {
-  margin-bottom: v.space(3xl);
+  margin-bottom: v.space(2xl);
 
   .title {
-    font-size: clamp(v.fs(3xl), 3vw, v.fs(display-md));
-    font-weight: v.fw(extrabold);
+    font-size: clamp(v.fs(2xl), 2.5vw, v.fs(3xl));
+    font-weight: v.fw(bold);
     color: var(--color-text-heading);
     margin: 0 0 v.space(sm);
-    line-height: 1.2;
+    line-height: 1.25;
   }
 
   .subtitle {

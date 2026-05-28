@@ -8,13 +8,24 @@
   top: 0;
   left: 0;
   right: 0;
-  padding: v.space(lg) v.space(xl);
   z-index: v.z(header);
   background: transparent;
+  box-sizing: border-box;
+  /* .layout-container 의 --layout-header-* 와 동일 (상속) */
+  padding-top: var(--layout-header-pad-block, #{v.space(lg)});
+  padding-bottom: var(--layout-header-pad-block, #{v.space(lg)});
+  padding-left: v.space(xl);
+  padding-right: v.space(xl);
   @include sh.header-border-bottom;
 
   @include bp.above(bp.$md) {
-    padding: v.space(lg) v.space(3xl);
+    padding-left: v.space(3xl);
+    padding-right: v.space(3xl);
+  }
+
+  .logo-img {
+    height: var(--layout-header-inner, #{v.space(3xl)});
+    width: auto;
   }
 }
 
@@ -56,8 +67,8 @@
   justify-content: center;
   align-items: center;
   gap: v.space(px3);
-  width: 35px;
-  height: 35px;
+  width: var(--layout-header-inner, 35px);
+  height: var(--layout-header-inner, 35px);
   padding: 0;
   border: 1px solid var(--color-border-light);
   background: color-mix(in srgb, var(--color-header-bg) 85%, transparent);
@@ -479,8 +490,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: var(--layout-header-inner, 2.5rem);
+    height: var(--layout-header-inner, 2.5rem);
     padding: 0;
     border-radius: v.rad(circle);
     border: 1px solid transparent;

@@ -11,22 +11,21 @@
   --pc-replies-gap: #{v.space(sm)};
   --pc-comment-body-lines: 5; // 본문 줄 수
   --pc-comment-body-lh: 1.55; // 본문 줄 높이
-  --pc-well-bg: color-mix(in srgb, var(--color-bg-subtle) 88%, var(--color-primary-muted) 12%);
+  --pc-well-bg: var(--color-bg-subtle);
   --pc-composer-bg: var(--color-card);
 
-  margin-top: v.space(4xl);
-  padding: v.space(xl) v.space(table-y);
+  margin-top: v.space(3xl);
+  padding: v.space(xl) v.space(lg);
   width: 100%;
   box-sizing: border-box;
-  border-radius: v.rad(p14);
-  border: 1px solid var(--color-border-light);
+  border-radius: v.rad(p12);
+  border: 1px solid var(--color-border);
   background: var(--pc-well-bg);
-  @include sh.sm-1;
+  @include sh.card-surface;
 }
 
 [data-theme="dark"] .comment-section {
-  --pc-well-bg: color-mix(in srgb, var(--color-card) 52%, var(--color-surface-elevated) 48%);
-  @include sh.sm-2;
+  --pc-well-bg: var(--color-bg-subtle-2);
 }
 
 .comment-section__composer-card {

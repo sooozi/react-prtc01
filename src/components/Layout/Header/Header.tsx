@@ -225,6 +225,15 @@ export default function Header() {
               </Link>
             </li>
             <li>
+              <Link to="/style-guide" className="nav-link nav-link--drawer">
+                <DrawerNavIcon>
+                  <path d="M4 7h16M4 12h10M4 17h14" />
+                  <circle cx="17" cy="17" r="2" />
+                </DrawerNavIcon>
+                <span className="nav-link__label">Style</span>
+              </Link>
+            </li>
+            <li>
               <Link to="/user/list" className="nav-link nav-link--drawer">
                 <DrawerNavIcon>
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />

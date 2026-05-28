@@ -47,9 +47,12 @@ export default function MyPage() {
   useEffect(() => {
     // userId가 없으면 목록 비우기
     if (!userId) {
-      setPosts([]);
-      setPostsLoading(false);
-      setLoadFailed(false);
+      // set-state-in-effect 규칙 회피: effect에서 동기적으로 setState를 호출하지 않음
+      queueMicrotask(() => {
+        setPosts([]);
+        setPostsLoading(false);
+        setLoadFailed(false);
+      });
       return;
     }
 

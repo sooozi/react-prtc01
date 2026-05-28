@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { redirectUnauthorizedToLogin } from "@/api/auth/loginRedirectSession";
 import { selectBoardList, BoardApiError } from "@/api/board";
 import type { Post } from "@/api/board";
-import { Button, LoadingState, Pagination, PageHeader, TableSortTh, Tooltip } from "@/components";
+import { Button, Pagination, PageHeader, TableSortTh, Tooltip } from "@/components";
 import { usePagination } from "@/hooks/usePagination";
 import { useUrlQueryPage } from "@/hooks/useUrlQueryPage";
 import {
@@ -16,6 +16,7 @@ import {
   type BoardListSortState,
   type BoardSortColumn,
 } from "@/lib/post/boardListSort";
+import { BoardListDataSkeleton } from "@/components";
 import "@/pages/post/list/List.scss";
 
 //[검색] API에 실제로 넘긴 검색어가 하나라도 있으면 true (빈 목록 문구용)
@@ -190,7 +191,7 @@ export default function List() {
 
         <div className="board-page__list">
           {loading ? (
-            <LoadingState />
+            <BoardListDataSkeleton />
           ) : error ? (
             <div className="error-state">
               <span className="error-icon">⚠️</span>

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import Home from "@/pages/home/Home";
 import About from "@/pages/about/About";
+import StyleGuide from "@/pages/style-guide/StyleGuide";
 import UserList from "@/pages/user/list/List";
 import UserDetail from "@/pages/user/detail/Detail";
 import MyPage from "@/pages/user/my-page/MyPage";
@@ -35,6 +36,7 @@ export default function AppRouter() {
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/signup" element={<Signup />} />
             <Route path="/about" element={<About />} />
+            <Route path="/style-guide" element={<StyleGuide />} />
             {/* 사용자 목록·상세: 목 데이터만 사용, 로그인 없이 접근 가능 */}
             <Route path="/user/list" element={<UserList />} />
             <Route path="/user/detail" element={<UserDetail />} />
