@@ -69,12 +69,6 @@
   }
 }
 
-/* 스타일 가이드 — 풀폭 배경(main 패딩 영역까지 동일 톤, 흰 띠 방지) */
-.layout-main--style-guide {
-  @include layout-main-bleed-inline;
-  background: var(--color-bg-subtle);
-}
-
 @keyframes layout-blob-float {
   0% {
     transform: translate3d(0, 0, 0) scale(1);

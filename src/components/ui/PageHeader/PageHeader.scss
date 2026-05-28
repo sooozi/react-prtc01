@@ -2,21 +2,16 @@
 @use "@/styles/breakpoints" as bp;
 @use "@/styles/variables" as v;
 
-// ── Desktop ────────────────────────────────────────────────────────────────
-
+// variant마다 타이틀 크기를 나누지 않음 — 동일한 페이지 제목 규격
 .page-header {
   text-align: center;
-}
-
-.page-header--list {
   margin-bottom: v.space(4xl);
 
-  .page-header__block {
+  &__block {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    flex: 1;
     min-width: 0;
   }
 
@@ -38,68 +33,20 @@
   }
 }
 
-.page-header--centered {
-  margin-bottom: v.space(2xl);
-
-  .title {
-    font-size: clamp(v.fs(2xl), 2.5vw, v.fs(3xl));
-    font-weight: v.fw(bold);
-    color: var(--color-text-heading);
-    margin: 0 0 v.space(sm);
-    line-height: 1.25;
-  }
-
-  .subtitle {
-    margin: 0;
-    font-size: v.fs(base);
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-  }
-}
-
+// 아래 여백만 화면 맥락에 따라 조정 (타이포는 동일)
+.page-header--centered,
 .page-header--auth {
-  margin-bottom: v.space(3xl);
-
-  .title {
-    font-size: v.fs(3xl);
-    font-weight: v.fw(extrabold);
-    letter-spacing: -0.03em;
-    color: var(--color-text-heading);
-    margin: 0 0 v.space(sm);
-  }
-
-  .subtitle {
-    margin: 0;
-    font-size: v.fs(sm);
-    line-height: 1.5;
-    color: var(--color-text-secondary);
-  }
+  margin-bottom: v.space(2xl);
 }
 
 .page-header--inline {
   margin-bottom: 0;
-
-  .title {
-    font-size: v.fs(3xl);
-    font-weight: v.fw(extrabold);
-    letter-spacing: -0.03em;
-    line-height: 1.2;
-    color: var(--color-text-heading);
-    margin: 0 0 v.space(sm);
-  }
-
-  .subtitle {
-    margin: 0;
-    font-size: v.fs(sm);
-    line-height: 1.5;
-    color: var(--color-text-secondary);
-  }
 }
-
-// ── Mobile (파일 맨 아래 — 데스크톱 규칙보다 나중에 적용) ─────────────────
 
 @include bp.below(bp.$md) {
   .page-header {
+    margin-bottom: v.space(2xl);
+
     .badge {
       padding: v.space(xs) v.space(md);
       margin-bottom: v.space(md);
@@ -108,7 +55,7 @@
 
     .title {
       margin-bottom: v.space(xs);
-      font-size: v.fs(2xl);
+      font-size: clamp(v.fs(2xl), 4.5vw, v.fs(3xl));
       line-height: 1.2;
     }
 
@@ -118,18 +65,7 @@
     }
   }
 
-  .page-header--list {
-    margin-bottom: v.space(2xl);
-
-    .title {
-      font-size: clamp(v.fs(2xl), 4.5vw, v.fs(3xl));
-    }
-  }
-
-  .page-header--centered {
-    margin-bottom: v.space(xl);
-  }
-
+  .page-header--centered,
   .page-header--auth {
     margin-bottom: v.space(xl);
   }

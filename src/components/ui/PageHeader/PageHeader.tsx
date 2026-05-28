@@ -10,6 +10,7 @@ export type PageHeaderProps = {
   title: ReactNode;
   subtitle?: ReactNode;
   titleId?: string;
+  /** 타이포는 동일. `centered`·`auth`·`inline`은 제목 아래 여백만 다름 */
   variant?: PageHeaderVariant;
   className?: string;
   titleClassName?: string;
@@ -28,27 +29,15 @@ export default function PageHeader({
   subtitleClassName = "subtitle",
   as: Tag = "header",
 }: PageHeaderProps) {
-  const content = (
-    <>
-      <Badge>{badge}</Badge>
-      <h1 id={titleId} className={titleClassName}>
-        {title}
-      </h1>
-      {subtitle != null ? <p className={subtitleClassName}>{subtitle}</p> : null}
-    </>
-  );
-
-  if (variant === "list") {
-    return (
-      <Tag className={clsx("page-header page-header--list", className)}>
-        <div className="page-header__block">{content}</div>
-      </Tag>
-    );
-  }
-
   return (
     <Tag className={clsx("page-header", `page-header--${variant}`, className)}>
-      {content}
+      <div className="page-header__block">
+        <Badge>{badge}</Badge>
+        <h1 id={titleId} className={titleClassName}>
+          {title}
+        </h1>
+        {subtitle != null ? <p className={subtitleClassName}>{subtitle}</p> : null}
+      </div>
     </Tag>
   );
 }

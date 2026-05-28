@@ -3,100 +3,38 @@
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
-// 스타일 가이드 전용 — 부드러운 플로팅 카드 (레퍼런스 UI kit 느낌)
-@mixin sg-float-card($radius-key: p20) {
-  background: var(--color-card);
-  border-radius: v.rad($radius-key);
-  border: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
-  box-shadow:
-    0 1px 2px color-mix(in srgb, var(--color-text) 4%, transparent),
-    0 16px 48px -12px color-mix(in srgb, var(--color-text) 8%, transparent);
+// 사용자 목록·게시판과 동일한 카드 셸
+@mixin sg-surface-card($radius-key: p16) {
+  @include card-surface-shell($radius-key);
 }
 
 .style-guide-page {
-  --sg-max: #{v.layout-max(content)};
-  --sg-gutter: clamp(#{v.space(lg)}, 4vw, #{v.space(3xl)});
-
   @extend %page-container;
-  position: relative;
-  max-width: none;
-  min-height: 100%;
-  padding-inline: var(--sg-gutter);
-  box-sizing: border-box;
-  background: transparent;
+  @extend %page-sections-stack;
 }
 
-.sg-ambient {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: v.z(below);
+.style-guide-page__masthead {
+  display: flex;
+  flex-direction: column;
+  gap: v.space(xl);
 }
 
-.sg-ambient__orb {
-  position: absolute;
-  border-radius: v.rad(circle);
-  filter: blur(56px);
-  opacity: 0.5;
+.style-guide-page__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 
-  &--1 {
-    width:  min(520px, 70vw);
-    height: min(520px, 70vw);
-    top: -180px;
-    right: -120px;
-    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  .page-header {
+    margin-bottom: 0;
   }
-
-  &--2 {
-    width: min(440px, 60vw);
-    height: min(440px, 60vw);
-    top: 38%;
-    left: -160px;
-    background: color-mix(in srgb, var(--color-primary) 6%, var(--color-bg-subtle-2));
-  }
-
-  &--3 {
-    width: min(640px, 90vw);
-    height: min(640px, 90vw);
-    bottom: -220px;
-    right: 8%;
-    opacity: 0.35;
-    background: color-mix(in srgb, var(--color-border) 55%, transparent);
-  }
-
-  &--4 {
-    width: min(480px, 70vw);
-    height: min(480px, 70vw);
-    bottom: 5%;
-    left: -12%;
-    opacity: 0.3;
-    background: color-mix(in srgb, var(--color-bg-subtle-2) 80%, transparent);
-  }
-}
-
-[data-theme="dark"] .sg-ambient__orb {
-  opacity: 0.22;
 }
 
 .sg-jump {
   position: sticky;
   top: var(--header-height);
   z-index: v.z(raised);
-  margin: 0 calc(-1 * var(--sg-gutter)) v.space(2xl);
-  padding: v.space(sm) var(--sg-gutter);
-  box-sizing: border-box;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-
-  @include bp.below(bp.$md) {
-    margin-bottom: v.space(xl);
-  }
-}
-
-.sg-jump__inner {
-  max-width: var(--sg-max);
-  margin: 0 auto;
+  margin: 0;
+  padding-bottom: 0;
 }
 
 .sg-jump__list {
@@ -110,9 +48,9 @@
   overscroll-behavior-x: contain;
   scrollbar-width: none;
   border-radius: v.rad(p12);
-  background: color-mix(in srgb, var(--color-card) 88%, var(--color-bg-subtle));
-  border: 1px solid color-mix(in srgb, var(--color-border) 45%, transparent);
-  box-shadow: 0 1px 2px color-mix(in srgb, var(--color-text) 4%, transparent);
+  background: var(--color-card);
+  border: 1px solid var(--color-card-border);
+  @include sh.table-surface;
 
   &::-webkit-scrollbar {
     display: none;
@@ -165,53 +103,8 @@
   }
 }
 
-[data-theme="dark"] .sg-jump {
-  background: color-mix(in srgb, var(--color-bg) 78%, transparent);
-  border-bottom-color: color-mix(in srgb, var(--color-border) 70%, transparent);
-}
-
-[data-theme="dark"] .sg-jump__list {
-  background: color-mix(in srgb, var(--color-card) 92%, var(--color-bg-subtle));
-}
-
 [data-theme="dark"] .sg-jump__link.is-active {
   background: var(--color-bg-subtle-2);
-}
-
-.sg-hero {
-  position: relative;
-  z-index: v.z(base);
-  max-width: 40rem;
-  margin: 0 auto;
-  padding-bottom: v.space(2xl);
-
-  .page-header--list {
-    margin-bottom: v.space(2xl);
-  }
-
-  @include bp.below(bp.$md) {
-    padding-bottom: v.space(xl);
-  }
-}
-
-.sg-hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: v.space(md);
-  margin-bottom: 0;
-}
-
-.sg-content {
-  position: relative;
-  z-index: v.z(base);
-  width: 100%;
-  max-width: var(--sg-max);
-  margin: 0 auto;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  @include page-section-gap;
 }
 
 .sg-section__head {
@@ -221,6 +114,27 @@
 
   @include bp.below(bp.$md) {
     max-width: none;
+  }
+}
+
+.sg-section__head,
+.sg-section__body {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity #{v.dur(section)} #{v.ease(out-expo)},
+    transform #{v.dur(section)} #{v.ease(out-expo)};
+}
+
+.sg-section__body {
+  transition-delay: 0.08s;
+}
+
+.sg-section.sg-reveal--visible {
+  .sg-section__head,
+  .sg-section__body {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -254,6 +168,13 @@
   color: var(--color-text-secondary);
 }
 
+/* 고정 헤더 아래로 앵커 스크롤 여유 */
+.style-guide-page {
+  [id^="sg-"] {
+    scroll-margin-top: calc(var(--header-height) + #{v.space(lg)});
+  }
+}
+
 // ── Typography ────────────────────────────────────────────────
 
 .sg-type-hero {
@@ -263,7 +184,7 @@
   align-items: center;
   margin-bottom: v.space(2xl);
   padding: v.space(3xl) v.space(3xl);
-  @include sg-float-card(p24);
+  @include sg-surface-card(p16);
 
   @include bp.below(bp.$md) {
     grid-template-columns: 1fr;
@@ -323,7 +244,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  @include sg-float-card(p20);
+  @include sg-surface-card(p16);
   padding: v.space(sm) v.space(xl);
 }
 
@@ -412,21 +333,22 @@
   gap: v.space(md);
 }
 
-.sg-color-scheme,
-.sg-color-semantic {
+.sg-color-scheme {
   overflow: hidden;
   border-radius: v.rad(p16);
   border: 1px solid color-mix(in srgb, var(--color-border) 65%, transparent);
   box-shadow:
     0 1px 2px color-mix(in srgb, var(--color-text) 4%, transparent),
     0 12px 40px -16px color-mix(in srgb, var(--color-text) 10%, transparent);
-}
-
-.sg-color-scheme {
   display: grid;
   grid-template-columns: minmax(0, 1.28fr) repeat(4, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(7.25rem, 1fr));
   min-height: clamp(15rem, 34vw, 20rem);
+  background: var(--color-bg);
+
+  > .sg-color-scheme__cell {
+    border-radius: 0;
+  }
 
   @include bp.below(bp.$md) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -435,13 +357,97 @@
   }
 }
 
-.sg-color-semantic {
+.sg-color-semantic-board {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  min-height: 5.5rem;
+  gap: v.space(md);
+  overflow: hidden;
+  border-radius: v.rad(p16);
+  border: 1px solid color-mix(in srgb, var(--color-border) 65%, transparent);
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--color-text) 4%, transparent),
+    0 12px 40px -16px color-mix(in srgb, var(--color-text) 10%, transparent);
 
   @include bp.below(bp.$md) {
-    min-height: 4.75rem;
+    grid-template-columns: 1fr;
+  }
+}
+
+.sg-color-semantic-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: v.rad(p12);
+
+  @include bp.below(bp.$md) {
+    border-radius: v.rad(p16);
+  }
+}
+
+.sg-color-semantic-group__title {
+  margin: 0;
+  padding: v.space(md) v.space(lg) v.space(sm);
+  font-size: v.fs(sm);
+  font-weight: v.fw(bold);
+  letter-spacing: -0.02em;
+  color: var(--color-text-heading);
+  background: var(--color-card);
+}
+
+.sg-color-semantic-group__strip {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+
+  .sg-color-scheme__cell {
+    min-height: 5.5rem;
+    border-radius: 0;
+
+    &:first-child {
+      border-top-left-radius: v.rad(p12);
+      border-top-right-radius: v.rad(p12);
+    }
+
+    &:not(:last-child) {
+      border-bottom: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
+    }
+  }
+
+  @include bp.below(bp.$md) {
+    .sg-color-scheme__cell {
+      min-height: 4.75rem;
+    }
+  }
+}
+
+.sg-color-copy-toast {
+  position: fixed;
+  left: 50%;
+  top: calc(var(--header-height) + #{v.space(lg)});
+  z-index: v.z(toast);
+  transform: translateX(-50%);
+  pointer-events: none;
+  animation: sg-color-copy-toast-in 0.28s #{v.ease(default)};
+
+  .sg-toast {
+    max-width: min(24rem, calc(100vw - #{v.space(3xl)}));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@keyframes sg-color-copy-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(calc(-1 * #{v.space(sm)}));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
 }
 
@@ -452,10 +458,33 @@
   justify-content: flex-end;
   align-items: flex-start;
   gap: v.space(px5);
+  width: 100%;
   min-height: 7.25rem;
   padding: clamp(#{v.space(md)}, 2.4vw, #{v.space(lg)});
+  border: none;
+  border-radius: 0;
+  font: inherit;
   color: #fff;
   text-align: left;
+  cursor: pointer;
+  background-color: transparent;
+  transition:
+    filter #{v.dur(fast)} #{v.ease(default)},
+    transform #{v.dur(fast)} #{v.ease(default)};
+
+  &:hover {
+    filter: brightness(1.06);
+  }
+
+  &:active {
+    transform: scale(0.985);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    z-index: 1;
+  }
 
   @include bp.below(bp.$md) {
     min-height: 6.5rem;
@@ -527,7 +556,7 @@
 }
 
 .sg-panel {
-  @include sg-float-card(p20);
+  @include sg-surface-card(p16);
   padding: v.space(xl);
 
   &--wide {
@@ -655,7 +684,7 @@
 }
 
 .sg-showcase-card {
-  @include sg-float-card(p20);
+  @include sg-surface-card(p16);
   padding: v.space(xl) v.space(xl) v.space(2xl);
   display: flex;
   flex-direction: column;
@@ -707,7 +736,7 @@
 }
 
 .sg-demo-card {
-  @include sg-float-card(p16);
+  @include sg-surface-card(p16);
   padding: v.space(lg);
   width: 100%;
   box-shadow: none;
@@ -878,7 +907,7 @@
 }
 
 .sg-widget {
-  @include sg-float-card(p20);
+  @include sg-surface-card(p16);
   padding: v.space(xl);
 }
 
@@ -921,7 +950,7 @@
 }
 
 .sg-board-preview {
-  @include sg-float-card(p20);
+  @include sg-surface-card(p16);
   overflow: hidden;
 }
 
@@ -966,7 +995,7 @@
 }
 
 .sg-calendar-preview {
-  @include sg-float-card(p20);
+  @include sg-surface-card(p16);
   padding: v.space(lg);
 }
 
@@ -1010,7 +1039,7 @@
 
 .sg-form-preview,
 .sg-comment-preview {
-  @include sg-float-card(p20);
+  @include sg-surface-card(p16);
   padding: v.space(xl);
   display: flex;
   flex-direction: column;
@@ -1045,7 +1074,7 @@
 
 .sg-theme-panel {
   overflow: hidden;
-  @include sg-float-card(p20);
+  @include sg-surface-card(p16);
 
   &[data-theme="dark"] {
     color-scheme: dark;
@@ -1087,7 +1116,7 @@
 }
 
 .sg-theme-panel__card {
-  @include sg-float-card(p16);
+  @include sg-surface-card(p16);
   padding: v.space(lg);
   margin-bottom: v.space(lg);
   background: var(--color-card);
@@ -1139,8 +1168,7 @@
 // ── Footer ────────────────────────────────────────────────────
 
 .sg-footer {
-  max-width: var(--sg-max);
-  margin: v.space(5xl) auto 0;
+  margin: 0;
   padding-top: v.space(2xl);
   text-align: center;
   font-size: v.fs(sm);

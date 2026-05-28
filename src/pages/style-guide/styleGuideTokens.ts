@@ -32,10 +32,37 @@ export const COLOR_SCHEME_GRID: ColorSchemeCell[] = [
   { name: "Card", cssVar: "--color-bg", hex: "#ffffff", tone: "ink" },
 ];
 
-export const COLOR_SEMANTIC_SWATCHES: ColorSchemeCell[] = [
-  { name: "Success", cssVar: "--color-success", hex: "#16a34a", tone: "on-color" },
-  { name: "Error", cssVar: "--color-error", hex: "#ef4444", tone: "on-color" },
-  { name: "Warning", cssVar: "--color-warning", hex: "#f59e0b", tone: "on-color" },
+export type ColorSemanticGroup = {
+  title: string;
+  swatches: ColorSchemeCell[];
+};
+
+/** Success / Warning / Danger — 각 3단계 (이미지 팔레트와 동기) */
+export const COLOR_SEMANTIC_GROUPS: ColorSemanticGroup[] = [
+  {
+    title: "Success",
+    swatches: [
+      { name: "100", cssVar: "--color-success-100", hex: "#66DD83", tone: "ink" },
+      { name: "500", cssVar: "--color-success-500", hex: "#00C781", tone: "on-color" },
+      { name: "600", cssVar: "--color-success-600", hex: "#00B374", tone: "on-color" },
+    ],
+  },
+  {
+    title: "Warning",
+    swatches: [
+      { name: "100", cssVar: "--color-warning-100", hex: "#FFD688", tone: "ink" },
+      { name: "500", cssVar: "--color-warning-500", hex: "#FFB838", tone: "on-color" },
+      { name: "300", cssVar: "--color-warning-300", hex: "#E6A832", tone: "on-color" },
+    ],
+  },
+  {
+    title: "Danger",
+    swatches: [
+      { name: "100", cssVar: "--color-danger-100", hex: "#FF8C8C", tone: "ink" },
+      { name: "500", cssVar: "--color-danger-500", hex: "#FF4040", tone: "on-color" },
+      { name: "700", cssVar: "--color-danger-700", hex: "#CC3333", tone: "on-color" },
+    ],
+  },
 ];
 
 export const SPACING_SCALE = [

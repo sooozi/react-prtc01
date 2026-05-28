@@ -10,6 +10,7 @@ const meta = {
     variant: {
       control: 'select',
       options: ['list', 'centered', 'auth', 'inline'],
+      description: '타이포는 동일. 제목 아래 margin-bottom만 다름',
     },
   },
 } satisfies Meta<typeof PageHeader>;

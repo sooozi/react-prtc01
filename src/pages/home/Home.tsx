@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, PageHeader } from "@/components";
+import { PageHeader } from "@/components";
+import { HomeMarquee } from "@/pages/home/HomeMarquee";
 import "@/pages/home/Home.scss";
 
 export default function Home() {
@@ -76,6 +77,12 @@ export default function Home() {
     { to: "/user/mypage", label: "마이페이지", icon: "👤" },
   ];
 
+  const marqueeMenus = [
+    { to: "/home", label: "홈" },
+    ...quickLinks.map(({ to, label }) => ({ to, label })),
+    { to: "/style-guide", label: "스타일 가이드" },
+  ];
+
   return (
     <div className="home-page" ref={pageRef}>
       <section className="hero" aria-labelledby="home-hero-title">
@@ -84,9 +91,12 @@ export default function Home() {
             badge="Practice Project"
             title={
               <>
-                더 빠르고, 더 아름다운
-                <br />
-                <span className="gradient-text">개발 경험</span>
+                <span className="hero-title__line">더 빠르고, 더 아름다운</span>
+                <span className="hero-title__line hero-title__line--accent">
+                  <span className="hero-title__glitch" data-text="개발 경험">
+                    개발 경험
+                  </span>
+                </span>
               </>
             }
             titleId="home-hero-title"
@@ -94,8 +104,6 @@ export default function Home() {
             subtitle={
               <>
                 Vite · React · TypeScript 기반으로 게시판·회원·일정 UI를 붙여 본 저장소입니다.
-                <br />
-                일부 메뉴는 로그인 후에 이용할 수 있어요.
               </>
             }
             subtitleClassName="hero-description"
@@ -103,16 +111,10 @@ export default function Home() {
             className="hero-copy"
             as="div"
           />
-          <div className="hero-actions">
-            <Button variant="primary" onClick={() => navigate("/auth/signup")}>
-              회원가입
-            </Button>
-            <Button variant="secondary" onClick={() => navigate("/about")}>
-              서비스 소개
-            </Button>
-          </div>
         </div>
       </section>
+
+      <HomeMarquee items={marqueeMenus} />
 
       <section
         id="features"

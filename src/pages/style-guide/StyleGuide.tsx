@@ -1,5 +1,4 @@
-import clsx from "clsx";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Badge,
   Button,
@@ -9,16 +8,21 @@ import {
   Pagination,
   PostDetailDataSkeleton,
 } from "@/components";
-import { SgSection } from "@/pages/style-guide/components/SgSection";
 import {
-  COLOR_SCHEME_GRID,
-  COLOR_SEMANTIC_SWATCHES,
-  type ColorSchemeCell,
-  FONT_WEIGHTS,
-  RADIUS_SCALE,
-  SPACING_SCALE,
-  TYPE_SCALE,
-} from "@/pages/style-guide/styleGuideTokens";
+  SgBoardPreview,
+  SgCalendarPreview,
+  SgColorSchemeBoard,
+  SgDashboardWidget,
+  SgEmptyState,
+  SgFormPreview,
+  SgLiquidGlass,
+  SgPreviewCommentCard,
+  SgPreviewTabs,
+  SgPreviewToast,
+  SgSection,
+  SgThemePreviewPanel,
+} from "@/pages/style-guide/components";
+import { FONT_WEIGHTS, RADIUS_SCALE, SPACING_SCALE, TYPE_SCALE } from "@/pages/style-guide/styleGuideTokens";
 import "@/pages/style-guide/StyleGuide.scss";
 
 const NAV_ANCHORS = [
@@ -29,223 +33,8 @@ const NAV_ANCHORS = [
   { href: "#sg-components", label: "Components" },
   { href: "#sg-preview", label: "UI Preview" },
   { href: "#sg-theme", label: "Themes" },
+  { href: "#sg-glass", label: "Glass" },
 ] as const;
-
-function ColorSchemeCellView({ cell }: { cell: ColorSchemeCell }) {
-  const tone = cell.tone ?? "on-color";
-
-  return (
-    <div
-      className={clsx(
-        "sg-color-scheme__cell",
-        cell.spanRows === 2 && "sg-color-scheme__cell--span-rows",
-        tone === "ink" && "sg-color-scheme__cell--ink"
-      )}
-      style={{ backgroundColor: `var(${cell.cssVar})` }}
-    >
-      {cell.eyebrow ? <span className="sg-color-scheme__eyebrow">{cell.eyebrow}</span> : null}
-      <span className="sg-color-scheme__label">{cell.name}</span>
-      <span className="sg-color-scheme__hex">{cell.hex}</span>
-    </div>
-  );
-}
-
-function ColorSchemeBoard() {
-  return (
-    <div className="sg-color-system">
-      <div className="sg-color-scheme" role="img" aria-label="프로젝트 컬러 스킴">
-        {COLOR_SCHEME_GRID.map((cell) => (
-          <ColorSchemeCellView key={cell.cssVar} cell={cell} />
-        ))}
-      </div>
-      <div className="sg-color-semantic" aria-label="시맨틱 컬러">
-        {COLOR_SEMANTIC_SWATCHES.map((cell) => (
-          <ColorSchemeCellView key={cell.cssVar} cell={cell} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function MockTabs() {
-  const baseId = useId();
-  const [active, setActive] = useState<"all" | "notice" | "qna">("all");
-  const tabs = [
-    { id: "all" as const, label: "전체" },
-    { id: "notice" as const, label: "공지" },
-    { id: "qna" as const, label: "Q&A" },
-  ];
-
-  return (
-    <div className="sg-tabs" role="tablist" aria-label="게시판 분류">
-      {tabs.map((tab) => (
-        <button
-          key={tab.id}
-          type="button"
-          role="tab"
-          id={`${baseId}-${tab.id}`}
-          aria-selected={active === tab.id}
-          aria-controls={`${baseId}-panel`}
-          className={active === tab.id ? "sg-tabs__tab is-active" : "sg-tabs__tab"}
-          onClick={() => setActive(tab.id)}
-        >
-          {tab.label}
-        </button>
-      ))}
-      <div
-        id={`${baseId}-panel`}
-        role="tabpanel"
-        aria-labelledby={`${baseId}-${active}`}
-        className="sg-tabs__panel"
-      >
-        {active === "all" && "전체 게시글 목록을 표시합니다."}
-        {active === "notice" && "공지사항만 필터링합니다."}
-        {active === "qna" && "Q&A 게시글만 표시합니다."}
-      </div>
-    </div>
-  );
-}
-
-function MockToast() {
-  return (
-    <div className="sg-toast" role="status">
-      <span className="sg-toast__icon" aria-hidden>
-        ✓
-      </span>
-      <span className="sg-toast__text">저장되었습니다.</span>
-    </div>
-  );
-}
-
-function MockCommentCard() {
-  return (
-    <article className="sg-comment-card">
-      <div className="sg-comment-card__avatar" aria-hidden>
-        A
-      </div>
-      <div className="sg-comment-card__body">
-        <header className="sg-comment-card__head">
-          <span className="sg-comment-card__author">alex.dev</span>
-          <time className="sg-comment-card__time" dateTime="2025-05-28">
-            2시간 전
-          </time>
-        </header>
-        <p className="sg-comment-card__text">
-          디자인 토큰 기반으로 카드·spacing을 맞추면 페이지 간 일관성이 좋아집니다.
-        </p>
-      </div>
-    </article>
-  );
-}
-
-function DashboardWidget() {
-  return (
-    <div className="sg-widget sg-widget--stat">
-      <p className="sg-widget__label">이번 주 조회수</p>
-      <p className="sg-widget__value">12,480</p>
-      <p className="sg-widget__delta sg-widget__delta--up">+18.2%</p>
-      <div className="sg-widget__bars" aria-hidden>
-        {[40, 65, 45, 80, 55, 90, 70].map((h, i) => (
-          <span key={i} className="sg-widget__bar" style={{ height: `${h}%` }} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function BoardPreviewMock() {
-  return (
-    <div className="sg-board-preview">
-      <div className="sg-board-preview__toolbar">
-        <span className="sg-board-preview__title">게시판</span>
-        <Button variant="primary" size="sm">
-          글쓰기
-        </Button>
-      </div>
-      <table className="sg-board-preview__table">
-        <thead>
-          <tr>
-            <th scope="col">번호</th>
-            <th scope="col">제목</th>
-            <th scope="col">작성자</th>
-            <th scope="col">조회</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>42</td>
-            <td>Style Guide 페이지 오픈</td>
-            <td>admin</td>
-            <td>128</td>
-          </tr>
-          <tr>
-            <td>41</td>
-            <td>디자인 토큰 정리 노트</td>
-            <td>dev</td>
-            <td>86</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function CalendarPreviewMock() {
-  const days = ["일", "월", "화", "수", "목", "금", "토"];
-  const cells = Array.from({ length: 35 }, (_, i) => i + 1);
-
-  return (
-    <div className="sg-calendar-preview" aria-label="달력 미리보기">
-      <div className="sg-calendar-preview__head">
-        <span className="sg-calendar-preview__month">2025년 5월</span>
-      </div>
-      <div className="sg-calendar-preview__grid">
-        {days.map((d) => (
-          <span key={d} className="sg-calendar-preview__dow">
-            {d}
-          </span>
-        ))}
-        {cells.map((n) => (
-          <span
-            key={n}
-            className={
-              n === 28 ? "sg-calendar-preview__day is-today" : "sg-calendar-preview__day"
-            }
-          >
-            {n <= 31 ? n : ""}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ThemePreviewPanel({ theme }: { theme: "light" | "dark" }) {
-  return (
-    <div className="sg-theme-panel" data-theme={theme}>
-      <div className="sg-theme-panel__inner">
-        <p className="sg-theme-panel__mode">{theme === "light" ? "Light" : "Dark"}</p>
-        <div className="sg-theme-panel__card">
-          <span className="sg-theme-panel__badge">Badge</span>
-          <h3 className="sg-theme-panel__title">카드 제목</h3>
-          <p className="sg-theme-panel__body">본문과 보조 텍스트 계층을 확인합니다.</p>
-          <div className="sg-theme-panel__actions">
-            <Button variant="primary" size="sm">
-              Primary
-            </Button>
-            <Button variant="secondary" size="sm">
-              Secondary
-            </Button>
-          </div>
-        </div>
-        <label className="sg-theme-panel__field">
-          <span className="sg-theme-panel__label">Input</span>
-          <input type="text" className="input" placeholder="placeholder" />
-        </label>
-      </div>
-    </div>
-  );
-}
 
 export default function StyleGuide() {
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -281,34 +70,44 @@ export default function StyleGuide() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const nodes = document.querySelectorAll<HTMLElement>(".sg-section");
+    if (nodes.length === 0) return;
+
+    if (reduced) {
+      nodes.forEach((el) => el.classList.add("sg-reveal--visible"));
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          (entry.target as HTMLElement).classList.add("sg-reveal--visible");
+          io.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.18, rootMargin: "0px 0px -18% 0px" }
+    );
+
+    nodes.forEach((n) => io.observe(n));
+    return () => io.disconnect();
+  }, []);
+
   return (
     <div className="style-guide-page">
-      <div className="sg-ambient" aria-hidden>
-        <span className="sg-ambient__orb sg-ambient__orb--1" />
-        <span className="sg-ambient__orb sg-ambient__orb--2" />
-        <span className="sg-ambient__orb sg-ambient__orb--3" />
-        <span className="sg-ambient__orb sg-ambient__orb--4" />
-      </div>
-
-      <section id="sg-hero" className="sg-hero" aria-labelledby="sg-hero-title">
-        <PageHeader
-          badge="Visual System"
-          title="Style Guide"
-          titleId="sg-hero-title"
-          subtitle="디자인 토큰과 컴포넌트, 실제 UI 리듬을 한눈에 보여주는 시스템 쇼케이스입니다."
-        />
-        <div className="sg-hero__actions">
-          <Button variant="primary" onClick={() => document.getElementById("sg-components")?.scrollIntoView({ behavior: "smooth" })}>
-            컴포넌트 보기
-          </Button>
-          <Button variant="secondary" onClick={() => document.getElementById("sg-color")?.scrollIntoView({ behavior: "smooth" })}>
-            컬러 팔레트
-          </Button>
+      <div className="style-guide-page__masthead">
+        <div id="sg-hero" className="style-guide-page__intro">
+          <PageHeader
+            badge="Visual System"
+            title="Style Guide"
+            titleId="sg-hero-title"
+            subtitle="디자인 토큰과 컴포넌트, 실제 UI 리듬을 한눈에 보여주는 시스템 쇼케이스입니다."
+          />
         </div>
-      </section>
 
-      <nav className="sg-jump" aria-label="스타일 가이드 목차">
-        <div className="sg-jump__inner">
+        <nav className="sg-jump" aria-label="스타일 가이드 목차">
           <ul className="sg-jump__list">
             {NAV_ANCHORS.map((item) => (
               <li key={item.href} className="sg-jump__item">
@@ -324,10 +123,8 @@ export default function StyleGuide() {
               </li>
             ))}
           </ul>
-        </div>
-      </nav>
-
-      <div className="sg-content">
+        </nav>
+      </div>
         <SgSection
           id="sg-type"
           label="01 · Typography"
@@ -371,7 +168,7 @@ export default function StyleGuide() {
           title="컬러 시스템"
           description="포인트 컬러는 CTA·링크·활성 상태에만 사용하고, 나머지는 neutral surface로 구성합니다."
         >
-          <ColorSchemeBoard />
+          <SgColorSchemeBoard />
         </SgSection>
 
         <SgSection
@@ -464,7 +261,7 @@ export default function StyleGuide() {
               <h3 className="sg-showcase-card__title">Badge · Tabs</h3>
               <div className="sg-showcase-card__stack">
                 <Badge>New</Badge>
-                <MockTabs />
+                <SgPreviewTabs />
               </div>
             </article>
 
@@ -501,18 +298,13 @@ export default function StyleGuide() {
 
             <article className="sg-showcase-card">
               <h3 className="sg-showcase-card__title">Toast</h3>
-              <MockToast />
+              <SgPreviewToast />
             </article>
 
             <article className="sg-showcase-card">
               <h3 className="sg-showcase-card__title">Loading · Empty</h3>
               <LoadingState message="불러오는 중…" variant="compact" />
-              <div className="sg-empty" role="status">
-                <span className="sg-empty__icon" aria-hidden>
-                  📭
-                </span>
-                <p>표시할 데이터가 없습니다.</p>
-              </div>
+              <SgEmptyState />
             </article>
 
             <article className="sg-showcase-card sg-showcase-card--wide">
@@ -524,7 +316,7 @@ export default function StyleGuide() {
 
             <article className="sg-showcase-card">
               <h3 className="sg-showcase-card__title">Comment</h3>
-              <MockCommentCard />
+              <SgPreviewCommentCard />
             </article>
           </div>
         </SgSection>
@@ -538,26 +330,15 @@ export default function StyleGuide() {
         >
           <div className="sg-preview-bento">
             <div className="sg-preview-bento__main">
-              <DashboardWidget />
-              <BoardPreviewMock />
+              <SgDashboardWidget />
+              <SgBoardPreview />
             </div>
             <div className="sg-preview-bento__side">
-              <CalendarPreviewMock />
-              <div className="sg-form-preview">
-                <h3 className="sg-form-preview__title">빠른 문의</h3>
-                <label className="sg-field">
-                  <span className="sg-field__label">이름</span>
-                  <input type="text" className="input" />
-                </label>
-                <label className="sg-field">
-                  <span className="sg-field__label">내용</span>
-                  <textarea className="input" rows={3} />
-                </label>
-                <Button variant="primary">제출</Button>
-              </div>
+              <SgCalendarPreview />
+              <SgFormPreview />
               <div className="sg-comment-preview">
                 <h3 className="sg-comment-preview__title">댓글</h3>
-                <MockCommentCard />
+                <SgPreviewCommentCard />
               </div>
             </div>
           </div>
@@ -570,15 +351,19 @@ export default function StyleGuide() {
           description="data-theme 속성으로 전환합니다. 아래 패널은 페이지 테마와 독립적으로 미리보기합니다."
         >
           <div className="sg-theme-compare">
-            <ThemePreviewPanel theme="light" />
-            <ThemePreviewPanel theme="dark" />
+            <SgThemePreviewPanel theme="light" />
+            <SgThemePreviewPanel theme="dark" />
           </div>
         </SgSection>
-      </div>
 
-      <footer className="sg-footer">
-        <p>React Practice Design System · CSS variables + SCSS tokens</p>
-      </footer>
+        <SgSection
+          id="sg-glass"
+          label="07 · Liquid Glass"
+          title="글래스모피즘 키트"
+          description="반투명 레이어, backdrop-blur, 그라데이션 하이라이트를 조합한 실험적 UI 스타일입니다. 본 서비스 기본 톤과는 별도 레퍼런스입니다."
+        >
+          <SgLiquidGlass />
+        </SgSection>
     </div>
   );
 }

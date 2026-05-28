@@ -63,18 +63,26 @@
   --color-input-placeholder: #576474;
 
   
-  --color-success: #16a34a;
-  --color-success-dark: #15803d;
-  --color-success-bg: rgba(22, 163, 74, 0.1);
-  --color-success-border: rgba(22, 163, 74, 0.35);
+  --color-success-100: #66dd83;
+  --color-success-500: #00c781;
+  --color-success-600: #00b374;
+  --color-success: var(--color-success-500);
+  --color-success-dark: var(--color-success-600);
+  --color-success-bg: color-mix(in srgb, var(--color-success-100) 38%, transparent);
+  --color-success-border: color-mix(in srgb, var(--color-success-500) 35%, transparent);
 
-  
-  --color-error: #ef4444;
-  --color-error-dark: #dc2626;
-  --color-error-bg: rgba(239, 68, 68, 0.1);
-  --color-error-border: rgba(239, 68, 68, 0.35);
+  --color-warning-100: #ffd688;
+  --color-warning-500: #ffb838;
+  --color-warning-300: #e6a832;
+  --color-warning: var(--color-warning-500);
 
-  --color-warning: #f59e0b;
+  --color-danger-100: #ff8c8c;
+  --color-danger-500: #ff4040;
+  --color-danger-700: #cc3333;
+  --color-error: var(--color-danger-500);
+  --color-error-dark: var(--color-danger-700);
+  --color-error-bg: color-mix(in srgb, var(--color-danger-100) 38%, transparent);
+  --color-error-border: color-mix(in srgb, var(--color-danger-500) 35%, transparent);
   --color-info: #6366f1;
 
   
@@ -156,17 +164,26 @@
   --color-input-focus-bg: var(--color-bg-subtle-2);
   --color-input-placeholder: #94a3b8;
 
-  --color-success: #4ade80;
-  --color-success-dark: #22c55e;
-  --color-success-bg: rgba(74, 222, 128, 0.12);
-  --color-success-border: rgba(74, 222, 128, 0.35);
+  --color-success-100: #7ae89a;
+  --color-success-500: #00c781;
+  --color-success-600: #00e090;
+  --color-success: var(--color-success-500);
+  --color-success-dark: var(--color-success-600);
+  --color-success-bg: color-mix(in srgb, var(--color-success-100) 22%, transparent);
+  --color-success-border: color-mix(in srgb, var(--color-success-500) 40%, transparent);
 
-  --color-error: #f87171;
-  --color-error-dark: #ef4444;
-  --color-error-bg: rgba(248, 113, 113, 0.15);
-  --color-error-border: rgba(248, 113, 113, 0.4);
+  --color-warning-100: #ffe0a3;
+  --color-warning-500: #ffc04d;
+  --color-warning-300: #e6a832;
+  --color-warning: var(--color-warning-500);
 
-  --color-warning: #fbbf24;
+  --color-danger-100: #ffa3a3;
+  --color-danger-500: #ff5252;
+  --color-danger-700: #e64545;
+  --color-error: var(--color-danger-500);
+  --color-error-dark: var(--color-danger-700);
+  --color-error-bg: color-mix(in srgb, var(--color-danger-100) 22%, transparent);
+  --color-error-border: color-mix(in srgb, var(--color-danger-500) 40%, transparent);
   --color-info: #818cf8;
 
   --color-header-bg: rgba(15, 23, 42, 0.9);
