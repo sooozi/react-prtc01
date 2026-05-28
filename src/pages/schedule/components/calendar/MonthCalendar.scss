@@ -22,6 +22,15 @@
   }
 }
 
+/* Schedule 페이지 워크스페이스 내부에서는 한 겹으로 보이도록(중첩 카드/그림자 제거) */
+.schedule-workspace__calendar .month-calendar {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
 .month-calendar__week-start-row {
   display: flex;
   align-items: center;

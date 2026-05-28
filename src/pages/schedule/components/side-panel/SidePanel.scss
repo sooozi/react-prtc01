@@ -24,6 +24,16 @@
   }
 }
 
+/* Schedule 워크스페이스 내부에서는 패널이 카드 역할을 하므로 중첩을 제거 */
+.schedule-workspace__panel .schedule-side-panel__card {
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+}
+
 .schedule-side-panel__hero {
   position: relative;
   z-index: v.z(raised);

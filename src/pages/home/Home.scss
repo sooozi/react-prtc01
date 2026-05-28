@@ -154,21 +154,14 @@
 .home-marquee-wrap {
   position: relative;
   z-index: v.z(dock);
-  margin-left: calc(-1 * v.space(3xl));
-  margin-right: calc(-1 * v.space(3xl));
   padding: v.space(lg) 0;
-  padding-left: v.space(3xl);
-  padding-right: v.space(3xl);
   overflow: hidden;
   border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
   background: var(--color-bg);
 
   @include bp.below(bp.$md) {
-    margin-left: calc(-1 * v.space(lg));
-    margin-right: calc(-1 * v.space(lg));
-    padding-left: v.space(lg);
-    padding-right: v.space(lg);
+    padding: v.space(md) 0;
   }
 
   &:hover .home-marquee-track {

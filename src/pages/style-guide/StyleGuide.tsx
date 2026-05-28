@@ -100,7 +100,7 @@ export default function StyleGuide() {
       <div className="style-guide-page__masthead">
         <div id="sg-hero" className="style-guide-page__intro">
           <PageHeader
-            badge="Visual System"
+            badge="🎛️ Visual System"
             title="Style Guide"
             titleId="sg-hero-title"
             subtitle="디자인 토큰과 컴포넌트, 실제 UI 리듬을 한눈에 보여주는 시스템 쇼케이스입니다."
