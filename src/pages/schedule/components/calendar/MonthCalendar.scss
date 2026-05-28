@@ -534,7 +534,6 @@
 .month-calendar__grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: v.space(px2);
   background: color-mix(in srgb, var(--color-border) 55%, transparent);
   border-radius: v.rad(p12);
   overflow: hidden;
@@ -696,7 +695,7 @@
 }
 
 .month-calendar__cell--today {
-  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-card));
+  background: color-mix(in srgb, var(--color-primary) 6%, var(--color-card));
   @include sh.mc-cell-today;
 
   .month-calendar__day-num {

@@ -19,6 +19,8 @@ interface TooltipProps {
   disabled?: boolean;
   /** true면 말줄임(overflow)이 있을 때만 툴팁 표시 */
   onlyWhenTruncated?: boolean;
+  /** true면 트리거가 부모 너비를 채우도록 렌더링 (말줄임 감지용) */
+  fullWidth?: boolean;
 }
 
 type ShowReasons = {
@@ -29,7 +31,9 @@ type ShowReasons = {
 
 /** 자식 요소가 가로로 잘려 있는지 확인 (말줄임 여부) */
 function isTruncated(el: HTMLElement | null): boolean {
-  const target = (el?.firstElementChild as HTMLElement) ?? el;
+  const target =
+    el?.querySelector<HTMLElement>("[data-tooltip-truncate]") ??
+    ((el?.firstElementChild as HTMLElement) ?? el);
   if (!target) return false;
   return target.scrollWidth > target.clientWidth;
 }
@@ -39,6 +43,7 @@ export default function Tooltip({
   children,
   disabled = false,
   onlyWhenTruncated = false,
+  fullWidth = false,
 }: TooltipProps) {
   const tooltipId = useId();
   const [state, setState] = useState<{
@@ -175,7 +180,7 @@ export default function Tooltip({
     <>
       <span
         ref={triggerRef}
-        className="tooltip-trigger"
+        className={fullWidth ? "tooltip-trigger tooltip-trigger--full" : "tooltip-trigger"}
         aria-describedby={state.visible ? tooltipId : undefined}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}

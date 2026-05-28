@@ -11,6 +11,11 @@
   }
 }
 
+.tooltip-trigger--full {
+  display: block;
+  width: 100%;
+}
+
 .tooltip-bubble {
   transform: translate(-50%, -100%);
   margin-top: calc(-1 * (v.space(px8) + v.space(px5) + v.space(px5)));

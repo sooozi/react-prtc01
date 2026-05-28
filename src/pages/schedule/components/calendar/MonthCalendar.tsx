@@ -337,11 +337,18 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
               {visibleItems.length > 0 ? (
                 <div className="month-calendar__events" aria-label={`${isoDate} 일정`}>
                   {visibleItems.map((it) => (
-                    <Tooltip key={it.id} content={it.note || "제목 없음"} onlyWhenTruncated>
+                    <Tooltip
+                      key={it.id}
+                      content={it.note || "제목 없음"}
+                      onlyWhenTruncated
+                      fullWidth
+                    >
                       <span
                         className={clsx("month-calendar__event", `month-calendar__event--${it.category}`)}
                       >
-                        <span className="month-calendar__event-text">{it.note || "제목 없음"}</span>
+                        <span className="month-calendar__event-text" data-tooltip-truncate>
+                          {it.note || "제목 없음"}
+                        </span>
                       </span>
                     </Tooltip>
                   ))}
