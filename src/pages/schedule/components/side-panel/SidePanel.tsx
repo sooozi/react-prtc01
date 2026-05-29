@@ -27,11 +27,12 @@ type ScheduleDraftItem = {
   createdAt: number;
 };
 
+// 로컬스토리지에서 일정 데이터를 읽어오는 함수(새 일정은 배열 맨 앞에 추가)
 function safeReadScheduleItems(): ScheduleDraftItem[] {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return [];
+  const raw = localStorage.getItem(STORAGE_KEY); // 로컬스토리지에서 일정 데이터를 읽어옴
+  if (!raw) return []; // 일정 데이터가 없으면 빈 배열 반환
   try {
-    const parsed = JSON.parse(raw) as unknown;
+    const parsed = JSON.parse(raw) as unknown; // 파싱 결과를 ScheduleDraftItem[] 타입으로 형변환
     return Array.isArray(parsed) ? (parsed as ScheduleDraftItem[]) : [];
   } catch {
     return [];

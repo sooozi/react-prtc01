@@ -844,6 +844,7 @@
   border-radius: v.rad(circle);
   font-size: v.fs(sm);
   font-weight: v.fw(bold);
+  line-height: 0;
   color: var(--color-primary);
   background: var(--color-primary-muted);
 }

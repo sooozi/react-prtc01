@@ -1,4 +1,4 @@
-/** 게시글 첨부 허용 확장자 (소문자, 점 없음) */
+// 허용 확장자
 export const ALLOWED_ATTACHMENT_EXTENSIONS = [
   "jpg",
   "jpeg",
@@ -15,11 +15,12 @@ export type AllowedAttachmentExtension = (typeof ALLOWED_ATTACHMENT_EXTENSIONS)[
 
 const ALLOWED_EXTENSION_SET = new Set<string>(ALLOWED_ATTACHMENT_EXTENSIONS);
 
-/** `<input accept>` — MIME 와일드카드 대신 확장자만 명시 (exe/dmg 등 우회 완화) */
+// 파일 선택창: image/* 대신 jpg, png처럼 허용 확장자만 accept에 넣음
 export const ATTACHMENT_FILE_INPUT_ACCEPT = ALLOWED_ATTACHMENT_EXTENSIONS.map((ext) => `.${ext}`).join(
   ",",
 );
 
+// 허용 확장자에 해당하는 MIME 타입
 const ALLOWED_MIME_SET = new Set<string>([
   "image/jpeg",
   "image/png",
@@ -32,7 +33,7 @@ const ALLOWED_MIME_SET = new Set<string>([
   "image/vnd.microsoft.icon",
 ]);
 
-/** 파일명 중간에 숨겨진 실행·설치 파일 확장자 */
+// 파일명 중간에 숨겨진 실행·설치 파일 확장자
 const DANGEROUS_EXTENSIONS_IN_NAME = new Set<string>([
   "exe",
   "dmg",
@@ -56,6 +57,7 @@ const DANGEROUS_EXTENSIONS_IN_NAME = new Set<string>([
   "iso",
 ]);
 
+// 차단된 MIME 타입 집합
 const BLOCKED_MIME_EXACT = new Set<string>([
   "application/x-msdownload",
   "application/x-msdos-program",
@@ -77,7 +79,7 @@ export const ALLOWED_ATTACHMENT_EXTENSIONS_LABEL = ALLOWED_ATTACHMENT_EXTENSIONS
 
 export const ATTACHMENT_ALLOWLIST_FORM_ERROR = `허용되지 않는 파일 형식이 포함되어 있습니다. (${ALLOWED_ATTACHMENT_EXTENSIONS_LABEL}만 첨부할 수 있습니다.)`;
 
-/** 마지막 `.` 뒤 확장자 (소문자). 없거나 비정상이면 `null` */
+// 마지막 `.` 뒤 확장자 (소문자). 없거나 비정상이면 `null`
 export function getNormalizedFileExtension(fileName: string): string | null {
   const trimmed = fileName.trim();
   const lastDot = trimmed.lastIndexOf(".");
@@ -87,11 +89,12 @@ export function getNormalizedFileExtension(fileName: string): string | null {
   return ext;
 }
 
+// 파일명 중간에 숨겨진 실행·설치 파일 확장자 검사
 function hasDangerousExtensionSegment(fileName: string): boolean {
-  const lower = fileName.trim().toLowerCase();
-  const parts = lower.split(".");
-  if (parts.length < 2) return false;
-  for (let i = 1; i < parts.length; i++) {
+  const lower = fileName.trim().toLowerCase(); // 파일명 소문자로 변환
+  const parts = lower.split("."); // 파일명을 . 기준으로 분리
+  if (parts.length < 2) return false; // 파일명에 .이 없거나 하나 => 실행·설치 파일 확장자 검사 필요 없음
+  for (let i = 1; i < parts.length; i++) { // 파일명 중간에 있는 확장자 검사
     if (DANGEROUS_EXTENSIONS_IN_NAME.has(parts[i]!)) return true;
   }
   return false;
@@ -107,18 +110,18 @@ function isBlockedMimeType(mime: string): boolean {
   return true;
 }
 
-/** 확장자 화이트리스트 + MIME·이중 확장자 검사 */
+// 확장자 화이트리스트 + MIME·이중 확장자 검사 (파일 업로드 시 허용 여부 검사)
 export function isAllowedAttachmentFile(file: File): boolean {
-  if (hasDangerousExtensionSegment(file.name)) return false;
+  if (hasDangerousExtensionSegment(file.name)) return false; // 파일명 중간에 숨겨진 실행·설치 파일 확장자 검사
 
-  const ext = getNormalizedFileExtension(file.name);
-  if (!ext || !ALLOWED_EXTENSION_SET.has(ext)) return false;
+  const ext = getNormalizedFileExtension(file.name); // 마지막 `.` 뒤 확장자 (소문자). 없거나 비정상 => `null`
+  if (!ext || !ALLOWED_EXTENSION_SET.has(ext)) return false; // 허용 확장자 검사
 
-  const mime = file.type.trim().toLowerCase();
-  if (isBlockedMimeType(mime)) return false;
-  if (!mime || mime === "application/octet-stream") return true;
-  if (mime.startsWith("image/")) return true;
-  return ALLOWED_MIME_SET.has(mime);
+  const mime = file.type.trim().toLowerCase(); // MIME 타입 소문자로 변환
+  if (isBlockedMimeType(mime)) return false; // 차단된 MIME 타입 검사
+  if (!mime || mime === "application/octet-stream") return true; // MIME 타입이 없거나 application/octet-stream이면 허용
+  if (mime.startsWith("image/")) return true; // MIME 타입이 image/로 시작하면 허용
+  return ALLOWED_MIME_SET.has(mime); // 허용 확장자에 해당하는 MIME 타입 검사
 }
 
 export function partitionFilesByAttachmentAllowlist(files: File[]): {

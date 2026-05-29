@@ -115,6 +115,7 @@ export default function Update() {
       setFieldErrors({ content: "내용을 입력해주세요." });
       return;
     }
+    // 첨부 파일 허용 여부 검사
     if (
       editAttachmentRows.some((r) => r.kind === "local" && !isAllowedAttachmentFile(r.file))
     ) {

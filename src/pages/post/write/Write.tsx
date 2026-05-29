@@ -49,6 +49,7 @@ export default function Write() {
       setFieldErrors({ content: "내용을 입력해주세요." });
       return;
     }
+    // 첨부 파일 허용 여부 검사
     if (attachFileItems.some((i) => !isAllowedAttachmentFile(i.file))) {
       setFieldErrors({ attach: ATTACHMENT_ALLOWLIST_FORM_ERROR });
       return;

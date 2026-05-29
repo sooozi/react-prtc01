@@ -72,13 +72,14 @@ export function ImageFileAttachFieldCreate({
     [items, onChange, showNotice]
   );
 
+  // 파일 선택창에서 파일 선택 시 호출되는 함수
   const handleFileInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const list = e.target.files;
+      const list = e.target.files; // 선택된 파일 목록
       e.target.value = "";
-      if (!list) return;
-      const { allowed, rejected } = partitionFileListByAttachmentAllowlist(list);
-      onFilesAdded(allowed, buildRejectedAllowlistMessages(rejected));
+      if (!list) return; // 선택된 파일 목록이 없으면 종료
+      const { allowed, rejected } = partitionFileListByAttachmentAllowlist(list); // 허용된 파일과 차단된 파일 목록을 분리
+      onFilesAdded(allowed, buildRejectedAllowlistMessages(rejected)); // 허용된 파일과 차단된 파일 목록을 전달
     },
     [onFilesAdded]
   );
