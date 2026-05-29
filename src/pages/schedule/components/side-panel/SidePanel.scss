@@ -325,3 +325,45 @@
   gap: v.space(btn-gap);
   padding-top: v.space(lg);
 }
+
+/* 좁은 화면 하단 시트 — 데스크톱 사이드바용 stretch·투명 스타일 덮어쓰기 */
+.schedule-workspace__panel--narrow-open {
+  .schedule-side-panel {
+    flex: none;
+    min-height: 0;
+  }
+
+  .schedule-side-panel__card {
+    height: auto;
+    flex: none;
+  }
+
+  .schedule-side-panel__hero {
+    padding: v.space(md) v.space(lg) v.space(sm);
+
+    &::before {
+      content: "";
+      display: block;
+      width: 2.5rem;
+      height: 0.25rem;
+      margin: 0 auto v.space(md);
+      border-radius: v.rad(pill);
+      background: color-mix(in srgb, var(--color-border) 80%, transparent);
+    }
+  }
+
+  .schedule-side-panel__body {
+    padding: 0 v.space(lg) v.space(lg);
+  }
+
+  .schedule-side-panel__textarea {
+    height: auto;
+    min-height: 6rem;
+    max-height: 10rem;
+  }
+
+  .schedule-side-panel__actions {
+    padding-top: v.space(md);
+    border-top: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
+  }
+}

@@ -105,11 +105,15 @@
   right: 0;
   bottom: 0;
   z-index: v.z(modal);
+  display: flex;
+  flex-direction: column;
   max-height: min(88vh, 640px);
   overflow: auto;
+  overscroll-behavior: contain;
   padding-bottom: env(safe-area-inset-bottom, 0);
   border-radius: v.rad(p16) v.rad(p16) 0 0;
-  border-top: none;
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
+  background-color: var(--color-card);
   box-shadow: 0 -8px 32px color-mix(in srgb, var(--color-text-heading) 12%, transparent);
 }
 
