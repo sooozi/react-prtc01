@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   COLOR_SCHEME_GRID,
   COLOR_SEMANTIC_GROUPS,
@@ -81,16 +82,19 @@ export function SgColorSchemeBoard() {
         ))}
       </div>
 
-      {copyToast ? (
-        <div className="sg-color-copy-toast" role="status" aria-live="polite">
-          <div className="sg-toast">
-            <span className="sg-toast__icon" aria-hidden>
-              ✓
-            </span>
-            <span className="sg-toast__text">{copyToast}</span>
-          </div>
-        </div>
-      ) : null}
+      {copyToast
+        ? createPortal(
+            <div className="sg-color-copy-toast" role="status" aria-live="polite">
+              <div className="sg-toast">
+                <span className="sg-toast__icon" aria-hidden>
+                  ✓
+                </span>
+                <span className="sg-toast__text">{copyToast}</span>
+              </div>
+            </div>,
+            document.body
+          )
+        : null}
     </div>
   );
 }

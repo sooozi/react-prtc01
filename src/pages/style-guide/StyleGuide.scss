@@ -195,6 +195,7 @@
   line-height: 1;
   letter-spacing: -0.05em;
   color: var(--color-text-heading);
+  z-index: 1;
 }
 
 .sg-type-hero__orb {
@@ -203,8 +204,8 @@
   height: 100px;
   border-radius: v.rad(circle);
   background: color-mix(in srgb, var(--color-primary) 28%, transparent);
-  transform: translate(20%, -8%);
-  z-index: v.z(below);
+  transform: translate(35%, -15%);
+  z-index: 0;
 }
 
 .sg-type-hero__family {
@@ -412,14 +413,21 @@
   }
 }
 
+// body 포털 — --header-height는 .layout-container에만 있어 top이 무효 → 문서 하단에 붙음
 .sg-color-copy-toast {
   position: fixed;
-  left: 50%;
-  top: calc(var(--header-height) + #{v.space(lg)});
-  z-index: v.z(toast);
-  transform: translateX(-50%);
+  z-index: calc(#{v.z(header)} + 1);
+  inset-inline: 0;
+  top: calc(#{v.space(lg)} * 2 + 35px + #{v.space(sm)});
+  display: flex;
+  justify-content: center;
+  padding-inline: v.space(lg);
   pointer-events: none;
   animation: sg-color-copy-toast-in 0.28s #{v.ease(default)};
+
+  @include bp.above(bp.$md) {
+    top: calc(#{v.space(lg)} * 2 + 2.5rem + #{v.space(sm)});
+  }
 
   .sg-toast {
     max-width: min(24rem, calc(100vw - #{v.space(3xl)}));
@@ -432,12 +440,12 @@
 @keyframes sg-color-copy-toast-in {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(calc(-1 * #{v.space(sm)}));
+    margin-top: calc(-1 * #{v.space(sm)});
   }
 
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    margin-top: 0;
   }
 }
 
