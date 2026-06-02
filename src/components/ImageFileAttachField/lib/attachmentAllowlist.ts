@@ -100,6 +100,7 @@ function hasDangerousExtensionSegment(fileName: string): boolean {
   return false;
 }
 
+// 차단된 MIME 타입 검사
 function isBlockedMimeType(mime: string): boolean {
   const normalized = mime.trim().toLowerCase();
   if (!normalized) return false;
