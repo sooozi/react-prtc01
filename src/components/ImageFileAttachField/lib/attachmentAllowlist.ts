@@ -11,8 +11,10 @@ export const ALLOWED_ATTACHMENT_EXTENSIONS = [
   "svg",
 ] as const;
 
+// 허용 확장자 타입 (다른 코드에서 확장자를 다룰 때 타입으로 오타/누락을 막고 자동완성을 받기 위해 사용)
 export type AllowedAttachmentExtension = (typeof ALLOWED_ATTACHMENT_EXTENSIONS)[number];
 
+// 허용 확장자 집합
 const ALLOWED_EXTENSION_SET = new Set<string>(ALLOWED_ATTACHMENT_EXTENSIONS);
 
 // 파일 선택창: image/* 대신 jpg, png처럼 허용 확장자만 accept에 넣음
@@ -125,6 +127,7 @@ export function isAllowedAttachmentFile(file: File): boolean {
   return ALLOWED_MIME_SET.has(mime); // 허용 확장자에 해당하는 MIME 타입 검사
 }
 
+// 파일 허용 여부 검사
 export function partitionFilesByAttachmentAllowlist(files: File[]): {
   allowed: File[];
   rejected: File[];
@@ -138,6 +141,7 @@ export function partitionFilesByAttachmentAllowlist(files: File[]): {
   return { allowed, rejected };
 }
 
+// 파일 목록 허용 여부 검사
 export function partitionFileListByAttachmentAllowlist(fileList: FileList | null): {
   allowed: File[];
   rejected: File[];
