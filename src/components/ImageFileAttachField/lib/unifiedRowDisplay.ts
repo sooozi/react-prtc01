@@ -2,6 +2,7 @@ import { formatFileSize } from "@/utils/formatFileSize";
 import type { ImageAttachRowDisplay } from "../hooks/useImageAttachReorder";
 import type { ImageFileUnifiedRow } from "../types";
 
+// 첨부된 이미지 목록을 표시하는 함수
 export function getUnifiedRowDisplay(row: ImageFileUnifiedRow): ImageAttachRowDisplay {
   if (row.kind === "server") {
     return {
@@ -16,10 +17,12 @@ export function getUnifiedRowDisplay(row: ImageFileUnifiedRow): ImageAttachRowDi
   };
 }
 
+// 첨부된 이미지 목록의 고유 키를 생성하는 함수
 export function getUnifiedRowKey(row: ImageFileUnifiedRow): string {
   return row.kind === "server" ? `srv-${row.fileId}` : row.id;
 }
 
+// 첨부된 이미지 목록의 크기를 합산하는 함수
 export function sumUnifiedRowsSizeBytes(rows: readonly ImageFileUnifiedRow[]): number {
   return rows.reduce((sum, r) => {
     if (r.kind === "local") return sum + r.file.size;

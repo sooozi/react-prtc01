@@ -38,14 +38,17 @@ type ScheduleDraftItem = {
   createdAt: number;
 };
 
+// 숫자를 두 자리 문자열로 변환하는 함수
 function pad2(n: number): string {
   return n < 10 ? `0${n}` : String(n);
 }
 
+// 날짜를 ISO 형식으로 변환하는 함수
 function toISODateLocal(d: Date): string {
   return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
 }
 
+// 로컬스토리지에서 일정 데이터를 읽어오는 함수
 function safeReadScheduleItems(): ScheduleDraftItem[] {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return [];
@@ -94,36 +97,41 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
     ? "주 시작 요일, 일요일부터. 월요일부터로 바꾸려면 선택"
     : "주 시작 요일, 월요일부터. 일요일부터로 바꾸려면 선택";
 
+  // 일정 데이터를 로컬스토리지에서 읽어오는 함수
   useEffect(() => {
     const sync = () => setScheduleItems(safeReadScheduleItems());
     sync();
 
+    // 로컬스토리지에 변경이 있을 때 일정 데이터를 다시 읽어오는 함수
     const onStorage = (e: StorageEvent) => {
       if (e.key === STORAGE_KEY) sync();
     };
+    // 일정 데이터가 업데이트될 때 일정 데이터를 다시 읽어오는 함수
     const onUpdated = () => sync();
 
-    window.addEventListener("storage", onStorage);
-    window.addEventListener(SCHEDULE_ITEMS_UPDATED_EVENT, onUpdated);
+    window.addEventListener("storage", onStorage); // 로컬스토리지에 변경이 있을 때 일정 데이터를 다시 읽어오는 함수
+    window.addEventListener(SCHEDULE_ITEMS_UPDATED_EVENT, onUpdated); // 일정 데이터가 업데이트될 때 일정 데이터를 다시 읽어오는 함수
+
     return () => {
       window.removeEventListener("storage", onStorage);
       window.removeEventListener(SCHEDULE_ITEMS_UPDATED_EVENT, onUpdated);
     };
   }, []);
 
+  // 일정 데이터를 날짜별로 그룹화하는 함수
   const scheduleByDate = useMemo(() => {
-    const map = new Map<string, ScheduleDraftItem[]>();
+    const map = new Map<string, ScheduleDraftItem[]>(); // 일정 데이터를 날짜별로 그룹화하는 맵
     for (const it of scheduleItems) {
-      if (!it?.date) continue;
+      if (!it?.date) continue; // 일정 데이터가 날짜가 없으면 건너뜀
       const list = map.get(it.date) ?? [];
-      list.push(it);
-      map.set(it.date, list);
+      list.push(it); // 일정 데이터를 날짜별로 그룹화하는 맵에 추가
+      map.set(it.date, list); // 일정 데이터를 날짜별로 그룹화하는 맵에 추가
     }
     for (const [k, list] of map.entries()) {
-      list.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
-      map.set(k, list);
+      list.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0)); // 일정 데이터를 생성일시별로 정렬
+      map.set(k, list); // 일정 데이터를 날짜별로 그룹화하는 맵에 추가
     }
-    return map;
+    return map; // 일정 데이터를 날짜별로 그룹화하는 맵 반환
   }, [scheduleItems]);
 
   return (
@@ -296,20 +304,20 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
         ))}
         {/* 날짜 */}
         {cells.map((cell) => {
-          const key = `${cell.date.getFullYear()}-${cell.date.getMonth()}-${cell.date.getDate()}`;
+          const key = `${cell.date.getFullYear()}-${cell.date.getMonth()}-${cell.date.getDate()}`; // 날짜 키 생성
           const isToday = isSameCalendarDay(cell.date, today);
-          const dow = cell.date.getDay();
-          const isSaturday = dow === 6;
-          const isSunday = dow === 0;
-          const isoDate = toISODateLocal(cell.date);
-          const dayItems = scheduleByDate.get(isoDate) ?? [];
-          const visibleItems = dayItems.slice(0, 4);
-          const overflow = Math.max(0, dayItems.length - visibleItems.length);
+          const dow = cell.date.getDay(); // 요일
+          const isSaturday = dow === 6; // 토요일인지 확인
+          const isSunday = dow === 0; // 일요일인지 확인
+          const isoDate = toISODateLocal(cell.date); // 날짜를 ISO 형식으로 변환
+          const dayItems = scheduleByDate.get(isoDate) ?? []; // 일정 데이터를 날짜별로 그룹화하는 맵에서 일정 데이터를 읽어옴
+          const visibleItems = dayItems.slice(0, 4); // 일정 데이터를 4개까지 표시
+          const overflow = Math.max(0, dayItems.length - visibleItems.length); // 일정 데이터를 4개까지 표시한 후 더 있는 일정 데이터 개수
           const holidayName = getKrHolidayName(
             cell.date.getFullYear(),
             cell.date.getMonth() + 1,
             cell.date.getDate()
-          );
+          ); // 공휴일 이름 가져오기
           return (
             <div
               key={key}
@@ -334,6 +342,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
                 </span>
               ) : null}
 
+              {/* 일정 데이터 표시 */}
               {visibleItems.length > 0 ? (
                 <div className="month-calendar__events" aria-label={`${isoDate} 일정`}>
                   {visibleItems.map((it) => (
@@ -352,6 +361,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
                       </span>
                     </Tooltip>
                   ))}
+                  {/* 일정 데이터 초과 표시 */}
                   {overflow > 0 ? (
                     <div className="month-calendar__event month-calendar__event--overflow" aria-label={`일정 ${overflow}개 더 있음`}>
                       +{overflow}

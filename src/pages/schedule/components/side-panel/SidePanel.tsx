@@ -33,8 +33,8 @@ function safeReadScheduleItems(): ScheduleDraftItem[] {
   if (!raw) return []; // 일정 데이터가 없으면 빈 배열 반환
   try {
     const parsed = JSON.parse(raw) as unknown; // 파싱 결과를 ScheduleDraftItem[] 타입으로 형변환
-    return Array.isArray(parsed) ? (parsed as ScheduleDraftItem[]) : [];
-  } catch {
+    return Array.isArray(parsed) ? (parsed as ScheduleDraftItem[]) : []; // 파싱 결과가 배열이면 배열 반환, 아니면 빈 배열 반환
+  } catch { // 파싱 결과가 배열이 아니면 빈 배열 반환
     return [];
   }
 }
@@ -51,6 +51,7 @@ export default function SidePanel({ onClose }: SidePanelProps) {
   const selectedCategoryLabel =
     CATEGORY_OPTIONS.find((c) => c.value === category)?.label ?? category;
 
+  // 일정 입력 저장 함수
   function handleSubmit() {
     const item: ScheduleDraftItem = {
       id: crypto.randomUUID(),
@@ -61,14 +62,14 @@ export default function SidePanel({ onClose }: SidePanelProps) {
       createdAt: Date.now(),
     };
 
-    const prev = safeReadScheduleItems();
-    const next = [item, ...prev];
+    const prev = safeReadScheduleItems(); // 로컬스토리지에서 일정 데이터를 읽어옴
+    const next = [item, ...prev]; // 일정 데이터를 추가
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    window.dispatchEvent(new Event("schedule-items-updated"));
+    window.dispatchEvent(new Event("schedule-items-updated"));  // 일정 데이터가 업데이트되었음을 알림
 
-    console.log("[일정 입력] 로컬스토리지 저장됨", { saved: item, total: next.length });
+    // console.log("[일정 입력] 로컬스토리지 저장됨", { saved: item, total: next.length });
 
-    setNote("");
+    setNote(""); // 내용 초기화
   }
 
   return (

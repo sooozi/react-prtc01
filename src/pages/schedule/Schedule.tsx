@@ -45,6 +45,7 @@ export default function Schedule() {
         <div
           className={`schedule-workspace${isNarrowWorkspace && mobilePanelOpen ? " schedule-workspace--narrow-sheet-open" : ""}`}
         >
+          {/* 왼쪽 달력 영역 */}
           <div className="schedule-workspace__calendar">
             <MonthCalendar month={month} onMonthChange={setMonth} />
           </div>
@@ -58,6 +59,7 @@ export default function Schedule() {
             />
           ) : null}
 
+          {/* 오른쪽 패널 영역 */}
           <div
             ref={narrowPanelRef}
             className={`schedule-workspace__panel${isNarrowWorkspace ? " schedule-workspace__panel--narrow" : ""}${isNarrowWorkspace && mobilePanelOpen ? " schedule-workspace__panel--narrow-open" : ""}${isNarrowWorkspace && !mobilePanelOpen ? " schedule-workspace__panel--narrow-collapsed" : ""}`}
@@ -72,7 +74,7 @@ export default function Schedule() {
                 isNarrowWorkspace ? () => setMobilePanelOpen(false) : undefined
               }
             />
-          </div>
+          </div>     
         </div>
       </div>
     </div>
