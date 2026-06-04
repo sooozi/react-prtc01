@@ -7,21 +7,17 @@ type CalendarPickerPopoverProps = {
   buttonRef: RefObject<HTMLButtonElement | null>;
   popoverRef: RefObject<HTMLDivElement | null>;
   popoverId: string;
-  /** listbox 패널용 접근 가능 이름 (스크린 리더) */
   listboxLabel: string;
   isOpen: boolean;
-  /** Esc 또는 트리거·패널 바깥 pointerdown 시 호출 (이 팝오버만 닫기) */
   onDismiss: () => void;
   onTriggerClick: () => void;
   triggerClassName: string;
-  /** 연도 패널 등 추가 그리드/스크롤용 클래스 */
   popoverExtraClassName?: string;
-  /** 트리거 안에 보여 줄 라벨 */
   triggerDisplay: ReactNode;
   children: ReactNode;
 };
 
-/** 연도·월: 트리거 버튼 + 숨김/표시 패널 */
+// 연도·월 선택 팝오버
 export function CalendarPickerPopover({
   buttonRef,
   popoverRef,
@@ -47,7 +43,7 @@ export function CalendarPickerPopover({
     restoreTargetRef: buttonRef,
   });
 
-  // 열릴 때: 선택된 옵션이 있으면 그쪽, 없으면 첫 옵션으로 포커스
+  // 열릴 때 선택된 옵션이 있으면 그쪽, 없으면 첫 옵션으로 포커스
   useLayoutEffect(() => {
     if (!isOpen) return;
     const root = popoverRef.current;
@@ -57,7 +53,7 @@ export function CalendarPickerPopover({
     (selected ?? first)?.focus();
   }, [isOpen, popoverRef]);
 
-  // 트리거·패널 밖을 누르면 닫기
+  // 트리거·패널 밖을 누르면 팝오버 닫기
   useEffect(() => {
     if (!isOpen) return;
 
