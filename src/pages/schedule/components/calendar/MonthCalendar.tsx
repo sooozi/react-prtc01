@@ -97,9 +97,9 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
     ? "주 시작 요일, 일요일부터. 월요일부터로 바꾸려면 선택"
     : "주 시작 요일, 월요일부터. 일요일부터로 바꾸려면 선택";
 
-  // 일정 데이터를 로컬스토리지에서 읽어오는 함수
+  // 마운트 시 일정 데이터를 로컬스토리지에서 읽어오는 함수
   useEffect(() => {
-    const sync = () => setScheduleItems(safeReadScheduleItems());
+    const sync = () => setScheduleItems(safeReadScheduleItems()); // 일정 데이터를 로컬스토리지에서 읽어오는 함수
     sync();
 
     // 로컬스토리지에 변경이 있을 때 일정 데이터를 다시 읽어오는 함수
@@ -118,7 +118,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
     };
   }, []);
 
-  // 일정 데이터를 날짜별로 그룹화하는 함수
+  // 일정 데이터를 날짜별로 그룹화하는 함수(모든 일정이 한 배열에 섞여 있으니까!)
   const scheduleByDate = useMemo(() => {
     const map = new Map<string, ScheduleDraftItem[]>(); // 일정 데이터를 날짜별로 그룹화하는 맵
     for (const it of scheduleItems) {
@@ -313,11 +313,11 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
           const dayItems = scheduleByDate.get(isoDate) ?? []; // 일정 데이터를 날짜별로 그룹화하는 맵에서 일정 데이터를 읽어옴
           const visibleItems = dayItems.slice(0, 4); // 일정 데이터를 4개까지 표시
           const overflow = Math.max(0, dayItems.length - visibleItems.length); // 일정 데이터를 4개까지 표시한 후 더 있는 일정 데이터 개수
-          const holidayName = getKrHolidayName(
+          const holidayName = getKrHolidayName( // 공휴일 이름 가져오기
             cell.date.getFullYear(),
             cell.date.getMonth() + 1,
             cell.date.getDate()
-          ); // 공휴일 이름 가져오기
+          );
           return (
             <div
               key={key}

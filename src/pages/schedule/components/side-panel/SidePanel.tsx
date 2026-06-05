@@ -22,7 +22,7 @@ type ScheduleDraftItem = {
   id: string;
   category: CategoryValue;
   categoryLabel: string;
-  date: string; // YYYY-MM-DD
+  date: string;
   note: string;
   createdAt: number;
 };
@@ -40,7 +40,7 @@ function safeReadScheduleItems(): ScheduleDraftItem[] {
 }
 
 /**
- * 일정 페이지 우측 패널 — 카테고리·날짜·내용 UI만 (저장 등 로직 미연결)
+ * 일정 페이지 우측 패널 — 카테고리·날짜·내용 UI
  */
 export default function SidePanel({ onClose }: SidePanelProps) {
   const todayISO = useMemo(() => new Date().toISOString().slice(0, 10), []);
@@ -48,11 +48,13 @@ export default function SidePanel({ onClose }: SidePanelProps) {
   const [date, setDate] = useState<string>(todayISO);
   const [note, setNote] = useState<string>("");
 
+  // 선택된 카테고리 라벨
   const selectedCategoryLabel =
     CATEGORY_OPTIONS.find((c) => c.value === category)?.label ?? category;
 
   // 일정 입력 저장 함수
   function handleSubmit() {
+    // 일정 입력 저장(일정 1개를 객체로 만듦)
     const item: ScheduleDraftItem = {
       id: crypto.randomUUID(),
       category,
@@ -64,7 +66,7 @@ export default function SidePanel({ onClose }: SidePanelProps) {
 
     const prev = safeReadScheduleItems(); // 로컬스토리지에서 일정 데이터를 읽어옴
     const next = [item, ...prev]; // 일정 데이터를 추가
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); // 일정 데이터를 로컬스토리지에 저장
     window.dispatchEvent(new Event("schedule-items-updated"));  // 일정 데이터가 업데이트되었음을 알림
 
     // console.log("[일정 입력] 로컬스토리지 저장됨", { saved: item, total: next.length });
@@ -109,6 +111,7 @@ export default function SidePanel({ onClose }: SidePanelProps) {
                     key={opt.value}
                     className={`schedule-side-panel__chip schedule-side-panel__chip--${opt.theme}`}
                   >
+                    {/* 카테고리 선택 */}
                     <input
                       type="radio"
                       name="schedule-category"
@@ -125,6 +128,7 @@ export default function SidePanel({ onClose }: SidePanelProps) {
           </div>
 
           <div className="schedule-side-panel__field">
+            {/* 날짜 선택 */}
             <label htmlFor="schedule-date" className="schedule-side-panel__label">
               날짜
             </label>
@@ -140,6 +144,7 @@ export default function SidePanel({ onClose }: SidePanelProps) {
           </div>
 
           <div className="schedule-side-panel__field">
+            {/* 내용 입력 */}
             <label htmlFor="schedule-note" className="schedule-side-panel__label">
               내용
             </label>
@@ -156,6 +161,7 @@ export default function SidePanel({ onClose }: SidePanelProps) {
           </div>
 
           <div className="schedule-side-panel__actions">
+            {/* 등록 버튼 */}
             <Button type="button" variant="primary" size="sm" onClick={handleSubmit}>
               등록
             </Button>
