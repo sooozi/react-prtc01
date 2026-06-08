@@ -19,7 +19,7 @@ const COMMENT_PAGE_SIZE = 5;
 // 목 API 지연(ms) — 무한 스크롤 테스트
 const MOCK_COMMENT_FETCH_DELAY_MS = 500;
 
-/** 목 UI: 첫 댓글의 첫 대댓글은 항상 비밀댓글 잠금 상태로 미리보기 */
+// 목 UI: 첫 댓글의 첫 대댓글은 항상 비밀댓글 잠금 상태로 미리보기
 const MOCK_SECRET_PREVIEW_COMMENT_ID = "mock-1-reply-1";
 
 // DFS: 답글 및 대댓글 한 파트 → 옆 댓글. 한 줄로 자르고 트리로 돌릴 때 순서 유지

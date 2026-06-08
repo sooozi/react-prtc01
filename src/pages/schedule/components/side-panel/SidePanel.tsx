@@ -14,7 +14,7 @@ const CATEGORY_OPTIONS = [
 type CategoryValue = (typeof CATEGORY_OPTIONS)[number]["value"];
 
 type SidePanelProps = {
-  /** 좁은 화면 시트 등 — 닫기 버튼 표시 및 호출 */
+  // 좁은 화면 시트 등 — 닫기 버튼 표시 및 호출
   onClose?: () => void;
 };
 
