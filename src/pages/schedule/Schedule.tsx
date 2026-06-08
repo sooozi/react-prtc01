@@ -52,6 +52,7 @@ export default function Schedule() {
             <MonthCalendar month={month} onMonthChange={setMonth} />
           </div>
 
+          {/* 좁은 화면일 때 패널 닫기 */}
           {isNarrowWorkspace && mobilePanelOpen ? (
             <button
               type="button"

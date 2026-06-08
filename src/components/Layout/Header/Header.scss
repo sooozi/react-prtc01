@@ -518,6 +518,7 @@
   font-size: v.fs(body-sm);
   font-weight: v.fw(medium);
   letter-spacing: -0.01em;
+  cursor: pointer;
   @include v.transition-channels(
     (
       color,

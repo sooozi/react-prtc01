@@ -50,6 +50,7 @@ export default function List() {
     setCurrentPage(1);
   };
 
+  // 정렬 클릭 시 정렬 상태 변경
   const handleSortClick = useCallback(
     (clicked: BoardSortColumn) => {
       setSortState((prev) => nextBoardListSortState(prev, clicked));
@@ -58,6 +59,7 @@ export default function List() {
     [setCurrentPage]
   );
 
+  // 게시글 상세 페이지로 이동
   const goToPostDetail = useCallback(
     (postNumber: number) => {
       navigate(`/post/detail?id=${postNumber}&from=list`);

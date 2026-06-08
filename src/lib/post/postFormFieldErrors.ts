@@ -5,6 +5,7 @@ export type PostFormFieldErrors = {
   attach?: string;
 };
 
+// 게시글 글쓰기·수정 폼 필드별 검증 메시지 초기화
 export function clearPostFormFieldError(
   errors: PostFormFieldErrors,
   field: keyof PostFormFieldErrors,

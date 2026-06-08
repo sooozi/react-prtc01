@@ -154,19 +154,36 @@
 .home-marquee-wrap {
   position: relative;
   z-index: v.z(dock);
-  padding: v.space(lg) 0;
+  box-sizing: border-box;
+  width: calc(100% + 2 * #{v.space(lg)});
+  margin-inline: calc(-1 * #{v.space(lg)});
+  padding: v.space(md) 0;
   overflow: hidden;
   border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
   background: var(--color-bg);
 
-  @include bp.below(bp.$md) {
-    padding: v.space(md) 0;
+  @include bp.above(bp.$md) {
+    width: auto;
+    max-width: none;
+    margin-inline: calc(50% - 50vw);
+    padding: v.space(lg) calc(50vw - 50%);
   }
 
   &:hover .home-marquee-track {
     animation-play-state: paused;
   }
+}
+
+.home-marquee-measure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: max-content;
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
 }
 
 .home-marquee-track {
@@ -736,8 +753,7 @@
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
-    max-width: 1080px;
-    margin: 0 auto;
+    margin: 0;
     padding: 0 v.space(lg);
     animation: none;
     gap: v.space(md);

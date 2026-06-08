@@ -1,4 +1,4 @@
-/** URL 쿼리 `from` — 허용 값만 (오픈 리다이렉트 방지) */
+// URL 쿼리 `from` 허용 값 지정 (오픈 리다이렉트 방지)
 export type PostDetailFromParam = "mypage" | "list";
 
 // from 쿼리 값을 경로로 변환
