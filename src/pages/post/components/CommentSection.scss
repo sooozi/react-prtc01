@@ -105,6 +105,50 @@
   height: 0.8125rem;
 }
 
+.comment-section__secret-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: v.space(xxs);
+  padding: v.space(xxs) v.space(sm);
+  border-radius: v.rad(pill);
+  font-size: v.fs(xxs);
+  font-weight: v.fw(bold);
+  line-height: 1.2;
+  color: var(--color-primary);
+  background: var(--color-primary-muted);
+}
+
+.comment-section__secret-badge-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.comment-section__secret-locked {
+  margin: 0 0 v.space(sm);
+  padding: v.space(md);
+  border-radius: v.rad(p10);
+  border: 1px dashed color-mix(in srgb, var(--color-primary) 28%, var(--color-border));
+  background: color-mix(in srgb, var(--color-primary-muted) 55%, var(--color-card));
+}
+
+.comment-section__secret-locked-label {
+  display: flex;
+  align-items: flex-start;
+  gap: v.space(sm);
+  margin: 0;
+  font-size: v.fs(body-sm);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.comment-section__secret-locked-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.1rem;
+  color: var(--color-primary);
+}
+
 // 켜짐: outlinePrimary 블록(3클래스)보다 특이도 높여 배경·테두리가 먹도록 btn·outline까지 포함
 .comment-section__secret-comment-btn.btn.btn--outlinePrimary.comment-section__secret-comment-btn--on {
   border-width: 1px;
@@ -385,6 +429,8 @@
 
   &:hover {
     color: var(--color-primary-hover);
+    border-color: transparent;
+    background: none;
   }
 }
 

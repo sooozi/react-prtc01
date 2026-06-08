@@ -1,9 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
+import { canViewSecretCommentBody } from "@/lib/comment/canViewSecretCommentBody";
 import { CommentRow } from "@/pages/post/components/CommentRow";
 import { countPreviewComments, PREVIEW_COMMENTS, type PreviewComment } from "@/mocks/comment";
 import "@/pages/post/components/CommentSection.scss";
+
+type CommentSectionProps = {
+  postOwnerUserId?: string;
+};
 
 // API 한 행(댓글·대댓글 공통) — 무한 스크롤은 플랫 단위로 페이지네이션
 type CommentFlatRow = Omit<PreviewComment, "replies"> & { parentId: string | null };
@@ -13,6 +18,9 @@ const COMMENT_PAGE_SIZE = 5;
 
 // 목 API 지연(ms) — 무한 스크롤 테스트
 const MOCK_COMMENT_FETCH_DELAY_MS = 500;
+
+/** 목 UI: 첫 댓글의 첫 대댓글은 항상 비밀댓글 잠금 상태로 미리보기 */
+const MOCK_SECRET_PREVIEW_COMMENT_ID = "mock-1-reply-1";
 
 // DFS: 답글 및 대댓글 한 파트 → 옆 댓글. 한 줄로 자르고 트리로 돌릴 때 순서 유지
 // nodes: 지금 단계에서 처리할 댓글 배열, parentId: 부모 댓글 ID, out: 결과 배열
@@ -66,8 +74,24 @@ function avatarInitial(name: string) {
   return t ? t[0]! : "?";
 }
 
+function resolveCanViewSecretBody(
+  comment: Pick<PreviewComment, "id" | "isSecret" | "authorUserId">,
+  currentUserId: string | null,
+  postOwnerUserId?: string,
+) {
+  if (comment.id === MOCK_SECRET_PREVIEW_COMMENT_ID && comment.isSecret) {
+    return false;
+  }
+  return canViewSecretCommentBody({
+    isSecret: comment.isSecret,
+    commentAuthorUserId: comment.authorUserId,
+    currentUserId,
+    postOwnerUserId,
+  });
+}
+
 // 게시글 상세 댓글 영역 — 플랫 5개 단위 무한 스크롤(목 API), 이후 실 API로 교체
-export default function CommentSection() {
+export default function CommentSection({ postOwnerUserId }: CommentSectionProps) {
   const totalCount = countPreviewComments(PREVIEW_COMMENTS);
   const [loadedRows, setLoadedRows] = useState<CommentFlatRow[]>([]);
   const [nextOffset, setNextOffset] = useState(0);
@@ -76,6 +100,8 @@ export default function CommentSection() {
   const [initialError, setInitialError] = useState<string | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const [isSecretComment, setIsSecretComment] = useState(false);
+  const currentUserId =
+    typeof window !== "undefined" ? localStorage.getItem("userId") : null;
 
   const commentTrees = useMemo(() => flatRowsToTrees(loadedRows), [loadedRows]);
 
@@ -208,6 +234,8 @@ export default function CommentSection() {
                     body={comment.body}
                     likes={comment.likes}
                     dislikes={comment.dislikes}
+                    isSecret={comment.isSecret}
+                    canViewSecretBody={resolveCanViewSecretBody(comment, currentUserId, postOwnerUserId)}
                   />
 
                   {comment.replies && comment.replies.length > 0 ? (
@@ -223,6 +251,8 @@ export default function CommentSection() {
                             body={reply.body}
                             likes={reply.likes}
                             dislikes={reply.dislikes}
+                            isSecret={reply.isSecret}
+                            canViewSecretBody={resolveCanViewSecretBody(reply, currentUserId, postOwnerUserId)}
                           />
                         </li>
                       ))}

@@ -5,6 +5,10 @@ export type PreviewComment = {
   body: string;
   likes: number;
   dislikes: number;
+  /** UI 목: 비밀댓글 여부 (API 연동 전) */
+  isSecret?: boolean;
+  /** 댓글 작성자 userId — 비밀댓글 열람 권한 판별용 */
+  authorUserId?: string;
   replies?: readonly PreviewComment[];
 };
 
@@ -21,15 +25,17 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-1-reply-1",
         author: "이양갱",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #1 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 0,
         dislikes: 0,
+        isSecret: true,
+        authorUserId: "mock-comment-author-1",
       },
       {
         id: "mock-1-reply-2",
         author: "이앙금",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #1 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 1,
         dislikes: 1,
@@ -37,7 +43,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-1-reply-3",
         author: "문태식",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #1 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 2,
         dislikes: 0,
@@ -45,7 +51,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-1-reply-4",
         author: "배주화",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #1 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 3,
         dislikes: 1,
@@ -63,7 +69,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-2-reply-1",
         author: "신예린",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #2 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 1,
         dislikes: 1,
@@ -71,7 +77,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-2-reply-2",
         author: "고은비",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #2 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 2,
         dislikes: 0,
@@ -79,7 +85,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-2-reply-3",
         author: "장도윤",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #2 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 3,
         dislikes: 1,
@@ -87,7 +93,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-2-reply-4",
         author: "송미경",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #2 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 4,
         dislikes: 0,
@@ -105,7 +111,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-3-reply-1",
         author: "황재성",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #3 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 2,
         dislikes: 0,
@@ -113,7 +119,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-3-reply-2",
         author: "이앙금",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #3 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 3,
         dislikes: 1,
@@ -121,7 +127,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-3-reply-3",
         author: "윤서연",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #3 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 4,
         dislikes: 0,
@@ -129,7 +135,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-3-reply-4",
         author: "문태식",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #3 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 5,
         dislikes: 1,
@@ -147,7 +153,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-4-reply-1",
         author: "배주화",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #4 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 3,
         dislikes: 1,
@@ -155,7 +161,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-4-reply-2",
         author: "신예린",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #4 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 4,
         dislikes: 0,
@@ -163,7 +169,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-4-reply-3",
         author: "고은비",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #4 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 5,
         dislikes: 1,
@@ -171,7 +177,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-4-reply-4",
         author: "장도윤",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #4 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 6,
         dislikes: 0,
@@ -189,7 +195,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-5-reply-1",
         author: "송미경",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #5 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 4,
         dislikes: 0,
@@ -197,7 +203,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-5-reply-2",
         author: "황재성",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #5 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 5,
         dislikes: 1,
@@ -205,7 +211,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-5-reply-3",
         author: "이앙금",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #5 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 6,
         dislikes: 0,
@@ -213,7 +219,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-5-reply-4",
         author: "윤서연",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #5 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 7,
         dislikes: 1,
@@ -231,7 +237,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-6-reply-1",
         author: "문태식",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #6 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 5,
         dislikes: 1,
@@ -239,7 +245,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-6-reply-2",
         author: "배주화",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #6 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 6,
         dislikes: 0,
@@ -247,7 +253,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-6-reply-3",
         author: "신예린",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #6 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 7,
         dislikes: 1,
@@ -255,7 +261,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-6-reply-4",
         author: "고은비",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #6 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 8,
         dislikes: 0,
@@ -273,7 +279,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-7-reply-1",
         author: "장도윤",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #7 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 6,
         dislikes: 0,
@@ -281,7 +287,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-7-reply-2",
         author: "송미경",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #7 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 7,
         dislikes: 1,
@@ -289,7 +295,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-7-reply-3",
         author: "황재성",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #7 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 8,
         dislikes: 0,
@@ -297,7 +303,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-7-reply-4",
         author: "이앙금",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #7 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 9,
         dislikes: 1,
@@ -315,7 +321,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-8-reply-1",
         author: "윤서연",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #8 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 7,
         dislikes: 1,
@@ -323,7 +329,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-8-reply-2",
         author: "문태식",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #8 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 8,
         dislikes: 0,
@@ -331,7 +337,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-8-reply-3",
         author: "배주화",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #8 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 9,
         dislikes: 1,
@@ -339,7 +345,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-8-reply-4",
         author: "신예린",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #8 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 10,
         dislikes: 0,
@@ -357,7 +363,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-9-reply-1",
         author: "고은비",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #9 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 8,
         dislikes: 0,
@@ -365,7 +371,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-9-reply-2",
         author: "장도윤",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #9 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 9,
         dislikes: 1,
@@ -373,7 +379,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-9-reply-3",
         author: "송미경",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #9 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 10,
         dislikes: 0,
@@ -381,7 +387,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-9-reply-4",
         author: "황재성",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #9 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 11,
         dislikes: 1,
@@ -399,7 +405,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-10-reply-1",
         author: "이앙금",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #10 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 9,
         dislikes: 1,
@@ -407,7 +413,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-10-reply-2",
         author: "윤서연",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #10 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 10,
         dislikes: 0,
@@ -415,7 +421,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-10-reply-3",
         author: "문태식",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #10 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 11,
         dislikes: 1,
@@ -423,7 +429,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-10-reply-4",
         author: "배주화",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #10 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 0,
         dislikes: 0,
@@ -441,7 +447,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-11-reply-1",
         author: "신예린",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #11 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 10,
         dislikes: 0,
@@ -449,7 +455,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-11-reply-2",
         author: "고은비",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #11 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 11,
         dislikes: 1,
@@ -457,7 +463,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-11-reply-3",
         author: "장도윤",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #11 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 0,
         dislikes: 0,
@@ -465,7 +471,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-11-reply-4",
         author: "송미경",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #11 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 1,
         dislikes: 1,
@@ -483,7 +489,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-12-reply-1",
         author: "황재성",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #12 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 11,
         dislikes: 1,
@@ -491,7 +497,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-12-reply-2",
         author: "이앙금",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #12 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 0,
         dislikes: 0,
@@ -499,7 +505,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-12-reply-3",
         author: "윤서연",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #12 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 1,
         dislikes: 1,
@@ -507,7 +513,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-12-reply-4",
         author: "문태식",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #12 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 2,
         dislikes: 0,
@@ -525,7 +531,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-13-reply-1",
         author: "배주화",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #13 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 0,
         dislikes: 0,
@@ -533,7 +539,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-13-reply-2",
         author: "신예린",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #13 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 1,
         dislikes: 1,
@@ -541,7 +547,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-13-reply-3",
         author: "고은비",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #13 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 2,
         dislikes: 0,
@@ -549,7 +555,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-13-reply-4",
         author: "장도윤",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #13 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 3,
         dislikes: 1,
@@ -567,7 +573,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-14-reply-1",
         author: "송미경",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #14 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 1,
         dislikes: 1,
@@ -575,7 +581,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-14-reply-2",
         author: "황재성",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #14 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 2,
         dislikes: 0,
@@ -583,7 +589,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-14-reply-3",
         author: "이앙금",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #14 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 3,
         dislikes: 1,
@@ -591,7 +597,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-14-reply-4",
         author: "윤서연",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #14 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 4,
         dislikes: 0,
@@ -609,7 +615,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-15-reply-1",
         author: "문태식",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #15 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 2,
         dislikes: 0,
@@ -617,7 +623,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-15-reply-2",
         author: "배주화",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #15 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 3,
         dislikes: 1,
@@ -625,7 +631,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-15-reply-3",
         author: "신예린",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #15 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 4,
         dislikes: 0,
@@ -633,7 +639,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-15-reply-4",
         author: "고은비",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #15 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 5,
         dislikes: 1,
@@ -651,7 +657,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-16-reply-1",
         author: "장도윤",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #16 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 3,
         dislikes: 1,
@@ -659,7 +665,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-16-reply-2",
         author: "송미경",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #16 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 4,
         dislikes: 0,
@@ -667,7 +673,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-16-reply-3",
         author: "황재성",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #16 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 5,
         dislikes: 1,
@@ -675,7 +681,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-16-reply-4",
         author: "이앙금",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #16 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 6,
         dislikes: 0,
@@ -693,7 +699,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-17-reply-1",
         author: "윤서연",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #17 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 4,
         dislikes: 0,
@@ -701,7 +707,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-17-reply-2",
         author: "문태식",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #17 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 5,
         dislikes: 1,
@@ -709,7 +715,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-17-reply-3",
         author: "배주화",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #17 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 6,
         dislikes: 0,
@@ -717,7 +723,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-17-reply-4",
         author: "신예린",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #17 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 7,
         dislikes: 1,
@@ -735,7 +741,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-18-reply-1",
         author: "고은비",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #18 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 5,
         dislikes: 1,
@@ -743,7 +749,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-18-reply-2",
         author: "장도윤",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #18 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 6,
         dislikes: 0,
@@ -751,7 +757,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-18-reply-3",
         author: "송미경",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #18 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 7,
         dislikes: 1,
@@ -759,7 +765,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-18-reply-4",
         author: "황재성",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #18 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 8,
         dislikes: 0,
@@ -777,7 +783,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-19-reply-1",
         author: "이앙금",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #19 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 6,
         dislikes: 0,
@@ -785,7 +791,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-19-reply-2",
         author: "윤서연",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #19 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 7,
         dislikes: 1,
@@ -793,7 +799,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-19-reply-3",
         author: "문태식",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #19 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 8,
         dislikes: 0,
@@ -801,7 +807,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-19-reply-4",
         author: "배주화",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #19 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 9,
         dislikes: 1,
@@ -819,7 +825,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-20-reply-1",
         author: "신예린",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #20 대댓글 1. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 7,
         dislikes: 1,
@@ -827,7 +833,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-20-reply-2",
         author: "고은비",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #20 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 8,
         dislikes: 0,
@@ -835,7 +841,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-20-reply-3",
         author: "장도윤",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #20 대댓글 3. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 9,
         dislikes: 1,
@@ -843,7 +849,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
       {
         id: "mock-20-reply-4",
         author: "송미경",
-        dateLabel: "2026-04-29",
+        dateLabel: "2026-05-29",
         body: "루트 #20 대댓글 4. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 10,
         dislikes: 0,

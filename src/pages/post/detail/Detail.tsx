@@ -223,7 +223,7 @@ export default function Detail() {
                 </ul>
               </section>
             )}
-            <CommentSection />
+            <CommentSection postOwnerUserId={post.ownerUserId} />
           </>
         ) : null}
       </div>
