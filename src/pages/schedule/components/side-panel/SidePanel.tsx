@@ -24,7 +24,7 @@ type ScheduleDraftItem = {
   categoryLabel: string;
   date: string;
   note: string;
-  createdAt: number;
+  createdTimestamp: number; // 일정 생성 시간
 };
 
 // 로컬스토리지에서 일정 데이터를 읽어오는 함수(새 일정은 배열 맨 앞에 추가)
@@ -33,7 +33,14 @@ function safeReadScheduleItems(): ScheduleDraftItem[] {
   if (!raw) return []; // 일정 데이터가 없으면 빈 배열 반환
   try {
     const parsed = JSON.parse(raw) as unknown; // 파싱 결과를 ScheduleDraftItem[] 타입으로 형변환
-    return Array.isArray(parsed) ? (parsed as ScheduleDraftItem[]) : []; // 파싱 결과가 배열이면 배열 반환, 아니면 빈 배열 반환
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((item) => {
+      const row = item as ScheduleDraftItem & { createdAt?: number };
+      return {
+        ...row,
+        createdTimestamp: row.createdTimestamp ?? row.createdAt ?? 0,
+      };
+    });
   } catch { // 파싱 결과가 배열이 아니면 빈 배열 반환
     return [];
   }
@@ -61,7 +68,7 @@ export default function SidePanel({ onClose }: SidePanelProps) {
       categoryLabel: selectedCategoryLabel,
       date,
       note,
-      createdAt: Date.now(),
+      createdTimestamp: Date.now(),
     };
 
     const prev = safeReadScheduleItems(); // 로컬스토리지에서 일정 데이터를 읽어옴

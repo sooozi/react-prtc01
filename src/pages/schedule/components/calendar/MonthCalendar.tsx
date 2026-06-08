@@ -35,7 +35,7 @@ type ScheduleDraftItem = {
   categoryLabel?: string;
   date: string; // YYYY-MM-DD
   note: string;
-  createdAt: number;
+  createdTimestamp: number; // 일정 생성 시간 (Unix ms)
 };
 
 // 숫자를 두 자리 문자열로 변환하는 함수
@@ -54,7 +54,14 @@ function safeReadScheduleItems(): ScheduleDraftItem[] {
   if (!raw) return [];
   try {
     const parsed = JSON.parse(raw) as unknown;
-    return Array.isArray(parsed) ? (parsed as ScheduleDraftItem[]) : [];
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((item) => {
+      const row = item as ScheduleDraftItem & { createdAt?: number };
+      return {
+        ...row,
+        createdTimestamp: row.createdTimestamp ?? row.createdAt ?? 0,
+      };
+    });
   } catch {
     return [];
   }
@@ -128,7 +135,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
       map.set(it.date, list); // 일정 데이터를 날짜별로 그룹화하는 맵에 추가
     }
     for (const [k, list] of map.entries()) {
-      list.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0)); // 일정 데이터를 생성일시별로 정렬
+      list.sort((a, b) => (b.createdTimestamp ?? 0) - (a.createdTimestamp ?? 0)); // 일정 생성 시간 기준 최신순
       map.set(k, list); // 일정 데이터를 날짜별로 그룹화하는 맵에 추가
     }
     return map; // 일정 데이터를 날짜별로 그룹화하는 맵 반환
