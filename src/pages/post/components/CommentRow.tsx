@@ -1,41 +1,36 @@
 import { useLayoutEffect, useRef, useState } from "react";
+import type { CommentListItem } from "@/api/board/boardApi.types";
 import { Confirm } from "@/components";
 import { CommentDeleteIcon } from "@/components/icons/CommentDeleteIcon";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
 
 export type CommentRowProps = {
   variant: "root" | "reply";
-  avatarLetter: string;
-  commentKey: string;
-  author: string;
-  dateLabel: string;
-  body: string;
-  likes: number;
-  dislikes: number;
-  isSecret?: boolean;
+  comment: CommentListItem;
   canViewSecretBody?: boolean;
-  isDeleted?: boolean;
 };
+
+function avatarInitial(name: string) {
+  const t = name.trim();
+  return t ? t[0]! : "?";
+}
 
 // 댓글 한 줄(루트·답글) — 레이아웃 + 본문 접기/펼치기 + 액션
 export function CommentRow({
-  avatarLetter,
-  commentKey,
-  author,
-  dateLabel,
-  body,
-  likes,
-  dislikes,
-  isSecret = false,
+  comment,
   canViewSecretBody = true,
-  isDeleted = false,
 }: CommentRowProps) {
+  const commentKey = String(comment.commentId);
+  const isDeleted = comment.delYn === "Y";
+  const isSecret = comment.secretYn === "Y";
+  const dateLabel = comment.regDt.slice(0, 10);
+
   const bodyRef = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false);
   const [canExpand, setCanExpand] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [likeCount, setLikeCount] = useState(likes);
-  const [dislikeCount, setDislikeCount] = useState(dislikes);
+  const [likeCount, setLikeCount] = useState(comment.likeCnt);
+  const [dislikeCount, setDislikeCount] = useState(comment.dislikeCnt);
 
   const isLocked = isSecret && !canViewSecretBody;
 
@@ -55,7 +50,7 @@ export function CommentRow({
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [body, commentKey, expanded, isLocked, isDeleted]);
+  }, [comment.content, commentKey, expanded, isLocked, isDeleted]);
 
   const commentRow = (
     <div
@@ -78,7 +73,7 @@ export function CommentRow({
         {isDeleted ? (
           <CommentDeleteIcon className="comment-section__avatar-deleted-icon" />
         ) : (
-          avatarLetter
+          avatarInitial(comment.rgtrName)
         )}
       </div>
       <div className="comment-section__item-main">
@@ -92,7 +87,7 @@ export function CommentRow({
         ) : (
           <>
             <div className="comment-section__item-meta">
-              <span className="comment-section__author">{author}</span>
+              <span className="comment-section__author">{comment.rgtrName}</span>
               {isSecret ? (
                 <span className="comment-section__secret-badge">
                   <SecretCommentLockIcon locked className="comment-section__secret-badge-icon" />
@@ -123,7 +118,7 @@ export function CommentRow({
                     expanded ? "comment-section__body--expanded" : "comment-section__body--collapsed",
                   ].join(" ")}
                 >
-                  {body}
+                  {comment.content}
                 </p>
                 {canExpand ? (
                   <button

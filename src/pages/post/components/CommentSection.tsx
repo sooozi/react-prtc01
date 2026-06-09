@@ -12,32 +12,24 @@ type CommentSectionProps = {
   postOwnerUserId?: string;
 };
 
-type CommentFlatRow = {
-  id: string;
-  author: string;
-  dateLabel: string;
-  body: string;
-  likes: number;
-  dislikes: number;
-  isSecret?: boolean;
-  isDeleted?: boolean;
-  authorUserId?: string;
-  parentId: string | null;
-};
+type CommentTreeNode = CommentListItem & { replies: CommentTreeNode[] };
 
-type CommentTreeNode = CommentFlatRow & { replies: CommentTreeNode[] };
+function isRootComment(parentCommentId: number | null) {
+  return parentCommentId == null || parentCommentId === 0;
+}
 
-function flatRowsToTrees(rows: readonly CommentFlatRow[]): CommentTreeNode[] {
+// 댓글 트리 구축
+function flatRowsToTrees(rows: readonly CommentListItem[]): CommentTreeNode[] {
   const roots: CommentTreeNode[] = [];
-  const map = new Map<string, CommentTreeNode>();
+  const map = new Map<number, CommentTreeNode>();
 
   for (const row of rows) {
     const node: CommentTreeNode = { ...row, replies: [] };
-    map.set(row.id, node);
-    if (row.parentId == null) {
+    map.set(row.commentId, node);
+    if (isRootComment(row.parentCommentId)) {
       roots.push(node);
     } else {
-      const parent = map.get(row.parentId);
+      const parent = map.get(row.parentCommentId!);
       if (parent) parent.replies.push(node);
       else roots.push(node);
     }
@@ -46,46 +38,14 @@ function flatRowsToTrees(rows: readonly CommentFlatRow[]): CommentTreeNode[] {
   return roots;
 }
 
-function formatCommentDateLabel(regDt: string) {
-  return regDt.slice(0, 10);
-}
-
-function toParentId(parentCommentId: number | null) {
-  if (parentCommentId == null || parentCommentId === 0) return null;
-  return String(parentCommentId);
-}
-
-function mapCommentListItemToFlatRow(item: CommentListItem): CommentFlatRow {
-  const isDeleted = item.delYn === "Y";
-  const isSecret = item.secretYn === "Y";
-
-  return {
-    id: String(item.commentId),
-    author: item.rgtrName,
-    dateLabel: formatCommentDateLabel(item.regDt),
-    body: isDeleted ? "" : item.content,
-    likes: item.likeCnt,
-    dislikes: item.dislikeCnt,
-    isSecret,
-    isDeleted,
-    authorUserId: item.rgtrId,
-    parentId: toParentId(item.parentCommentId),
-  };
-}
-
-function avatarInitial(name: string) {
-  const t = name.trim();
-  return t ? t[0]! : "?";
-}
-
 function resolveCanViewSecretBody(
-  comment: Pick<CommentFlatRow, "isSecret" | "authorUserId">,
+  comment: Pick<CommentListItem, "secretYn" | "rgtrId">,
   currentUserId: string | null,
   postOwnerUserId?: string,
 ) {
   return canViewSecretCommentBody({
-    isSecret: comment.isSecret,
-    commentAuthorUserId: comment.authorUserId,
+    secretYn: comment.secretYn,
+    rgtrId: comment.rgtrId,
     currentUserId,
     postOwnerUserId,
   });
@@ -93,7 +53,7 @@ function resolveCanViewSecretBody(
 
 // 게시글 상세 댓글 영역 — GET /comments 목록 + POST /comments 작성
 export default function CommentSection({ postNumber, postOwnerUserId }: CommentSectionProps) {
-  const [apiRows, setApiRows] = useState<CommentFlatRow[]>([]);
+  const [apiRows, setApiRows] = useState<CommentListItem[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [isInitialListReady, setIsInitialListReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -121,10 +81,9 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
           return;
         }
 
-        const rows = items.map(mapCommentListItemToFlatRow);
         setInitialError(null);
-        setApiRows(rows);
-        setTotalCount(rows.length);
+        setApiRows(items);
+        setTotalCount(items.length);
       } catch {
         if (!signal?.aborted) setInitialError("댓글을 불러오지 못했습니다.");
       } finally {
@@ -262,38 +221,22 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
         <>
           <ul className="comment-section__list" aria-label="댓글 목록">
             {commentTrees.map((comment) => (
-              <li key={comment.id} className="comment-section__root">
+              <li key={comment.commentId} className="comment-section__root">
                 <div className="comment-section__root-thread">
                   <CommentRow
                     variant="root"
-                    avatarLetter={avatarInitial(comment.author)}
-                    commentKey={comment.id}
-                    author={comment.author}
-                    dateLabel={comment.dateLabel}
-                    body={comment.body}
-                    likes={comment.likes}
-                    dislikes={comment.dislikes}
-                    isSecret={comment.isSecret}
+                    comment={comment}
                     canViewSecretBody={resolveCanViewSecretBody(comment, currentUserId, postOwnerUserId)}
-                    isDeleted={comment.isDeleted}
                   />
 
                   {comment.replies.length > 0 ? (
                     <ul className="comment-section__replies" aria-label="답글">
                       {comment.replies.map((reply) => (
-                        <li key={reply.id} className="comment-section__reply">
+                        <li key={reply.commentId} className="comment-section__reply">
                           <CommentRow
                             variant="reply"
-                            avatarLetter={avatarInitial(reply.author)}
-                            commentKey={reply.id}
-                            author={reply.author}
-                            dateLabel={reply.dateLabel}
-                            body={reply.body}
-                            likes={reply.likes}
-                            dislikes={reply.dislikes}
-                            isSecret={reply.isSecret}
+                            comment={reply}
                             canViewSecretBody={resolveCanViewSecretBody(reply, currentUserId, postOwnerUserId)}
-                            isDeleted={reply.isDeleted}
                           />
                         </li>
                       ))}
