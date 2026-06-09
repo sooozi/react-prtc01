@@ -236,6 +236,7 @@ export default function CommentSection({ postOwnerUserId }: CommentSectionProps)
                     dislikes={comment.dislikes}
                     isSecret={comment.isSecret}
                     canViewSecretBody={resolveCanViewSecretBody(comment, currentUserId, postOwnerUserId)}
+                    isDeleted={comment.isDeleted}
                   />
 
                   {comment.replies && comment.replies.length > 0 ? (
@@ -253,6 +254,7 @@ export default function CommentSection({ postOwnerUserId }: CommentSectionProps)
                             dislikes={reply.dislikes}
                             isSecret={reply.isSecret}
                             canViewSecretBody={resolveCanViewSecretBody(reply, currentUserId, postOwnerUserId)}
+                            isDeleted={reply.isDeleted}
                           />
                         </li>
                       ))}

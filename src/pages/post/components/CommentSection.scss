@@ -149,6 +149,54 @@
   color: var(--color-primary);
 }
 
+.comment-section__secret-locked-text {
+  min-width: 0;
+}
+
+.comment-section__item-inner--deleted {
+  --pc-deleted-fg: var(--color-text-muted);
+  --pc-deleted-bg: color-mix(in srgb, var(--color-text-muted) 10%, var(--color-card));
+  --pc-deleted-border: color-mix(in srgb, var(--color-text-muted) 14%, var(--color-border-light));
+
+  opacity: 0.92;
+}
+
+.comment-section__avatar-deleted-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  opacity: 0.88;
+}
+
+.comment-section__deleted-notice {
+  margin: 0 0 v.space(sm);
+  padding: v.space(md);
+  border-radius: v.rad(p10);
+  border: 1px dashed color-mix(in srgb, var(--pc-deleted-fg) 24%, var(--color-border));
+  background: color-mix(in srgb, var(--pc-deleted-fg) 5%, var(--color-card));
+}
+
+.comment-section__deleted-label {
+  display: flex;
+  align-items: flex-start;
+  gap: v.space(sm);
+  margin: 0;
+  font-size: v.fs(xs);
+  line-height: 1.5;
+  color: var(--pc-deleted-fg);
+}
+
+.comment-section__deleted-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.1rem;
+  color: var(--pc-deleted-fg);
+}
+
+.comment-section__deleted-text {
+  min-width: 0;
+}
+
 // 켜짐: outlinePrimary 블록(3클래스)보다 특이도 높여 배경·테두리가 먹도록 btn·outline까지 포함
 .comment-section__secret-comment-btn.btn.btn--outlinePrimary.comment-section__secret-comment-btn--on {
   border-width: 1px;
@@ -359,6 +407,12 @@
   color: var(--color-primary);
   background: var(--color-primary-muted);
   border: 1px solid color-mix(in srgb, var(--color-primary) 22%, var(--color-border-light));
+}
+
+.comment-section__avatar.comment-section__avatar--deleted {
+  color: var(--pc-deleted-fg);
+  background: var(--pc-deleted-bg);
+  border: 1px solid var(--pc-deleted-border);
 }
 
 .comment-section__item-main {
@@ -578,6 +632,10 @@
 
   .comment-section__body {
     font-size: v.fs(xs);
+  }
+
+  .comment-section__secret-locked-desc {
+    display: block;
   }
 
   .comment-section__expand-toggle {

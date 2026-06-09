@@ -7,6 +7,8 @@ export type PreviewComment = {
   dislikes: number;
   /** UI 목: 비밀댓글 여부 (API 연동 전) */
   isSecret?: boolean;
+  /** UI 목: 삭제된 댓글 여부 (API 연동 전) */
+  isDeleted?: boolean;
   /** 댓글 작성자 userId — 비밀댓글 열람 권한 판별용 */
   authorUserId?: string;
   replies?: readonly PreviewComment[];
@@ -39,6 +41,7 @@ export const PREVIEW_COMMENTS: readonly PreviewComment[] = [
         body: "루트 #1 대댓글 2. 백엔드 연동 후에는 실제 API 응답으로 바뀝니다. 목으로 레이아웃·무한 스크롤·접기 동작을 확인합니다. ",
         likes: 1,
         dislikes: 1,
+        isDeleted: true,
       },
       {
         id: "mock-1-reply-3",
