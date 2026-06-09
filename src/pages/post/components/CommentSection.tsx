@@ -76,6 +76,7 @@ function avatarInitial(name: string) {
   return t ? t[0]! : "?";
 }
 
+// 오늘 날짜 레이블
 function todayDateLabel() {
   const now = new Date();
   const y = now.getFullYear();
@@ -84,6 +85,7 @@ function todayDateLabel() {
   return `${y}-${m}-${d}`;
 }
 
+// 생성된 댓글 행 빌드
 function buildCreatedCommentRow(
   commentId: string,
   content: string,
@@ -106,6 +108,7 @@ function buildCreatedCommentRow(
   };
 }
 
+// 비밀 댓글 보기 가능 여부 확인
 function resolveCanViewSecretBody(
   comment: Pick<PreviewComment, "id" | "isSecret" | "authorUserId">,
   currentUserId: string | null,

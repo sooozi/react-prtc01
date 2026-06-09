@@ -107,3 +107,30 @@ export type CreateCommentRequest = {
 
 /** 댓글 작성 응답 */
 export type CreateCommentResponse = string;
+
+/** GET /comments — 댓글 한 행 (서버 응답) */
+export type CommentListItem = {
+  commentId: number;
+  postNumber: number;
+  parentCommentId: number | null;
+  rootCommentId: number | null;
+  depth: number;
+  content: string;
+  likeCnt: number;
+  dislikeCnt: number;
+  secretYn: "Y" | "N";
+  delYn: "Y" | "N";
+  regDt: string;        // "2026-06-09 14:30:00"
+  rgtrId: string;
+  rgtrName: string;
+  rgtrInfo?: string;
+  mdfcnDt?: string;
+  mdfrId?: string;
+  mdfrName?: string;
+  mdfrInfo?: string;
+};
+/** 목록 조회 쿼리 */
+export type SelectCommentListParams = {
+  postNumber: number;
+  commentId?: number; // 특정 댓글 기준 조회(답글 등) — 처음엔 생략
+};

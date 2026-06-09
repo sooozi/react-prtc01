@@ -13,7 +13,9 @@ import type {
   PostDetail,
   PostListResponse,
   SelectBoardList,
+  SelectCommentListParams,
   UpdatePostRequest,
+  CommentListItem,
 } from "./boardApi.types";
 
 export type {
@@ -242,6 +244,36 @@ export async function createComment(
   try {
     getAuthTokenOrThrow(); // 로그인 필수
     return await api.post<CreateCommentResponse, CreateCommentRequest>("/comments", body);
+  } catch (e) {
+    reportApiErrorToUser(e);
+    return null;
+  }
+}
+
+/**
+ * 댓글 목록 조회
+ * [GET] /comments?postNumber={postNumber}
+ */
+export async function selectCommentList(
+  params: SelectCommentListParams,
+): Promise<CommentListItem[] | null> {
+  try {
+    getAuthTokenOrThrow();
+    const json = await api.get<CommentListItem[]>("/comments", {
+      params: {
+        postNumber: params.postNumber,
+        ...(params.commentId != null && { commentId: params.commentId }),
+      },
+    });
+
+    if (json.resultCode !== COMMENT_SUCCESS_CODE) {
+      reportApiErrorToUser(
+        new Error(json.resultMessage ?? "댓글 목록을 불러오지 못했습니다."),
+      );
+      return null;
+    }
+    
+    return json.data ?? [];
   } catch (e) {
     reportApiErrorToUser(e);
     return null;
