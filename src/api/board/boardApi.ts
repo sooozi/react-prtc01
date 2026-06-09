@@ -6,6 +6,8 @@ import { api } from "../http/http";
 import type { ApiResponse } from "../http/types";
 import type {
   CreatePostRequest,
+  CreateCommentRequest,
+  CreateCommentResponse,
   Post,
   PostAttachmentItem,
   PostDetail,
@@ -16,6 +18,8 @@ import type {
 
 export type {
   CreatePostRequest,
+  CreateCommentRequest,
+  CreateCommentResponse,
   Post,
   PostAttachmentItem,
   PostDetail,
@@ -202,7 +206,6 @@ export async function getMyPostList(userId: string): Promise<Post[] | null> {
   }
 }
 
-
 /**
  * 포스트 상세 첨부파일 목록 조회
  * [GET] /posts/{id}/files
@@ -224,4 +227,23 @@ export async function getPostFileBlob(postNumber: number, fileId: number): Promi
     responseType: "blob",
   });
   return res.data;
+}
+
+/** 댓글 작성 성공 시 백엔드 resultCode (로그인·게시판과 동일 코드) */
+export const COMMENT_SUCCESS_CODE = "BPLTE200" as const;
+
+/**
+ * 댓글 작성
+ * [POST] /comments — application/json
+ */
+export async function createComment(
+  body: CreateCommentRequest,
+): Promise<ApiResponse<CreateCommentResponse> | null> {
+  try {
+    getAuthTokenOrThrow(); // 로그인 필수
+    return await api.post<CreateCommentResponse, CreateCommentRequest>("/comments", body);
+  } catch (e) {
+    reportApiErrorToUser(e);
+    return null;
+  }
 }

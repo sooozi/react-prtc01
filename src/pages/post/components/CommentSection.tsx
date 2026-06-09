@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { COMMENT_SUCCESS_CODE, createComment } from "@/api/board";
 import { Button } from "@/components";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
 import { canViewSecretCommentBody } from "@/lib/comment/canViewSecretCommentBody";
@@ -7,6 +8,7 @@ import { countPreviewComments, PREVIEW_COMMENTS, type PreviewComment } from "@/m
 import "@/pages/post/components/CommentSection.scss";
 
 type CommentSectionProps = {
+  postNumber: number;
   postOwnerUserId?: string;
 };
 
@@ -74,6 +76,36 @@ function avatarInitial(name: string) {
   return t ? t[0]! : "?";
 }
 
+function todayDateLabel() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function buildCreatedCommentRow(
+  commentId: string,
+  content: string,
+  isSecret: boolean,
+  authorUserId: string | null,
+): CommentFlatRow {
+  const author =
+    typeof window !== "undefined" ? localStorage.getItem("userName")?.trim() || "나" : "나";
+
+  return {
+    id: commentId,
+    author,
+    dateLabel: todayDateLabel(),
+    body: content,
+    likes: 0,
+    dislikes: 0,
+    isSecret,
+    authorUserId: authorUserId ?? undefined,
+    parentId: null,
+  };
+}
+
 function resolveCanViewSecretBody(
   comment: Pick<PreviewComment, "id" | "isSecret" | "authorUserId">,
   currentUserId: string | null,
@@ -91,9 +123,14 @@ function resolveCanViewSecretBody(
 }
 
 // 게시글 상세 댓글 영역 — 플랫 5개 단위 무한 스크롤(목 API), 이후 실 API로 교체
-export default function CommentSection({ postOwnerUserId }: CommentSectionProps) {
-  const totalCount = countPreviewComments(PREVIEW_COMMENTS);
-  const [loadedRows, setLoadedRows] = useState<CommentFlatRow[]>([]);
+export default function CommentSection({ postNumber, postOwnerUserId }: CommentSectionProps) {
+  const mockTotalCount = countPreviewComments(PREVIEW_COMMENTS);
+  const [createdCommentCount, setCreatedCommentCount] = useState(0);
+  const totalCount = mockTotalCount + createdCommentCount;
+  const [createdRows, setCreatedRows] = useState<CommentFlatRow[]>([]);
+  const [mockRows, setMockRows] = useState<CommentFlatRow[]>([]);
+  const [isInitialListReady, setIsInitialListReady] = useState(false);
+  const loadedRows = useMemo(() => [...createdRows, ...mockRows], [createdRows, mockRows]);
   const [nextOffset, setNextOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -105,6 +142,10 @@ export default function CommentSection({ postOwnerUserId }: CommentSectionProps)
 
   const commentTrees = useMemo(() => flatRowsToTrees(loadedRows), [loadedRows]);
 
+  const [draft, setDraft] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   // 무한 스크롤 로드 기능
   const loadPage = useCallback(async (offset: number, append: boolean, signal?: AbortSignal) => {
     setIsLoading(true);
@@ -112,15 +153,61 @@ export default function CommentSection({ postOwnerUserId }: CommentSectionProps)
       const { rows, hasMore: more } = await fetchCommentsPageMock(offset);
       if (signal?.aborted) return;
       setInitialError(null);
-      setLoadedRows((prev) => (append ? [...prev, ...rows] : rows));
+      setMockRows((prev) => (append ? [...prev, ...rows] : rows));
       setNextOffset(offset + rows.length);
       setHasMore(more);
     } catch {
       if (!append && !signal?.aborted) setInitialError("댓글을 불러오지 못했습니다.");
     } finally {
       setIsLoading(false);
+      if (offset === 0 && !append && !signal?.aborted) {
+        setIsInitialListReady(true);
+      }
     }
   }, []);
+
+  // 댓글 작성
+  const handleSubmit = async () => {
+    const content = draft.trim();
+    if (!content || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const res = await createComment({
+        postNumber,
+        content,
+        parentCommentId: null,
+        rootCommentId: null,
+        depth: 0,
+        secretYn: isSecretComment ? "Y" : "N",
+      });
+
+      if (!res) return; // reportApiErrorToUser가 이미 처리
+
+      if (res.resultCode !== COMMENT_SUCCESS_CODE) {
+        setSubmitError(
+          res.resultMessage ?? res.resultDetailMessage ?? "댓글 등록에 실패했습니다.",
+        );
+        return;
+      }
+
+      const newRow = buildCreatedCommentRow(
+        res.data ? String(res.data) : `local-${Date.now()}`,
+        content,
+        isSecretComment,
+        currentUserId,
+      );
+
+      setCreatedRows((prev) => [newRow, ...prev]);
+      setCreatedCommentCount((count) => count + 1);
+      setDraft("");
+      setIsSecretComment(false);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // 마운트 시 첫 페이지만 요청(언마운트·재실행 시 이전 요청 취소)
   useEffect(() => {
@@ -188,6 +275,12 @@ export default function CommentSection({ postOwnerUserId }: CommentSectionProps)
             className="comment-section__draft"
             rows={5}
             placeholder="댓글을 입력하세요."
+            value={draft}
+            onChange={(e) => {
+              setDraft(e.target.value);
+              if (submitError) setSubmitError(null);
+            }}
+            disabled={isSubmitting || !isInitialListReady}
           />
           <div className="comment-section__composer-foot">
             <div className="comment-section__composer-actions">
@@ -203,19 +296,32 @@ export default function CommentSection({ postOwnerUserId }: CommentSectionProps)
                     : "comment-section__secret-comment-btn"
                 }
                 onClick={() => setIsSecretComment((prev) => !prev)}
+                disabled={isSubmitting || !isInitialListReady}
               >
                 <SecretCommentLockIcon locked={isSecretComment} className="comment-section__secret-lock-icon" />
               </Button>
-              <Button type="button" variant="primary" size="sm" className="comment-section__composer-submit" disabled>
-                등록
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
+                className="comment-section__composer-submit"
+                disabled={isSubmitting || !isInitialListReady || draft.trim().length === 0}
+                onClick={handleSubmit}
+              >
+                {isSubmitting ? "등록 중..." : !isInitialListReady ? "불러오는 중..." : "등록"}
               </Button>
             </div>
           </div>
+          {submitError ? (
+            <p className="comment-section__composer-error" role="alert">
+              {submitError}
+            </p>
+          ) : null}
         </div>
       </div>
 
       {/* 첫 페이지 로드 실패 시 에러 메시지 표시 */}
-      {initialError && loadedRows.length === 0 ? (
+      {initialError && mockRows.length === 0 && createdRows.length === 0 ? (
         <p className="comment-section__list-error" role="alert">
           {initialError}
         </p>

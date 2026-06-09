@@ -94,3 +94,16 @@ export type PostDetail = {
   mdfcrName?: string;
   mdfcrInfo?: string;
 };
+
+/** 댓글 작성 요청 */
+export type CreateCommentRequest = {
+  postNumber: number;
+  content: string; // 댓글 내용 
+  parentCommentId: number | null; // 부모 댓글 ID
+  rootCommentId: number | null; // 최상위 댓글 ID
+  depth: number; // 댓글 깊이
+  secretYn: "Y" | "N"; // 비밀 댓글 여부
+};
+
+/** 댓글 작성 응답 */
+export type CreateCommentResponse = string;

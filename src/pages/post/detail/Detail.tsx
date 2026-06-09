@@ -223,7 +223,9 @@ export default function Detail() {
                 </ul>
               </section>
             )}
-            <CommentSection postOwnerUserId={post.ownerUserId} />
+            
+            {/* 게시글 상세 댓글 영역 */}
+            <CommentSection postNumber={post.postNumber} postOwnerUserId={post.ownerUserId} />
           </>
         ) : null}
       </div>
