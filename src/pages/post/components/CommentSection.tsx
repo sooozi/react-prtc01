@@ -18,6 +18,16 @@ function isRootComment(parentCommentId: number | null) {
   return parentCommentId == null || parentCommentId === 0;
 }
 
+function compareCommentsNewestFirst(a: CommentListItem, b: CommentListItem) {
+  const byDate = b.regDt.localeCompare(a.regDt);
+  return byDate !== 0 ? byDate : b.commentId - a.commentId;
+}
+
+function compareCommentsOldestFirst(a: CommentListItem, b: CommentListItem) {
+  const byDate = a.regDt.localeCompare(b.regDt);
+  return byDate !== 0 ? byDate : a.commentId - b.commentId;
+}
+
 // 댓글 트리 구축
 function flatRowsToTrees(rows: readonly CommentListItem[]): CommentTreeNode[] {
   const roots: CommentTreeNode[] = [];
@@ -33,6 +43,11 @@ function flatRowsToTrees(rows: readonly CommentListItem[]): CommentTreeNode[] {
       if (parent) parent.replies.push(node);
       else roots.push(node);
     }
+  }
+
+  roots.sort(compareCommentsNewestFirst);
+  for (const root of roots) {
+    root.replies.sort(compareCommentsOldestFirst);
   }
 
   return roots;
@@ -159,20 +174,6 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
           댓글
           <span className="comment-section__count">{totalCount}</span>
         </h3>
-        <div className="comment-section__sort">
-          <label htmlFor="comment-sort" className="visually-hidden">
-            정렬
-          </label>
-          <select
-            id="comment-sort"
-            className="comment-section__select"
-            defaultValue="recent"
-            disabled
-          >
-            <option value="recent">최신순</option>
-            <option value="old">오래된순</option>
-          </select>
-        </div>
       </div>
 
       <div className="comment-section__write-block">
