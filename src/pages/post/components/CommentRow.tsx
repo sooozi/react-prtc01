@@ -8,6 +8,9 @@ export type CommentRowProps = {
   variant: "root" | "reply";
   comment: CommentListItem;
   canViewSecretBody?: boolean;
+  canDelete?: boolean;
+  isDeleting?: boolean;
+  onDelete?: (commentId: number) => Promise<void>;
 };
 
 function avatarInitial(name: string) {
@@ -19,6 +22,9 @@ function avatarInitial(name: string) {
 export function CommentRow({
   comment,
   canViewSecretBody = true,
+  canDelete = false,
+  isDeleting = false,
+  onDelete,
 }: CommentRowProps) {
   const commentKey = String(comment.commentId);
   const isDeleted = comment.delYn === "Y";
@@ -62,10 +68,7 @@ export function CommentRow({
         .join(" ")}
     >
       <div
-        className={[
-          "comment-section__avatar",
-          isDeleted ? "comment-section__avatar--deleted" : "",
-        ]
+        className={["comment-section__avatar", isDeleted ? "comment-section__avatar--deleted" : ""]
           .filter(Boolean)
           .join(" ")}
         aria-hidden
@@ -78,7 +81,10 @@ export function CommentRow({
       </div>
       <div className="comment-section__item-main">
         {isDeleted ? (
-          <div className="comment-section__deleted-notice" aria-labelledby={`${commentKey}-deleted-label`}>
+          <div
+            className="comment-section__deleted-notice"
+            aria-labelledby={`${commentKey}-deleted-label`}
+          >
             <p id={`${commentKey}-deleted-label`} className="comment-section__deleted-label">
               <CommentDeleteIcon className="comment-section__deleted-icon" />
               <span className="comment-section__deleted-text">삭제된 댓글입니다.</span>
@@ -98,8 +104,14 @@ export function CommentRow({
             </div>
 
             {isLocked ? (
-              <div className="comment-section__secret-locked" aria-labelledby={`${commentKey}-secret-label`}>
-                <p id={`${commentKey}-secret-label`} className="comment-section__secret-locked-label">
+              <div
+                className="comment-section__secret-locked"
+                aria-labelledby={`${commentKey}-secret-label`}
+              >
+                <p
+                  id={`${commentKey}-secret-label`}
+                  className="comment-section__secret-locked-label"
+                >
                   <SecretCommentLockIcon locked className="comment-section__secret-locked-icon" />
                   <span className="comment-section__secret-locked-text">
                     <span>비밀댓글입니다.</span>{" "}
@@ -115,7 +127,9 @@ export function CommentRow({
                   ref={bodyRef}
                   className={[
                     "comment-section__body",
-                    expanded ? "comment-section__body--expanded" : "comment-section__body--collapsed",
+                    expanded
+                      ? "comment-section__body--expanded"
+                      : "comment-section__body--collapsed",
                   ].join(" ")}
                 >
                   {comment.content}
@@ -162,17 +176,24 @@ export function CommentRow({
                   {dislikeCount}
                 </span>
               </button>
-              <button type="button" className="comment-section__action comment-section__action--text" disabled>
-                답글
-              </button>
               <button
                 type="button"
-                className="comment-section__action comment-section__action--icon comment-section__action--delete"
-                aria-label="댓글 삭제"
-                onClick={() => setDeleteConfirmOpen(true)}
+                className="comment-section__action comment-section__action--text"
+                disabled
               >
-                <CommentDeleteIcon className="comment-section__delete-icon" />
+                답글
               </button>
+              {canDelete ? (
+                <button
+                  type="button"
+                  className="comment-section__action comment-section__action--icon comment-section__action--delete"
+                  aria-label="댓글 삭제"
+                  disabled={isDeleting}
+                  onClick={() => setDeleteConfirmOpen(true)}
+                >
+                  <CommentDeleteIcon className="comment-section__delete-icon" />
+                </button>
+              ) : null}
             </div>
           </>
         )}
@@ -191,7 +212,11 @@ export function CommentRow({
         cancelLabel="취소"
         variant="danger"
         onCancel={() => setDeleteConfirmOpen(false)}
-        onConfirm={() => setDeleteConfirmOpen(false)}
+        onConfirm={async () => {
+          setDeleteConfirmOpen(false);
+          if (!onDelete) return;
+          await onDelete(comment.commentId);
+        }}
       />
     </>
   );

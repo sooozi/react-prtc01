@@ -165,8 +165,8 @@
   --pc-deleted-fg: var(--color-text-muted);
   --pc-deleted-bg: color-mix(in srgb, var(--color-text-muted) 10%, var(--color-card));
   --pc-deleted-border: color-mix(in srgb, var(--color-text-muted) 14%, var(--color-border-light));
-
   opacity: 0.92;
+  align-items: center !important;
 }
 
 .comment-section__avatar-deleted-icon {
@@ -176,7 +176,7 @@
 }
 
 .comment-section__deleted-notice {
-  margin: 0 0 v.space(sm);
+  // margin: 0 0 v.space(sm);
   padding: v.space(md);
   border-radius: v.rad(p10);
   border: 1px dashed color-mix(in srgb, var(--pc-deleted-fg) 24%, var(--color-border));

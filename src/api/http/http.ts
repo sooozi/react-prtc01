@@ -19,33 +19,23 @@ export const api = {
   post<T, B = unknown>(
     url: string,
     body?: B,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<ApiResponse<T>> {
-    return apiClient
-      .post<ApiResponse<T>>(url, body, config)
-      .then((res) => res.data);
+    return apiClient.post<ApiResponse<T>>(url, body, config).then((res) => res.data);
   },
 
   //포스트 수정
-  put<T, B = unknown>(
-    url: string,
-    body?: B,
-    config?: AxiosRequestConfig
-  ): Promise<ApiResponse<T>> {
-    return apiClient
-      .put<ApiResponse<T>>(url, body, config)
-      .then((res) => res.data);
+  put<T, B = unknown>(url: string, body?: B, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+    return apiClient.put<ApiResponse<T>>(url, body, config).then((res) => res.data);
   },
 
   //포스트 조회수 증가
   patch<T, B = unknown>(
     url: string,
     body?: B,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<ApiResponse<T>> {
-    return apiClient
-      .patch<ApiResponse<T>>(url, body, config)
-      .then((res) => res.data);
+    return apiClient.patch<ApiResponse<T>>(url, body, config).then((res) => res.data);
   },
 
   //포스트 삭제

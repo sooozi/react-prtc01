@@ -94,9 +94,7 @@ export async function getPostDetail(postNumber: number): Promise<PostDetail | nu
  * [POST] /posts — multipart/form-data (title, content, attachFileList[])
  * 실패 시 `reportApiErrorToUser` 후 `null`
  */
-export async function createPost(
-  body: CreatePostRequest
-): Promise<ApiResponse<number> | null> {
+export async function createPost(body: CreatePostRequest): Promise<ApiResponse<number> | null> {
   try {
     getAuthTokenOrThrow();
     const formData = new FormData();
@@ -129,19 +127,18 @@ export async function createPost(
  * 포스트 수정
  * [PUT] /posts/{postNumber} — multipart/form-data
  */
-export async function updatePost(
-  postNumber: number,
-  body: UpdatePostRequest
-): Promise<boolean> {
+export async function updatePost(postNumber: number, body: UpdatePostRequest): Promise<boolean> {
   try {
     getAuthTokenOrThrow();
     const formData = new FormData();
     formData.append("title", body.title);
     formData.append("content", body.content);
-    for (const file of body.addAttachFiles ?? []) { // 새로 추가한 파일
+    for (const file of body.addAttachFiles ?? []) {
+      // 새로 추가한 파일
       formData.append("addAttachFileList", file);
     }
-    for (const id of body.deleteFileIdList ?? []) { // 삭제할 파일
+    for (const id of body.deleteFileIdList ?? []) {
+      // 삭제할 파일
       formData.append("deleteFileIdList", String(id));
     }
     for (const name of body.attachFileOrderList ?? []) {
@@ -267,15 +264,28 @@ export async function selectCommentList(
     });
 
     if (json.resultCode !== COMMENT_SUCCESS_CODE) {
-      reportApiErrorToUser(
-        new Error(json.resultMessage ?? "댓글 목록을 불러오지 못했습니다."),
-      );
+      reportApiErrorToUser(new Error(json.resultMessage ?? "댓글 목록을 불러오지 못했습니다."));
       return null;
     }
-    
+
     return json.data ?? [];
   } catch (e) {
     reportApiErrorToUser(e);
     return null;
+  }
+}
+
+/**
+ * 댓글 삭제
+ * [DELETE] /comments/{commentId}
+ */
+export async function deleteComment(commentId: number): Promise<boolean> {
+  try {
+    getAuthTokenOrThrow();
+    await api.delete<unknown>(`/comments/${commentId}`);
+    return true;
+  } catch (e) {
+    reportApiErrorToUser(e);
+    return false;
   }
 }

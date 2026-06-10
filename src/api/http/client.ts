@@ -23,11 +23,7 @@ export const apiClient: AxiosInstance = axios.create({
 });
 
 /** 로그인/가입 등 — Bearer 붙이면 안 되는 경로 (남은 토큰으로 인한 간섭 방지) */
-const AUTH_PATHS_WITHOUT_BEARER = [
-  "/auth/login",
-  "/auth/join",
-  "/auth/available/user_id",
-] as const;
+const AUTH_PATHS_WITHOUT_BEARER = ["/auth/login", "/auth/join", "/auth/available/user_id"] as const;
 
 /** 쿼리 파라미터 제거한 경로 반환 */
 function requestPathWithoutQuery(url: string | undefined): string {
@@ -40,16 +36,6 @@ function shouldAttachBearer(url: string | undefined): boolean {
   const path = requestPathWithoutQuery(url);
   return !AUTH_PATHS_WITHOUT_BEARER.some((p) => path === p);
 }
-
-// request interceptor: Bearer 붙이는 경로 여부 확인 후, 토큰 있으면 Authorization Bearer 자동 부착
-apiClient.interceptors.request.use((config) => {
-  if (!shouldAttachBearer(config.url)) return config;
-  const token = getStoredAuthToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
 
 type ErrorResponseBody = {
   resultMessage?: string;
@@ -76,8 +62,7 @@ apiClient.interceptors.response.use(
       if (status === 401 && typeof window !== "undefined") {
         const data401 = error.response.data as ErrorResponseBody | undefined;
         const toastMsg =
-          data401?.resultMessage ??
-          "인증이 필요합니다. 로그인 후 다시 시도해주세요.";
+          data401?.resultMessage ?? "인증이 필요합니다. 로그인 후 다시 시도해주세요.";
         redirectUnauthorizedToLogin(toastMsg);
       }
 
@@ -92,9 +77,19 @@ apiClient.interceptors.response.use(
           status,
           code: data?.resultCode,
           resultDetailMessage: data?.resultDetailMessage,
-        })
+        }),
       );
     }
     return Promise.reject(error);
-  }
+  },
 );
+
+// request interceptor: Bearer 붙이는 경로 여부 확인 후, 토큰 있으면 Authorization Bearer 자동 부착
+apiClient.interceptors.request.use((config) => {
+  if (!shouldAttachBearer(config.url)) return config;
+  const token = getStoredAuthToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});

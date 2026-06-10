@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { COMMENT_SUCCESS_CODE, createComment, selectCommentList } from "@/api/board";
+import { COMMENT_SUCCESS_CODE, createComment, deleteComment, selectCommentList } from "@/api/board";
 import type { CommentListItem } from "@/api/board/boardApi.types";
 import { Button } from "@/components";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
@@ -59,14 +59,14 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
   const [isLoading, setIsLoading] = useState(false);
   const [initialError, setInitialError] = useState<string | null>(null);
   const [isSecretComment, setIsSecretComment] = useState(false);
-  const currentUserId =
-    typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+  const currentUserId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
 
   const commentTrees = useMemo(() => flatRowsToTrees(apiRows), [apiRows]);
 
   const [draft, setDraft] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [deletingCommentId, setDeletingCommentId] = useState<number | null>(null); // 삭제 중인 댓글 ID
 
   const loadComments = useCallback(
     async (signal?: AbortSignal) => {
@@ -94,6 +94,22 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
     [postNumber],
   );
 
+  // 댓글 삭제
+  const handleDeleteComment = async (commentId: number) => {
+    if (deletingCommentId != null) return;
+
+    setDeletingCommentId(commentId);
+    try {
+      const ok = await deleteComment(commentId);
+      if (ok) {
+        await loadComments();
+      }
+    } finally {
+      setDeletingCommentId(null);
+    }
+  };
+
+  // 댓글 등록
   const handleSubmit = async () => {
     const content = draft.trim();
     if (!content || isSubmitting) return;
@@ -114,9 +130,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
       if (!res) return;
 
       if (res.resultCode !== COMMENT_SUCCESS_CODE) {
-        setSubmitError(
-          res.resultMessage ?? res.resultDetailMessage ?? "댓글 등록에 실패했습니다.",
-        );
+        setSubmitError(res.resultMessage ?? res.resultDetailMessage ?? "댓글 등록에 실패했습니다.");
         return;
       }
 
@@ -128,6 +142,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
     }
   };
 
+  // 댓글 목록 불러오기
   useEffect(() => {
     const ac = new AbortController();
     queueMicrotask(() => {
@@ -148,7 +163,12 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
           <label htmlFor="comment-sort" className="visually-hidden">
             정렬
           </label>
-          <select id="comment-sort" className="comment-section__select" defaultValue="recent" disabled>
+          <select
+            id="comment-sort"
+            className="comment-section__select"
+            defaultValue="recent"
+            disabled
+          >
             <option value="recent">최신순</option>
             <option value="old">오래된순</option>
           </select>
@@ -191,7 +211,10 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
                 onClick={() => setIsSecretComment((prev) => !prev)}
                 disabled={isSubmitting || !isInitialListReady}
               >
-                <SecretCommentLockIcon locked={isSecretComment} className="comment-section__secret-lock-icon" />
+                <SecretCommentLockIcon
+                  locked={isSecretComment}
+                  className="comment-section__secret-lock-icon"
+                />
               </Button>
               <Button
                 type="button"
@@ -226,7 +249,14 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
                   <CommentRow
                     variant="root"
                     comment={comment}
-                    canViewSecretBody={resolveCanViewSecretBody(comment, currentUserId, postOwnerUserId)}
+                    canViewSecretBody={resolveCanViewSecretBody(
+                      comment,
+                      currentUserId,
+                      postOwnerUserId,
+                    )}
+                    canDelete={!!currentUserId && comment.rgtrId === currentUserId}
+                    isDeleting={deletingCommentId === comment.commentId}
+                    onDelete={handleDeleteComment}
                   />
 
                   {comment.replies.length > 0 ? (
@@ -236,7 +266,14 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
                           <CommentRow
                             variant="reply"
                             comment={reply}
-                            canViewSecretBody={resolveCanViewSecretBody(reply, currentUserId, postOwnerUserId)}
+                            canViewSecretBody={resolveCanViewSecretBody(
+                              reply,
+                              currentUserId,
+                              postOwnerUserId,
+                            )}
+                            canDelete={!!currentUserId && reply.rgtrId === currentUserId}
+                            isDeleting={deletingCommentId === reply.commentId}
+                            onDelete={handleDeleteComment}
                           />
                         </li>
                       ))}
@@ -248,7 +285,9 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
           </ul>
 
           <div className="comment-section__infinite-status" aria-live="polite">
-            {isLoading ? <span className="comment-section__infinite-loading">댓글 불러오는 중…</span> : null}
+            {isLoading ? (
+              <span className="comment-section__infinite-loading">댓글 불러오는 중…</span>
+            ) : null}
             {!isLoading && isInitialListReady && apiRows.length > 0 ? (
               <span className="comment-section__infinite-end">모든 댓글을 불러왔습니다.</span>
             ) : null}
