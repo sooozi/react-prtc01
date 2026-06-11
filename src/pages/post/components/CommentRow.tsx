@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import type { CommentListItem } from "@/api/board/boardApi.types";
-import { Confirm } from "@/components";
+import { Button, Confirm } from "@/components";
 import { CommentDeleteIcon } from "@/components/icons/CommentDeleteIcon";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
 
@@ -8,8 +8,15 @@ export type CommentRowProps = {
   variant: "root" | "reply";
   comment: CommentListItem;
   canViewSecretBody?: boolean;
+  canEdit?: boolean;
   canDelete?: boolean;
+  isEditing?: boolean;
   isDeleting?: boolean;
+  isSaving?: boolean;
+  editError?: string | null;
+  onStartEdit?: (commentId: number) => void;
+  onCancelEdit?: () => void;
+  onSaveEdit?: (commentId: number, content: string) => void;
   onDelete?: (commentId: number) => Promise<void>;
 };
 
@@ -22,23 +29,34 @@ function avatarInitial(name: string) {
 export function CommentRow({
   comment,
   canViewSecretBody = true,
+  canEdit = false,
   canDelete = false,
+  isEditing = false,
   isDeleting = false,
+  isSaving = false, // 수정 중 여부
+  editError = null, // 수정 오류 메시지
+  onStartEdit,
+  onCancelEdit,
+  onSaveEdit,
   onDelete,
 }: CommentRowProps) {
   const commentKey = String(comment.commentId);
   const isDeleted = comment.delYn === "Y";
   const isSecret = comment.secretYn === "Y";
   const dateLabel = comment.regDt.slice(0, 10);
+  const commentContent = comment.content ?? "";
 
   const bodyRef = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false);
   const [canExpand, setCanExpand] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [editDraft, setEditDraft] = useState(commentContent);
   const [likeCount, setLikeCount] = useState(comment.likeCnt);
   const [dislikeCount, setDislikeCount] = useState(comment.dislikeCnt);
 
   const isLocked = isSecret && !canViewSecretBody;
+  const editDraftTrimmed = editDraft.trim();
+  const canSaveEdit = editDraftTrimmed.length > 0 && editDraftTrimmed !== commentContent.trim();
 
   // 본문 접기/펼치기 가능 여부 확인
   useLayoutEffect(() => {
@@ -56,7 +74,7 @@ export function CommentRow({
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [comment.content, commentKey, expanded, isLocked, isDeleted]);
+  }, [commentContent, commentKey, expanded, isLocked, isDeleted]);
 
   const commentRow = (
     <div
@@ -121,6 +139,47 @@ export function CommentRow({
                   </span>
                 </p>
               </div>
+            ) : isEditing ? (
+              <div className="comment-section__edit-card">
+                <label htmlFor={`comment-edit-${commentKey}`} className="visually-hidden">
+                  댓글 수정
+                </label>
+                <textarea
+                  id={`comment-edit-${commentKey}`}
+                  className="comment-section__edit-draft"
+                  rows={4}
+                  value={editDraft}
+                  onChange={(e) => setEditDraft(e.target.value)}
+                  disabled={isDeleting}
+                />
+                <div className="comment-section__edit-foot">
+                  <Button
+                    type="button"
+                    variant="outlinePrimary"
+                    size="sm"
+                    className="comment-section__edit-cancel"
+                    disabled={isDeleting}
+                    onClick={() => onCancelEdit?.()}
+                  >
+                    취소
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    className="comment-section__edit-save"
+                    disabled={isDeleting || isSaving || !canSaveEdit}
+                    onClick={() => onSaveEdit?.(comment.commentId, editDraftTrimmed)}
+                  >
+                    {isSaving ? "저장 중..." : "저장"}
+                  </Button>
+                </div>
+                {editError ? (
+                  <p className="comment-section__edit-error" role="alert">
+                    {editError}
+                  </p>
+                ) : null}
+              </div>
             ) : (
               <div className="comment-section__body-block">
                 <p
@@ -132,7 +191,7 @@ export function CommentRow({
                       : "comment-section__body--collapsed",
                   ].join(" ")}
                 >
-                  {comment.content}
+                  {commentContent}
                 </p>
                 {canExpand ? (
                   <button
@@ -147,54 +206,69 @@ export function CommentRow({
               </div>
             )}
 
-            <div className="comment-section__actions" role="group" aria-label="댓글 반응 및 작업">
-              <button
-                type="button"
-                className="comment-section__action"
-                aria-label={`좋아요 ${likeCount}개`}
-                disabled={isLocked}
-                onClick={() => {
-                  setLikeCount(likeCount + 1);
-                }}
-              >
-                <span aria-hidden>👍</span>{" "}
-                <span className="comment-section__action-count" aria-hidden>
-                  {likeCount}
-                </span>
-              </button>
-              <button
-                type="button"
-                className="comment-section__action"
-                aria-label={`싫어요 ${dislikeCount}개`}
-                disabled={isLocked}
-                onClick={() => {
-                  setDislikeCount(dislikeCount + 1);
-                }}
-              >
-                <span aria-hidden>👎</span>{" "}
-                <span className="comment-section__action-count" aria-hidden>
-                  {dislikeCount}
-                </span>
-              </button>
-              <button
-                type="button"
-                className="comment-section__action comment-section__action--text"
-                disabled
-              >
-                답글
-              </button>
-              {canDelete ? (
+            {!isEditing ? (
+              <div className="comment-section__actions" role="group" aria-label="댓글 반응 및 작업">
                 <button
                   type="button"
-                  className="comment-section__action comment-section__action--icon comment-section__action--delete"
-                  aria-label="댓글 삭제"
-                  disabled={isDeleting}
-                  onClick={() => setDeleteConfirmOpen(true)}
+                  className="comment-section__action"
+                  aria-label={`좋아요 ${likeCount}개`}
+                  disabled={isLocked}
+                  onClick={() => {
+                    setLikeCount(likeCount + 1);
+                  }}
                 >
-                  <CommentDeleteIcon className="comment-section__delete-icon" />
+                  <span aria-hidden>👍</span>{" "}
+                  <span className="comment-section__action-count" aria-hidden>
+                    {likeCount}
+                  </span>
                 </button>
-              ) : null}
-            </div>
+                <button
+                  type="button"
+                  className="comment-section__action"
+                  aria-label={`싫어요 ${dislikeCount}개`}
+                  disabled={isLocked}
+                  onClick={() => {
+                    setDislikeCount(dislikeCount + 1);
+                  }}
+                >
+                  <span aria-hidden>👎</span>{" "}
+                  <span className="comment-section__action-count" aria-hidden>
+                    {dislikeCount}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className="comment-section__action comment-section__action--text"
+                  disabled
+                >
+                  답글
+                </button>
+                {canEdit ? (
+                  <button
+                    type="button"
+                    className="comment-section__action comment-section__action--text comment-section__action--edit"
+                    disabled={isDeleting}
+                    onClick={() => {
+                      setEditDraft(commentContent);
+                      onStartEdit?.(comment.commentId);
+                    }}
+                  >
+                    수정
+                  </button>
+                ) : null}
+                {canDelete ? (
+                  <button
+                    type="button"
+                    className="comment-section__action comment-section__action--icon comment-section__action--delete"
+                    aria-label="댓글 삭제"
+                    disabled={isDeleting}
+                    onClick={() => setDeleteConfirmOpen(true)}
+                  >
+                    <CommentDeleteIcon className="comment-section__delete-icon" />
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
           </>
         )}
       </div>

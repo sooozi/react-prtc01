@@ -16,6 +16,8 @@ import type {
   SelectCommentListParams,
   UpdatePostRequest,
   CommentListItem,
+  UpdateCommentRequest,
+  UpdateCommentResponse,
 } from "./boardApi.types";
 
 export type {
@@ -28,6 +30,8 @@ export type {
   PostListResponse,
   SortOrder,
   UpdatePostRequest,
+  UpdateCommentRequest,
+  UpdateCommentResponse,
 } from "./boardApi.types";
 
 /** 페이지에서 기존처럼 `instanceof BoardApiError` 쓰기 — ApiError와 동일 클래스 */
@@ -287,5 +291,25 @@ export async function deleteComment(commentId: number): Promise<boolean> {
   } catch (e) {
     reportApiErrorToUser(e);
     return false;
+  }
+}
+
+/**
+ * 댓글 수정
+ * [PUT] /comments/{commentId} — application/json
+ */
+export async function updateComment(
+  commentId: number,
+  body: UpdateCommentRequest,
+): Promise<ApiResponse<UpdateCommentResponse> | null> {
+  try {
+    getAuthTokenOrThrow(); // 로그인 필수 (토큰 없으면 여기서 throw)
+    return await api.put<UpdateCommentResponse, UpdateCommentRequest>(
+      `/comments/${commentId}`,
+      body,
+    );
+  } catch (e) {
+    reportApiErrorToUser(e);
+    return null;
   }
 }

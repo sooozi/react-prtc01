@@ -219,6 +219,68 @@
   }
 }
 
+.comment-section__edit-card {
+  margin: 0 0 v.space(sm);
+  border-radius: v.rad(p10);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 22%, var(--color-border-light));
+  background: var(--color-card);
+  @include sh.sm-1;
+  overflow: hidden;
+}
+
+.comment-section__edit-draft {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: v.space(md) v.space(table-y) v.space(sm);
+  min-height: 5.5rem;
+  font-family: inherit;
+  font-size: v.fs(body-sm);
+  line-height: var(--pc-comment-body-lh);
+  color: var(--color-text);
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  resize: vertical;
+  outline: none;
+
+  @include input-placeholder-tokens;
+
+  &:focus {
+    background: color-mix(in srgb, var(--color-input-focus-bg) 35%, transparent);
+  }
+}
+
+.comment-section__edit-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: v.space(btn-gap);
+  padding: v.space(sm) v.space(md) v.space(md);
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 65%, transparent);
+}
+
+.comment-section__edit-cancel.btn.btn--sm,
+.comment-section__edit-save.btn.btn--sm {
+  box-sizing: border-box;
+  min-width: 3rem;
+  min-height: 1.625rem;
+  padding: v.space(xxs) v.space(md);
+  font-size: v.fs(xs);
+  line-height: 1;
+  border-radius: v.rad(p8);
+}
+
+.comment-section__action--edit {
+  cursor: pointer;
+  opacity: 1;
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
 .comment-section__composer-submit.btn.btn--sm {
   box-sizing: border-box;
   min-width: 3rem;

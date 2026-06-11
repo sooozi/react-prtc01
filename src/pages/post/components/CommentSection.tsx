@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { COMMENT_SUCCESS_CODE, createComment, deleteComment, selectCommentList } from "@/api/board";
+import {
+  COMMENT_SUCCESS_CODE,
+  createComment,
+  deleteComment,
+  selectCommentList,
+  updateComment,
+} from "@/api/board";
 import type { CommentListItem } from "@/api/board/boardApi.types";
 import { Button } from "@/components";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
@@ -14,15 +20,18 @@ type CommentSectionProps = {
 
 type CommentTreeNode = CommentListItem & { replies: CommentTreeNode[] };
 
+// 댓글 트리 구축
 function isRootComment(parentCommentId: number | null) {
   return parentCommentId == null || parentCommentId === 0;
 }
 
+// 댓글 정렬
 function compareCommentsNewestFirst(a: CommentListItem, b: CommentListItem) {
   const byDate = b.regDt.localeCompare(a.regDt);
   return byDate !== 0 ? byDate : b.commentId - a.commentId;
 }
 
+// 댓글 정렬
 function compareCommentsOldestFirst(a: CommentListItem, b: CommentListItem) {
   const byDate = a.regDt.localeCompare(b.regDt);
   return byDate !== 0 ? byDate : a.commentId - b.commentId;
@@ -82,6 +91,10 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [deletingCommentId, setDeletingCommentId] = useState<number | null>(null); // 삭제 중인 댓글 ID
+  const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정 중인 댓글 ID
+
+  const [savingCommentId, setSavingCommentId] = useState<number | null>(null); // 추가
+  const [editError, setEditError] = useState<string | null>(null); // 추가 (선택)
 
   const loadComments = useCallback(
     async (signal?: AbortSignal) => {
@@ -109,6 +122,45 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
     [postNumber],
   );
 
+  const isOwnComment = useCallback(
+    (rgtrId: string) => !!currentUserId && rgtrId === currentUserId,
+    [currentUserId],
+  );
+
+  // 댓글 수정
+  const handleStartEdit = (commentId: number) => {
+    if (deletingCommentId != null || savingCommentId != null) return; // 삭제 중이거나 수정 중이면 수정 불가
+    setEditError(null); // 수정 오류 메시지 초기화
+    setEditingCommentId(commentId); // 수정 중인 댓글 ID 설정
+  };
+
+  // 댓글 수정 취소
+  const handleCancelEdit = () => {
+    setEditingCommentId(null); // 수정 중인 댓글 ID 초기화
+    setEditError(null); // 수정 오류 메시지 초기화
+    setSavingCommentId(null); // 수정 중 여부 초기화
+  };
+
+  // 댓글 수정
+  const handleSaveEdit = async (commentId: number, content: string) => {
+    const trimmed = content.trim();
+    if (!trimmed || savingCommentId != null) return;
+    setSavingCommentId(commentId);
+    setEditError(null);
+    try {
+      const res = await updateComment(commentId, { content: trimmed });
+      if (!res) return; // 네트워크/토큰 오류 → reportApiErrorToUser가 이미 처리
+      if (res.resultCode !== COMMENT_SUCCESS_CODE) {
+        setEditError(res.resultMessage ?? res.resultDetailMessage ?? "댓글 수정에 실패했습니다.");
+        return;
+      }
+      setEditingCommentId(null);
+      await loadComments(); // 목록 새로고침 → 화면에 수정된 내용 반영
+    } finally {
+      setSavingCommentId(null);
+    }
+  };
+
   // 댓글 삭제
   const handleDeleteComment = async (commentId: number) => {
     if (deletingCommentId != null) return;
@@ -117,6 +169,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
     try {
       const ok = await deleteComment(commentId);
       if (ok) {
+        if (editingCommentId === commentId) setEditingCommentId(null);
         await loadComments();
       }
     } finally {
@@ -177,9 +230,9 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
       </div>
 
       <div className="comment-section__write-block">
-        <h4 id="comment-write-heading" className="comment-section__subheading">
+        {/* <h4 id="comment-write-heading" className="comment-section__subheading">
           댓글 작성
-        </h4>
+        </h4> */}
         <div className="comment-section__composer-card" aria-labelledby="comment-write-heading">
           <label htmlFor="comment-draft" className="visually-hidden">
             댓글 입력
@@ -255,8 +308,15 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
                       currentUserId,
                       postOwnerUserId,
                     )}
-                    canDelete={!!currentUserId && comment.rgtrId === currentUserId}
+                    canEdit={isOwnComment(comment.rgtrId)}
+                    canDelete={isOwnComment(comment.rgtrId)}
+                    isSaving={savingCommentId === comment.commentId}
+                    isEditing={editingCommentId === comment.commentId}
                     isDeleting={deletingCommentId === comment.commentId}
+                    onStartEdit={handleStartEdit}
+                    onCancelEdit={handleCancelEdit}
+                    onSaveEdit={handleSaveEdit}
+                    editError={editingCommentId === comment.commentId ? editError : null}
                     onDelete={handleDeleteComment}
                   />
 
@@ -272,8 +332,15 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
                               currentUserId,
                               postOwnerUserId,
                             )}
-                            canDelete={!!currentUserId && reply.rgtrId === currentUserId}
+                            canEdit={isOwnComment(reply.rgtrId)}
+                            canDelete={isOwnComment(reply.rgtrId)}
+                            isEditing={editingCommentId === reply.commentId}
                             isDeleting={deletingCommentId === reply.commentId}
+                            isSaving={savingCommentId === reply.commentId}
+                            editError={editingCommentId === reply.commentId ? editError : null}
+                            onStartEdit={handleStartEdit}
+                            onCancelEdit={handleCancelEdit}
+                            onSaveEdit={handleSaveEdit}
                             onDelete={handleDeleteComment}
                           />
                         </li>

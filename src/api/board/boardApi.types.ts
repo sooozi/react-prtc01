@@ -61,7 +61,7 @@ export type SortOrder = "ASC" | "DESC";
 export type SelectBoardList = {
   page: number;
   size: number;
-  titleSearchKeyword?: string;  
+  titleSearchKeyword?: string;
   rgtrIdSearchKeyword?: string;
   rgtrNameSearchKeyword?: string;
   sortColumnName?: string;
@@ -98,7 +98,7 @@ export type PostDetail = {
 /** 댓글 작성 요청 */
 export type CreateCommentRequest = {
   postNumber: number;
-  content: string; // 댓글 내용 
+  content: string; // 댓글 내용
   parentCommentId: number | null; // 부모 댓글 ID
   rootCommentId: number | null; // 최상위 댓글 ID
   depth: number; // 댓글 깊이
@@ -120,7 +120,7 @@ export type CommentListItem = {
   dislikeCnt: number;
   secretYn: "Y" | "N";
   delYn: "Y" | "N";
-  regDt: string;        // "2026-06-09 14:30:00"
+  regDt: string; // "2026-06-09 14:30:00"
   rgtrId: string;
   rgtrName: string;
   rgtrInfo?: string;
@@ -129,8 +129,17 @@ export type CommentListItem = {
   mdfrName?: string;
   mdfrInfo?: string;
 };
+
 /** 목록 조회 쿼리 */
 export type SelectCommentListParams = {
   postNumber: number;
   commentId?: number; // 특정 댓글 기준 조회(답글 등) — 처음엔 생략
 };
+
+/** PUT /comments/{id} — 댓글 수정 요청 */
+export type UpdateCommentRequest = {
+  content: string;
+};
+
+/** PUT /comments/{id} — 댓글 수정 응답 data */
+export type UpdateCommentResponse = string;
