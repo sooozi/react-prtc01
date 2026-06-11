@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import type { CommentListItem } from "@/api/board/boardApi.types";
+import type { CommentListItem, CommentReactionType } from "@/api/board/boardApi.types";
 import { Button, Confirm } from "@/components";
 import { CommentDeleteIcon } from "@/components/icons/CommentDeleteIcon";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
@@ -14,9 +14,11 @@ export type CommentRowProps = {
   isDeleting?: boolean;
   isSaving?: boolean;
   editError?: string | null;
+  isReacting?: boolean;
   onStartEdit?: (commentId: number) => void;
   onCancelEdit?: () => void;
-  onSaveEdit?: (commentId: number, content: string) => void;
+  onSaveEdit?: (commentId: number, content: string) => void; // 댓글 수정
+  onReaction?: (commentId: number, reactionType: CommentReactionType) => void; // 댓글 반응
   onDelete?: (commentId: number) => Promise<void>;
 };
 
@@ -33,29 +35,30 @@ export function CommentRow({
   canDelete = false,
   isEditing = false,
   isDeleting = false,
-  isSaving = false, // 수정 중 여부
-  editError = null, // 수정 오류 메시지
+  isSaving = false,
+  editError = null,
+  isReacting = false,
   onStartEdit,
   onCancelEdit,
   onSaveEdit,
+  onReaction,
   onDelete,
 }: CommentRowProps) {
   const commentKey = String(comment.commentId);
   const isDeleted = comment.delYn === "Y";
   const isSecret = comment.secretYn === "Y";
   const dateLabel = comment.regDt.slice(0, 10);
-  const commentContent = comment.content ?? "";
+  const commentContent = comment.content ?? ""; // 댓글 내용
 
   const bodyRef = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false);
   const [canExpand, setCanExpand] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [editDraft, setEditDraft] = useState(commentContent);
-  const [likeCount, setLikeCount] = useState(comment.likeCnt);
-  const [dislikeCount, setDislikeCount] = useState(comment.dislikeCnt);
 
   const isLocked = isSecret && !canViewSecretBody;
-  const editDraftTrimmed = editDraft.trim();
+  const editDraftTrimmed = editDraft.trim(); // 수정 초안 양쪽 공백 제거
+  // 수정 가능 여부 확인
   const canSaveEdit = editDraftTrimmed.length > 0 && editDraftTrimmed !== commentContent.trim();
 
   // 본문 접기/펼치기 가능 여부 확인
@@ -211,29 +214,25 @@ export function CommentRow({
                 <button
                   type="button"
                   className="comment-section__action"
-                  aria-label={`좋아요 ${likeCount}개`}
-                  disabled={isLocked}
-                  onClick={() => {
-                    setLikeCount(likeCount + 1);
-                  }}
+                  aria-label={`좋아요 ${comment.likeCnt}개`}
+                  disabled={isLocked || isReacting}
+                  onClick={() => onReaction?.(comment.commentId, "LIKE")}
                 >
                   <span aria-hidden>👍</span>{" "}
                   <span className="comment-section__action-count" aria-hidden>
-                    {likeCount}
+                    {comment.likeCnt}
                   </span>
                 </button>
                 <button
                   type="button"
                   className="comment-section__action"
-                  aria-label={`싫어요 ${dislikeCount}개`}
-                  disabled={isLocked}
-                  onClick={() => {
-                    setDislikeCount(dislikeCount + 1);
-                  }}
+                  aria-label={`싫어요 ${comment.dislikeCnt}개`}
+                  disabled={isLocked || isReacting}
+                  onClick={() => onReaction?.(comment.commentId, "DISLIKE")}
                 >
                   <span aria-hidden>👎</span>{" "}
                   <span className="comment-section__action-count" aria-hidden>
-                    {dislikeCount}
+                    {comment.dislikeCnt}
                   </span>
                 </button>
                 <button

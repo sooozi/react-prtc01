@@ -29,7 +29,7 @@ export type UpdatePostRequest = {
   attachFileOrderList?: string[];
 };
 
-/** GET /posts 목록의 게시글 한 건 (조회수: inqCnt) */
+// GET /posts 목록의 게시글 한 건 (조회수: inqCnt)
 export type Post = {
   postNumber: number;
   ownerUserId?: string;
@@ -46,7 +46,7 @@ export type Post = {
   inqCnt?: number;
 };
 
-/** GET /posts 목록 응답 본문 (페이지 메타 + rows) */
+// GET /posts 목록 응답 본문 (페이지 메타 + rows)
 export type PostListResponse = {
   itemSize: number;
   pageSize: number;
@@ -54,10 +54,10 @@ export type PostListResponse = {
   data: Post[];
 };
 
-/** 목록 정렬 방향 (쿼리 sortType: ASC / DESC) */
+// 목록 정렬 방향 (쿼리 sortType: ASC / DESC)
 export type SortOrder = "ASC" | "DESC";
 
-/** 목록 조회 요청 파라미터 (GET /posts 쿼리, Swagger와 동일한 필드명) */
+// 목록 조회 요청 파라미터 (GET /posts 쿼리, Swagger와 동일한 필드명)
 export type SelectBoardList = {
   page: number;
   size: number;
@@ -68,7 +68,7 @@ export type SelectBoardList = {
   sortType?: SortOrder;
 };
 
-/** GET /posts/{id}/files 한 건 (Swagger: fileId, fileName, fileSize, sortOrder) */
+// GET /posts/{id}/files 한 건 (Swagger: fileId, fileName, fileSize, sortOrder)
 export type PostAttachmentItem = {
   fileId: number;
   fileName: string;
@@ -77,7 +77,7 @@ export type PostAttachmentItem = {
   sortOrder: number;
 };
 
-/** GET /posts/{id} 상세 응답 (조회수: inqCnt) */
+// GET /posts/{id} 상세 응답 (조회수: inqCnt)
 export type PostDetail = {
   postNumber: number;
   ownerUserId?: string;
@@ -95,7 +95,7 @@ export type PostDetail = {
   mdfcrInfo?: string;
 };
 
-/** 댓글 작성 요청 */
+// 댓글 작성 요청
 export type CreateCommentRequest = {
   postNumber: number;
   content: string; // 댓글 내용
@@ -105,10 +105,10 @@ export type CreateCommentRequest = {
   secretYn: "Y" | "N"; // 비밀 댓글 여부
 };
 
-/** 댓글 작성 응답 */
+// 댓글 작성 응답
 export type CreateCommentResponse = string;
 
-/** GET /comments — 댓글 한 행 (서버 응답) */
+// 댓글 한 행 (서버 응답)
 export type CommentListItem = {
   commentId: number;
   postNumber: number;
@@ -130,16 +130,22 @@ export type CommentListItem = {
   mdfrInfo?: string;
 };
 
-/** 목록 조회 쿼리 */
+// 목록 조회 쿼리
 export type SelectCommentListParams = {
   postNumber: number;
   commentId?: number; // 특정 댓글 기준 조회(답글 등) — 처음엔 생략
 };
 
-/** PUT /comments/{id} — 댓글 수정 요청 */
+// 댓글 수정 요청 data
 export type UpdateCommentRequest = {
   content: string;
 };
 
-/** PUT /comments/{id} — 댓글 수정 응답 data */
+// 댓글 수정 응답 data
 export type UpdateCommentResponse = string;
+
+// 댓글 반응 타입
+export type CommentReactionType = "LIKE" | "LIKE_CANCEL" | "DISLIKE" | "DISLIKE_CANCEL";
+
+// 댓글 반응 취소 응답 data
+export type CommentReactionResponse = string;

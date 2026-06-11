@@ -5,8 +5,9 @@ import {
   deleteComment,
   selectCommentList,
   updateComment,
+  reactToComment,
 } from "@/api/board";
-import type { CommentListItem } from "@/api/board/boardApi.types";
+import type { CommentListItem, CommentReactionType } from "@/api/board/boardApi.types";
 import { Button } from "@/components";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
 import { canViewSecretCommentBody } from "@/lib/comment/canViewSecretCommentBody";
@@ -96,6 +97,9 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
   const [savingCommentId, setSavingCommentId] = useState<number | null>(null); // 추가
   const [editError, setEditError] = useState<string | null>(null); // 추가 (선택)
 
+  const [reactingCommentId, setReactingCommentId] = useState<number | null>(null);
+
+  // 댓글 목록 불러오기
   const loadComments = useCallback(
     async (signal?: AbortSignal) => {
       setIsLoading(true);
@@ -122,6 +126,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
     [postNumber],
   );
 
+  // 댓글 소유 여부 확인
   const isOwnComment = useCallback(
     (rgtrId: string) => !!currentUserId && rgtrId === currentUserId,
     [currentUserId],
@@ -207,6 +212,20 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
       await loadComments();
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // 댓글 반응
+  const handleReaction = async (commentId: number, reactionType: CommentReactionType) => {
+    if (reactingCommentId != null) return; // 반응 중이면 반응 불가
+    setReactingCommentId(commentId); // 반응 중인 댓글 ID 설정
+    try {
+      const res = await reactToComment(commentId, reactionType); // 댓글 반응
+      if (!res) return;
+      if (res.resultCode !== COMMENT_SUCCESS_CODE) return;
+      await loadComments(); // likeCnt, dislikeCnt 서버 값으로 갱신
+    } finally {
+      setReactingCommentId(null);
     }
   };
 
@@ -316,6 +335,8 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
                     onStartEdit={handleStartEdit}
                     onCancelEdit={handleCancelEdit}
                     onSaveEdit={handleSaveEdit}
+                    onReaction={handleReaction}
+                    isReacting={reactingCommentId === comment.commentId}
                     editError={editingCommentId === comment.commentId ? editError : null}
                     onDelete={handleDeleteComment}
                   />
@@ -341,6 +362,8 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
                             onStartEdit={handleStartEdit}
                             onCancelEdit={handleCancelEdit}
                             onSaveEdit={handleSaveEdit}
+                            onReaction={handleReaction}
+                            isReacting={reactingCommentId === reply.commentId}
                             onDelete={handleDeleteComment}
                           />
                         </li>

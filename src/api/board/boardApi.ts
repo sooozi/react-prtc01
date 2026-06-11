@@ -18,6 +18,8 @@ import type {
   CommentListItem,
   UpdateCommentRequest,
   UpdateCommentResponse,
+  CommentReactionType,
+  CommentReactionResponse,
 } from "./boardApi.types";
 
 export type {
@@ -308,6 +310,25 @@ export async function updateComment(
       `/comments/${commentId}`,
       body,
     );
+  } catch (e) {
+    reportApiErrorToUser(e);
+    return null;
+  }
+}
+
+/**
+ * 댓글 반응
+ * [PATCH] /comments/{commentId}/reaction
+ */
+export async function reactToComment(
+  commentId: number,
+  reactionType: CommentReactionType,
+): Promise<ApiResponse<CommentReactionResponse> | null> {
+  try {
+    getAuthTokenOrThrow();
+    return await api.patch<CommentReactionResponse>(`/comments/${commentId}/reaction`, undefined, {
+      params: { reactionType },
+    });
   } catch (e) {
     reportApiErrorToUser(e);
     return null;
