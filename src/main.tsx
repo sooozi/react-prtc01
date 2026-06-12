@@ -11,12 +11,4 @@ document.documentElement.setAttribute("data-theme", theme);
 
 const rootEl = document.getElementById("root")!;
 
-async function start() {
-  if (import.meta.env.DEV) {
-    const { bootstrapAxe } = await import("@/bootstrapAxe");
-    await bootstrapAxe();
-  }
-  createRoot(rootEl).render(<App />);
-}
-
-void start();
+createRoot(rootEl).render(<App />);

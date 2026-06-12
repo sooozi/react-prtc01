@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary";
 import Header from "@/components/Layout/Header/Header";
@@ -21,6 +22,11 @@ function MainOutlet() {
  * header + main + footer = 100vh (콘텐츠가 짧을 때 푸터는 화면 하단 고정)
  */
 export default function Layout() {
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    void import("@/bootstrapAxe").then(({ bootstrapAxe }) => bootstrapAxe());
+  }, []);
+
   return (
     <div className="layout-container">
       <a href="#main-content" className="skip-to-main">

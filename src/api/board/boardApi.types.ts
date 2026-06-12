@@ -118,6 +118,9 @@ export type CommentListItem = {
   content: string;
   likeCnt: number;
   dislikeCnt: number;
+  /** 로그인 사용자 반응 — Swagger 필드명에 맞게 둘 중 하나가 올 수 있음 */
+  myReactionType?: CommentUserReaction | null;
+  reactionType?: CommentUserReaction | null;
   secretYn: "Y" | "N";
   delYn: "Y" | "N";
   regDt: string; // "2026-06-09 14:30:00"
@@ -144,8 +147,11 @@ export type UpdateCommentRequest = {
 // 댓글 수정 응답 data
 export type UpdateCommentResponse = string;
 
-// 댓글 반응 타입
+// 댓글 반응 타입 (PATCH 요청)
 export type CommentReactionType = "LIKE" | "LIKE_CANCEL" | "DISLIKE" | "DISLIKE_CANCEL";
+
+// 로그인 사용자의 현재 반응 (GET 목록)
+export type CommentUserReaction = "LIKE" | "DISLIKE";
 
 // 댓글 반응 취소 응답 data
 export type CommentReactionResponse = string;

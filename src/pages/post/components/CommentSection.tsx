@@ -7,10 +7,18 @@ import {
   updateComment,
   reactToComment,
 } from "@/api/board";
-import type { CommentListItem, CommentReactionType } from "@/api/board/boardApi.types";
+import type {
+  CommentListItem,
+  CommentReactionType,
+  CommentUserReaction,
+} from "@/api/board/boardApi.types";
 import { Button } from "@/components";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
 import { canViewSecretCommentBody } from "@/lib/comment/canViewSecretCommentBody";
+import {
+  resolveCommentMyReaction,
+  resolveMyReactionAfterRequest,
+} from "@/lib/comment/resolveCommentMyReaction";
 import { CommentRow } from "@/pages/post/components/CommentRow";
 import "@/pages/post/components/CommentSection.scss";
 
@@ -98,6 +106,33 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
   const [editError, setEditError] = useState<string | null>(null); // 추가 (선택)
 
   const [reactingCommentId, setReactingCommentId] = useState<number | null>(null);
+  const [myReactionByCommentId, setMyReactionByCommentId] = useState<
+    Record<number, CommentUserReaction | null>
+  >({});
+
+  function syncMyReactionsFromRows(rows: readonly CommentListItem[]) {
+    setMyReactionByCommentId((prev) => {
+      const next = { ...prev };
+      for (const row of rows) {
+        const hasServerReactionField =
+          row.myReactionType !== undefined || row.reactionType !== undefined;
+        if (hasServerReactionField) {
+          next[row.commentId] = resolveCommentMyReaction(row);
+        } else if (!(row.commentId in next)) {
+          next[row.commentId] = null;
+        }
+      }
+      return next;
+    });
+  }
+
+  function getMyReaction(commentId: number, rows: readonly CommentListItem[]) {
+    if (commentId in myReactionByCommentId) {
+      return myReactionByCommentId[commentId] ?? null;
+    }
+    const row = rows.find((item) => item.commentId === commentId);
+    return row ? resolveCommentMyReaction(row) : null;
+  }
 
   // 댓글 목록 불러오기
   const loadComments = useCallback(
@@ -116,6 +151,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
         setInitialError(null);
         setApiRows(items);
         setTotalCount(items.length);
+        syncMyReactionsFromRows(items);
       } catch {
         if (!signal?.aborted) setInitialError("댓글을 불러오지 못했습니다.");
       } finally {
@@ -217,13 +253,19 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
 
   // 댓글 반응
   const handleReaction = async (commentId: number, reactionType: CommentReactionType) => {
-    if (reactingCommentId != null) return; // 반응 중이면 반응 불가
-    setReactingCommentId(commentId); // 반응 중인 댓글 ID 설정
+    if (reactingCommentId != null) return;
+
+    setReactingCommentId(commentId);
     try {
-      const res = await reactToComment(commentId, reactionType); // 댓글 반응
+      const res = await reactToComment(commentId, reactionType);
       if (!res) return;
       if (res.resultCode !== COMMENT_SUCCESS_CODE) return;
-      await loadComments(); // likeCnt, dislikeCnt 서버 값으로 갱신
+
+      setMyReactionByCommentId((prev) => ({
+        ...prev,
+        [commentId]: resolveMyReactionAfterRequest(reactionType),
+      }));
+      await loadComments();
     } finally {
       setReactingCommentId(null);
     }
@@ -337,6 +379,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
                     onSaveEdit={handleSaveEdit}
                     onReaction={handleReaction}
                     isReacting={reactingCommentId === comment.commentId}
+                    myReaction={getMyReaction(comment.commentId, apiRows)}
                     editError={editingCommentId === comment.commentId ? editError : null}
                     onDelete={handleDeleteComment}
                   />
@@ -364,6 +407,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
                             onSaveEdit={handleSaveEdit}
                             onReaction={handleReaction}
                             isReacting={reactingCommentId === reply.commentId}
+                            myReaction={getMyReaction(reply.commentId, apiRows)}
                             onDelete={handleDeleteComment}
                           />
                         </li>

@@ -28,7 +28,7 @@ export default function Home() {
           io.unobserve(entry.target);
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -24px 0px" }
+      { threshold: 0.12, rootMargin: "0px 0px -24px 0px" },
     );
 
     nodes.forEach((n) => io.observe(n));
@@ -60,10 +60,12 @@ export default function Home() {
     { name: "TypeScript", desc: "타입" },
     { name: "React Router", desc: "라우팅" },
     { name: "React Hook Form", desc: "폼" },
+    { name: "Zod", desc: "검증" },
     { name: "Axios", desc: "HTTP" },
-    { name: "clsx", desc: "클래스" },
-    { name: "ESLint", desc: "품질" },
+    { name: "Quill", desc: "에디터" },
     { name: "SCSS", desc: "스타일" },
+    { name: "Storybook", desc: "UI 문서" },
+    { name: "ESLint", desc: "품질" },
   ];
 
   const quickLinks = [
@@ -102,9 +104,7 @@ export default function Home() {
             titleId="home-hero-title"
             titleClassName="hero-title"
             subtitle={
-              <>
-                Vite · React · TypeScript 기반으로 게시판·회원·일정 UI를 붙여 본 저장소입니다.
-              </>
+              <>Vite · React · TypeScript 기반으로 게시판·회원·일정 UI를 붙여 본 저장소입니다.</>
             }
             subtitleClassName="hero-description"
             variant="inline"

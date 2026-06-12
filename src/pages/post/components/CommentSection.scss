@@ -281,6 +281,21 @@
   }
 }
 
+.comment-section__action--active {
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary-muted) 60%, transparent);
+  opacity: 1;
+
+  .comment-section__action-count {
+    color: var(--color-primary);
+  }
+
+  &:hover {
+    color: var(--color-primary-hover);
+    background: color-mix(in srgb, var(--color-primary-muted) 75%, transparent);
+  }
+}
+
 .comment-section__composer-submit.btn.btn--sm {
   box-sizing: border-box;
   min-width: 3rem;

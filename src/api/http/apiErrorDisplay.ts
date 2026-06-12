@@ -58,23 +58,28 @@ function shouldSuppressUiMessageForStatus(status?: number): boolean {
  * 로그·전역 문구(인라인 catch 대체). 401로 로그인 보낸 뒤에는 광고/문구를 생략
  */
 export function reportApiErrorToUser(e: unknown): void {
-  if (e instanceof ApiError) { // ApiError 인스턴스인 경우
-    if (e.status === 401) { // 401 상태 코드인 경우
+  if (e instanceof ApiError) {
+    // ApiError 인스턴스인 경우
+    if (e.status === 401) {
+      // 401 상태 코드인 경우
       redirectUnauthorizedToLogin(e.message);
       return;
     }
-    if (shouldSuppressUiMessageForStatus(e.status)) { // 401, 403, 404 상태 코드인 경우
+    if (shouldSuppressUiMessageForStatus(e.status)) {
+      // 401, 403, 404 상태 코드인 경우
       return;
     }
   }
-  if (isAxiosError(e)) { // AxiosError 인스턴스인 경우
+  if (isAxiosError(e)) {
+    // AxiosError 인스턴스인 경우
     if (e.response) {
       const s = e.response.status;
-      if (shouldSuppressUiMessageForStatus(s)) { // 401, 403, 404 상태 코드인 경우
+      if (shouldSuppressUiMessageForStatus(s)) {
+        // 401, 403, 404 상태 코드인 경우
         return;
       }
     } else {
-      setGlobalApiErrorText("네트워크에 연결할 수 없습니다. 연결을 확인한 뒤 다시 시도해주세요."); // 네트워크 연결 실패 메시지
+      setGlobalApiErrorText("API 응답을 받지 못했습니다. 서버 상태를 확인한 뒤 다시 시도해주세요.");
       return;
     }
   }

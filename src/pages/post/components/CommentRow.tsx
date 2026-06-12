@@ -1,5 +1,10 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import type { CommentListItem, CommentReactionType } from "@/api/board/boardApi.types";
+import type {
+  CommentListItem,
+  CommentReactionType,
+  CommentUserReaction,
+} from "@/api/board/boardApi.types";
+import { resolveReactionRequestType } from "@/lib/comment/resolveCommentMyReaction";
 import { Button, Confirm } from "@/components";
 import { CommentDeleteIcon } from "@/components/icons/CommentDeleteIcon";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
@@ -15,6 +20,7 @@ export type CommentRowProps = {
   isSaving?: boolean;
   editError?: string | null;
   isReacting?: boolean;
+  myReaction?: CommentUserReaction | null;
   onStartEdit?: (commentId: number) => void;
   onCancelEdit?: () => void;
   onSaveEdit?: (commentId: number, content: string) => void; // 댓글 수정
@@ -22,6 +28,7 @@ export type CommentRowProps = {
   onDelete?: (commentId: number) => Promise<void>;
 };
 
+// 아바타 초기 문자
 function avatarInitial(name: string) {
   const t = name.trim();
   return t ? t[0]! : "?";
@@ -38,6 +45,7 @@ export function CommentRow({
   isSaving = false,
   editError = null,
   isReacting = false,
+  myReaction = null,
   onStartEdit,
   onCancelEdit,
   onSaveEdit,
@@ -213,10 +221,18 @@ export function CommentRow({
               <div className="comment-section__actions" role="group" aria-label="댓글 반응 및 작업">
                 <button
                   type="button"
-                  className="comment-section__action"
+                  className={[
+                    "comment-section__action",
+                    myReaction === "LIKE" ? "comment-section__action--active" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                   aria-label={`좋아요 ${comment.likeCnt}개`}
+                  aria-pressed={myReaction === "LIKE"}
                   disabled={isLocked || isReacting}
-                  onClick={() => onReaction?.(comment.commentId, "LIKE")}
+                  onClick={() =>
+                    onReaction?.(comment.commentId, resolveReactionRequestType(myReaction, "LIKE"))
+                  }
                 >
                   <span aria-hidden>👍</span>{" "}
                   <span className="comment-section__action-count" aria-hidden>
@@ -225,10 +241,21 @@ export function CommentRow({
                 </button>
                 <button
                   type="button"
-                  className="comment-section__action"
+                  className={[
+                    "comment-section__action",
+                    myReaction === "DISLIKE" ? "comment-section__action--active" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                   aria-label={`싫어요 ${comment.dislikeCnt}개`}
+                  aria-pressed={myReaction === "DISLIKE"}
                   disabled={isLocked || isReacting}
-                  onClick={() => onReaction?.(comment.commentId, "DISLIKE")}
+                  onClick={() =>
+                    onReaction?.(
+                      comment.commentId,
+                      resolveReactionRequestType(myReaction, "DISLIKE"),
+                    )
+                  }
                 >
                   <span aria-hidden>👎</span>{" "}
                   <span className="comment-section__action-count" aria-hidden>
