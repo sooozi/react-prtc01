@@ -104,11 +104,7 @@ export function CommentRow({
           .join(" ")}
         aria-hidden
       >
-        {isDeleted ? (
-          <CommentDeleteIcon className="comment-section__avatar-deleted-icon" />
-        ) : (
-          avatarInitial(comment.rgtrName)
-        )}
+        {avatarInitial(comment.rgtrName)}
       </div>
       <div className="comment-section__item-main">
         {isDeleted ? (
