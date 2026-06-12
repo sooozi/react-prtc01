@@ -15,6 +15,7 @@ import type {
 import { Button } from "@/components";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
 import { canViewSecretCommentBody } from "@/lib/comment/canViewSecretCommentBody";
+import { buildRootCommentRequest, isRootComment } from "@/lib/comment/buildCreateCommentRequest";
 import {
   resolveCommentMyReaction,
   resolveMyReactionAfterRequest,
@@ -28,11 +29,6 @@ type CommentSectionProps = {
 };
 
 type CommentTreeNode = CommentListItem & { replies: CommentTreeNode[] };
-
-// 댓글 트리 구축
-function isRootComment(parentCommentId: number | null) {
-  return parentCommentId == null || parentCommentId === 0;
-}
 
 // 댓글 정렬
 function compareCommentsNewestFirst(a: CommentListItem, b: CommentListItem) {
@@ -170,9 +166,9 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
 
   // 댓글 수정
   const handleStartEdit = (commentId: number) => {
-    if (deletingCommentId != null || savingCommentId != null) return; // 삭제 중이거나 수정 중이면 수정 불가
-    setEditError(null); // 수정 오류 메시지 초기화
-    setEditingCommentId(commentId); // 수정 중인 댓글 ID 설정
+    if (deletingCommentId != null || savingCommentId != null) return;
+    setEditError(null);
+    setEditingCommentId(commentId);
   };
 
   // 댓글 수정 취소
@@ -227,14 +223,9 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
     setSubmitError(null);
 
     try {
-      const res = await createComment({
-        postNumber,
-        content,
-        parentCommentId: null,
-        rootCommentId: null,
-        depth: 0,
-        secretYn: isSecretComment ? "Y" : "N",
-      });
+      const res = await createComment(
+        buildRootCommentRequest(postNumber, content, isSecretComment ? "Y" : "N"),
+      );
 
       if (!res) return;
 
@@ -369,19 +360,20 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
                       currentUserId,
                       postOwnerUserId,
                     )}
-                    canEdit={isOwnComment(comment.rgtrId)}
-                    canDelete={isOwnComment(comment.rgtrId)}
-                    isSaving={savingCommentId === comment.commentId}
-                    isEditing={editingCommentId === comment.commentId}
-                    isDeleting={deletingCommentId === comment.commentId}
-                    onStartEdit={handleStartEdit}
-                    onCancelEdit={handleCancelEdit}
-                    onSaveEdit={handleSaveEdit}
+                    canEdit={isOwnComment(comment.rgtrId)} // 댓글 소유 여부 확인
+                    canDelete={isOwnComment(comment.rgtrId)} // 댓글 삭제 가능 여부 확인
+                    isSaving={savingCommentId === comment.commentId} // 저장 API 호출 중
+                    isEditing={editingCommentId === comment.commentId} // 수정 UI 표시 중
+                    isDeleting={deletingCommentId === comment.commentId} // 삭제 중 여부 확인
+                    onStartEdit={handleStartEdit} // 수정 시작
+                    onCancelEdit={handleCancelEdit} // 수정 취소
+                    onSaveEdit={handleSaveEdit} // 수정 저장
                     onReaction={handleReaction}
-                    isReacting={reactingCommentId === comment.commentId}
+                    isReacting={reactingCommentId === comment.commentId} // 반응 중 여부 확인
                     myReaction={getMyReaction(comment.commentId, apiRows)}
-                    editError={editingCommentId === comment.commentId ? editError : null}
+                    editError={editingCommentId === comment.commentId ? editError : null} // 수정 오류 메시지 확인
                     onDelete={handleDeleteComment}
+                    canReply={comment.depth === 0}
                   />
 
                   {comment.replies.length > 0 ? (

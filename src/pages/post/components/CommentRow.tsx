@@ -25,6 +25,7 @@ export type CommentRowProps = {
   onCancelEdit?: () => void;
   onSaveEdit?: (commentId: number, content: string) => void; // 댓글 수정
   onReaction?: (commentId: number, reactionType: CommentReactionType) => void; // 댓글 반응
+  canReply?: boolean;
   onDelete?: (commentId: number) => Promise<void>;
 };
 
@@ -50,6 +51,7 @@ export function CommentRow({
   onCancelEdit,
   onSaveEdit,
   onReaction,
+  canReply = false,
   onDelete,
 }: CommentRowProps) {
   const commentKey = String(comment.commentId);
@@ -262,13 +264,16 @@ export function CommentRow({
                     {comment.dislikeCnt}
                   </span>
                 </button>
-                <button
-                  type="button"
-                  className="comment-section__action comment-section__action--text"
-                  disabled
-                >
-                  답글
-                </button>
+                {canReply ? (
+                  <button
+                    type="button"
+                    className="comment-section__action comment-section__action--text"
+                    disabled={isLocked || isDeleting}
+                    onClick={() => console.log("답글")}
+                  >
+                    답글
+                  </button>
+                ) : null}
                 {canEdit ? (
                   <button
                     type="button"
