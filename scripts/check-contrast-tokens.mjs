@@ -23,12 +23,14 @@ const PAIRS = [
   { name: "light · text on bg", fg: "#1e293b", bg: "#ffffff", min: 4.5 },
   { name: "light · muted on bg", fg: "#64748b", bg: "#ffffff", min: 4.5 },
   { name: "light · primary on bg", fg: "#5254d9", bg: "#ffffff", min: 4.5 },
+  { name: "light · tech desc on card", fg: "#64748b", bg: "#ffffff", min: 4.5 },
   { name: "light · placeholder on input", fg: "#576474", bg: "#f2f4f6", min: 4.5 },
   { name: "dark · text on bg", fg: "#f8fafc", bg: "#0f172a", min: 4.5 },
   { name: "dark · muted on bg", fg: "#94a3b8", bg: "#0f172a", min: 4.5 },
   { name: "dark · muted on card", fg: "#94a3b8", bg: "#1e293b", min: 4.5 },
   { name: "dark · primary on bg", fg: "#818cf8", bg: "#0f172a", min: 4.5 },
   { name: "dark · placeholder on input", fg: "#94a3b8", bg: "#1e293b", min: 4.5 },
+  { name: "dark · tech desc on card", fg: "#94a3b8", bg: "#1e293b", min: 4.5 },
 ];
 
 let failed = 0;

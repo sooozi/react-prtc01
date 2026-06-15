@@ -216,29 +216,32 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
 
   // 댓글 등록
   const handleSubmit = async () => {
-    const content = draft.trim();
+    const content = draft.trim(); // 댓글 내용 양쪽 공백 제거
     if (!content || isSubmitting) return;
 
-    setIsSubmitting(true);
-    setSubmitError(null);
+    setIsSubmitting(true); // 등록 API 호출 중 여부 표시
+    setSubmitError(null); // 등록 오류 메시지 초기화
 
     try {
+      // 댓글 등록 API 호출
       const res = await createComment(
         buildRootCommentRequest(postNumber, content, isSecretComment ? "Y" : "N"),
       );
 
       if (!res) return;
 
+      // 등록 성공 → 목록 새로고침 → 화면에 등록된 내용 반영
       if (res.resultCode !== COMMENT_SUCCESS_CODE) {
+        // 등록 실패 → 등록 오류 메시지 표시
         setSubmitError(res.resultMessage ?? res.resultDetailMessage ?? "댓글 등록에 실패했습니다.");
         return;
       }
 
-      setDraft("");
-      setIsSecretComment(false);
-      await loadComments();
+      setDraft(""); // 댓글 내용 초기화
+      setIsSecretComment(false); // 비밀 댓글 꺼짐
+      await loadComments(); // 목록 새로고침 → 화면에 등록된 내용 반영
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // 등록 API 호출 중 여부 초기화
     }
   };
 

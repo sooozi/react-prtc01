@@ -17,8 +17,7 @@
 }
 
 .tooltip-bubble {
-  transform: translate(-50%, -100%);
-  margin-top: calc(-1 * (v.space(px8) + v.space(px5) + v.space(px5)));
+  transform: translate(-50%, calc(-100% - #{v.space(sm)}));
   padding: v.space(sm) v.space(md);
   max-width: 320px;
   font-size: v.fs(sm);
