@@ -266,6 +266,8 @@
 .schedule-side-panel__chip--other:has(.schedule-side-panel__chip-input:checked) {
   border-color: color-mix(in srgb, var(--color-text-secondary) 72%, var(--color-border));
   background: color-mix(in srgb, var(--color-text-muted) 8%, var(--color-input-bg));
+  color: var(--color-text-heading);
+  font-weight: v.fw(extrabold);
 }
 
 .schedule-side-panel__input-shell {
