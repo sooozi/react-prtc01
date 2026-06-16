@@ -5,7 +5,7 @@
   max-width: 100%;
   cursor: default;
 
-  :is(button, .btn):hover {
+  :is(button, .btn):not(.month-calendar__event):hover {
     border-color: transparent;
     background-color: var(--color-primary-muted);
   }

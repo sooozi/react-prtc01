@@ -15,8 +15,16 @@
   border: 1px solid var(--color-card-border, var(--color-border));
   background-color: var(--color-card);
   background-image:
-    radial-gradient(ellipse 120% 85% at 100% 0%, color-mix(in srgb, var(--color-primary) 1%, transparent), transparent 52%),
-    radial-gradient(ellipse 90% 70% at 0% 100%, color-mix(in srgb, var(--color-primary) 3.5%, transparent), transparent 48%);
+    radial-gradient(
+      ellipse 120% 85% at 100% 0%,
+      color-mix(in srgb, var(--color-primary) 1%, transparent),
+      transparent 52%
+    ),
+    radial-gradient(
+      ellipse 90% 70% at 0% 100%,
+      color-mix(in srgb, var(--color-primary) 3.5%, transparent),
+      transparent 48%
+    );
   @include sh.schedule-side-card;
 
   @include bp.below(bp.$sm) {
@@ -61,7 +69,7 @@
   font-size: clamp(v.fs(lg), 2.2vw, v.fs(xl));
   font-weight: v.fw(extrabold);
   letter-spacing: -0.04em;
-  line-height: 1.25;
+  line-height: 1;
   color: var(--color-text-heading);
 }
 
@@ -104,7 +112,8 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: 0 clamp(#{v.space(lg)}, 2.8vw, #{v.space(2xl)}) clamp(#{v.space(xl)}, 3vw, #{v.space(2xl)});
+  padding: 0 clamp(#{v.space(lg)}, 2.8vw, #{v.space(2xl)})
+    clamp(#{v.space(xl)}, 3vw, #{v.space(2xl)});
 
   @include bp.below(bp.$sm) {
     padding: 0 v.space(lg) v.space(xl);
@@ -143,7 +152,7 @@
 .schedule-side-panel__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: v.space(sm) v.space(sm);
+  gap: v.space(xs);
 }
 
 .schedule-side-panel__chip {
@@ -191,25 +200,41 @@
 
 .schedule-side-panel__chip--work {
   color: color-mix(in srgb, var(--color-primary) 92%, var(--color-text-heading) 8%);
-  background: color-mix(in srgb, var(--color-card) 35%, color-mix(in srgb, var(--color-primary) 18%, var(--color-input-bg)));
+  background: color-mix(
+    in srgb,
+    var(--color-card) 35%,
+    color-mix(in srgb, var(--color-primary) 18%, var(--color-input-bg))
+  );
   border-color: color-mix(in srgb, var(--color-primary) 38%, var(--color-border));
 }
 
 .schedule-side-panel__chip--meeting {
   color: color-mix(in srgb, var(--color-primary-hover) 88%, var(--color-text-heading) 12%);
-  background: color-mix(in srgb, var(--color-card) 35%, color-mix(in srgb, var(--color-primary-hover) 18%, var(--color-input-bg)));
+  background: color-mix(
+    in srgb,
+    var(--color-card) 35%,
+    color-mix(in srgb, var(--color-primary-hover) 18%, var(--color-input-bg))
+  );
   border-color: color-mix(in srgb, var(--color-primary-hover) 38%, var(--color-border));
 }
 
 .schedule-side-panel__chip--personal {
   color: color-mix(in srgb, var(--color-secondary) 88%, var(--color-text-heading) 12%);
-  background: color-mix(in srgb, var(--color-card) 35%, color-mix(in srgb, var(--color-secondary) 16%, var(--color-input-bg)));
+  background: color-mix(
+    in srgb,
+    var(--color-card) 35%,
+    color-mix(in srgb, var(--color-secondary) 16%, var(--color-input-bg))
+  );
   border-color: color-mix(in srgb, var(--color-secondary) 42%, var(--color-border));
 }
 
 .schedule-side-panel__chip--other {
   color: var(--color-text-secondary);
-  background: color-mix(in srgb, var(--color-card) 45%, color-mix(in srgb, var(--color-text-muted) 10%, var(--color-input-bg)));
+  background: color-mix(
+    in srgb,
+    var(--color-card) 45%,
+    color-mix(in srgb, var(--color-text-muted) 10%, var(--color-input-bg))
+  );
   border-color: color-mix(in srgb, var(--color-text-muted) 26%, var(--color-border));
 }
 
@@ -226,7 +251,11 @@
 
 .schedule-side-panel__chip--meeting:has(.schedule-side-panel__chip-input:checked) {
   border-color: var(--color-primary-hover);
-  background: color-mix(in srgb, var(--color-primary) 8%, color-mix(in srgb, var(--color-primary-hover) 22%, var(--color-input-bg)));
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 8%,
+    color-mix(in srgb, var(--color-primary-hover) 22%, var(--color-input-bg))
+  );
 }
 
 .schedule-side-panel__chip--personal:has(.schedule-side-panel__chip-input:checked) {
@@ -324,6 +353,42 @@
   justify-content: flex-end;
   gap: v.space(btn-gap);
   padding-top: v.space(lg);
+}
+
+.schedule-toast {
+  position: fixed;
+  /* body 포털 — --header-height는 .layout-container에만 있어 var() 사용 시 top 무효 → 하단에 붙음 */
+  top: calc(#{v.space(lg)} * 2 + 35px + #{v.space(lg)});
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: calc(#{v.z(modal)} + 10);
+  max-width: min(24rem, calc(100vw - #{v.space(2xl)}));
+  padding: v.space(md) v.space(2xl);
+  background: var(--color-toast-bg);
+  color: var(--color-toast-text);
+  font-size: v.fs(body-sm);
+  font-weight: v.fw(medium);
+  line-height: 1.5;
+  text-align: center;
+  border-radius: v.rad(p12);
+  @include sh.md-float;
+  animation: schedule-toast-in 0.3s ease;
+  pointer-events: none;
+
+  @include bp.above(bp.$md) {
+    top: calc(#{v.space(lg)} * 2 + 2.5rem + #{v.space(lg)});
+  }
+}
+
+@keyframes schedule-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 /* 좁은 화면 하단 시트 — 데스크톱 사이드바용 stretch·투명 스타일 덮어쓰기 */

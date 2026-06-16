@@ -7,13 +7,20 @@ import {
   startOfMonth,
   type CalendarWeekStart,
 } from "@/lib/schedule/calendarUtils";
-import { CalendarPickerPopover, CalendarPopoverOption } from "@/pages/schedule/components/calendar/CalendarPickerPopover";
+import {
+  CalendarPickerPopover,
+  CalendarPopoverOption,
+} from "@/pages/schedule/components/calendar/CalendarPickerPopover";
 import { getKrHolidayName } from "@/lib/holidayUtils";
 import { Tooltip } from "@/components";
 import "@/pages/schedule/components/calendar/MonthCalendar.scss";
 
-const STORAGE_KEY = "scheduleItems";
-const SCHEDULE_ITEMS_UPDATED_EVENT = "schedule-items-updated";
+import {
+  readScheduleItems,
+  SCHEDULE_ITEMS_UPDATED_EVENT,
+  SCHEDULE_STORAGE_KEY,
+  type ScheduleItem,
+} from "@/lib/schedule/scheduleItems";
 
 // 그리드 열 순서는 weekStart 에 맞출 것 — 월 시작 / 일 시작
 const WEEKDAYS_ORDER: Record<CalendarWeekStart, readonly string[]> = {
@@ -23,20 +30,16 @@ const WEEKDAYS_ORDER: Record<CalendarWeekStart, readonly string[]> = {
 
 const MONTH_NUMS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 
-// 부모에서 넘기는 값
 type Props = {
-  month: Date; // 표시할 달
-  onMonthChange: (nextMonthStart: Date) => void; // 달 바꿀 때 호출
+  month: Date;
+  onMonthChange: (nextMonthStart: Date) => void;
+  selectedEventId?: string | null;
+  selectedDate?: string | null;
+  onEventSelect?: (item: ScheduleItem) => void;
+  onDateSelect?: (date: string) => void; // "2026-06-20" 형식의 날짜
 };
 
-type ScheduleDraftItem = {
-  id: string;
-  category: "work" | "meeting" | "personal" | "other";
-  categoryLabel?: string;
-  date: string; // YYYY-MM-DD
-  note: string;
-  createdTimestamp: number; // 일정 생성 시간 (Unix ms)
-};
+type ScheduleDraftItem = ScheduleItem;
 
 // 숫자를 두 자리 문자열로 변환하는 함수
 function pad2(n: number): string {
@@ -50,24 +53,17 @@ function toISODateLocal(d: Date): string {
 
 // 로컬스토리지에서 일정 데이터를 읽어오는 함수
 function safeReadScheduleItems(): ScheduleDraftItem[] {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return [];
-  try {
-    const parsed = JSON.parse(raw) as unknown;
-    if (!Array.isArray(parsed)) return [];
-    return parsed.map((item) => {
-      const row = item as ScheduleDraftItem & { createdAt?: number };
-      return {
-        ...row,
-        createdTimestamp: row.createdTimestamp ?? row.createdAt ?? 0,
-      };
-    });
-  } catch {
-    return [];
-  }
+  return readScheduleItems();
 }
 
-export default function MonthCalendar({ month, onMonthChange }: Props) {
+export default function MonthCalendar({
+  month,
+  onMonthChange,
+  selectedEventId = null,
+  selectedDate = null,
+  onEventSelect,
+  onDateSelect,
+}: Props) {
   const [weekStart, setWeekStart] = useState<CalendarWeekStart>("monday");
   const [isMonthPopoverOpen, setIsMonthPopoverOpen] = useState(false); // 월 선택 팝오버 열려있는지 확인
   const [isYearPopoverOpen, setIsYearPopoverOpen] = useState(false); // 연도 선택 팝오버 열려있는지 확인
@@ -111,7 +107,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
 
     // 로컬스토리지에 변경이 있을 때 일정 데이터를 다시 읽어오는 함수
     const onStorage = (e: StorageEvent) => {
-      if (e.key === STORAGE_KEY) sync();
+      if (e.key === SCHEDULE_STORAGE_KEY) sync();
     };
     // 일정 데이터가 업데이트될 때 일정 데이터를 다시 읽어오는 함수
     const onUpdated = () => sync();
@@ -190,7 +186,10 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
 
         <button
           type="button"
-          className={clsx("month-calendar__today-btn", isViewingTodayMonth && "month-calendar__today-btn--active")}
+          className={clsx(
+            "month-calendar__today-btn",
+            isViewingTodayMonth && "month-calendar__today-btn--active",
+          )}
           onClick={() => {
             onMonthChange(startOfMonth(new Date()));
             setIsMonthPopoverOpen(false);
@@ -218,7 +217,7 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
             ‹
           </span>
         </button>
-        
+
         {/* 연·월 컨트롤 */}
         <div className="month-calendar__title">
           {/* 연도 선택 */}
@@ -317,21 +316,34 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
           const isSaturday = dow === 6; // 토요일인지 확인
           const isSunday = dow === 0; // 일요일인지 확인
           const isoDate = toISODateLocal(cell.date); // 날짜를 ISO 형식으로 변환
+          const isDateSelected = selectedDate === isoDate;
           const dayItems = scheduleByDate.get(isoDate) ?? []; // 일정 데이터를 날짜별로 그룹화하는 맵에서 일정 데이터를 읽어옴
           const visibleItems = dayItems.slice(0, 4); // 일정 데이터를 4개까지 표시
           const overflow = Math.max(0, dayItems.length - visibleItems.length); // 일정 데이터를 4개까지 표시한 후 더 있는 일정 데이터 개수
-          const holidayName = getKrHolidayName( // 공휴일 이름 가져오기
+          const holidayName = getKrHolidayName(
+            // 공휴일 이름 가져오기
             cell.date.getFullYear(),
             cell.date.getMonth() + 1,
-            cell.date.getDate()
+            cell.date.getDate(),
           );
           return (
             <div
               key={key}
+              onClick={() => onDateSelect?.(isoDate)}
+              role="button"
+              tabIndex={0}
+              aria-label={`${isoDate} 선택`}
               className={clsx("month-calendar__cell", {
                 "month-calendar__cell--muted": !cell.inCurrentMonth,
                 "month-calendar__cell--today": isToday,
+                "month-calendar__cell--selected": isDateSelected,
               })}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onDateSelect?.(isoDate);
+                }
+              }}
             >
               <span
                 className={clsx("month-calendar__day-num", {
@@ -344,7 +356,10 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
                 {cell.date.getDate()}
               </span>
               {holidayName && cell.inCurrentMonth ? (
-                <span className="month-calendar__holiday-name" aria-label={`공휴일: ${holidayName}`}>
+                <span
+                  className="month-calendar__holiday-name"
+                  aria-label={`공휴일: ${holidayName}`}
+                >
                   {holidayName}
                 </span>
               ) : null}
@@ -352,25 +367,39 @@ export default function MonthCalendar({ month, onMonthChange }: Props) {
               {/* 일정 데이터 표시 */}
               {visibleItems.length > 0 ? (
                 <div className="month-calendar__events" aria-label={`${isoDate} 일정`}>
-                  {visibleItems.map((it) => (
-                    <Tooltip
-                      key={it.id}
-                      content={it.note || "제목 없음"}
-                      onlyWhenTruncated
-                      fullWidth
-                    >
-                      <span
-                        className={clsx("month-calendar__event", `month-calendar__event--${it.category}`)}
-                      >
-                        <span className="month-calendar__event-text" data-tooltip-truncate>
-                          {it.note || "제목 없음"}
-                        </span>
-                      </span>
-                    </Tooltip>
-                  ))}
+                  {visibleItems.map((it) => {
+                    const eventLabel = it.note || "제목 없음";
+                    const isSelected = selectedEventId === it.id;
+
+                    return (
+                      <Tooltip key={it.id} content={eventLabel} onlyWhenTruncated fullWidth>
+                        <button
+                          type="button"
+                          className={clsx(
+                            "month-calendar__event",
+                            `month-calendar__event--${it.category}`,
+                            isSelected && "month-calendar__event--selected",
+                          )}
+                          aria-label={`${isoDate} ${it.categoryLabel ?? it.category} 일정: ${eventLabel}. 클릭하여 수정`}
+                          aria-pressed={isSelected}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onEventSelect?.(it);
+                          }}
+                        >
+                          <span className="month-calendar__event-text" data-tooltip-truncate>
+                            {eventLabel}
+                          </span>
+                        </button>
+                      </Tooltip>
+                    );
+                  })}
                   {/* 일정 데이터 초과 표시 */}
                   {overflow > 0 ? (
-                    <div className="month-calendar__event month-calendar__event--overflow" aria-label={`일정 ${overflow}개 더 있음`}>
+                    <div
+                      className="month-calendar__event month-calendar__event--overflow"
+                      aria-label={`일정 ${overflow}개 더 있음`}
+                    >
                       +{overflow}
                     </div>
                   ) : null}

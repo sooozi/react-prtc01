@@ -91,6 +91,7 @@
   margin: 0;
   padding: 0;
   border: none;
+  border-radius: 0;
   background: var(--color-overlay-scrim);
   cursor: pointer;
 }
@@ -117,7 +118,6 @@
   box-shadow: 0 -8px 32px color-mix(in srgb, var(--color-text-heading) 12%, transparent);
 }
 
-/* layout-main·footer가 동일 z-index(dock)일 때 푸터가 fixed 시트를 덮음 → 시트 열림 시 main 쌓임 상승 */
 @at-root .layout-main:has(.schedule-workspace--narrow-sheet-open) {
   z-index: v.z(modal);
 }
