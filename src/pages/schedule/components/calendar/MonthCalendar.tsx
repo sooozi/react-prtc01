@@ -92,8 +92,9 @@ export default function MonthCalendar({
     return new Date(n.getFullYear(), n.getMonth(), n.getDate());
   }, []);
 
-  // 오늘 날짜가 있는 달인지 확인
-  const isViewingTodayMonth = today.getFullYear() === y && today.getMonth() === m;
+  // 오늘 날짜가 선택됐는지 확인 (오늘 버튼 active 표시용)
+  const todayISO = useMemo(() => toISODateLocal(today), [today]);
+  const isTodaySelected = selectedDate === todayISO;
 
   const weekStartSunday = weekStart === "sunday";
   const weekStartSwitchLabel = weekStartSunday
@@ -188,10 +189,11 @@ export default function MonthCalendar({
           type="button"
           className={clsx(
             "month-calendar__today-btn",
-            isViewingTodayMonth && "month-calendar__today-btn--active",
+            isTodaySelected && "month-calendar__today-btn--active",
           )}
           onClick={() => {
             onMonthChange(startOfMonth(new Date()));
+            onDateSelect?.(toISODateLocal(today));
             setIsMonthPopoverOpen(false);
             setIsYearPopoverOpen(false);
           }}
