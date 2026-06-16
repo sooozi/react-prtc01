@@ -14,7 +14,7 @@ function getServerSnapshot() {
   return false;
 }
 
-/** `window.matchMedia` 결과를 구독한다 (SSR 시 false). */
+// 화면 크기 조건이 맞는지 확인
 export function useMediaQuery(query: string): boolean {
   return useSyncExternalStore(
     (onChange) => subscribe(query, onChange),

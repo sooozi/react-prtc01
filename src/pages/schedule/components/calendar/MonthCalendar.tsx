@@ -13,6 +13,7 @@ import {
 } from "@/pages/schedule/components/calendar/CalendarPickerPopover";
 import { getKrHolidayName } from "@/lib/holidayUtils";
 import { Tooltip } from "@/components";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import "@/pages/schedule/components/calendar/MonthCalendar.scss";
 
 import {
@@ -64,6 +65,8 @@ export default function MonthCalendar({
   onEventSelect,
   onDateSelect,
 }: Props) {
+  const isNarrowCalendar = useMediaQuery("(max-width: 1024px)");
+  const maxVisibleEvents = isNarrowCalendar ? 2 : 3;
   const [weekStart, setWeekStart] = useState<CalendarWeekStart>("monday");
   const [isMonthPopoverOpen, setIsMonthPopoverOpen] = useState(false); // 월 선택 팝오버 열려있는지 확인
   const [isYearPopoverOpen, setIsYearPopoverOpen] = useState(false); // 연도 선택 팝오버 열려있는지 확인
@@ -320,8 +323,8 @@ export default function MonthCalendar({
           const isoDate = toISODateLocal(cell.date); // 날짜를 ISO 형식으로 변환
           const isDateSelected = selectedDate === isoDate;
           const dayItems = scheduleByDate.get(isoDate) ?? []; // 일정 데이터를 날짜별로 그룹화하는 맵에서 일정 데이터를 읽어옴
-          const visibleItems = dayItems.slice(0, 4); // 일정 데이터를 4개까지 표시
-          const overflow = Math.max(0, dayItems.length - visibleItems.length); // 일정 데이터를 4개까지 표시한 후 더 있는 일정 데이터 개수
+          const visibleItems = dayItems.slice(0, maxVisibleEvents);
+          const overflow = Math.max(0, dayItems.length - visibleItems.length);
           const holidayName = getKrHolidayName(
             // 공휴일 이름 가져오기
             cell.date.getFullYear(),
