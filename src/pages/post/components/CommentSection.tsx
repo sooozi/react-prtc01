@@ -133,26 +133,27 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
   // 댓글 목록 불러오기
   const loadComments = useCallback(
     async (signal?: AbortSignal) => {
-      setIsLoading(true);
-      setIsInitialListReady(false);
+      setIsLoading(true); // 댓글 목록 로딩 중 여부 표시
+      setIsInitialListReady(false); // 댓글 목록 초기화 여부 표시
       try {
         const items = await selectCommentList({ postNumber });
-        if (signal?.aborted) return;
+        if (signal?.aborted) return; // 취소 플래그 확인
 
         if (!items) {
+          // 댓글 목록 조회 실패 시
           if (!signal?.aborted) setInitialError("댓글을 불러오지 못했습니다.");
           return;
         }
 
-        setInitialError(null);
+        setInitialError(null); // 초기화 오류 메시지 초기화
         setApiRows(items);
         setTotalCount(items.length);
-        syncMyReactionsFromRows(items);
+        syncMyReactionsFromRows(items); // 내 반응 동기화
       } catch {
         if (!signal?.aborted) setInitialError("댓글을 불러오지 못했습니다.");
       } finally {
-        setIsLoading(false);
-        if (!signal?.aborted) setIsInitialListReady(true);
+        setIsLoading(false); // 댓글 목록 로딩 중 여부 초기화
+        if (!signal?.aborted) setIsInitialListReady(true); // 댓글 목록 초기화 여부 표시
       }
     },
     [postNumber],

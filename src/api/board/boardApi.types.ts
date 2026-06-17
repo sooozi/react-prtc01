@@ -118,7 +118,6 @@ export type CommentListItem = {
   content: string;
   likeCnt: number;
   dislikeCnt: number;
-  /** 로그인 사용자 반응 — Swagger 필드명에 맞게 둘 중 하나가 올 수 있음 */
   myReactionType?: CommentUserReaction | null;
   reactionType?: CommentUserReaction | null;
   secretYn: "Y" | "N";
