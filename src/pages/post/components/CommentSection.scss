@@ -242,7 +242,7 @@
   border: none;
   border-radius: 0;
   background: transparent;
-  resize: vertical;
+  resize: none;
   outline: none;
 
   @include input-placeholder-tokens;
@@ -257,8 +257,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: v.space(btn-gap);
-  padding: v.space(sm) v.space(md) v.space(md);
-  border-top: 1px solid color-mix(in srgb, var(--color-border) 65%, transparent);
+  padding: 0.5rem 0.5rem 0.75rem;
 }
 
 .comment-section__edit-cancel.btn.btn--sm,

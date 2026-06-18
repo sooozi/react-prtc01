@@ -41,7 +41,7 @@ function avatarInitial(name: string) {
   return t ? t[0]! : "?";
 }
 
-// 댓글 한 줄(루트·답글) — 레이아웃 + 본문 접기/펼치기 + 액션
+// 댓글 한 줄(루트·대댓글) — 레이아웃 + 본문 접기/펼치기 + 액션
 export function CommentRow({
   comment,
   canViewSecretBody = true,
@@ -280,8 +280,8 @@ export function CommentRow({
                     className="comment-section__action comment-section__action--text"
                     disabled={isLocked || isDeleting}
                     onClick={() => {
-                      setReplyDraft(""); // 답글 입력 초기화
-                      onStartReply?.(comment); // 답글 작성 시작
+                      setReplyDraft(""); // 대댓글 입력 초기화
+                      onStartReply?.(comment); // 대댓글 작성 시작
                     }}
                   >
                     답글
@@ -317,13 +317,13 @@ export function CommentRow({
             {isReplying ? (
               <div className="comment-section__edit-card">
                 <label htmlFor={`comment-reply-${commentKey}`} className="visually-hidden">
-                  답글 입력
+                  대댓글 입력
                 </label>
                 <textarea
                   id={`comment-reply-${commentKey}`}
                   className="comment-section__edit-draft"
                   rows={3}
-                  placeholder="답글을 입력하세요."
+                  placeholder="대댓글을 입력하세요."
                   value={replyDraft}
                   onChange={(e) => setReplyDraft(e.target.value)}
                   disabled={isDeleting || isSubmittingReply}

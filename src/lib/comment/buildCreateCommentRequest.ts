@@ -28,7 +28,7 @@ export function buildRootCommentRequest(
   };
 }
 
-/** POST /comments — 답글(대댓글) */
+/** POST /comments — 대댓글 */
 export function buildReplyCommentRequest({
   postNumber,
   content,

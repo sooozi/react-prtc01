@@ -135,7 +135,7 @@ export type CommentListItem = {
 // 목록 조회 쿼리
 export type SelectCommentListParams = {
   postNumber: number;
-  commentId?: number; // 특정 댓글 기준 조회(답글 등) — 처음엔 생략
+  commentId?: number; // 특정 댓글 기준 조회(대댓글 등) — 처음엔 생략
 };
 
 // 댓글 수정 요청 data

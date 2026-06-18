@@ -54,7 +54,7 @@ function flatRowsToTrees(rows: readonly CommentListItem[]): CommentTreeNode[] {
 
   for (const row of rows) {
     // 댓글 목록 하나씩 반복해서 확인
-    const node: CommentTreeNode = { ...row, replies: [] }; // 답글 담을 공간 추가
+    const node: CommentTreeNode = { ...row, replies: [] }; // 대댓글 담을 공간 추가
     map.set(row.commentId, node); // 주소록 저장(나중에 부모 댓글을 찾을 수 있도록 commentId를 key로 해서 map에 저장)
     if (isRootComment(row.parentCommentId)) {
       // 부모가 없는 댓글(루트 댓글)인 경우 '일반 댓글'로 분류
@@ -69,7 +69,7 @@ function flatRowsToTrees(rows: readonly CommentListItem[]): CommentTreeNode[] {
 
   roots.sort(compareCommentsNewestFirst); // 댓글 정렬
   for (const root of roots) {
-    root.replies.sort(compareCommentsOldestFirst); // 답글 정렬
+    root.replies.sort(compareCommentsOldestFirst); // 대댓글 정렬
   }
 
   return roots; // 댓글 트리 반환
@@ -279,30 +279,30 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
     }
   };
 
-  // 답글 작성 시작
+  // 대댓글 작성 시작
   const handleStartReply = (comment: CommentListItem) => {
-    if (deletingCommentId != null || savingCommentId != null) return; // 삭제 중이면 답글과 겹치지 않게 끔
+    if (deletingCommentId != null || savingCommentId != null) return; // 삭제 중이면 대댓글과 겹치지 않게 끔
     setEditingCommentId(null); // 수정 중인 댓글 ID 초기화
     setEditError(null); // 수정 오류 메시지 초기화
-    setReplyError(null); // 답글 오류 메시지 초기화
-    setReplyingTo(comment); // 답글 작성 중인 댓글 설정
+    setReplyError(null); // 대댓글 오류 메시지 초기화
+    setReplyingTo(comment); // 대댓글 작성 중인 댓글 설정
   };
 
-  // 답글 작성 취소
+  // 대댓글 작성 취소
   const handleCancelReply = () => {
-    setReplyingTo(null); // 답글 작성 중인 댓글 초기화
+    setReplyingTo(null); // 대댓글 작성 중인 댓글 초기화
     setReplyError(null);
-  }; // 답글 오류 메시지 초기화
+  }; // 대댓글 오류 메시지 초기화
 
-  // 답글 등록
+  // 대댓글 등록
   const handleSubmitReply = async (content: string) => {
-    if (!replyingTo || isSubmittingReply) return; // 답글 작성 중이면 겹치지 않게 끔
+    if (!replyingTo || isSubmittingReply) return; // 대댓글 작성 중이면 겹치지 않게 끔
 
     const trimmed = content.trim();
-    if (!trimmed) return; // 답글 내용 양쪽 공백 제거
+    if (!trimmed) return; // 대댓글 내용 양쪽 공백 제거
 
     setIsSubmittingReply(true);
-    setReplyError(null); // 답글 오류 메시지 초기화
+    setReplyError(null); // 대댓글 오류 메시지 초기화
 
     try {
       const res = await createComment(
@@ -317,7 +317,9 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
       if (!res) return;
 
       if (res.resultCode !== COMMENT_SUCCESS_CODE) {
-        setReplyError(res.resultMessage ?? res.resultDetailMessage ?? "답글 등록에 실패했습니다.");
+        setReplyError(
+          res.resultMessage ?? res.resultDetailMessage ?? "대댓글 등록에 실패했습니다.",
+        );
         return;
       }
 
@@ -440,7 +442,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
                     editError={editingCommentId === comment.commentId ? editError : null} // 수정 오류 메시지 확인
                     onDelete={handleDeleteComment}
                     canReply={comment.depth === 0}
-                    isReplying={replyingTo?.commentId === comment.commentId}
+                    isReplying={replyingTo?.commentId === comment.commentId} // 대댓글 작성 중 여부 확인
                     isSubmittingReply={
                       isSubmittingReply && replyingTo?.commentId === comment.commentId
                     }
@@ -451,7 +453,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
                   />
 
                   {comment.replies.length > 0 ? (
-                    <ul className="comment-section__replies" aria-label="답글">
+                    <ul className="comment-section__replies" aria-label="대댓글">
                       {comment.replies.map((reply) => (
                         <li key={reply.commentId} className="comment-section__reply">
                           <CommentRow
