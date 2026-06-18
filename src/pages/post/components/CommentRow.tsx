@@ -26,7 +26,13 @@ export type CommentRowProps = {
   onSaveEdit?: (commentId: number, content: string) => void; // 댓글 수정
   onReaction?: (commentId: number, reactionType: CommentReactionType) => void; // 댓글 반응
   canReply?: boolean;
+  isReplying?: boolean;
+  isSubmittingReply?: boolean;
+  replyError?: string | null;
   onDelete?: (commentId: number) => Promise<void>;
+  onStartReply?: (comment: CommentListItem) => void;
+  onCancelReply?: () => void;
+  onSubmitReply?: (content: string) => void;
 };
 
 // 아바타 초기 문자
@@ -52,7 +58,13 @@ export function CommentRow({
   onSaveEdit,
   onReaction,
   canReply = false,
+  isReplying = false,
+  isSubmittingReply = false,
+  replyError = null,
   onDelete,
+  onStartReply,
+  onCancelReply,
+  onSubmitReply,
 }: CommentRowProps) {
   const commentKey = String(comment.commentId);
   const isDeleted = comment.delYn === "Y";
@@ -65,11 +77,13 @@ export function CommentRow({
   const [canExpand, setCanExpand] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [editDraft, setEditDraft] = useState(commentContent);
+  const [replyDraft, setReplyDraft] = useState("");
 
   const isLocked = isSecret && !canViewSecretBody;
-  const editDraftTrimmed = editDraft.trim(); // 수정 초안 양쪽 공백 제거
-  // 수정 가능 여부 확인
+  const editDraftTrimmed = editDraft.trim();
+  const replyDraftTrimmed = replyDraft.trim();
   const canSaveEdit = editDraftTrimmed.length > 0 && editDraftTrimmed !== commentContent.trim();
+  const canSubmitReply = replyDraftTrimmed.length > 0;
 
   // 본문 접기/펼치기 가능 여부 확인
   useLayoutEffect(() => {
@@ -260,12 +274,15 @@ export function CommentRow({
                     {comment.dislikeCnt}
                   </span>
                 </button>
-                {canReply ? (
+                {canReply && !isReplying ? (
                   <button
                     type="button"
                     className="comment-section__action comment-section__action--text"
                     disabled={isLocked || isDeleting}
-                    onClick={() => console.log("답글")}
+                    onClick={() => {
+                      setReplyDraft(""); // 답글 입력 초기화
+                      onStartReply?.(comment); // 답글 작성 시작
+                    }}
                   >
                     답글
                   </button>
@@ -293,6 +310,50 @@ export function CommentRow({
                   >
                     <CommentDeleteIcon className="comment-section__delete-icon" />
                   </button>
+                ) : null}
+              </div>
+            ) : null}
+
+            {isReplying ? (
+              <div className="comment-section__edit-card">
+                <label htmlFor={`comment-reply-${commentKey}`} className="visually-hidden">
+                  답글 입력
+                </label>
+                <textarea
+                  id={`comment-reply-${commentKey}`}
+                  className="comment-section__edit-draft"
+                  rows={3}
+                  placeholder="답글을 입력하세요."
+                  value={replyDraft}
+                  onChange={(e) => setReplyDraft(e.target.value)}
+                  disabled={isDeleting || isSubmittingReply}
+                />
+                <div className="comment-section__edit-foot">
+                  <Button
+                    type="button"
+                    variant="outlinePrimary"
+                    size="sm"
+                    className="comment-section__edit-cancel"
+                    disabled={isDeleting || isSubmittingReply}
+                    onClick={() => onCancelReply?.()}
+                  >
+                    취소
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    className="comment-section__composer-submit"
+                    disabled={isDeleting || isSubmittingReply || !canSubmitReply}
+                    onClick={() => onSubmitReply?.(replyDraftTrimmed)}
+                  >
+                    {isSubmittingReply ? "등록 중..." : "등록"}
+                  </Button>
+                </div>
+                {replyError ? (
+                  <p className="comment-section__edit-error" role="alert">
+                    {replyError}
+                  </p>
                 ) : null}
               </div>
             ) : null}

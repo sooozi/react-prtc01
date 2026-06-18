@@ -15,7 +15,11 @@ import type {
 import { Button } from "@/components";
 import { SecretCommentLockIcon } from "@/components/icons/SecretCommentLockIcon";
 import { canViewSecretCommentBody } from "@/lib/comment/canViewSecretCommentBody";
-import { buildRootCommentRequest, isRootComment } from "@/lib/comment/buildCreateCommentRequest";
+import {
+  buildReplyCommentRequest,
+  buildRootCommentRequest,
+  isRootComment,
+} from "@/lib/comment/buildCreateCommentRequest";
 import {
   resolveCommentMyReaction,
   resolveMyReactionAfterRequest,
@@ -28,6 +32,7 @@ type CommentSectionProps = {
   postOwnerUserId?: string;
 };
 
+// 댓글 트리 노드 타입
 type CommentTreeNode = CommentListItem & { replies: CommentTreeNode[] };
 
 // 댓글 정렬
@@ -44,27 +49,30 @@ function compareCommentsOldestFirst(a: CommentListItem, b: CommentListItem) {
 
 // 댓글 트리 구축
 function flatRowsToTrees(rows: readonly CommentListItem[]): CommentTreeNode[] {
-  const roots: CommentTreeNode[] = [];
-  const map = new Map<number, CommentTreeNode>();
+  const roots: CommentTreeNode[] = []; // 루트 댓글 목록(부모가 없는 댓글을 담을 배열)
+  const map = new Map<number, CommentTreeNode>(); // 댓글 ID와 댓글 노드 매핑(댓글 찾기용 주소록)
 
   for (const row of rows) {
-    const node: CommentTreeNode = { ...row, replies: [] };
-    map.set(row.commentId, node);
+    // 댓글 목록 하나씩 반복해서 확인
+    const node: CommentTreeNode = { ...row, replies: [] }; // 답글 담을 공간 추가
+    map.set(row.commentId, node); // 주소록 저장(나중에 부모 댓글을 찾을 수 있도록 commentId를 key로 해서 map에 저장)
     if (isRootComment(row.parentCommentId)) {
-      roots.push(node);
+      // 부모가 없는 댓글(루트 댓글)인 경우 '일반 댓글'로 분류
+      roots.push(node); // 루트 댓글 목록에 추가
     } else {
-      const parent = map.get(row.parentCommentId!);
-      if (parent) parent.replies.push(node);
-      else roots.push(node);
+      const parent = map.get(row.parentCommentId!); // 부모 댓글 노드 찾기
+      if (parent)
+        parent.replies.push(node); // 부모 댓글 목록에 추가
+      else roots.push(node); // 루트 댓글 목록에 추가
     }
   }
 
-  roots.sort(compareCommentsNewestFirst);
+  roots.sort(compareCommentsNewestFirst); // 댓글 정렬
   for (const root of roots) {
-    root.replies.sort(compareCommentsOldestFirst);
+    root.replies.sort(compareCommentsOldestFirst); // 답글 정렬
   }
 
-  return roots;
+  return roots; // 댓글 트리 반환
 }
 
 function resolveCanViewSecretBody(
@@ -106,6 +114,10 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
     Record<number, CommentUserReaction | null>
   >({});
 
+  const [replyingTo, setReplyingTo] = useState<CommentListItem | null>(null);
+  const [isSubmittingReply, setIsSubmittingReply] = useState(false);
+  const [replyError, setReplyError] = useState<string | null>(null);
+
   function syncMyReactionsFromRows(rows: readonly CommentListItem[]) {
     setMyReactionByCommentId((prev) => {
       const next = { ...prev };
@@ -136,7 +148,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
       setIsLoading(true); // 댓글 목록 로딩 중 여부 표시
       setIsInitialListReady(false); // 댓글 목록 초기화 여부 표시
       try {
-        const items = await selectCommentList({ postNumber });
+        const items = await selectCommentList({ postNumber }); // 댓글 목록 조회
         if (signal?.aborted) return; // 취소 플래그 확인
 
         if (!items) {
@@ -169,6 +181,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
   const handleStartEdit = (commentId: number) => {
     if (deletingCommentId != null || savingCommentId != null) return;
     setEditError(null);
+    setReplyingTo(null);
     setEditingCommentId(commentId);
   };
 
@@ -263,6 +276,55 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
       await loadComments();
     } finally {
       setReactingCommentId(null);
+    }
+  };
+
+  // 답글 작성 시작
+  const handleStartReply = (comment: CommentListItem) => {
+    if (deletingCommentId != null || savingCommentId != null) return; // 삭제 중이면 답글과 겹치지 않게 끔
+    setEditingCommentId(null); // 수정 중인 댓글 ID 초기화
+    setEditError(null); // 수정 오류 메시지 초기화
+    setReplyError(null); // 답글 오류 메시지 초기화
+    setReplyingTo(comment); // 답글 작성 중인 댓글 설정
+  };
+
+  // 답글 작성 취소
+  const handleCancelReply = () => {
+    setReplyingTo(null); // 답글 작성 중인 댓글 초기화
+    setReplyError(null);
+  }; // 답글 오류 메시지 초기화
+
+  // 답글 등록
+  const handleSubmitReply = async (content: string) => {
+    if (!replyingTo || isSubmittingReply) return; // 답글 작성 중이면 겹치지 않게 끔
+
+    const trimmed = content.trim();
+    if (!trimmed) return; // 답글 내용 양쪽 공백 제거
+
+    setIsSubmittingReply(true);
+    setReplyError(null); // 답글 오류 메시지 초기화
+
+    try {
+      const res = await createComment(
+        buildReplyCommentRequest({
+          postNumber,
+          content: trimmed,
+          parent: replyingTo,
+          secretYn: "N",
+        }),
+      );
+
+      if (!res) return;
+
+      if (res.resultCode !== COMMENT_SUCCESS_CODE) {
+        setReplyError(res.resultMessage ?? res.resultDetailMessage ?? "답글 등록에 실패했습니다.");
+        return;
+      }
+
+      setReplyingTo(null);
+      await loadComments();
+    } finally {
+      setIsSubmittingReply(false);
     }
   };
 
@@ -378,6 +440,14 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
                     editError={editingCommentId === comment.commentId ? editError : null} // 수정 오류 메시지 확인
                     onDelete={handleDeleteComment}
                     canReply={comment.depth === 0}
+                    isReplying={replyingTo?.commentId === comment.commentId}
+                    isSubmittingReply={
+                      isSubmittingReply && replyingTo?.commentId === comment.commentId
+                    }
+                    replyError={replyingTo?.commentId === comment.commentId ? replyError : null}
+                    onStartReply={handleStartReply}
+                    onCancelReply={handleCancelReply}
+                    onSubmitReply={handleSubmitReply}
                   />
 
                   {comment.replies.length > 0 ? (
