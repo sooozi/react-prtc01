@@ -274,11 +274,11 @@ export function CommentRow({
                     {comment.dislikeCnt}
                   </span>
                 </button>
-                {canReply && !isReplying ? (
+                {canReply ? (
                   <button
                     type="button"
-                    className="comment-section__action comment-section__action--text"
-                    disabled={isLocked || isDeleting}
+                    className="comment-section__action comment-section__action--text comment-section__action--reply"
+                    disabled={isLocked || isDeleting || isReplying}
                     onClick={() => {
                       setReplyDraft(""); // 대댓글 입력 초기화
                       onStartReply?.(comment); // 대댓글 작성 시작
@@ -314,6 +314,7 @@ export function CommentRow({
               </div>
             ) : null}
 
+            {/* 대댓글 입력 카드 */}
             {isReplying ? (
               <div className="comment-section__edit-card">
                 <label htmlFor={`comment-reply-${commentKey}`} className="visually-hidden">

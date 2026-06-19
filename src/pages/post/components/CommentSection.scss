@@ -220,7 +220,7 @@
 }
 
 .comment-section__edit-card {
-  margin: 0 0 v.space(sm);
+  margin: v.space(sm) 0;
   border-radius: v.rad(p10);
   border: 1px solid color-mix(in srgb, var(--color-primary) 22%, var(--color-border-light));
   background: var(--color-card);
@@ -566,6 +566,23 @@
 .comment-section__action--text {
   padding-left: v.space(xs);
   padding-right: v.space(xs);
+}
+
+.comment-section__action--reply {
+  cursor: pointer;
+  opacity: 1;
+
+  &:hover:not(:disabled) {
+    color: var(--color-primary);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.42;
+    color: var(--color-text-muted);
+    border-color: transparent;
+    background: color-mix(in srgb, var(--color-bg-subtle) 85%, transparent);
+  }
 }
 
 .comment-section__action--icon {

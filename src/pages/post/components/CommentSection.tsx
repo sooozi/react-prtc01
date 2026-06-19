@@ -49,32 +49,42 @@ function compareCommentsOldestFirst(a: CommentListItem, b: CommentListItem) {
 
 // 댓글 트리 구축
 function flatRowsToTrees(rows: readonly CommentListItem[]): CommentTreeNode[] {
-  const roots: CommentTreeNode[] = []; // 루트 댓글 목록(부모가 없는 댓글을 담을 배열)
   const map = new Map<number, CommentTreeNode>(); // 댓글 ID와 댓글 노드 매핑(댓글 찾기용 주소록)
 
+  // 댓글 목록 하나씩 반복해서 확인
   for (const row of rows) {
-    // 댓글 목록 하나씩 반복해서 확인
-    const node: CommentTreeNode = { ...row, replies: [] }; // 대댓글 담을 공간 추가
-    map.set(row.commentId, node); // 주소록 저장(나중에 부모 댓글을 찾을 수 있도록 commentId를 key로 해서 map에 저장)
+    map.set(row.commentId, { ...row, replies: [] }); // 댓글 노드 생성(댓글 ID를 key로 해서 map에 저장)
+  }
+
+  const roots: CommentTreeNode[] = []; // 루트 댓글 목록
+  for (const row of rows) {
+    const node = map.get(row.commentId)!;
+    // 부모가 없는 댓글(루트 댓글)인 경우 '일반 댓글'로 분류
     if (isRootComment(row.parentCommentId)) {
-      // 부모가 없는 댓글(루트 댓글)인 경우 '일반 댓글'로 분류
-      roots.push(node); // 루트 댓글 목록에 추가
+      roots.push(node);
     } else {
-      const parent = map.get(row.parentCommentId!); // 부모 댓글 노드 찾기
+      const parent = map.get(row.parentCommentId!);
       if (parent)
         parent.replies.push(node); // 부모 댓글 목록에 추가
-      else roots.push(node); // 루트 댓글 목록에 추가
+      else roots.push(node);
     }
   }
 
-  roots.sort(compareCommentsNewestFirst); // 댓글 정렬
-  for (const root of roots) {
-    root.replies.sort(compareCommentsOldestFirst); // 대댓글 정렬
-  }
-
-  return roots; // 댓글 트리 반환
+  roots.sort(compareCommentsNewestFirst); // 댓글 정렬[기본함수]
+  sortCommentRepliesOldestFirst(roots); // 답글 정렬[재귀함수]
+  return roots; // 댓글 트리 목록 반환
 }
 
+// 답글 정렬[재귀함수]
+function sortCommentRepliesOldestFirst(nodes: CommentTreeNode[]) {
+  nodes.sort(compareCommentsOldestFirst); // 답글 정렬[기본함수]
+  for (const node of nodes) {
+    // 답글 목록 하나씩 반복해서 확인
+    if (node.replies.length > 0) sortCommentRepliesOldestFirst(node.replies); // 답글 정렬
+  }
+}
+
+// 비밀 댓글 보기 가능 여부 확인
 function resolveCanViewSecretBody(
   comment: Pick<CommentListItem, "secretYn" | "rgtrId">,
   currentUserId: string | null,
@@ -118,6 +128,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
   const [replyError, setReplyError] = useState<string | null>(null);
 
+  // 내 반응 동기화
   function syncMyReactionsFromRows(rows: readonly CommentListItem[]) {
     setMyReactionByCommentId((prev) => {
       const next = { ...prev };
@@ -134,6 +145,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
     });
   }
 
+  // 내 반응 조회
   function getMyReaction(commentId: number, rows: readonly CommentListItem[]) {
     if (commentId in myReactionByCommentId) {
       return myReactionByCommentId[commentId] ?? null;
@@ -221,6 +233,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
       const ok = await deleteComment(commentId);
       if (ok) {
         if (editingCommentId === commentId) setEditingCommentId(null);
+        if (replyingTo?.commentId === commentId) setReplyingTo(null);
         await loadComments();
       }
     } finally {
@@ -340,6 +353,46 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
     return () => ac.abort();
   }, [loadComments]);
 
+  const renderCommentThread = (comment: CommentTreeNode, variant: "root" | "reply") => (
+    <>
+      <CommentRow
+        variant={variant}
+        comment={comment}
+        canViewSecretBody={resolveCanViewSecretBody(comment, currentUserId, postOwnerUserId)}
+        canEdit={isOwnComment(comment.rgtrId)}
+        canDelete={isOwnComment(comment.rgtrId)}
+        isSaving={savingCommentId === comment.commentId}
+        isEditing={editingCommentId === comment.commentId}
+        isDeleting={deletingCommentId === comment.commentId}
+        onStartEdit={handleStartEdit}
+        onCancelEdit={handleCancelEdit}
+        onSaveEdit={handleSaveEdit}
+        onReaction={handleReaction}
+        isReacting={reactingCommentId === comment.commentId}
+        myReaction={getMyReaction(comment.commentId, apiRows)}
+        editError={editingCommentId === comment.commentId ? editError : null}
+        onDelete={handleDeleteComment}
+        canReply
+        isReplying={replyingTo?.commentId === comment.commentId}
+        isSubmittingReply={isSubmittingReply && replyingTo?.commentId === comment.commentId}
+        replyError={replyingTo?.commentId === comment.commentId ? replyError : null}
+        onStartReply={handleStartReply}
+        onCancelReply={handleCancelReply}
+        onSubmitReply={handleSubmitReply}
+      />
+
+      {comment.replies.length > 0 ? (
+        <ul className="comment-section__replies" aria-label="대댓글">
+          {comment.replies.map((reply) => (
+            <li key={reply.commentId} className="comment-section__reply">
+              {renderCommentThread(reply, "reply")}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </>
+  );
+
   return (
     <section className="comment-section" aria-labelledby="comment-heading">
       <div className="comment-section__page-head">
@@ -420,68 +473,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
             {commentTrees.map((comment) => (
               <li key={comment.commentId} className="comment-section__root">
                 <div className="comment-section__root-thread">
-                  <CommentRow
-                    variant="root"
-                    comment={comment}
-                    canViewSecretBody={resolveCanViewSecretBody(
-                      comment,
-                      currentUserId,
-                      postOwnerUserId,
-                    )}
-                    canEdit={isOwnComment(comment.rgtrId)} // 댓글 소유 여부 확인
-                    canDelete={isOwnComment(comment.rgtrId)} // 댓글 삭제 가능 여부 확인
-                    isSaving={savingCommentId === comment.commentId} // 저장 API 호출 중
-                    isEditing={editingCommentId === comment.commentId} // 수정 UI 표시 중
-                    isDeleting={deletingCommentId === comment.commentId} // 삭제 중 여부 확인
-                    onStartEdit={handleStartEdit} // 수정 시작
-                    onCancelEdit={handleCancelEdit} // 수정 취소
-                    onSaveEdit={handleSaveEdit} // 수정 저장
-                    onReaction={handleReaction}
-                    isReacting={reactingCommentId === comment.commentId} // 반응 중 여부 확인
-                    myReaction={getMyReaction(comment.commentId, apiRows)}
-                    editError={editingCommentId === comment.commentId ? editError : null} // 수정 오류 메시지 확인
-                    onDelete={handleDeleteComment}
-                    canReply={comment.depth === 0}
-                    isReplying={replyingTo?.commentId === comment.commentId} // 대댓글 작성 중 여부 확인
-                    isSubmittingReply={
-                      isSubmittingReply && replyingTo?.commentId === comment.commentId
-                    }
-                    replyError={replyingTo?.commentId === comment.commentId ? replyError : null}
-                    onStartReply={handleStartReply}
-                    onCancelReply={handleCancelReply}
-                    onSubmitReply={handleSubmitReply}
-                  />
-
-                  {comment.replies.length > 0 ? (
-                    <ul className="comment-section__replies" aria-label="대댓글">
-                      {comment.replies.map((reply) => (
-                        <li key={reply.commentId} className="comment-section__reply">
-                          <CommentRow
-                            variant="reply"
-                            comment={reply}
-                            canViewSecretBody={resolveCanViewSecretBody(
-                              reply,
-                              currentUserId,
-                              postOwnerUserId,
-                            )}
-                            canEdit={isOwnComment(reply.rgtrId)}
-                            canDelete={isOwnComment(reply.rgtrId)}
-                            isEditing={editingCommentId === reply.commentId}
-                            isDeleting={deletingCommentId === reply.commentId}
-                            isSaving={savingCommentId === reply.commentId}
-                            editError={editingCommentId === reply.commentId ? editError : null}
-                            onStartEdit={handleStartEdit}
-                            onCancelEdit={handleCancelEdit}
-                            onSaveEdit={handleSaveEdit}
-                            onReaction={handleReaction}
-                            isReacting={reactingCommentId === reply.commentId}
-                            myReaction={getMyReaction(reply.commentId, apiRows)}
-                            onDelete={handleDeleteComment}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
+                  {renderCommentThread(comment, "root")}
                 </div>
               </li>
             ))}
