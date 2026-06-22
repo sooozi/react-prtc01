@@ -41,6 +41,13 @@ function avatarInitial(name: string) {
   return t ? t[0]! : "?";
 }
 
+// 한 번이라도 수정된 댓글인지(삭제된 댓글 제외)
+function isEditedComment(comment: Pick<CommentListItem, "regDt" | "mdfcnDt" | "delYn">) {
+  if (comment.delYn === "Y") return false; // 삭제된 댓글은 수정된 댓글이 아님
+  if (!comment.mdfcnDt?.trim()) return false; // mdfcnDt 없으면 미수정
+  return comment.mdfcnDt.trim() !== comment.regDt.trim(); // 등록 시각과 다를 때만 수정됨
+}
+
 // 댓글 한 줄(루트·대댓글) — 레이아웃 + 본문 접기/펼치기 + 액션
 export function CommentRow({
   comment,
@@ -69,7 +76,8 @@ export function CommentRow({
   const commentKey = String(comment.commentId);
   const isDeleted = comment.delYn === "Y";
   const isSecret = comment.secretYn === "Y";
-  const dateLabel = comment.regDt.slice(0, 10);
+  const [datePart = comment.regDt, timePart = ""] = comment.regDt.split(" ");
+  const timeLabel = timePart.length >= 5 ? timePart.slice(0, 5) : timePart;
   const commentContent = comment.content ?? ""; // 댓글 내용
 
   const bodyRef = useRef<HTMLParagraphElement>(null);
@@ -84,6 +92,8 @@ export function CommentRow({
   const replyDraftTrimmed = replyDraft.trim();
   const canSaveEdit = editDraftTrimmed.length > 0 && editDraftTrimmed !== commentContent.trim();
   const canSubmitReply = replyDraftTrimmed.length > 0;
+
+  const isEdited = isEditedComment(comment); // 한 번이라도 수정된 댓글인지 여부
 
   // 본문 접기/펼치기 가능 여부 확인
   useLayoutEffect(() => {
@@ -141,7 +151,23 @@ export function CommentRow({
                   비밀
                 </span>
               ) : null}
-              <span className="comment-section__date">{dateLabel}</span>
+              {isEdited ? (
+                <span
+                  className="comment-section__edited-badge"
+                  role="status"
+                  aria-label={comment.mdfcnDt ? `수정됨, ${comment.mdfcnDt}` : "수정됨"}
+                >
+                  수정됨
+                </span>
+              ) : null}
+              <time className="comment-section__date" dateTime={comment.regDt}>
+                <span className="comment-section__date-part">{datePart}</span>
+                {timeLabel ? (
+                  <>
+                    <span className="comment-section__time">{timeLabel}</span>
+                  </>
+                ) : null}
+              </time>
             </div>
 
             {isLocked ? (

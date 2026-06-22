@@ -51,12 +51,14 @@ function compareCommentsOldestFirst(a: CommentListItem, b: CommentListItem) {
 function flatRowsToTrees(rows: readonly CommentListItem[]): CommentTreeNode[] {
   const map = new Map<number, CommentTreeNode>(); // 댓글 ID와 댓글 노드 매핑(댓글 찾기용 주소록)
 
-  // 댓글 목록 하나씩 반복해서 확인
+  // 1단계: 모든 댓글을 주소록(map)에 등록(댓글 목록 하나씩 반복해서 확인) [주소록 만들기]
   for (const row of rows) {
     map.set(row.commentId, { ...row, replies: [] }); // 댓글 노드 생성(댓글 ID를 key로 해서 map에 저장)
   }
 
   const roots: CommentTreeNode[] = []; // 루트 댓글 목록
+
+  // 2단계: 모든 댓글을 트리 구조로 변환(댓글 목록 하나씩 반복해서 확인) [부모 찾아서 연결]
   for (const row of rows) {
     const node = map.get(row.commentId)!;
     // 부모가 없는 댓글(루트 댓글)인 경우 '일반 댓글'로 분류
@@ -70,8 +72,9 @@ function flatRowsToTrees(rows: readonly CommentListItem[]): CommentTreeNode[] {
     }
   }
 
-  roots.sort(compareCommentsNewestFirst); // 댓글 정렬[기본함수]
-  sortCommentRepliesOldestFirst(roots); // 답글 정렬[재귀함수]
+  // 3단계: 댓글 트리 목록 정렬(최상위: 최신순, 최하위: 오래된순) [정렬]
+  roots.sort(compareCommentsNewestFirst); // 댓글 정렬(최상위: 최신순)
+  sortCommentRepliesOldestFirst(roots); // 답글 정렬[재귀함수](최하위: 오래된순)
   return roots; // 댓글 트리 목록 반환
 }
 
@@ -106,6 +109,8 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
   const [isLoading, setIsLoading] = useState(false);
   const [initialError, setInitialError] = useState<string | null>(null);
   const [isSecretComment, setIsSecretComment] = useState(false);
+
+  // 현재 로그인 사용자 ID 조회
   const currentUserId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
 
   const commentTrees = useMemo(() => flatRowsToTrees(apiRows), [apiRows]);
@@ -170,7 +175,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
         }
 
         setInitialError(null); // 초기화 오류 메시지 초기화
-        setApiRows(items);
+        setApiRows(items); // 받은 댓글 목록 저장
         setTotalCount(items.length);
         syncMyReactionsFromRows(items); // 내 반응 동기화
       } catch {
@@ -317,6 +322,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
     setIsSubmittingReply(true);
     setReplyError(null); // 대댓글 오류 메시지 초기화
 
+    // 대댓글 등록 API 호출
     try {
       const res = await createComment(
         buildReplyCommentRequest({
@@ -329,6 +335,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
 
       if (!res) return;
 
+      // 등록 실패 → 등록 오류 메시지 표시
       if (res.resultCode !== COMMENT_SUCCESS_CODE) {
         setReplyError(
           res.resultMessage ?? res.resultDetailMessage ?? "대댓글 등록에 실패했습니다.",
@@ -336,10 +343,10 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
         return;
       }
 
-      setReplyingTo(null);
-      await loadComments();
+      setReplyingTo(null); // 대댓글 작성 중인 댓글 초기화
+      await loadComments(); // 다시 불러와서 목록 재구성
     } finally {
-      setIsSubmittingReply(false);
+      setIsSubmittingReply(false); // 대댓글 등록 중 여부 초기화
     }
   };
 
@@ -348,9 +355,9 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
     const ac = new AbortController();
     queueMicrotask(() => {
       if (ac.signal.aborted) return;
-      void loadComments(ac.signal);
+      void loadComments(ac.signal); // 댓글 목록 불러오기(페이지 열리면 자동 실행)
     });
-    return () => ac.abort();
+    return () => ac.abort(); // 댓글 목록 불러오기 취소(페이지 닫으면 자동 실행)
   }, [loadComments]);
 
   const renderCommentThread = (comment: CommentTreeNode, variant: "root" | "reply") => (
