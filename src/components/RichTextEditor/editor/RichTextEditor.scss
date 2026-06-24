@@ -73,4 +73,15 @@
     background: var(--color-input-bg);
     color: var(--color-text);
   }
+
+  .ql-resize-overlay {
+    border-color: var(--color-border);
+  }
+
+  .ql-resize-handle,
+  .ql-resize-display {
+    background: var(--color-card);
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
 }

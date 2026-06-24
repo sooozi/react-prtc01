@@ -6662,6 +6662,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"quill-resize-module@npm:^2.1.3":
+  version: 2.1.3
+  resolution: "quill-resize-module@npm:2.1.3"
+  checksum: 10c0/3092739cfb0ac9e63169304597fb833dabdf9f7f36b0a478467f81832980d7e6baf943b0f0d3b89ebdbfa8ce0404cb513b49db55c5a963dd9b573c079c392764
+  languageName: node
+  linkType: hard
+
 "quill@npm:^2.0.3, quill@npm:~2.0.3":
   version: 2.0.3
   resolution: "quill@npm:2.0.3"
@@ -6799,6 +6806,7 @@ __metadata:
     prettier: "npm:^3.8.3"
     quill: "npm:^2.0.3"
     quill-delta: "npm:^5.1.0"
+    quill-resize-module: "npm:^2.1.3"
     react: "npm:^19.2.0"
     react-dom: "npm:^19.2.0"
     react-helmet-async: "npm:^3.0.0"

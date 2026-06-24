@@ -4,6 +4,7 @@
  */
 import { useLayoutEffect, useRef } from "react";
 import ReactQuill from "react-quill-new";
+import "./registerQuillResize"; // ← 2단계: 등록 파일 불러오기
 import { quillFormats, quillModules } from "./quillConfig";
 import { applyQuillToolbarA11y } from "./quillToolbarA11y";
 import "./RichTextEditor.scss";
@@ -77,7 +78,7 @@ export function RichTextEditor({
         theme="snow"
         value={value}
         onChange={onChange}
-        modules={quillModules}
+        modules={quillModules} // ← toolbar + resize 설정
         formats={quillFormats}
         placeholder={placeholder}
         readOnly={readOnly}
