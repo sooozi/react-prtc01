@@ -277,21 +277,31 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
     }
   };
 
-  // 댓글 반응
+  // 댓글 반응 — 클릭 즉시 UI 반영(낙관적 업데이트), 실패 시 되돌림
   const handleReaction = async (commentId: number, reactionType: CommentReactionType) => {
     if (reactingCommentId != null) return;
 
+    const row = apiRows.find((item) => item.commentId === commentId);
+    const previousReaction =
+      commentId in myReactionByCommentId
+        ? (myReactionByCommentId[commentId] ?? null)
+        : row
+          ? resolveCommentMyReaction(row)
+          : null;
+    const nextReaction = resolveMyReactionAfterRequest(reactionType);
+
     setReactingCommentId(commentId);
+    setMyReactionByCommentId((prev) => ({ ...prev, [commentId]: nextReaction }));
+
     try {
       const res = await reactToComment(commentId, reactionType);
-      if (!res) return;
-      if (res.resultCode !== COMMENT_SUCCESS_CODE) return;
-
-      setMyReactionByCommentId((prev) => ({
-        ...prev,
-        [commentId]: resolveMyReactionAfterRequest(reactionType),
-      }));
+      if (!res || res.resultCode !== COMMENT_SUCCESS_CODE) {
+        setMyReactionByCommentId((prev) => ({ ...prev, [commentId]: previousReaction }));
+        return;
+      }
       await loadComments();
+    } catch {
+      setMyReactionByCommentId((prev) => ({ ...prev, [commentId]: previousReaction }));
     } finally {
       setReactingCommentId(null);
     }

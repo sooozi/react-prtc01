@@ -94,6 +94,8 @@ export function CommentRow({
   const canSubmitReply = replyDraftTrimmed.length > 0;
 
   const isEdited = isEditedComment(comment); // 한 번이라도 수정된 댓글인지 여부
+  const isLikeActive = myReaction === "LIKE";
+  const isDislikeActive = myReaction === "DISLIKE";
 
   // 본문 접기/펼치기 가능 여부 확인
   useLayoutEffect(() => {
@@ -261,18 +263,34 @@ export function CommentRow({
                   type="button"
                   className={[
                     "comment-section__action",
-                    myReaction === "LIKE" ? "comment-section__action--active" : "",
+                    "comment-section__action--reaction",
+                    "comment-section__action--like",
+                    isLikeActive ? "comment-section__action--active" : "",
                   ]
                     .filter(Boolean)
                     .join(" ")}
-                  aria-label={`좋아요 ${comment.likeCnt}개`}
-                  aria-pressed={myReaction === "LIKE"}
+                  aria-label={
+                    isLikeActive
+                      ? `좋아요 취소, ${comment.likeCnt}개`
+                      : `좋아요 ${comment.likeCnt}개`
+                  }
+                  aria-pressed={isLikeActive}
                   disabled={isLocked || isReacting}
                   onClick={() =>
                     onReaction?.(comment.commentId, resolveReactionRequestType(myReaction, "LIKE"))
                   }
                 >
-                  <span aria-hidden>👍</span>{" "}
+                  <span
+                    className={[
+                      "comment-section__reaction-icon",
+                      isLikeActive ? "comment-section__reaction-icon--on" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    aria-hidden
+                  >
+                    {isLikeActive ? "❤️" : "🤍"}
+                  </span>
                   <span className="comment-section__action-count" aria-hidden>
                     {comment.likeCnt}
                   </span>
@@ -281,12 +299,18 @@ export function CommentRow({
                   type="button"
                   className={[
                     "comment-section__action",
-                    myReaction === "DISLIKE" ? "comment-section__action--active" : "",
+                    "comment-section__action--reaction",
+                    "comment-section__action--dislike",
+                    isDislikeActive ? "comment-section__action--active" : "",
                   ]
                     .filter(Boolean)
                     .join(" ")}
-                  aria-label={`싫어요 ${comment.dislikeCnt}개`}
-                  aria-pressed={myReaction === "DISLIKE"}
+                  aria-label={
+                    isDislikeActive
+                      ? `싫어요 취소, ${comment.dislikeCnt}개`
+                      : `싫어요 ${comment.dislikeCnt}개`
+                  }
+                  aria-pressed={isDislikeActive}
                   disabled={isLocked || isReacting}
                   onClick={() =>
                     onReaction?.(
@@ -295,7 +319,17 @@ export function CommentRow({
                     )
                   }
                 >
-                  <span aria-hidden>👎</span>{" "}
+                  <span
+                    className={[
+                      "comment-section__reaction-icon",
+                      isDislikeActive ? "comment-section__reaction-icon--on" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    aria-hidden
+                  >
+                    👎
+                  </span>
                   <span className="comment-section__action-count" aria-hidden>
                     {comment.dislikeCnt}
                   </span>
