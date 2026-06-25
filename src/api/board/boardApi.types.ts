@@ -116,10 +116,10 @@ export type CommentListItem = {
   rootCommentId: number | null;
   depth: number;
   content: string;
-  likeCnt: number;
-  dislikeCnt: number;
-  myReactionType?: CommentUserReaction | null;
-  reactionType?: CommentUserReaction | null;
+  likeCnt: number; // 좋아요 수
+  dislikeCnt: number; // 싫어요 수
+  myReactionType?: CommentUserReaction | null; // 내 반응 타입
+  reactionType?: CommentUserReaction | null; // 댓글 반응 타입
   secretYn: "Y" | "N";
   delYn: "Y" | "N";
   regDt: string; // "2026-06-09 14:30:00"

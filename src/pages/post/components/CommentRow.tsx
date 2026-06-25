@@ -289,7 +289,7 @@ export function CommentRow({
                       .join(" ")}
                     aria-hidden
                   >
-                    {isLikeActive ? "❤️" : "🤍"}
+                    👍
                   </span>
                   <span className="comment-section__action-count" aria-hidden>
                     {comment.likeCnt}

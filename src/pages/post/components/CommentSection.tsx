@@ -124,10 +124,10 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
   const [savingCommentId, setSavingCommentId] = useState<number | null>(null); // 추가
   const [editError, setEditError] = useState<string | null>(null); // 추가 (선택)
 
-  const [reactingCommentId, setReactingCommentId] = useState<number | null>(null);
+  const [reactingCommentId, setReactingCommentId] = useState<number | null>(null); // 반응 중인 댓글 ID
   const [myReactionByCommentId, setMyReactionByCommentId] = useState<
     Record<number, CommentUserReaction | null>
-  >({});
+  >({}); // 내 반응 매핑
 
   const [replyingTo, setReplyingTo] = useState<CommentListItem | null>(null);
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
@@ -176,7 +176,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
 
         setInitialError(null); // 초기화 오류 메시지 초기화
         setApiRows(items); // 받은 댓글 목록 저장
-        setTotalCount(items.length);
+        setTotalCount(items.length); // 댓글 개수 설정
         syncMyReactionsFromRows(items); // 내 반응 동기화
       } catch {
         if (!signal?.aborted) setInitialError("댓글을 불러오지 못했습니다.");

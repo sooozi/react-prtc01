@@ -313,20 +313,7 @@
   }
 }
 
-.comment-section__action--like.comment-section__action--active {
-  color: #e0245e;
-  background: color-mix(in srgb, #e0245e 12%, transparent);
-
-  .comment-section__action-count {
-    color: #e0245e;
-  }
-
-  &:hover:not(:disabled) {
-    color: #c91d51;
-    background: color-mix(in srgb, #e0245e 18%, transparent);
-  }
-}
-
+.comment-section__action--like.comment-section__action--active,
 .comment-section__action--dislike.comment-section__action--active {
   color: var(--color-primary);
   background: color-mix(in srgb, var(--color-primary-muted) 60%, transparent);
@@ -631,6 +618,7 @@
   background: transparent;
   opacity: 0.85;
   @include button-focus-ring-border-1px;
+  border: 1px solid #00000012;
 }
 
 .comment-section__action-count {
