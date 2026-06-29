@@ -24,12 +24,6 @@
     0 0 0 1px color-mix(in srgb, #000 8%, transparent),
     0 28px 64px color-mix(in srgb, #000 42%, transparent),
     0 0 100px color-mix(in srgb, #7c3aed 24%, transparent);
-  transform: perspective(1200px) rotateX(2deg);
-  transform-origin: center top;
-
-  @include bp.above(bp.$lg) {
-    transform: perspective(1400px) rotateX(3deg) rotateY(-2deg);
-  }
 }
 
 .testmain-browser__chrome {
@@ -146,11 +140,5 @@
   .hero-description,
   .hero-copy > .badge {
     animation: none !important;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .testmain-browser {
-    transform: none;
   }
 }

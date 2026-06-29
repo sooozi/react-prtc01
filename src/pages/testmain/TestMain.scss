@@ -217,10 +217,19 @@
 .testmain-intro {
   position: relative;
   z-index: v.z(dock);
-  padding: clamp(#{v.space(5xl)}, 8vw, #{v.space(7xl)}) 0
+  box-sizing: border-box;
+  width: calc(100% + 2 * #{v.space(lg)});
+  margin-inline: calc(-1 * #{v.space(lg)});
+  padding: clamp(#{v.space(5xl)}, 8vw, #{v.space(7xl)}) v.space(lg)
     clamp(#{v.space(3xl)}, 5vw, #{v.space(5xl)});
   text-align: center;
   background: var(--color-bg);
+
+  @include bp.above(bp.$md) {
+    width: auto;
+    margin-inline: calc(50% - 50vw);
+    padding-inline: calc(50vw - 50%);
+  }
 }
 
 .testmain-intro__title {
@@ -667,8 +676,8 @@
   }
 }
 
-.testmain-marquee-block .home-marquee-wrap {
-  margin-top: 0;
+.testmain-page .home-marquee-wrap {
+  display: none;
 }
 
 .home-marquee-wrap {
