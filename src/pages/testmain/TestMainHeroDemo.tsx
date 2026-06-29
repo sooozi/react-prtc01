@@ -2,7 +2,9 @@ import { useEffect, useRef } from "react";
 import Home from "@/pages/home/Home";
 import "@/pages/testmain/TestMainHeroDemo.scss";
 
-const SCROLL_SPEED = 0.4;
+const SCROLL_SPEED = 0.55;
+const START_DELAY_MS = 1000;
+const EDGE_PAUSE_MS = 1200;
 
 export function TestMainHeroDemo() {
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -16,23 +18,42 @@ export function TestMainHeroDemo() {
 
     let rafId = 0;
     let direction = 1;
+    let pauseUntil = performance.now() + START_DELAY_MS;
 
-    const tick = () => {
+    const tick = (now: number) => {
       const maxScroll = viewport.scrollHeight - viewport.clientHeight;
-      if (maxScroll > 0) {
+
+      if (maxScroll > 0 && now >= pauseUntil) {
         viewport.scrollTop += SCROLL_SPEED * direction;
+
         if (viewport.scrollTop >= maxScroll - 1) {
           viewport.scrollTop = maxScroll;
           direction = -1;
+          pauseUntil = now + EDGE_PAUSE_MS;
         } else if (viewport.scrollTop <= 0) {
+          viewport.scrollTop = 0;
           direction = 1;
+          pauseUntil = now + EDGE_PAUSE_MS;
         }
       }
+
       rafId = requestAnimationFrame(tick);
     };
 
     rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
+
+    const ro = new ResizeObserver(() => {
+      const maxScroll = viewport.scrollHeight - viewport.clientHeight;
+      if (maxScroll > 0 && viewport.scrollTop > maxScroll) {
+        viewport.scrollTop = maxScroll;
+      }
+    });
+    ro.observe(viewport);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      ro.disconnect();
+    };
   }, []);
 
   return (
