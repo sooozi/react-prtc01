@@ -4,7 +4,12 @@ import { PageHeader } from "@/components";
 import { HomeMarquee } from "@/pages/home/HomeMarquee";
 import "@/pages/home/Home.scss";
 
-export default function Home() {
+type HomeProps = {
+  /** testmain 등 embed 데모 — 링크·reveal 비활성 */
+  preview?: boolean;
+};
+
+export default function Home({ preview = false }: HomeProps) {
   const navigate = useNavigate();
   const pageRef = useRef<HTMLDivElement>(null);
 
@@ -15,7 +20,7 @@ export default function Home() {
     const nodes = root.querySelectorAll<HTMLElement>("[data-home-section]");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (reduced) {
+    if (preview || reduced) {
       nodes.forEach((el) => el.classList.add("home-reveal--visible"));
       return;
     }
@@ -33,7 +38,7 @@ export default function Home() {
 
     nodes.forEach((n) => io.observe(n));
     return () => io.disconnect();
-  }, []);
+  }, [preview]);
 
   const features = [
     {
@@ -86,7 +91,11 @@ export default function Home() {
   ];
 
   return (
-    <div className="home-page" ref={pageRef}>
+    <div
+      className={`home-page${preview ? " home-page--preview" : ""}`}
+      ref={pageRef}
+      aria-hidden={preview ? true : undefined}
+    >
       <section className="hero" aria-labelledby="home-hero-title">
         <div className="hero-inner">
           <PageHeader
@@ -101,7 +110,7 @@ export default function Home() {
                 </span>
               </>
             }
-            titleId="home-hero-title"
+            titleId={preview ? undefined : "home-hero-title"}
             titleClassName="hero-title"
             subtitle={
               <>Vite · React · TypeScript 기반으로 게시판·회원·일정 UI를 붙여 본 저장소입니다.</>
@@ -165,7 +174,8 @@ export default function Home() {
               <button
                 type="button"
                 className="link-card"
-                onClick={() => navigate(link.to)}
+                onClick={preview ? undefined : () => navigate(link.to)}
+                tabIndex={preview ? -1 : undefined}
                 aria-label={`${link.label} 페이지로 이동`}
               >
                 <span className="link-icon" aria-hidden>

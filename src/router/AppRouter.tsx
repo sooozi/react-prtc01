@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import Home from "@/pages/home/Home";
+import TestMain from "@/pages/testmain/TestMain";
 import About from "@/pages/about/About";
 import StyleGuide from "@/pages/style-guide/StyleGuide";
 import UserList from "@/pages/user/list/List";
@@ -33,6 +34,7 @@ export default function AppRouter() {
           <Route element={<Layout />}>
             <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/testmain" element={<TestMain />} />
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/signup" element={<Signup />} />
             <Route path="/about" element={<About />} />

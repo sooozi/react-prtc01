@@ -20,6 +20,11 @@ export function getRouteDocumentMeta(pathname: string): RouteDocumentMeta {
         title: withSuffix("홈"),
         announce: "홈 화면으로 이동했습니다.",
       };
+    case "/testmain":
+      return {
+        title: withSuffix("Test Main"),
+        announce: "Test Main 화면으로 이동했습니다.",
+      };
     case "/auth/login":
       return {
         title: withSuffix("로그인"),

@@ -1,0 +1,9 @@
+/* Lenis recommended CSS (minimal) — html.lenis 클래스는 인스턴스 활성 시에만 적용됨 */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}

@@ -4,7 +4,10 @@ import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary";
 import Header from "@/components/Layout/Header/Header";
 import Footer from "@/components/Layout/Footer/Footer";
 import ApiErrorBar from "@/components/ApiErrorBar/ApiErrorBar";
+import { useLenisScroll } from "@/hooks/useLenisScroll";
+import { isLenisRoute } from "@/router/lenisRoutes";
 import "@/components/Layout/Layout.scss";
+import "@/styles/lenis.scss";
 
 /** main 안 페이지 영역 — 경로 변경 시 Error Boundary 상태 초기화 */
 function MainOutlet() {
@@ -22,6 +25,10 @@ function MainOutlet() {
  * header + main + footer = 100vh (콘텐츠가 짧을 때 푸터는 화면 하단 고정)
  */
 export default function Layout() {
+  const { pathname } = useLocation();
+
+  useLenisScroll({ enabled: isLenisRoute(pathname) });
+
   useEffect(() => {
     if (!import.meta.env.DEV) return;
     void import("@/bootstrapAxe").then(({ bootstrapAxe }) => bootstrapAxe());
