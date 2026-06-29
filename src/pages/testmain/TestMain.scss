@@ -576,6 +576,10 @@
   }
 }
 
+.testmain-stats.testmain-reveal--visible {
+  margin-top: 0;
+}
+
 .testmain-stats__grid {
   @extend %list-reset;
   display: grid;
@@ -862,7 +866,7 @@
 
   p {
     margin: 0;
-    padding: 0 v.space(2xl) v.space(lg);
+    padding: 1rem;
     font-size: v.fs(body-sm);
     line-height: 1.7;
     color: var(--color-text-secondary);
