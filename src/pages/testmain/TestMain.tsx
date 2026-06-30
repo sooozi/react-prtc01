@@ -182,7 +182,9 @@ export default function TestMain() {
               <span>인증 · UI · 스타일 시스템까지</span>
             </p>
             <h1 id="testmain-hero-title" className="testmain-hero__headline">
-              실무형 프론트엔드 연습의 완성
+              <span className="testmain-hero__headline-line">실무형</span>
+              <span className="testmain-hero__headline-line">프론트엔드</span>
+              <span className="testmain-hero__headline-line">연습의 완성</span>
             </h1>
           </div>
           <div className="testmain-hero__demo-slot">
