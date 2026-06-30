@@ -148,7 +148,9 @@ export default function TestMain() {
     const root = pageRef.current;
     if (!root) return;
 
-    const nodes = root.querySelectorAll<HTMLElement>("[data-testmain-reveal]");
+    const nodes = root.querySelectorAll<HTMLElement>(
+      "[data-testmain-reveal], [data-testmain-reveal-title]",
+    );
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (reduced) {
@@ -193,17 +195,13 @@ export default function TestMain() {
         </div>
       </section>
 
-      <section
-        className="testmain-intro"
-        data-testmain-reveal
-        aria-labelledby="testmain-intro-title"
-      >
-        <h2 id="testmain-intro-title" className="testmain-intro__title">
+      <section className="testmain-intro" aria-labelledby="testmain-intro-title">
+        <h2 id="testmain-intro-title" className="testmain-intro__title" data-testmain-reveal-title>
           실무형 화면을 연습하고,
           <br />
           제대로 관리하고 있나요?
         </h2>
-        <p className="testmain-intro__desc">
+        <p className="testmain-section-desc">
           흩어진 튜토리얼, 인증 흐름의 공백, 일관되지 않은 UI는
           <br className="testmain-br-desktop" />
           학습 효율을 떨어뜨리고, 절반의 성과만을 만듭니다.
@@ -236,17 +234,17 @@ export default function TestMain() {
         </ul>
       </section>
 
-      <section
-        className="testmain-features"
-        data-testmain-reveal
-        aria-labelledby="testmain-features-heading"
-      >
+      <section className="testmain-features" aria-labelledby="testmain-features-heading">
         <div className="testmain-section-head">
           <p className="testmain-eyebrow">한 프로젝트에서 한눈에</p>
-          <h2 id="testmain-features-heading" className="testmain-section-head__title">
+          <h2
+            id="testmain-features-heading"
+            className="testmain-section-head__title"
+            data-testmain-reveal-title
+          >
             연습 화면을 보고 바로 이동하세요
           </h2>
-          <p className="testmain-section-head__desc">
+          <p className="testmain-section-desc">
             게시판·인증·일정·디자인 시스템까지, 프론트엔드 실무에 필요한 흐름을 제공합니다.
           </p>
         </div>
@@ -266,16 +264,16 @@ export default function TestMain() {
         </ul>
       </section>
 
-      <section
-        className="testmain-stats"
-        data-testmain-reveal
-        aria-labelledby="testmain-stats-heading"
-      >
+      <section className="testmain-stats" aria-labelledby="testmain-stats-heading">
         <div className="testmain-section-head testmain-section-head--light">
-          <h2 id="testmain-stats-heading" className="testmain-section-head__title">
+          <h2
+            id="testmain-stats-heading"
+            className="testmain-section-head__title"
+            data-testmain-reveal-title
+          >
             모두를 위한 프론트엔드 연습
           </h2>
-          <p className="testmain-section-head__desc">
+          <p className="testmain-section-desc">
             개별 기능 연습을 넘어, 하나의 앱 흐름으로 이어집니다.
           </p>
         </div>
@@ -304,8 +302,12 @@ export default function TestMain() {
         <HomeMarquee items={MARQUEE_ITEMS} />
       </div>
 
-      <section className="testmain-faq" data-testmain-reveal aria-labelledby="testmain-faq-heading">
-        <h2 id="testmain-faq-heading" className="testmain-section-head__title">
+      <section className="testmain-faq" aria-labelledby="testmain-faq-heading">
+        <h2
+          id="testmain-faq-heading"
+          className="testmain-section-head__title"
+          data-testmain-reveal-title
+        >
           자주하는 질문
         </h2>
         <ul className="testmain-faq__list">
@@ -344,8 +346,8 @@ export default function TestMain() {
         </ul>
       </section>
 
-      <section className="testmain-cta" data-testmain-reveal aria-labelledby="testmain-cta-heading">
-        <h2 id="testmain-cta-heading" className="testmain-cta__title">
+      <section className="testmain-cta" aria-labelledby="testmain-cta-heading">
+        <h2 id="testmain-cta-heading" className="testmain-cta__title" data-testmain-reveal-title>
           업무의 모든 순간을 코드와 함께
         </h2>
         <div className="testmain-cta__actions">

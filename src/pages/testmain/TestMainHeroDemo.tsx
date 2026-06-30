@@ -4,7 +4,7 @@ import "@/pages/testmain/TestMainHeroDemo.scss";
 
 const SCROLL_SPEED = 0.55;
 const START_DELAY_MS = 1000;
-const EDGE_PAUSE_MS = 1200;
+const END_PAUSE_MS = 1000;
 
 export function TestMainHeroDemo() {
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -17,24 +17,35 @@ export function TestMainHeroDemo() {
     if (reduced) return;
 
     let rafId = 0;
-    let direction = 1;
     let pauseUntil = performance.now() + START_DELAY_MS;
+    let isPausedAtBottom = false;
 
     const tick = (now: number) => {
       const maxScroll = viewport.scrollHeight - viewport.clientHeight;
 
-      if (maxScroll > 0 && now >= pauseUntil) {
-        viewport.scrollTop += SCROLL_SPEED * direction;
+      if (maxScroll <= 0) {
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
 
-        if (viewport.scrollTop >= maxScroll - 1) {
-          viewport.scrollTop = maxScroll;
-          direction = -1;
-          pauseUntil = now + EDGE_PAUSE_MS;
-        } else if (viewport.scrollTop <= 0) {
-          viewport.scrollTop = 0;
-          direction = 1;
-          pauseUntil = now + EDGE_PAUSE_MS;
-        }
+      if (now < pauseUntil) {
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
+
+      if (isPausedAtBottom) {
+        viewport.scrollTop = 0;
+        isPausedAtBottom = false;
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
+
+      viewport.scrollTop = Math.min(viewport.scrollTop + SCROLL_SPEED, maxScroll);
+
+      if (viewport.scrollTop >= maxScroll - 1) {
+        viewport.scrollTop = maxScroll;
+        isPausedAtBottom = true;
+        pauseUntil = now + END_PAUSE_MS;
       }
 
       rafId = requestAnimationFrame(tick);
