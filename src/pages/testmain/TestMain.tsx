@@ -2,8 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components";
 import { HomeMarquee } from "@/pages/home/HomeMarquee";
+import { COLOR_SCHEME_GRID, SPACING_SCALE } from "@/pages/style-guide/styleGuideTokens";
 import { TestMainHeroDemo } from "@/pages/testmain/TestMainHeroDemo";
 import "@/pages/testmain/TestMain.scss";
+
+const DESIGN_PREVIEW_NAV = ["Type", "Color", "Token", "Theme"] as const;
+
+const DESIGN_PREVIEW_SPACING = SPACING_SCALE.slice(0, 4);
 
 const PAIN_POINTS = [
   {
@@ -26,7 +31,7 @@ const PAIN_POINTS = [
 const FEATURES = [
   {
     tag: "게시판",
-    title: "게시판 & 첨부",
+    title: "게시판",
     description:
       "목록·상세·작성·수정, 이미지 첨부, 총 용량 표시까지 실무에 가까운 CRUD 흐름을 연습합니다.",
     preview: "board",
@@ -39,7 +44,7 @@ const FEATURES = [
   },
   {
     tag: "일정",
-    title: "일정 UI",
+    title: "일정",
     description: "월 단위 달력, 드래그 날짜 변경, 카테고리 색상 등 스케줄형 UI를 다룹니다.",
     preview: "schedule",
   },
@@ -96,44 +101,278 @@ const MARQUEE_FEATURES = [
   "Zod 폼 검증",
 ];
 
+type BoardPreviewRow = {
+  no: number;
+  title: string;
+  author: string;
+  views: number;
+  attach?: boolean;
+  highlight?: boolean;
+};
+
+const BOARD_PREVIEW_ROWS: BoardPreviewRow[] = [
+  {
+    no: 12,
+    title: "Vite 마이그레이션 후기",
+    author: "김수지",
+    views: 128,
+    attach: true,
+    highlight: true,
+  },
+  { no: 11, title: "React 19 상태 관리 정리", author: "이민호", views: 86 },
+  { no: 10, title: "첨부 이미지 용량 테스트", author: "박지원", views: 42, attach: true },
+  { no: 9, title: "일정 API 연동 노트", author: "최서연", views: 31 },
+];
+
+const SCHEDULE_PREVIEW_WEEKDAYS = ["월", "화", "수", "목", "금", "토", "일"] as const;
+
+type SchedulePreviewCell = {
+  day: number;
+  muted?: boolean;
+  today?: boolean;
+  event?: string;
+  eventTone?: "meeting" | "personal" | "work";
+};
+
+const AUTH_PREVIEW_POSTS = [
+  { title: "Vite 마이그레이션 후기", date: "2026-06-24" },
+  { title: "React 19 상태 관리 정리", date: "2026-06-20" },
+] as const;
+
+const SCHEDULE_PREVIEW_CELLS: SchedulePreviewCell[] = [
+  { day: 26, muted: true },
+  { day: 27, muted: true },
+  { day: 28, muted: true },
+  { day: 29, muted: true },
+  { day: 30, muted: true },
+  { day: 31, muted: true },
+  { day: 1 },
+  { day: 2 },
+  { day: 3 },
+  { day: 4, today: true, event: "회의", eventTone: "meeting" },
+  { day: 5 },
+  { day: 6, event: "리뷰", eventTone: "personal" },
+  { day: 7 },
+  { day: 8 },
+  { day: 9 },
+  { day: 10 },
+  { day: 11, event: "배포", eventTone: "work" },
+  { day: 12 },
+  { day: 13 },
+  { day: 14 },
+];
+
 function FeaturePreview({ type }: { type: (typeof FEATURES)[number]["preview"] }) {
   switch (type) {
     case "board":
       return (
         <div className="testmain-preview testmain-preview--board" aria-hidden>
-          <div className="testmain-preview__bar" />
-          <div className="testmain-preview__row" />
-          <div className="testmain-preview__row testmain-preview__row--short" />
-          <div className="testmain-preview__row" />
+          <div className="testmain-preview__board-toolbar">
+            <div className="testmain-preview__board-search">
+              <span className="testmain-preview__board-search-label">제목</span>
+              <span className="testmain-preview__board-search-field" />
+            </div>
+            <span className="testmain-preview__board-search-btn">검색</span>
+          </div>
+          <div className="testmain-preview__board-actions">
+            <span className="testmain-preview__board-write-btn">글쓰기</span>
+          </div>
+          <table className="testmain-preview__board-table">
+            <thead>
+              <tr>
+                <th scope="col">번호</th>
+                <th scope="col">제목</th>
+                <th scope="col">등록자</th>
+                <th scope="col">조회</th>
+              </tr>
+            </thead>
+            <tbody>
+              {BOARD_PREVIEW_ROWS.map((row) => (
+                <tr key={row.no} className={row.highlight ? "is-highlight" : undefined}>
+                  <td>{row.no}</td>
+                  <td>
+                    <span className="testmain-preview__board-title">{row.title}</span>
+                    {row.attach ? (
+                      <span className="testmain-preview__board-attach" aria-hidden>
+                        첨부
+                      </span>
+                    ) : null}
+                  </td>
+                  <td>{row.author}</td>
+                  <td>{row.views}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       );
     case "auth":
       return (
         <div className="testmain-preview testmain-preview--auth" aria-hidden>
-          <div className="testmain-preview__avatar" />
-          <div className="testmain-preview__field" />
-          <div className="testmain-preview__field" />
-          <div className="testmain-preview__btn" />
+          <div className="testmain-preview__auth-grid">
+            <div className="testmain-preview__auth-login">
+              <div className="testmain-preview__auth-login-head">
+                <span className="testmain-preview__auth-badge">Login</span>
+                <span className="testmain-preview__auth-login-title">로그인</span>
+              </div>
+              <div className="testmain-preview__auth-field">
+                <span className="testmain-preview__auth-label">아이디</span>
+                <span className="testmain-preview__auth-input">practice_user</span>
+              </div>
+              <div className="testmain-preview__auth-field">
+                <span className="testmain-preview__auth-label">비밀번호</span>
+                <span className="testmain-preview__auth-input testmain-preview__auth-input--password">
+                  ••••••••
+                </span>
+              </div>
+              <span className="testmain-preview__auth-submit">로그인</span>
+              <span className="testmain-preview__auth-signup">
+                계정이 없으신가요? <em>회원가입</em>
+              </span>
+            </div>
+
+            <div className="testmain-preview__auth-mypage">
+              <div className="testmain-preview__auth-mypage-head">
+                <span className="testmain-preview__auth-badge testmain-preview__auth-badge--mypage">
+                  👤 MyPage
+                </span>
+                <span className="testmain-preview__auth-mypage-greeting">
+                  안녕하세요, <em>김수지</em>님
+                </span>
+              </div>
+              <div className="testmain-preview__auth-profile">
+                <span className="testmain-preview__auth-profile-title">기본 정보</span>
+                <div className="testmain-preview__auth-profile-row">
+                  <span>아이디</span>
+                  <span>practice_user</span>
+                </div>
+                <div className="testmain-preview__auth-profile-row">
+                  <span>이름</span>
+                  <span>김수지</span>
+                </div>
+              </div>
+              <div className="testmain-preview__auth-profile testmain-preview__auth-profile--compact">
+                <div className="testmain-preview__auth-profile-row">
+                  <span>계정 상태</span>
+                  <span className="is-ok">정상</span>
+                </div>
+              </div>
+              <div className="testmain-preview__auth-posts-head">
+                <span className="testmain-preview__auth-profile-title">내가 쓴 글</span>
+                <span className="testmain-preview__auth-posts-count">
+                  {AUTH_PREVIEW_POSTS.length}건
+                </span>
+              </div>
+              {AUTH_PREVIEW_POSTS.map((post) => (
+                <div key={post.title} className="testmain-preview__auth-post-item">
+                  <span className="testmain-preview__auth-post-title">{post.title}</span>
+                  <span className="testmain-preview__auth-post-date">{post.date}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       );
     case "schedule":
       return (
         <div className="testmain-preview testmain-preview--schedule" aria-hidden>
-          <div className="testmain-preview__cal-head" />
-          <div className="testmain-preview__cal-grid">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <span key={i} className={i === 4 ? "is-active" : undefined} />
+          <div className="testmain-preview__schedule-toolbar">
+            <span className="testmain-preview__schedule-nav" />
+            <span className="testmain-preview__schedule-title">2026년 6월</span>
+            <span className="testmain-preview__schedule-nav" />
+          </div>
+          <div className="testmain-preview__schedule-weekdays">
+            {SCHEDULE_PREVIEW_WEEKDAYS.map((label) => (
+              <span key={label}>{label}</span>
+            ))}
+          </div>
+          <div className="testmain-preview__schedule-grid">
+            {SCHEDULE_PREVIEW_CELLS.map((cell) => (
+              <div
+                key={`${cell.day}-${cell.muted ? "m" : "c"}`}
+                className={[
+                  "testmain-preview__schedule-cell",
+                  cell.muted ? "is-muted" : "",
+                  cell.today ? "is-today" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                <span className="testmain-preview__schedule-day">{cell.day}</span>
+                {cell.event ? (
+                  <span
+                    className={[
+                      "testmain-preview__schedule-event",
+                      cell.eventTone ? `testmain-preview__schedule-event--${cell.eventTone}` : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                  >
+                    {cell.event}
+                  </span>
+                ) : null}
+              </div>
             ))}
           </div>
         </div>
       );
-    default:
+    case "design":
       return (
         <div className="testmain-preview testmain-preview--design" aria-hidden>
-          <div className="testmain-preview__swatch" />
-          <div className="testmain-preview__swatch" />
-          <div className="testmain-preview__swatch" />
-          <div className="testmain-preview__token" />
+          <nav className="testmain-preview__design-jump">
+            {DESIGN_PREVIEW_NAV.map((item) => (
+              <span key={item} className={item === "Color" ? "is-active" : undefined}>
+                {item}
+              </span>
+            ))}
+          </nav>
+          <div className="testmain-preview__design-grid">
+            <div className="testmain-preview__design-colors" role="img" aria-label="컬러 스킴">
+              {COLOR_SCHEME_GRID.map((cell) => (
+                <span
+                  key={cell.cssVar}
+                  className={[
+                    "testmain-preview__design-swatch",
+                    cell.spanRows === 2 ? "testmain-preview__design-swatch--primary" : "",
+                    cell.tone === "ink" ? "is-ink" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  style={{ backgroundColor: `var(${cell.cssVar})` }}
+                >
+                  <span className="testmain-preview__design-swatch-label">{cell.name}</span>
+                </span>
+              ))}
+            </div>
+            <div className="testmain-preview__design-side">
+              <div className="testmain-preview__design-panel">
+                <span className="testmain-preview__design-panel-title">Spacing</span>
+                <ul className="testmain-preview__design-spacing">
+                  {DESIGN_PREVIEW_SPACING.map((spacing) => (
+                    <li key={spacing.key}>
+                      <span
+                        className="testmain-preview__design-spacing-bar"
+                        style={{ width: spacing.rem }}
+                      />
+                      <span className="testmain-preview__design-spacing-key">{spacing.key}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="testmain-preview__design-panel">
+                <span className="testmain-preview__design-panel-title">Components</span>
+                <div className="testmain-preview__design-components">
+                  <span className="testmain-preview__design-btn testmain-preview__design-btn--primary">
+                    Primary
+                  </span>
+                  <span className="testmain-preview__design-btn testmain-preview__design-btn--secondary">
+                    Secondary
+                  </span>
+                  <span className="testmain-preview__design-badge">Badge</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       );
   }
@@ -180,13 +419,13 @@ export default function TestMain() {
         <div className="testmain-hero__inner">
           <div className="testmain-hero__copy">
             <p className="testmain-hero__eyebrow">
-              <span>게시판부터 일정까지</span>
-              <span>인증 · UI · 스타일 시스템까지</span>
+              <span>게시판 · 일정관리 · 인증</span>
+              <span>디자인 시스템 · 반응형 UI</span>
             </p>
             <h1 id="testmain-hero-title" className="testmain-hero__headline">
-              <span className="testmain-hero__headline-line">실무형</span>
-              <span className="testmain-hero__headline-line">프론트엔드</span>
-              <span className="testmain-hero__headline-line">연습의 완성</span>
+              <span className="testmain-hero__headline-line">사용자를 위한</span>
+              <span className="testmain-hero__headline-line">경험을 만드는</span>
+              <span className="testmain-hero__headline-line">웹 서비스</span>
             </h1>
           </div>
           <div className="testmain-hero__demo-slot">
