@@ -57,10 +57,161 @@ const FEATURES = [
 ] as const;
 
 const STATS = [
-  { value: "10+", unit: "Stack", label: "기술 스택", sub: "Vite · React 19 · TypeScript 등" },
-  { value: "3", unit: "Modules", label: "핵심 모듈", sub: "게시판 · 회원 · 일정" },
-  { value: "2x", unit: "Faster", label: "개발 속도", sub: "공통 UI·라우팅 재사용" },
+  {
+    value: "10+",
+    unit: "Stack",
+    label: "기술 스택",
+    sub: "Vite · React 19 · TypeScript 등",
+    durationMs: 1500,
+  },
+  {
+    value: "3",
+    unit: "Modules",
+    label: "핵심 모듈",
+    sub: "게시판 · 회원 · 일정",
+    durationMs: 1750,
+  },
+  {
+    value: "2x",
+    unit: "Faster",
+    label: "개발 속도",
+    sub: "공통 UI·라우팅 재사용",
+    durationMs: 2000,
+  },
 ] as const;
+
+const DIGIT_ROLL_CYCLES = 2;
+
+function easeOutCubic(progress: number): number {
+  return 1 - (1 - progress) ** 3;
+}
+
+function buildDigitStrip(cycles: number): number[] {
+  const length = (cycles + 1) * 10;
+  return Array.from({ length }, (_, index) => index % 10);
+}
+
+function getDigitSettleOffset(digit: number, cycles: number): number {
+  return cycles * 10 + digit;
+}
+
+function parseStatValue(value: string): { target: number; suffix: string } {
+  const match = value.match(/^(\d+)(.*)$/);
+  if (!match) return { target: 0, suffix: value };
+  return { target: Number(match[1]), suffix: match[2] };
+}
+
+function DigitRoller({
+  digit,
+  durationMs,
+  delay = 0,
+  cycles = DIGIT_ROLL_CYCLES,
+}: {
+  digit: number;
+  durationMs: number;
+  delay?: number;
+  cycles?: number;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const settleOffset = getDigitSettleOffset(digit, cycles);
+  const [offset, setOffset] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? settleOffset : 0;
+  });
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let rafId = 0;
+    let timeoutId = 0;
+    let cancelled = false;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        io.disconnect();
+
+        const run = () => {
+          if (cancelled) return;
+          const start = performance.now();
+
+          const tick = (now: number) => {
+            if (cancelled) return;
+            const progress = Math.min((now - start) / durationMs, 1);
+            setOffset(easeOutCubic(progress) * settleOffset);
+
+            if (progress < 1) {
+              rafId = requestAnimationFrame(tick);
+            } else {
+              setOffset(settleOffset);
+            }
+          };
+
+          rafId = requestAnimationFrame(tick);
+        };
+
+        if (delay > 0) {
+          timeoutId = window.setTimeout(run, delay);
+        } else {
+          run();
+        }
+      },
+      { threshold: 0.35, rootMargin: "0px 0px -8% 0px" },
+    );
+
+    io.observe(el);
+    return () => {
+      cancelled = true;
+      io.disconnect();
+      cancelAnimationFrame(rafId);
+      window.clearTimeout(timeoutId);
+    };
+  }, [delay, durationMs, settleOffset]);
+
+  const strip = buildDigitStrip(cycles);
+
+  return (
+    <span className="testmain-stat__digit" ref={ref}>
+      <span
+        className="testmain-stat__digit-strip"
+        style={{ transform: `translate3d(0, calc(-1 * ${offset} * 1lh), 0)` }}
+      >
+        {strip.map((value, index) => (
+          <span key={index} className="testmain-stat__digit-cell">
+            {value}
+          </span>
+        ))}
+      </span>
+    </span>
+  );
+}
+
+function TestMainStatDigitRoll({
+  value,
+  durationMs,
+  delay = 0,
+}: {
+  value: string;
+  durationMs: number;
+  delay?: number;
+}) {
+  const { target, suffix } = parseStatValue(value);
+  const digits = String(target).split("").map(Number);
+
+  return (
+    <span
+      className="testmain-stat__count testmain-stat__count--digits"
+      aria-label={`${target}${suffix}`}
+    >
+      {digits.map((digit, index) => (
+        <DigitRoller key={index} digit={digit} durationMs={durationMs} delay={delay} />
+      ))}
+      <span className="testmain-stat__count-suffix">{suffix}</span>
+    </span>
+  );
+}
 
 const MARQUEE_ITEMS = [
   { to: "/testmain", label: "Test Main" },
@@ -388,7 +539,7 @@ export default function TestMain() {
     if (!root) return;
 
     const nodes = root.querySelectorAll<HTMLElement>(
-      "[data-testmain-reveal], [data-testmain-reveal-title]",
+      "[data-testmain-reveal], [data-testmain-reveal-title], [data-testmain-reveal-desc]",
     );
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -424,8 +575,7 @@ export default function TestMain() {
             </p>
             <h1 id="testmain-hero-title" className="testmain-hero__headline">
               <span className="testmain-hero__headline-line">사용자를 위한</span>
-              <span className="testmain-hero__headline-line">경험을 만드는</span>
-              <span className="testmain-hero__headline-line">웹 서비스</span>
+              <span className="testmain-hero__headline-line">더 나은 경험</span>
             </h1>
           </div>
           <div className="testmain-hero__demo-slot">
@@ -440,7 +590,7 @@ export default function TestMain() {
           <br />
           제대로 관리하고 있나요?
         </h2>
-        <p className="testmain-section-desc">
+        <p className="testmain-section-desc" data-testmain-reveal-desc>
           흩어진 튜토리얼, 인증 흐름의 공백, 일관되지 않은 UI는
           <br className="testmain-br-desktop" />
           학습 효율을 떨어뜨리고, 절반의 성과만을 만듭니다.
@@ -483,7 +633,7 @@ export default function TestMain() {
           >
             연습 화면을 보고 바로 이동하세요
           </h2>
-          <p className="testmain-section-desc">
+          <p className="testmain-section-desc" data-testmain-reveal-desc>
             게시판·인증·일정·디자인 시스템까지, 프론트엔드 실무에 필요한 흐름을 제공합니다.
           </p>
         </div>
@@ -512,15 +662,19 @@ export default function TestMain() {
           >
             모두를 위한 프론트엔드 연습
           </h2>
-          <p className="testmain-section-desc">
+          <p className="testmain-section-desc" data-testmain-reveal-desc>
             개별 기능 연습을 넘어, 하나의 앱 흐름으로 이어집니다.
           </p>
         </div>
         <ul className="testmain-stats__grid">
-          {STATS.map((stat) => (
+          {STATS.map((stat, index) => (
             <li key={stat.label} className="testmain-stat">
               <p className="testmain-stat__value">
-                <span>{stat.value}</span>
+                <TestMainStatDigitRoll
+                  value={stat.value}
+                  durationMs={stat.durationMs}
+                  delay={index * 150}
+                />
                 <small>{stat.unit}</small>
               </p>
               <h3>{stat.label}</h3>
