@@ -923,7 +923,7 @@
   width: calc(100% + 2 * #{v.space(lg)});
   margin-inline: calc(-1 * #{v.space(lg)});
   margin-bottom: 0;
-  padding: clamp(#{v.space(5xl)}, 8vw, #{v.space(7xl)}) v.space(lg) 0;
+  padding: clamp(#{v.space(5xl)}, 8vw, #{v.space(7xl)}) v.space(lg) v.space(3xl);
   text-align: center;
   background:
     radial-gradient(
@@ -961,13 +961,46 @@
   flex-wrap: wrap;
   gap: v.space(btn-gap);
   justify-content: center;
+
+  .btn {
+    font-size: v.fs(sm);
+    font-weight: v.fw(semibold);
+    letter-spacing: -0.02em;
+
+    @include bp.below(bp.$md) {
+      font-size: v.fs(body-sm);
+    }
+  }
+
+  .btn--secondaryInverse {
+    color: var(--color-primary);
+    background: var(--color-card);
+    border: 2px solid var(--color-primary);
+
+    &:hover:not(:disabled) {
+      color: var(--color-text-on-primary);
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+  }
 }
 
 .testmain-cta__ghost {
+  min-height: 42px;
+  padding: v.space(sm) v.space(xl);
   color: var(--color-text-secondary) !important;
+  background: var(--color-card);
+  border: 1px solid var(--color-border) !important;
 
-  &:hover {
+  @include bp.below(bp.$md) {
+    min-height: 38px;
+    padding: v.space(sm) v.space(lg);
+  }
+
+  &:hover:not(:disabled) {
     color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    background: var(--color-card);
   }
 }
 
