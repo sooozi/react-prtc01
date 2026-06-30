@@ -382,6 +382,7 @@
     font-size: v.fs(body-sm);
     line-height: 1.65;
     color: var(--color-text-secondary);
+    white-space: pre-line;
   }
 
   &:hover {

@@ -12,19 +12,19 @@ const DESIGN_PREVIEW_SPACING = SPACING_SCALE.slice(0, 4);
 
 const PAIN_POINTS = [
   {
-    title: "실무형 UI 흐름 연습이 어려움",
+    title: "서비스 흐름 설계",
     description:
-      "튜토리얼만으로는 목록·상세·작성·수정 같은 실제 화면 전환과 상태 관리를 익히기 어렵습니다.",
+      "게시판, 일정관리, 인증을\n하나의 사용자 흐름으로 연결해\n서비스처럼 동작하도록 구성했습니다.",
   },
   {
-    title: "인증·권한 흐름이 분산됨",
+    title: "인증 및 권한 관리",
     description:
-      "로그인, 토큰, 보호 라우트, 마이페이지가 각각 따로 놀면 전체 사용자 여정을 설계하기 힘듭니다.",
+      "로그인, 토큰 관리,\n보호 라우팅, 마이페이지까지\n사용자 접근 흐름을 고려해 구현했습니다.",
   },
   {
-    title: "디자인 시스템 일관성 부족",
+    title: "디자인 시스템 구축",
     description:
-      "컴포넌트·토큰·다크 모드가 정리되지 않으면 화면이 늘어날수록 유지보수 비용이 커집니다.",
+      "공통 컴포넌트와 디자인 토큰을 정리해\n화면이 늘어나도 일관된 UI를 유지하도록 구성했습니다.",
   },
 ] as const;
 
@@ -586,14 +586,16 @@ export default function TestMain() {
 
       <section className="testmain-intro" aria-labelledby="testmain-intro-title">
         <h2 id="testmain-intro-title" className="testmain-intro__title" data-testmain-reveal-title>
-          실무형 화면을 연습하고,
+          하나의 서비스를
           <br />
-          제대로 관리하고 있나요?
+          처음부터 끝까지 구현했습니다.
         </h2>
         <p className="testmain-section-desc" data-testmain-reveal-desc>
-          흩어진 튜토리얼, 인증 흐름의 공백, 일관되지 않은 UI는
-          <br className="testmain-br-desktop" />
-          학습 효율을 떨어뜨리고, 절반의 성과만을 만듭니다.
+          인증, 게시판, 일정관리, 디자인 시스템까지
+          <br />
+          실제 서비스 흐름을 고려해
+          <br />
+          하나의 프로젝트로 완성했습니다.
         </p>
         <div className="testmain-intro__actions">
           <Button variant="primary" size="md" onClick={() => navigate("/post/list")}>
