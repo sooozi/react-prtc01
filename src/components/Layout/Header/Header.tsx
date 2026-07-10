@@ -17,6 +17,7 @@ const iconProps = {
   strokeLinejoin: "round" as const,
 };
 
+// 드로어 네비게이션 아이콘
 function DrawerNavIcon({ children }: { children: ReactNode }) {
   return (
     <span className="nav-link__icon" aria-hidden>
@@ -32,7 +33,7 @@ export default function Header() {
   const navigate = useNavigate();
   const userName = localStorage.getItem("userName");
   const [theme, setTheme] = useState<"light" | "dark">(
-    () => (document.documentElement.getAttribute("data-theme") as "light" | "dark") || "light"
+    () => (document.documentElement.getAttribute("data-theme") as "light" | "dark") || "light",
   );
   const [menuOpen, setMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
@@ -129,12 +130,7 @@ export default function Header() {
       <div className="header__bg" aria-hidden />
       <nav ref={navRef} className="nav">
         <Link to="/home" className="logo" onClick={closeMenu}>
-          <img
-            src="/logo-mark.png"
-            alt="MyViteProject"
-            className="logo-img"
-            decoding="async"
-          />
+          <img src="/logo-mark.png" alt="MyViteProject" className="logo-img" decoding="async" />
         </Link>
 
         <button
@@ -162,12 +158,7 @@ export default function Header() {
           tabIndex={menuOpen ? 0 : -1}
         />
 
-        <div
-          id="header-mobile-nav-drawer"
-          ref={navLinksRef}
-          className="nav-links"
-          tabIndex={-1}
-        >
+        <div id="header-mobile-nav-drawer" ref={navLinksRef} className="nav-links" tabIndex={-1}>
           <div
             className={`nav-links__top${userName ? "" : " nav-links__top--guest"}`}
             role="group"
@@ -225,6 +216,16 @@ export default function Header() {
               </Link>
             </li>
             <li>
+              <Link to="/study" className="nav-link nav-link--drawer">
+                <DrawerNavIcon>
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                  <path d="M8 7h8M8 11h6" />
+                </DrawerNavIcon>
+                <span className="nav-link__label">Study</span>
+              </Link>
+            </li>
+            <li>
               <Link to="/style-guide" className="nav-link nav-link--drawer">
                 <DrawerNavIcon>
                   <path d="M4 7h16M4 12h10M4 17h14" />
@@ -265,7 +266,11 @@ export default function Header() {
 
             {userName ? (
               <li>
-                <Button variant="ghost" className="nav-link nav-link--drawer logout-btn" onClick={handleLogout}>
+                <Button
+                  variant="ghost"
+                  className="nav-link nav-link--drawer logout-btn"
+                  onClick={handleLogout}
+                >
                   <DrawerNavIcon>
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                     <polyline points="16 17 21 12 16 7" />

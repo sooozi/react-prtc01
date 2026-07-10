@@ -534,6 +534,10 @@ export default function TestMain() {
   const pageRef = useRef<HTMLDivElement>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   useEffect(() => {
     const root = pageRef.current;
     if (!root) return;
@@ -598,11 +602,15 @@ export default function TestMain() {
           하나의 프로젝트로 완성했습니다.
         </p>
         <div className="testmain-intro__actions">
-          <Button variant="primary" size="md" onClick={() => navigate("/post/list")}>
-            게시판 둘러보기
+          <Button variant="primary" size="md" onClick={() => navigate("/about")}>
+            프로젝트 살펴보기
           </Button>
-          <Button variant="outlinePrimary" size="md" onClick={() => navigate("/home")}>
-            기존 홈 보기
+          <Button
+            variant="outlinePrimary"
+            size="md"
+            onClick={() => scrollToSection("testmain-features")}
+          >
+            주요 기능 보기
           </Button>
         </div>
       </section>
@@ -625,7 +633,11 @@ export default function TestMain() {
         </ul>
       </section>
 
-      <section className="testmain-features" aria-labelledby="testmain-features-heading">
+      <section
+        id="testmain-features"
+        className="testmain-features"
+        aria-labelledby="testmain-features-heading"
+      >
         <div className="testmain-section-head">
           <p className="testmain-eyebrow">한 프로젝트에서 한눈에</p>
           <h2

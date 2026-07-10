@@ -4,6 +4,7 @@ import { HelmetProvider } from "react-helmet-async";
 import Home from "@/pages/home/Home";
 import TestMain from "@/pages/testmain/TestMain";
 import About from "@/pages/about/About";
+import StudyPlan from "@/pages/study-plan/StudyPlan";
 import StyleGuide from "@/pages/style-guide/StyleGuide";
 import UserList from "@/pages/user/list/List";
 import UserDetail from "@/pages/user/detail/Detail";
@@ -38,6 +39,7 @@ export default function AppRouter() {
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/signup" element={<Signup />} />
             <Route path="/about" element={<About />} />
+            <Route path="/study" element={<StudyPlan />} />
             <Route path="/style-guide" element={<StyleGuide />} />
             {/* 사용자 목록·상세: 목 데이터만 사용, 로그인 없이 접근 가능 */}
             <Route path="/user/list" element={<UserList />} />

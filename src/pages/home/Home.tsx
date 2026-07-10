@@ -4,8 +4,8 @@ import { PageHeader } from "@/components";
 import { HomeMarquee } from "@/pages/home/HomeMarquee";
 import "@/pages/home/Home.scss";
 
+// testmain 등 embed 데모 — 링크·reveal 비활성
 type HomeProps = {
-  /** testmain 등 embed 데모 — 링크·reveal 비활성 */
   preview?: boolean;
 };
 
@@ -40,6 +40,7 @@ export default function Home({ preview = false }: HomeProps) {
     return () => io.disconnect();
   }, [preview]);
 
+  // 주요 기능
   const features = [
     {
       icon: "📋",
@@ -59,6 +60,7 @@ export default function Home({ preview = false }: HomeProps) {
     },
   ];
 
+  // 기술 스택
   const techStack = [
     { name: "Vite", desc: "빌드" },
     { name: "React 19", desc: "UI" },
@@ -73,6 +75,7 @@ export default function Home({ preview = false }: HomeProps) {
     { name: "ESLint", desc: "품질" },
   ];
 
+  // 사이트맵
   const quickLinks = [
     { to: "/about", label: "소개", icon: "📄" },
     { to: "/post/list", label: "게시판", icon: "📋" },
@@ -84,6 +87,7 @@ export default function Home({ preview = false }: HomeProps) {
     { to: "/user/mypage", label: "마이페이지", icon: "👤" },
   ];
 
+  // 메인 메뉴
   const marqueeMenus = [
     { to: "/home", label: "홈" },
     ...quickLinks.map(({ to, label }) => ({ to, label })),
@@ -123,6 +127,7 @@ export default function Home({ preview = false }: HomeProps) {
         </div>
       </section>
 
+      {/* 메인 메뉴 */}
       <HomeMarquee items={marqueeMenus} />
 
       <section

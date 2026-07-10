@@ -115,7 +115,7 @@ export default function CommentSection({ postNumber, postOwnerUserId }: CommentS
 
   const commentTrees = useMemo(() => flatRowsToTrees(apiRows), [apiRows]);
 
-  const [draft, setDraft] = useState("");
+  const [draft, setDraft] = useState(""); // 댓글 작성 초안
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [deletingCommentId, setDeletingCommentId] = useState<number | null>(null); // 삭제 중인 댓글 ID

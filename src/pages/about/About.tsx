@@ -34,7 +34,8 @@ export default function About() {
       icon: "📋",
       title: "게시판 & 첨부",
       tag: "API 연동",
-      description: "목록·상세·작성·수정과 이미지 첨부, 용량·순서 조정 등 파일 업로드 흐름을 다룹니다.",
+      description:
+        "목록·상세·작성·수정과 이미지 첨부, 용량·순서 조정 등 파일 업로드 흐름을 다룹니다.",
     },
     {
       icon: "👤",
@@ -127,10 +128,13 @@ export default function About() {
           </h2>
           <p className="cta-text">자주 쓰는 메뉴로 바로 이동해 보세요.</p>
           <div className="cta-buttons">
+            <Button variant="primaryInverse" onClick={() => navigate("/study")}>
+              학습 가이드
+            </Button>
             <Button variant="primaryInverse" onClick={() => navigate("/home")}>
               홈
             </Button>
-            <Button variant="primaryInverse" onClick={() => navigate("/post/list")}>
+            <Button variant="secondaryInverse" onClick={() => navigate("/post/list")}>
               게시판
             </Button>
             <Button variant="secondaryInverse" onClick={() => navigate("/user/list")}>

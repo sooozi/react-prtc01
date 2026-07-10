@@ -421,6 +421,7 @@
 .testmain-features {
   position: relative;
   z-index: v.z(dock);
+  scroll-margin-top: calc(var(--header-height) + #{v.space(lg)});
   box-sizing: border-box;
   width: calc(100% + 2 * #{v.space(lg)});
   margin-inline: calc(-1 * #{v.space(lg)});
