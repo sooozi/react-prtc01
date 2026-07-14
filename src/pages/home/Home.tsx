@@ -174,6 +174,7 @@ export default function Home({ preview = false }: HomeProps) {
           원하는 페이지로 이동하세요. 게시판·일정 등은 로그인이 필요할 수 있어요.
         </p>
         <ul className="links-grid">
+          {/* 사이트맵 리스트 */}
           {quickLinks.map((link) => (
             <li key={link.to}>
               <button

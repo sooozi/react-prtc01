@@ -1,12 +1,12 @@
 import { ApiError } from "../http/errors";
 
-// 로컬 스토리지에 저장된 토큰 (없으면 null)
+// 로컬 스토리지에 저장된 토큰
 export function getStoredAuthToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem("token");
 }
 
-// 토큰 여부 확인(불리언)
+// 토큰 여부 확인
 export function hasAuthToken(): boolean {
   return Boolean(getStoredAuthToken());
 }

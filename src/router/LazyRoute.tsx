@@ -8,12 +8,7 @@ import {
 } from "@/components/RouteSkeleton";
 
 /** lazy 라우트별 Suspense fallback 종류 */
-export type LazyRouteFallback =
-  | "compact"
-  | "post-list"
-  | "post-detail"
-  | "schedule"
-  | "rich-text";
+export type LazyRouteFallback = "compact" | "post-list" | "post-detail" | "schedule" | "rich-text";
 
 function resolveFallback(kind: LazyRouteFallback) {
   switch (kind) {
@@ -35,7 +30,7 @@ type LazyRouteProps = {
   fallback?: LazyRouteFallback;
 };
 
-/** React.lazy 페이지를 Suspense + 스켈레톤(또는 compact 로딩)으로 감쌉니다. */
+// React.lazy 페이지를 Suspense + 스켈레톤(또는 compact 로딩)으로 감쌉니다.
 export default function LazyRoute({ children, fallback = "compact" }: LazyRouteProps) {
   return <Suspense fallback={resolveFallback(fallback)}>{children}</Suspense>;
 }

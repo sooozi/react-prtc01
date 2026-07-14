@@ -18,7 +18,7 @@ import RequireAuth from "@/router/RequireAuth";
 import RouteHeadSync from "@/router/RouteHeadSync";
 import LazyRoute from "@/router/LazyRoute";
 
-/** 무거운 페이지·Quill 등 — 방문 시점에 청크 로드 */
+// 무거운 페이지·Quill 등 — 방문 시점에 청크 로드
 const PostList = lazy(() => import("@/pages/post/list/List"));
 const PostDetail = lazy(() => import("@/pages/post/detail/Detail"));
 const PostWrite = lazy(() => import("@/pages/post/write/Write"));

@@ -10,14 +10,16 @@ import { Button, PageHeader } from "@/components";
 import { formDescribedBy } from "@/lib/a11y/formDescribedBy";
 import "@/pages/auth/login/Login.scss";
 
-/** RequireAuth 등에서 로그인으로 보낼 때 넘기는 state */
+// RequireAuth 등에서 로그인으로 보낼 때 넘기는 state
 type LoginLocationState = { toast?: string; from?: Location };
 
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
-  const [apiAlert, setApiAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [apiAlert, setApiAlert] = useState<{ type: "success" | "error"; message: string } | null>(
+    null,
+  );
   /** 보드 등에서 리다이렉트 시 전달한 "로그인이 필요합니다" 토스트 */
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   /** 비밀번호 보기/숨기기 */
@@ -45,9 +47,7 @@ export default function Login() {
       setToastMessage(toastMsg);
     }
 
-    const shouldNormalizeState = Boolean(
-      st?.toast ?? consumed.toast ?? consumed.from
-    );
+    const shouldNormalizeState = Boolean(st?.toast ?? consumed.toast ?? consumed.from);
     if (shouldNormalizeState) {
       const next: LoginLocationState = {};
       if (fromLoc) next.from = fromLoc;
@@ -141,10 +141,23 @@ export default function Login() {
             className={apiAlert.type === "success" ? "login-success-alert" : "login-error-alert"}
             role="alert"
           >
-            <span className={apiAlert.type === "success" ? "login-success-alert__icon" : "login-error-alert__icon"} aria-hidden>
+            <span
+              className={
+                apiAlert.type === "success"
+                  ? "login-success-alert__icon"
+                  : "login-error-alert__icon"
+              }
+              aria-hidden
+            >
               {apiAlert.type === "success" ? "✓" : "!"}
             </span>
-            <span className={apiAlert.type === "success" ? "login-success-alert__text" : "login-error-alert__text"}>
+            <span
+              className={
+                apiAlert.type === "success"
+                  ? "login-success-alert__text"
+                  : "login-error-alert__text"
+              }
+            >
               {apiAlert.message}
             </span>
           </div>

@@ -1,7 +1,7 @@
 # React Practice
 
 Vite + React + TypeScript 기반 프론트엔드 연습·포트폴리오 프로젝트입니다.  
-로그인·회원가입·사용자 목록·상세(목 데이터)·마이페이지(내가 쓴 글)·게시판(목록·상세·작성·수정·삭제·조회수·검색·정렬·모바일 카드 / 데스크톱 테이블·댓글 UI·이미지 첨부·RichTextEditor)·일정(월 달력·연·월 선택·주 시작·한국 공휴일·localStorage 저장·달력 표시·입력 패널 / 좁은 화면 시트)·스타일 가이드·다크 모드·접근성(페이지 제목·스킵 링크·라우트 안내 등)을 다룹니다.
+로그인·회원가입·사용자 목록·상세(목 데이터)·마이페이지(내가 쓴 글)·게시판(목록·상세·작성·수정·삭제·조회수·검색·정렬·모바일 카드 / 데스크톱 테이블·**댓글 실 API**(목록·작성·대댓글·수정·삭제·반응)·이미지 첨부·RichTextEditor)·일정(월 달력·연·월 선택·주 시작·한국 공휴일·**localStorage CRUD**·좁은 화면 시트)·학습 가이드(`/study`)·스타일 가이드·Test Main 랜딩·다크 모드·접근성(페이지 제목·스킵 링크·라우트 안내 등)을 다룹니다.
 
 ## 링크
 
@@ -32,7 +32,7 @@ flowchart TB
     A["api/<br/>auth · board · user"]
     S["schemas/<br/>zod 폼 검증"]
     L["lib · hooks"]
-    M["mocks/<br/>목·데모"]
+    M["mocks/<br/>목·픽스처"]
   end
 
   R --> P
@@ -44,7 +44,7 @@ flowchart TB
   P --> M
   A --> H["api/http<br/>axios · ApiError"]
   H --> API[("VITE_API_BASE_URL")]
-  M -.->|user · comment 등| P
+  M -.->|user| P
 ```
 
 | 계층           | 폴더                    | 역할                                                               |
@@ -54,36 +54,38 @@ flowchart TB
 | **api**        | `src/api/{도메인}/`     | HTTP 호출만 (JSX·훅 없음). 공통 클라이언트는 `api/http/`           |
 | **schemas**    | `src/schemas/{도메인}/` | zod 폼 스키마 (로그인·회원가입 등)                                 |
 
-상세 트리·파일 배치 규칙은 아래 [프로젝트 구조](#프로젝트-구조), [docs/folder-structure.md](docs/folder-structure.md) 를 참고하세요.
+상세 트리·파일 배치 규칙은 아래 [프로젝트 구조](#프로젝트-구조), **[docs/folder-structure.md](docs/folder-structure.md)** 를 참고하세요. (alias·체크리스트는 docs가 최신입니다.)
 
 ---
 
 ## 프로젝트 범위
 
-React + TypeScript + Vite로 인증/게시판/마이페이지/일정/스타일 가이드 화면을 구현한 개인 프로젝트입니다. 게시판은 CRUD, 검색, 정렬, 페이지네이션, Quill 에디터, 이미지 첨부·순서·확장자 allowlist까지 포함했고, 목록은 데스크톱 테이블·모바일 카드로 반응형 처리했습니다. Axios로 외부 REST API에 연동하고 401 처리, 로그인 리다이렉트 안내, 예외 상황 UX를 정리했습니다. 사용자 목록·상세, 댓글 일부, 일정 저장은 mock·localStorage·데모 UI로 구성했고 백엔드 일부는 프로젝트 범위에서 제외했습니다.
+React + TypeScript + Vite로 인증/게시판/댓글/마이페이지/일정/학습 가이드/스타일 가이드 화면을 구현한 개인 프로젝트입니다. 게시판은 CRUD, 검색, 정렬, 페이지네이션, Quill 에디터, 이미지 첨부·순서·확장자 allowlist, 댓글(실 API)까지 포함했고, 목록은 데스크톱 테이블·모바일 카드로 반응형 처리했습니다. Axios로 외부 REST API에 연동하고 401 처리, 로그인 리다이렉트 안내, 예외 상황 UX를 정리했습니다.
+
+- **실 HTTP**: 로그인·회원가입·게시판·댓글·내 글 목록 등 (`VITE_API_BASE_URL`, Bearer 토큰은 `localStorage`)
+- **프론트 mock**: 사용자 목록·상세 (`src/mocks/user.ts`)
+- **localStorage**: 일정(등록·수정·삭제·달력 표시), 테마
+
+백엔드 일부(사용자 목록 API, 일정 서버 동기화 등)는 프로젝트 범위에서 제외했습니다.
 
 ---
 
 ### 데이터·백엔드 경계
 
-| 구분                                 | 방식             | 비고                                                                               |
-| ------------------------------------ | ---------------- | ---------------------------------------------------------------------------------- |
-| 로그인·회원가입·게시판·내 글 목록 등 | **실 HTTP**      | `VITE_API_BASE_URL` 필요                                                           |
-| 사용자 목록·사용자 상세              | **프론트 mock**  | `src/mocks/user.ts`, API 없이 목록 형태 학습용                                     |
-| 댓글 영역                            | **프론트 데모**  | `src/mocks/comment.ts` — 목록·무한 스크롤만 동작. 등록·대댓글·정렬·실삭제는 미연결 |
-| 일정                                 | **localStorage** | `scheduleItems` 키로 저장, `MonthCalendar`에 표시. 서버 동기화·수정·삭제 없음      |
+| 구분                                   | 방식             | 비고                                                           |
+| -------------------------------------- | ---------------- | -------------------------------------------------------------- |
+| 로그인·회원가입·게시판·댓글·내 글 목록 | **실 HTTP**      | `VITE_API_BASE_URL` 필요. 인증은 `localStorage.token` + Bearer |
+| 사용자 목록·사용자 상세                | **프론트 mock**  | `src/mocks/user.ts`, API 없이 목록 형태 학습용                 |
+| 일정                                   | **localStorage** | `scheduleItems` 키. **등록·수정·삭제 가능**. 서버 동기화 없음  |
 
-### 데모·미연결 UI (레포 상태)
+### 데모·미연결 / 미완 항목 (레포 상태)
 
-아래는 화면은 있지만 기본 플로우에서 아직 끝까지 연결되지 않은 항목입니다.
-
-| 항목                  | 상태                                                              |
-| --------------------- | ----------------------------------------------------------------- |
-| 댓글 등록·대댓글·정렬 | 버튼·select는 UI만 (`disabled` 또는 로컬 state만)                 |
-| 댓글 삭제 `Confirm`   | 확인 후 목록에서 제거하지 않음                                    |
-| 일정 수정·삭제        | 미구현 (입력·달력 표시만)                                         |
-| 전역 Toast            | 스타일 가이드 미리보기(`SgPreviewToast`)만, 앱 전역 Provider 없음 |
-| MSW                   | `docs/folder-structure.md`에 언급만, 레포에는 미설치              |
+| 항목                   | 상태                                                                          |
+| ---------------------- | ----------------------------------------------------------------------------- |
+| 전역 Toast Provider    | 스타일 가이드 `SgPreviewToast`·페이지 로컬 토스트만. 앱 전역 Toast 없음       |
+| MSW                    | **미설치·미사용** ([docs/folder-structure.md](docs/folder-structure.md) 참고) |
+| `getPostFileBlob`      | `boardApi`에 정의만 있고 UI 미리보기 미연결                                   |
+| `src/mocks/comment.ts` | **현재 미사용**(레거시). 댓은 `api/board` 실연동                              |
 
 ### 실험·선택 도구
 
@@ -96,20 +98,20 @@ React + TypeScript + Vite로 인증/게시판/마이페이지/일정/스타일 �
 
 ## 기술 스택
 
-| 구분            | 기술                                                                                                                    |
-| --------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| **런타임**      | Node.js 20.19+ (Vite 7 권장)                                                                                            |
-| **빌드/개발**   | Vite 7.x                                                                                                                |
-| **프레임워크**  | React 19.x                                                                                                              |
-| **언어**        | TypeScript 5.9.x                                                                                                        |
-| **라우팅**      | React Router DOM 7.x                                                                                                    |
-| **헤드·타이틀** | react-helmet-async                                                                                                      |
-| **폼**          | React Hook Form 7.x + **Zod** (`@hookform/resolvers`)                                                                   |
-| **HTTP**        | Axios                                                                                                                   |
-| **에디터·본문** | Quill 2 (`react-quill-new`) · **DOMPurify** (상세 HTML 표시)                                                            |
-| **스타일**      | Sass (SCSS), CSS 변수(테마), 설계 토큰 `v.space` / `v.fs` / `v.fw` / `v.rad` 등                                         |
-| **기타**        | clsx · **date-holidays** + `src/lib/` (달력 공휴일)                                                                     |
-| **품질**        | ESLint 9 + typescript-eslint + **eslint-plugin-jsx-a11y** · **Vitest** · **Storybook 10** · 개발 시 **@axe-core/react** |
+| 구분            | 기술                                                                                                                                          |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **런타임**      | Node.js 20.19+ (Vite 7 권장)                                                                                                                  |
+| **빌드/개발**   | Vite 7.x                                                                                                                                      |
+| **프레임워크**  | React 19.x                                                                                                                                    |
+| **언어**        | TypeScript 5.9.x                                                                                                                              |
+| **라우팅**      | React Router DOM 7.x                                                                                                                          |
+| **헤드·타이틀** | react-helmet-async                                                                                                                            |
+| **폼**          | React Hook Form 7.x + **Zod** (`@hookform/resolvers`)                                                                                         |
+| **HTTP·인증**   | Axios · Bearer (`localStorage.token`, 쿠키 세션 아님)                                                                                         |
+| **에디터·본문** | Quill 2 (`react-quill-new`) · **DOMPurify** (상세 HTML 표시)                                                                                  |
+| **스타일**      | Sass (SCSS), CSS 변수(테마), 설계 토큰 `v.space` / `v.fs` / `v.fw` / `v.rad` 등                                                               |
+| **기타**        | clsx · **date-holidays** + `src/lib/` (달력 공휴일) · **Lenis** (일부 랜딩 스무스 스크롤)                                                     |
+| **품질**        | ESLint 9 + typescript-eslint + **eslint-plugin-jsx-a11y** · **Vitest** · **Storybook 10** · 개발 시 **@axe-core/react** · husky + lint-staged |
 
 ---
 
@@ -203,6 +205,7 @@ yarn storybook   # http://localhost:6006
 
 - `src/components/ImageFileAttachField/lib/attachmentAllowlist.test.ts` — 첨부 확장자·MIME allowlist
 - `src/lib/a11y/formDescribedBy.test.ts` — 폼 `aria-describedby` 헬퍼
+- `src/components/RichTextEditor/editor/quillConfig.test.ts` — Quill 설정
 
 설정: `vitest.config.ts`. Playwright browser runner(`@vitest/browser-playwright`)는 devDependency로 포함되어 있으나, 앱 E2E 스위트는 아직 없습니다.
 
@@ -210,9 +213,9 @@ yarn storybook   # http://localhost:6006
 
 ## 환경 변수 (.env)
 
-| 변수                | 설명                                                                                                                                                                                                                              |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `VITE_API_BASE_URL` | API 베이스 URL. 로그인·회원가입·게시판·내 글 목록 등 axios 연동에 사용. 미설정 시 해당 호출은 실패할 수 있음. **사용자 목록·상세**는 `src/mocks/user.ts`만 사용해 이 변수와 무관함. 저장소에는 올리지 않음 (`.env.example` 참고). |
+| 변수                | 설명                                                                                                                                                                                                                                       |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `VITE_API_BASE_URL` | API 베이스 URL. 로그인·회원가입·게시판·**댓글**·내 글 목록 등 axios 연동에 사용. 미설정 시 해당 호출은 실패할 수 있음. **사용자 목록·상세**는 `src/mocks/user.ts`만 사용해 이 변수와 무관함. 저장소에는 올리지 않음 (`.env.example` 참고). |
 
 ---
 
@@ -229,35 +232,32 @@ src/
 ├── api/
 │   ├── http/          # axios 클라이언트, ApiError, 래퍼
 │   ├── auth/          # 로그인, 회원가입, 토큰, 로그인 리다이렉트 세션
-│   ├── board/         # 게시판 API·타입
+│   ├── board/         # 게시판·댓글 API·타입
 │   └── user/          # 사용자 API 래퍼(목록·상세는 mock)
 ├── components/        # 앱 전역 UI (index.ts 배럴) · *.stories.tsx (Storybook)
-│   ├── Layout/, Button/, PageHeader/, DataSkeleton/, RouteSkeleton/, …
+│   ├── Layout/, ui/(Button, PageHeader, Confirm…), DataSkeleton/, RouteSkeleton/, …
 │   ├── RichTextEditor/   # editor(Quill) · display(PostHtmlContent + DOMPurify)
 │   ├── ImageFileAttachField/
-│   │   ├── index.ts              # 공개 API (컴포넌트·타입·유틸 re-export)
-│   │   ├── ImageFileAttachField.tsx
-│   │   ├── types.ts
 │   │   ├── variants/             # Create(등록), UnifiedEdit(수정)
-│   │   ├── ui/                   # AttachRowBody, ReorderGhostPortal, Shell
-│   │   ├── hooks/                # useImageAttachReorder, useFileAddNotice
-│   │   └── lib/                  # attachmentAllowlist, fileAttachItemUtils,
-│   │                             # filterImageFiles, unifiedRowDisplay, fileAddMessages
+│   │   ├── ui/, hooks/, lib/
 │   └── icons/
-├── hooks/             # usePagination, useUrlQueryPage, useFloatingLayer, useMediaQuery
+├── hooks/             # usePagination, useUrlQueryPage, useFloatingLayer, useMediaQuery, useLenisScroll
 ├── lib/               # UI 없는 순수 TS (도메인별 하위 폴더)
 │   ├── a11y/          # formDescribedBy
+│   ├── comment/       # 댓글 요청·비밀글·reaction 헬퍼
 │   ├── holidayUtils.ts, krHolidays.ts
 │   ├── post/          # boardListSort, postDetailFromQuery, postFormFieldErrors
-│   └── schedule/      # calendarUtils
+│   └── schedule/      # calendarUtils, scheduleItems (localStorage CRUD)
 ├── schemas/           # zod 폼 스키마 (auth/login, auth/signup)
-├── mocks/             # 목·데모 데이터
-│   ├── user.ts
-│   └── comment.ts     # 게시판 댓글 데모
+├── mocks/
+│   ├── user.ts        # 사용자 목록·상세 (사용 중)
+│   └── comment.ts     # 레거시·현재 미사용
 ├── pages/             # 라우트 페이지 (도메인별)
 │   ├── home/          # Home, HomeMarquee
 │   ├── about/
+│   ├── study-plan/    # /study 학습 가이드
 │   ├── style-guide/   # StyleGuide — 토큰·컴포넌트 미리보기
+│   ├── testmain/      # 랜딩 실험 + TestMainHeroDemo
 │   ├── auth/
 │   │   ├── styles/    # _auth-shared.scss
 │   │   ├── login/
@@ -270,18 +270,19 @@ src/
 │   │   ├── list/, detail/, my-page/
 │   ├── post/
 │   │   ├── list/, detail/, write/, update/
-│   │   └── components/   # CommentSection, CommentRow
+│   │   └── components/   # CommentSection, CommentRow (실 API)
 │   └── schedule/
 │       ├── Schedule.tsx, Schedule.scss
 │       └── components/
 │           ├── calendar/       # MonthCalendar, CalendarPickerPopover
-│           └── side-panel/     # SidePanel (localStorage 저장)
+│           └── side-panel/     # SidePanel (localStorage CRUD)
 ├── router/
 │   ├── AppRouter.tsx
 │   ├── LazyRoute.tsx
 │   ├── RequireAuth.tsx
 │   ├── RouteHeadSync.tsx
-│   └── routeDocumentMeta.ts
+│   ├── routeDocumentMeta.ts
+│   └── lenisRoutes.ts
 ├── styles/
 ├── utils/
 ├── bootstrapAxe.ts
@@ -296,35 +297,37 @@ src/
 | `pages/{도메인}/{라우트}/`         | URL에 대응하는 페이지 컴포넌트 + 스타일                                              |
 | `pages/{도메인}/components/`       | 해당 도메인 전용 UI (전역 `components/`와 구분)                                      |
 | `src/lib/`                         | 여러 페이지·컴포넌트가 쓰는 순수 로직                                                |
-| `src/mocks/`                       | mock·데모 데이터                                                                     |
+| `src/mocks/`                       | mock·픽스처 (`user` 사용 중)                                                         |
 | `src/hooks/`                       | 재사용 커스텀 훅                                                                     |
 | `components/ImageFileAttachField/` | `variants/`(등록·수정), `ui/`(행·드래그 고스트), `lib/`(allowlist·필터·unified 표시) |
 
-- **경로 별칭**: `@` → `src`
+- **경로 별칭**: `@` → `src` (도메인 alias는 정의되어 있으나 현 코드는 `@/` 사용이 표준 — [folder-structure.md](docs/folder-structure.md))
 - **배럴**: `@/components` — `ImageFileAttachField`, `RichTextEditor`, `PostHtmlContent`, `filesToItemsWithIds`, `isAllowedAttachmentFile`, `MAX_ATTACHMENT_FILENAME_LENGTH` 등 export
 
 ---
 
 ## 라우팅
 
-| 경로                                                                | 페이지              | 비고                                                  |
-| ------------------------------------------------------------------- | ------------------- | ----------------------------------------------------- |
-| `/`                                                                 | -                   | `/home` 리다이렉트                                    |
-| `/home`                                                             | Home                | 랜딩                                                  |
-| `/auth/login`, `/auth/signup`                                       | Login, Signup       |                                                       |
-| `/about`                                                            | About               |                                                       |
-| `/style-guide`                                                      | StyleGuide          | 디자인 토큰·UI 미리보기 (공개)                        |
-| `/forbidden`, `/not-found`                                          | Forbidden, NotFound |                                                       |
-| `/user/list`, `/user/detail?userId=`                                | User 목록·상세      | 로그인 불필요, 사용자 데이터는 mock                   |
-| `/user/mypage`                                                      | MyPage              | 로그인 필수                                           |
-| `/post/list`, `/post/detail?id=`, `/post/write`, `/post/update?id=` | 게시판              | 로그인 필수 · 상세에서 `from` 쿼리로 복귀 경로 처리   |
-| `/schedule`                                                         | Schedule            | 로그인 필수 · localStorage 저장·달력 표시 (서버 없음) |
-| `*`                                                                 | -                   | `/not-found` 로 리다이렉트                            |
+| 경로                                                                | 페이지              | 비고                                                |
+| ------------------------------------------------------------------- | ------------------- | --------------------------------------------------- |
+| `/`                                                                 | -                   | `/home` 리다이렉트                                  |
+| `/home`                                                             | Home                | 랜딩                                                |
+| `/testmain`                                                         | TestMain            | 랜딩·히어로 데모 (공개)                             |
+| `/auth/login`, `/auth/signup`                                       | Login, Signup       |                                                     |
+| `/about`                                                            | About               |                                                     |
+| `/study`                                                            | StudyPlan           | 학습 가이드 (공개)                                  |
+| `/style-guide`                                                      | StyleGuide          | 디자인 토큰·UI 미리보기 (공개)                      |
+| `/forbidden`, `/not-found`                                          | Forbidden, NotFound |                                                     |
+| `/user/list`, `/user/detail?userId=`                                | User 목록·상세      | 로그인 불필요, 사용자 데이터는 mock                 |
+| `/user/mypage`                                                      | MyPage              | 로그인 필수                                         |
+| `/post/list`, `/post/detail?id=`, `/post/write`, `/post/update?id=` | 게시판              | 로그인 필수 · 상세에서 `from` 쿼리로 복귀 경로 처리 |
+| `/schedule`                                                         | Schedule            | 로그인 필수 · localStorage CRUD (서버 없음)         |
+| `*`                                                                 | -                   | `/not-found` 로 리다이렉트                          |
 
 공개 라우트도 **항상 `<Layout>`** 안에서 렌더되어 `<main id="main-content">` 랜드마크가 유지됩니다.  
 보호 라우트는 토큰 없을 때 로그인으로 이동하며 리다이렉트 state·sessionStorage 토스트를 넘길 수 있습니다.
 
-**헤더(요약)**: 로고, 테마 토글, 햄버거 드로어 메뉴(About · Style · User · Board · Schedule), 로그인 시 프로필·로그아웃.
+**헤더(요약)**: 로고, 테마 토글, 햄버거 드로어 메뉴(About · **Study** · Style · User · Board · Schedule), 로그인 시 프로필·로그아웃.
 
 ---
 
@@ -335,9 +338,10 @@ src/
 - **레이아웃**: 본문으로 건너뛰기 링크, `ApiErrorBar`, `Layout`의 `ErrorBoundary`(페이지 렌더 크래시 시 폴백 UI), 스크롤 시 헤더 `inert` 처리 등.
 - **코드 스플리팅**: 게시판 목록·상세·작성·수정(Quill)·일정은 `React.lazy` + `LazyRoute`(페이지별 `RouteSkeleton` fallback). 홈·로그인·스타일 가이드 등 가벼운 라우트는 즉시 로드.
 - **페이지 헤더**: `PageHeader`로 화면당 대표 문구와 **단일 `h1`** 패턴 통일.
-- **게시판**: 검색(제목·등록자 ID·이름), 정렬·페이지네이션, 표/카드 반응, Quill 작성·수정, DOMPurify로 상세 HTML 표시, 이미지 첨부·순서·allowlist, **댓글 UI(목 데이터·무한 스크롤 데모)**.
-- **일정**: `SidePanel`에서 `localStorage` 저장 → `MonthCalendar` 셀에 카테고리별 표시. 공휴일 이름, 연·월 picker, 주 시작 switch. 좁은 뷰에서 하단 시트(`useFloatingLayer`).
-- **스타일 가이드**: `/style-guide` — 타이포·색·간격 토큰, 보드·폼·Toast 등 UI 패턴 미리보기.
+- **게시판**: 검색(제목·등록자 ID·이름), 정렬·페이지네이션, 표/카드 반응, Quill 작성·수정, DOMPurify로 상세 HTML 표시, 이미지 첨부·순서·allowlist, **댓글 실 API**(목록·루트/대댓글 작성·수정·삭제·좋아요 반응, 클라이언트 트리 정렬).
+- **일정**: `SidePanel`에서 localStorage **등록·수정·삭제** → `MonthCalendar` 표시. 공휴일, 연·월 picker, 주 시작 switch, 날짜·이벤트 선택. 좁은 뷰에서 하단 시트(`useFloatingLayer`). HTTP 전환 설계는 [docs/api-request-schedule.md](docs/api-request-schedule.md).
+- **학습 가이드**: `/study` — Phase별 로드맵.
+- **스타일 가이드**: `/style-guide` — 타이포·색·간격 토큰, 보드·폼·Toast 미리보기(전역 Toast Provider는 없음).
 - **개발 도구**: `import.meta.env.DEV` 에서 `@axe-core/react` 로컬 검사 가능.
 
 상세한 API 필드·엔드포인트 이름은 코드 `src/api/board/boardApi.ts` 등을 참고하면 됩니다.
@@ -361,30 +365,31 @@ src/
 
 ## 공통 컴포넌트 (배럴 기준 발췌)
 
-| 이름                                                  | 역할                                                                                                                                  |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| **PageHeader**                                        | Badge + `h1` + 선택 subtitle (`list`·`centered`·`auth`·`inline` 변형)                                                                 |
-| **Button**                                            | variant / size, `to`·`href` 지원                                                                                                      |
-| **Badge, Confirm, LoadingState, Pagination, Tooltip** | 각 화면에서 공통 패턴                                                                                                                 |
-| **TableSortTh** 등                                    | 게시판 목록 정렬                                                                                                                      |
-| **RichTextEditor / PostHtmlContent**                  | Quill 작성 · DOMPurify로 안전하게 HTML 표시                                                                                           |
-| **BoardListDataSkeleton / PostDetailDataSkeleton**    | 게시판 목록·상세 로딩 UI                                                                                                              |
-| **ImageFileAttachField**                              | 등록(`variants/Create`)·수정(`variants/UnifiedEdit`, server+local unified rows)                                                       |
-| **ImageFileAttachField 유틸**                         | `filesToItemsWithIds`, `isAllowedAttachmentFile`, `ATTACHMENT_ALLOWLIST_FORM_ERROR`, `unifiedRowDisplay`(수정 화면 표시·용량 합산) 등 |
-| **Layout / Header / Footer**                          | 네비·테마·푸터                                                                                                                        |
+| 이름                                                  | 역할                                                                                                        |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **PageHeader**                                        | Badge + `h1` + 선택 subtitle (`list`·`centered`·`auth`·`inline` 변형)                                       |
+| **Button**                                            | variant / size, `to`·`href` 지원                                                                            |
+| **Badge, Confirm, LoadingState, Pagination, Tooltip** | Confirm이 공용 dialog(포커스·Esc). **공용 Toast 컴포넌트는 없음**(페이지·Style Guide 로컬)                  |
+| **TableSortTh** 등                                    | 게시판 목록 정렬 (`<table>` + 정렬 헤더; 풀 DataGrid 없음)                                                  |
+| **RichTextEditor / PostHtmlContent**                  | Quill 작성 · DOMPurify로 안전하게 HTML 표시                                                                 |
+| **BoardListDataSkeleton / PostDetailDataSkeleton**    | 게시판 목록·상세 로딩 UI                                                                                    |
+| **ImageFileAttachField**                              | 등록(`variants/Create`)·수정(`variants/UnifiedEdit`, server+local unified rows)                             |
+| **ImageFileAttachField 유틸**                         | `filesToItemsWithIds`, `isAllowedAttachmentFile`, `ATTACHMENT_ALLOWLIST_FORM_ERROR`, `unifiedRowDisplay` 등 |
+| **Layout / Header / Footer**                          | 네비·테마·푸터                                                                                              |
 
-`ApiErrorBar` 등 일부는 `@/components` 배럴에 없으면 해당 경로에서 직접 import 합니다.
+`ApiErrorBar`, Route skeleton 등 일부는 `@/components` 배럴에 없으면 해당 경로에서 직접 import 합니다. Input/Select/DatePicker는 공용 컴포넌트가 아니라 native + SCSS(또는 schedule 전용 picker)입니다.
 
 ---
 
 ## API 및 모의 데이터
 
 - **베이스 URL**: `.env` → `src/api/http/client.ts`.
+- **인증**: 로그인 성공 시 `localStorage`에 `token`(accessToken), `userName`, `userId`. refresh token 없음.
 - **사용자 목록·상세**: `src/mocks/user.ts` 고정 데이터.
-- **댓글 데모**: `src/mocks/comment.ts` — `CommentSection`에서 플랫 페이지네이션·무한 스크롤.
-- **일정**: `localStorage` 키 `scheduleItems` — `SidePanel` 저장, `MonthCalendar` 구독(`schedule-items-updated` 이벤트).
+- **댓글**: `src/api/board` HTTP (`CommentSection`). `mocks/comment.ts`는 미사용.
+- **일정**: `localStorage` 키 `scheduleItems` — `SidePanel` CRUD, `MonthCalendar` 구독(`schedule-items-updated` 이벤트).
 - **게시판·인증 등**: 실 HTTP 호출(백엔드 스펙은 코드의 경로·쿼리와 맞춰야 함).
-- 로그인 성공 코드 등은 소스 내 상수로만 관리합니다.
+- 로그인·댓글 성공 코드 등은 소스 내 상수(`BPLTE200` 등)로만 관리합니다.
 
 ---
 
@@ -420,8 +425,8 @@ src/
 
 - **BackstopJS**: 선택 도구. `backstop.json`이 있으면 `yarn dev` 실행 후 `npx backstop reference` / `npx backstop test` 로 시각 회귀 테스트 가능합니다. `"type": "module"` 과 엔진 `onBefore`/`onReady`의 `require` 혼용 시 충돌할 수 있습니다.
 - **ESLint**: `eslint-plugin-react-hooks`, `eslint-plugin-jsx-a11y` 포함. Prettier와 겹치는 스타일 규칙은 `eslint-config-prettier`로 비활성화.
-- **Prettier**: `.prettierrc.json` 기준. 커밋 훅(husky)은 없음 — `yarn format` / `yarn format:check`는 필요할 때 수동 실행.
-- **CI**: GitHub Actions는 Storybook 배포만 (lint/test/build 워크플로 없음).
+- **Prettier / husky**: `.prettierrc.json` 기준. **husky + lint-staged**로 pre-commit 시 ESLint·Prettier 실행. `yarn format` / `yarn format:check`도 필요 시 수동 실행.
+- **CI**: GitHub Actions는 **Storybook 배포만** (lint/test/build 워크플로 없음). 로컬 품질은 husky에 의존.
 - **React Compiler 관련 규칙**: 일부 훅/라이브러리 조합에서 `react-hooks/` 규칙 경고가 날 수 있음 — 레포 상태에 따라 허용·제외 처리됨.
 
 ---
