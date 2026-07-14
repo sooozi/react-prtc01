@@ -7,7 +7,7 @@ import {
   ScheduleRouteSkeleton,
 } from "@/components/RouteSkeleton";
 
-/** lazy 라우트별 Suspense fallback 종류 */
+// lazy 라우트별 Suspense fallback 종류
 export type LazyRouteFallback = "compact" | "post-list" | "post-detail" | "schedule" | "rich-text";
 
 function resolveFallback(kind: LazyRouteFallback) {

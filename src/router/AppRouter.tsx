@@ -31,7 +31,7 @@ export default function AppRouter() {
       <BrowserRouter>
         <RouteHeadSync />
         <Routes>
-          {/* Layout 밖에서 Navigate만 쓰면 그 순간 <main>이 없어 axe가 경고함 */}
+          {/* Layout 밖에서 Navigate만 쓰면 그 순간 <main>이 없어 axe가 경고 */}
           <Route element={<Layout />}>
             <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<Home />} />
