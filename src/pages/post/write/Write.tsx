@@ -7,9 +7,13 @@ import {
   ImageFileAttachField,
   isAllowedAttachmentFile,
   isAttachmentFileNameWithinLimit,
+  isAttachmentFileSizeWithinLimit,
+  isAttachmentTotalSizeWithinLimit,
   isQuillContentEmpty,
   itemsToFiles,
+  MAX_ATTACHMENT_FILE_SIZE_BYTES,
   MAX_ATTACHMENT_FILENAME_LENGTH,
+  MAX_ATTACHMENT_TOTAL_SIZE_BYTES,
   PageHeader,
   RichTextEditor,
   sanitizeQuillHtml,
@@ -17,6 +21,7 @@ import {
 import type { FileWithId } from "@/components";
 import { formDescribedBy } from "@/lib/a11y/formDescribedBy";
 import { clearPostFormFieldError, type PostFormFieldErrors } from "@/lib/post/postFormFieldErrors";
+import { formatFileSize } from "@/utils/formatFileSize";
 import "@/pages/post/write/Write.scss";
 
 const FIELD_IDS = {
@@ -55,6 +60,20 @@ export default function Write() {
     if (attachFileItems.some((i) => !isAttachmentFileNameWithinLimit(i.file.name))) {
       setFieldErrors({
         attach: `첨부 파일명(확장자 포함)은 ${MAX_ATTACHMENT_FILENAME_LENGTH}자 이하여야 합니다.`,
+      });
+      return;
+    }
+    // 첨부 파일 1개당 용량 제한 검사
+    if (attachFileItems.some((i) => !isAttachmentFileSizeWithinLimit(i.file))) {
+      setFieldErrors({
+        attach: `첨부 파일은 1개당 ${formatFileSize(MAX_ATTACHMENT_FILE_SIZE_BYTES)} 이하여야 합니다.`,
+      });
+      return;
+    }
+    // 첨부 파일 전체 합산 용량 제한 검사
+    if (!isAttachmentTotalSizeWithinLimit(attachFileItems.map((i) => i.file.size))) {
+      setFieldErrors({
+        attach: `첨부 파일 전체 용량은 ${formatFileSize(MAX_ATTACHMENT_TOTAL_SIZE_BYTES)} 이하여야 합니다.`,
       });
       return;
     }

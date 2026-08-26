@@ -8,10 +8,7 @@ import {
   buildTooLongNameMessages,
   splitFilesByMaxNameLength,
 } from "../lib/fileAddMessages";
-import {
-  filesToItemsWithIds,
-  partitionByAttachmentIdentity,
-} from "../lib/fileAttachItemUtils";
+import { filesToItemsWithIds, partitionByAttachmentIdentity } from "../lib/fileAttachItemUtils";
 import { partitionFileListByAttachmentAllowlist } from "../lib/filterImageFiles";
 import { useFileAddNotice } from "../hooks/useFileAddNotice";
 import { useImageAttachReorder } from "../hooks/useImageAttachReorder";
@@ -29,7 +26,7 @@ export function ImageFileAttachFieldCreate({
 }: ImageFileAttachFieldCreateProps) {
   const { message: fileAddNoticeMessage, showNotice } = useFileAddNotice();
 
-  const { rootRef, reorderGhost, getRowClassName, handleReorderPointerDown } =
+  const { rootRef, reorderGhost, getRowClassName, handleReorderPointerDown, handleReorderKeyDown } =
     useImageAttachReorder({
       items,
       onReorder: onChange,
@@ -39,10 +36,7 @@ export function ImageFileAttachFieldCreate({
       }),
     });
 
-  const totalSizeBytes = useMemo(
-    () => items.reduce((sum, i) => sum + i.file.size, 0),
-    [items]
-  );
+  const totalSizeBytes = useMemo(() => items.reduce((sum, i) => sum + i.file.size, 0), [items]);
 
   const onFilesAdded = useCallback(
     (files: File[], initialMessages: string[] = []) => {
@@ -69,7 +63,7 @@ export function ImageFileAttachFieldCreate({
 
       showNotice(messageParts);
     },
-    [items, onChange, showNotice]
+    [items, onChange, showNotice],
   );
 
   // 파일 선택창에서 파일 선택 시 호출되는 함수
@@ -81,7 +75,7 @@ export function ImageFileAttachFieldCreate({
       const { allowed, rejected } = partitionFileListByAttachmentAllowlist(list); // 허용된 파일과 차단된 파일 목록을 분리
       onFilesAdded(allowed, buildRejectedAllowlistMessages(rejected)); // 허용된 파일과 차단된 파일 목록을 전달
     },
-    [onFilesAdded]
+    [onFilesAdded],
   );
 
   const removeAt = useCallback(
@@ -92,7 +86,7 @@ export function ImageFileAttachFieldCreate({
         fileInputRef.current.value = "";
       }
     },
-    [items, onChange, fileInputRef]
+    [items, onChange, fileInputRef],
   );
 
   return (
@@ -114,15 +108,12 @@ export function ImageFileAttachFieldCreate({
       reorderGhost={reorderGhost}
     >
       {items.map((item, index) => (
-        <li
-          key={item.id}
-          data-reorder-index={index}
-          className={getRowClassName(index)}
-        >
+        <li key={item.id} data-reorder-index={index} className={getRowClassName(index)}>
           <AttachRowBody
             fileName={item.file.name}
             sizeLabel={formatFileSize(item.file.size)}
             onHandlePointerDown={handleReorderPointerDown(index)}
+            onHandleKeyDown={handleReorderKeyDown(index)}
             trailing={
               <button
                 type="button"

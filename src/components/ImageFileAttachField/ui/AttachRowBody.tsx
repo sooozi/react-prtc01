@@ -6,12 +6,14 @@ export function AttachRowBody({
   sizeLabel,
   handleAriaHidden,
   onHandlePointerDown, // 순서 변경: 드래그하여 놓기
+  onHandleKeyDown, // 순서 변경: 방향키(↑/↓)로 이동
   trailing,
 }: {
   fileName: string;
   sizeLabel: string;
   handleAriaHidden?: boolean;
   onHandlePointerDown?: (e: React.PointerEvent<HTMLSpanElement>) => void; // 순서 변경: 드래그하여 놓기
+  onHandleKeyDown?: (e: React.KeyboardEvent<HTMLSpanElement>) => void; // 순서 변경: 방향키(↑/↓)로 이동
   trailing: ReactNode; // 삭제 버튼
 }) {
   return (
@@ -24,8 +26,9 @@ export function AttachRowBody({
           ? {
               role: "button" as const,
               tabIndex: 0,
-              "aria-label": "순서 변경: 드래그하여 놓기",
+              "aria-label": "순서 변경: 방향키(↑/↓)로 이동, 또는 드래그하여 놓기",
               onPointerDown: onHandlePointerDown,
+              onKeyDown: onHandleKeyDown,
             }
           : {})}
       >

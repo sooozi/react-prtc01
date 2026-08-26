@@ -8,8 +8,12 @@ export {
   ImageFileAttachField,
   isAllowedAttachmentFile,
   isAttachmentFileNameWithinLimit,
+  isAttachmentFileSizeWithinLimit,
+  isAttachmentTotalSizeWithinLimit,
   itemsToFiles,
+  MAX_ATTACHMENT_FILE_SIZE_BYTES,
   MAX_ATTACHMENT_FILENAME_LENGTH,
+  MAX_ATTACHMENT_TOTAL_SIZE_BYTES,
 } from "@/components/ImageFileAttachField";
 export type {
   FileWithId,

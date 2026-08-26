@@ -13,10 +13,7 @@ import {
   buildTooLongNameMessages,
   splitFilesByMaxNameLength,
 } from "../lib/fileAddMessages";
-import {
-  filesToItemsWithIds,
-  partitionByAttachmentIdentity,
-} from "../lib/fileAttachItemUtils";
+import { filesToItemsWithIds, partitionByAttachmentIdentity } from "../lib/fileAttachItemUtils";
 import { partitionFileListByAttachmentAllowlist } from "../lib/filterImageFiles";
 import {
   getUnifiedRowDisplay,
@@ -39,7 +36,7 @@ export function ImageFileAttachFieldUnifiedEdit({
 }: ImageFileAttachFieldUnifiedProps) {
   const { message: fileAddNoticeMessage, showNotice } = useFileAddNotice();
 
-  const { rootRef, reorderGhost, getRowClassName, handleReorderPointerDown } =
+  const { rootRef, reorderGhost, getRowClassName, handleReorderPointerDown, handleReorderKeyDown } =
     useImageAttachReorder({
       items: rows,
       onReorder: onRowsChange,
@@ -86,7 +83,7 @@ export function ImageFileAttachFieldUnifiedEdit({
 
       showNotice(messageParts);
     },
-    [rows, onRowsChange, showNotice]
+    [rows, onRowsChange, showNotice],
   );
 
   const handleFileInputChange = useCallback(
@@ -97,7 +94,7 @@ export function ImageFileAttachFieldUnifiedEdit({
       const { allowed, rejected } = partitionFileListByAttachmentAllowlist(list);
       onFilesAdded(allowed, buildRejectedAllowlistMessages(rejected));
     },
-    [onFilesAdded]
+    [onFilesAdded],
   );
 
   const removeAt = useCallback(
@@ -109,11 +106,10 @@ export function ImageFileAttachFieldUnifiedEdit({
         fileInputRef.current.value = "";
       }
     },
-    [rows, onRowsChange, fileInputRef]
+    [rows, onRowsChange, fileInputRef],
   );
 
-  const totalSizeLabel =
-    totalSizeBytes > 0 ? `총 ${formatFileSize(totalSizeBytes)}` : "총 —";
+  const totalSizeLabel = totalSizeBytes > 0 ? `총 ${formatFileSize(totalSizeBytes)}` : "총 —";
 
   return (
     <ImageFileAttachFieldShell
@@ -150,6 +146,7 @@ export function ImageFileAttachFieldUnifiedEdit({
               fileName={fileName}
               sizeLabel={sizeLabel}
               onHandlePointerDown={handleReorderPointerDown(index)}
+              onHandleKeyDown={handleReorderKeyDown(index)}
               trailing={
                 <button
                   type="button"

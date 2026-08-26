@@ -9,9 +9,13 @@ import {
   ImageFileAttachField,
   isAllowedAttachmentFile,
   isAttachmentFileNameWithinLimit,
+  isAttachmentFileSizeWithinLimit,
+  isAttachmentTotalSizeWithinLimit,
   isQuillContentEmpty,
   LoadingState,
+  MAX_ATTACHMENT_FILE_SIZE_BYTES,
   MAX_ATTACHMENT_FILENAME_LENGTH,
+  MAX_ATTACHMENT_TOTAL_SIZE_BYTES,
   PageHeader,
   RichTextEditor,
   sanitizeQuillHtml,
@@ -20,6 +24,7 @@ import type { ImageFileUnifiedRow } from "@/components";
 import { formDescribedBy } from "@/lib/a11y/formDescribedBy";
 import { listReturnPathFromFromQuery, postDetailPath } from "@/lib/post/postDetailFromQuery";
 import { clearPostFormFieldError, type PostFormFieldErrors } from "@/lib/post/postFormFieldErrors";
+import { formatFileSize } from "@/utils/formatFileSize";
 import "@/pages/post/detail/Detail.scss";
 import "@/pages/post/update/Update.scss";
 
@@ -123,6 +128,26 @@ export default function Update() {
     ) {
       setFieldErrors({
         attach: `첨부 파일명(확장자 포함)은 ${MAX_ATTACHMENT_FILENAME_LENGTH}자 이하여야 합니다.`,
+      });
+      return;
+    }
+    // 첨부 파일 1개당 용량 제한 검사 (새로 추가한 파일만 — 기존 서버 첨부는 이미 통과한 파일)
+    if (
+      editAttachmentRows.some((r) => r.kind === "local" && !isAttachmentFileSizeWithinLimit(r.file))
+    ) {
+      setFieldErrors({
+        attach: `첨부 파일은 1개당 ${formatFileSize(MAX_ATTACHMENT_FILE_SIZE_BYTES)} 이하여야 합니다.`,
+      });
+      return;
+    }
+    // 첨부 파일 전체 합산 용량 제한 검사 (기존 서버 첨부 + 새로 추가한 파일 모두 포함)
+    if (
+      !isAttachmentTotalSizeWithinLimit(
+        editAttachmentRows.map((r) => (r.kind === "server" ? (r.sizeBytes ?? 0) : r.file.size)),
+      )
+    ) {
+      setFieldErrors({
+        attach: `첨부 파일 전체 용량은 ${formatFileSize(MAX_ATTACHMENT_TOTAL_SIZE_BYTES)} 이하여야 합니다.`,
       });
       return;
     }

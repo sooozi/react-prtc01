@@ -8,6 +8,22 @@ export function isAttachmentFileNameWithinLimit(fileName: string): boolean {
   return fileName.length <= MAX_ATTACHMENT_FILENAME_LENGTH;
 }
 
+// 첨부 파일 1개당 최대 용량 (10MB)
+export const MAX_ATTACHMENT_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+
+// 첨부 파일 전체 합산 최대 용량 (30MB)
+export const MAX_ATTACHMENT_TOTAL_SIZE_BYTES = 30 * 1024 * 1024;
+
+// 파일 1개가 개별 용량 제한 이내인지 판별
+export function isAttachmentFileSizeWithinLimit(file: File): boolean {
+  return file.size <= MAX_ATTACHMENT_FILE_SIZE_BYTES;
+}
+
+// 여러 파일 용량(바이트) 합이 전체 용량 제한 이내인지 판별
+export function isAttachmentTotalSizeWithinLimit(sizesBytes: number[]): boolean {
+  return sizesBytes.reduce((sum, n) => sum + n, 0) <= MAX_ATTACHMENT_TOTAL_SIZE_BYTES;
+}
+
 /**
  * 마지막 `.` 기준 이름 + 확장자(소문자)로 동일 첨부 여부 판별
  * - `a.png` / `a.jpg` 는 서로 다름(베이스+확 조합이 다름)
@@ -26,10 +42,10 @@ export function getAttachmentIdentityKey(fileName: string): string {
 
 // 이미 `items`·`previous`·같은 배치 안에 동일(이름+확장자)가 있으면 `skip`, 나머지 `add`
 export function partitionByAttachmentIdentity(
-  newFiles: File[], 
+  newFiles: File[],
   currentItems: FileWithId[],
-  previous: ImageFilePreviousEntry[] | undefined
-): { add: File[]; skip: File[] } { 
+  previous: ImageFilePreviousEntry[] | undefined,
+): { add: File[]; skip: File[] } {
   const used = new Set<string>();
   for (const it of currentItems) {
     used.add(getAttachmentIdentityKey(it.file.name)); // 현재 첨부 파일 이름 추가

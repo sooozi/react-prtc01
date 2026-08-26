@@ -9,8 +9,12 @@ export {
   filesToItemsWithIds,
   getAttachmentIdentityKey,
   isAttachmentFileNameWithinLimit,
+  isAttachmentFileSizeWithinLimit,
+  isAttachmentTotalSizeWithinLimit,
   itemsToFiles,
+  MAX_ATTACHMENT_FILE_SIZE_BYTES,
   MAX_ATTACHMENT_FILENAME_LENGTH,
+  MAX_ATTACHMENT_TOTAL_SIZE_BYTES,
   partitionByAttachmentIdentity,
 } from "./lib/fileAttachItemUtils";
 export { filterImageFiles, partitionFileListByAttachmentAllowlist } from "./lib/filterImageFiles";

@@ -16,13 +16,19 @@ function isAuthPagePath(path: string): boolean {
   );
 }
 
+// 같은 401을 axios 인터셉터·reportApiErrorToUser 양쪽에서 각자 처리하면서
+// 중복 호출되는 경우가 있어, 페이지 이동이 시작되면 이후 호출은 무시
+let redirecting = false;
+
 /**
  * 401 등 — 로그인으로 보내고 토스트는 sessionStorage에 넣음 (axios 인터셉터·getAuthTokenOrThrow catch 공통)
  */
 export function redirectUnauthorizedToLogin(toast: string): void {
   if (typeof window === "undefined") return;
+  if (redirecting) return;
   const path = window.location.pathname;
   if (isAuthPagePath(path)) return;
+  redirecting = true;
 
   localStorage.removeItem("token");
   localStorage.removeItem("userName");
@@ -36,7 +42,7 @@ export function redirectUnauthorizedToLogin(toast: string): void {
       pathname: path || "/",
       search: window.location.search,
       hash: window.location.hash,
-    } satisfies LoginRedirectFromPayload)
+    } satisfies LoginRedirectFromPayload),
   );
   window.location.replace("/auth/login");
 }

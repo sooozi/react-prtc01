@@ -163,41 +163,55 @@ export function useImageAttachReorder<T>({
     document.addEventListener("pointercancel", onUp, true);
   };
 
-  const handleReorderPointerDown =
-    (index: number) => (e: React.PointerEvent<HTMLSpanElement>) => {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
-      if (items.length < 2) return;
+  const handleReorderPointerDown = (index: number) => (e: React.PointerEvent<HTMLSpanElement>) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (items.length < 2) return;
 
-      e.preventDefault();
-      e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
 
-      const row = (e.currentTarget as HTMLElement).closest(
-        "[data-reorder-index]"
-      ) as HTMLElement | null;
-      if (!row) return;
+    const row = (e.currentTarget as HTMLElement).closest(
+      "[data-reorder-index]",
+    ) as HTMLElement | null;
+    if (!row) return;
 
-      const item = items[index];
-      if (item == null) return;
+    const item = items[index];
+    if (item == null) return;
 
-      const rect = row.getBoundingClientRect();
-      const { fileName, sizeLabel } = getRowDisplay(item, index);
-      const offsetX = e.clientX - rect.left;
-      const offsetY = e.clientY - rect.top;
+    const rect = row.getBoundingClientRect();
+    const { fileName, sizeLabel } = getRowDisplay(item, index);
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
 
-      const initial: ReorderGhostState = {
-        left: e.clientX - offsetX,
-        top: e.clientY - offsetY,
-        width: rect.width,
-        offsetX,
-        offsetY,
-        fileName,
-        sizeLabel,
-      };
-
-      reorderGhostRef.current = initial;
-      setReorderGhost(initial);
-      bindPointerReorderSession(index, e.pointerId);
+    const initial: ReorderGhostState = {
+      left: e.clientX - offsetX,
+      top: e.clientY - offsetY,
+      width: rect.width,
+      offsetX,
+      offsetY,
+      fileName,
+      sizeLabel,
     };
+
+    reorderGhostRef.current = initial;
+    setReorderGhost(initial);
+    bindPointerReorderSession(index, e.pointerId);
+  };
+
+  // 키보드로 순서 변경: ↑/↓로 한 칸씩 이동 (포커스는 같은 핸들에 유지됨)
+  const handleReorderKeyDown = (index: number) => (e: React.KeyboardEvent<HTMLSpanElement>) => {
+    if (items.length < 2) return;
+
+    let to: number;
+    if (e.key === "ArrowUp") to = index - 1;
+    else if (e.key === "ArrowDown") to = index + 1;
+    else return;
+
+    e.preventDefault();
+    if (to < 0 || to >= items.length) return;
+
+    onReorderRef.current(arrayMove([...itemsRef.current], index, to));
+  };
 
   const getRowClassName = (index: number) =>
     [
@@ -216,5 +230,6 @@ export function useImageAttachReorder<T>({
     reorderGhost,
     getRowClassName,
     handleReorderPointerDown,
+    handleReorderKeyDown,
   };
 }
