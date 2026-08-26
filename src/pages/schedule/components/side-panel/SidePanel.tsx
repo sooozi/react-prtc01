@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button, Confirm } from "@/components";
+import { todayISOLocal } from "@/lib/schedule/calendarUtils";
 import {
   addScheduleItem,
   deleteScheduleItem,
@@ -32,7 +33,7 @@ export default function SidePanel({
   onUpdated,
   onClose,
 }: SidePanelProps) {
-  const todayISO = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const todayISO = useMemo(() => todayISOLocal(), []);
   const [category, setCategory] = useState<ScheduleCategory>(editingItem?.category ?? "work");
   const [date, setDate] = useState<string>(editingItem?.date ?? selectedDate ?? todayISO);
   const [note, setNote] = useState<string>(editingItem?.note ?? "");

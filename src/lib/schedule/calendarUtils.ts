@@ -1,4 +1,4 @@
-// 한 칸: 실제 날짜 + “지금 보고 있는 달”에 속하는지 
+// 한 칸: 실제 날짜 + “지금 보고 있는 달”에 속하는지
 export type CalendarCell = {
   date: Date;
   inCurrentMonth: boolean;
@@ -15,15 +15,12 @@ export type CalendarWeekStart = "monday" | "sunday";
 export function getCalendarCells(
   year: number,
   monthIndex: number,
-  weekStart: CalendarWeekStart = "monday"
+  weekStart: CalendarWeekStart = "monday",
 ): CalendarCell[] {
   const first = new Date(year, monthIndex, 1);
   const dow = first.getDay(); // 일=0 … 토=6
   /** 1일 이전으로 몇 칸 돌아가야 “이번 줄의 첫 요일”에 맞는지 */
-  const pad =
-    weekStart === "monday"
-      ? (dow + 6) % 7 /* 월=0 … 일=6 */
-      : dow; /* 일=0 시작 */
+  const pad = weekStart === "monday" ? (dow + 6) % 7 /* 월=0 … 일=6 */ : dow; /* 일=0 시작 */
   const cells: CalendarCell[] = [];
   for (let i = 0; i < 42; i++) {
     const d = new Date(year, monthIndex, 1 - pad + i);
@@ -52,4 +49,20 @@ export function isSameCalendarDay(a: Date, b: Date): boolean {
     a.getMonth() === b.getMonth() &&
     a.getDate() === b.getDate()
   );
+}
+
+// 숫자를 두 자리 문자열로 변환하는 함수
+function pad2(n: number): string {
+  return n < 10 ? `0${n}` : String(n);
+}
+
+// 날짜를 로컬 타임존 기준 ISO 형식("YYYY-MM-DD")으로 변환
+// Date.toISOString()은 UTC 기준이라 자정 근처에 다른 날짜로 보일 수 있어 쓰지 않음
+export function toISODateLocal(d: Date): string {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+// 오늘 날짜를 로컬 타임존 기준 ISO 형식으로 반환
+export function todayISOLocal(): string {
+  return toISODateLocal(new Date());
 }

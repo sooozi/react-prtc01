@@ -5,6 +5,7 @@ import {
   getCalendarCells,
   isSameCalendarDay,
   startOfMonth,
+  toISODateLocal,
   type CalendarWeekStart,
 } from "@/lib/schedule/calendarUtils";
 import {
@@ -41,16 +42,6 @@ type Props = {
 };
 
 type ScheduleDraftItem = ScheduleItem;
-
-// 숫자를 두 자리 문자열로 변환하는 함수
-function pad2(n: number): string {
-  return n < 10 ? `0${n}` : String(n);
-}
-
-// 날짜를 ISO 형식으로 변환하는 함수
-function toISODateLocal(d: Date): string {
-  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
-}
 
 // 로컬스토리지에서 일정 데이터를 읽어오는 함수
 function safeReadScheduleItems(): ScheduleDraftItem[] {
