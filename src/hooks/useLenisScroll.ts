@@ -1,5 +1,6 @@
 import Lenis from "lenis";
 import { useEffect } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export type LenisScrollOptions = {
   /** false면 인스턴스를 생성하지 않음 */
@@ -27,11 +28,11 @@ export function useLenisScroll(options: LenisScrollOptions = {}): void {
     autoRaf = DEFAULT_LENIS_OPTIONS.autoRaf,
   } = options;
 
-  useEffect(() => {
-    if (!enabled) return;
+  // 라이브 구독: OS 설정을 세션 중에 바꿔도(예: 접근성 설정 토글) 즉시 반영됨
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
+  useEffect(() => {
+    if (!enabled || reducedMotion) return;
 
     const lenis = new Lenis({
       smoothWheel,
@@ -55,5 +56,5 @@ export function useLenisScroll(options: LenisScrollOptions = {}): void {
       }
       lenis.destroy();
     };
-  }, [enabled, smoothWheel, lerp, autoRaf]);
+  }, [enabled, reducedMotion, smoothWheel, lerp, autoRaf]);
 }

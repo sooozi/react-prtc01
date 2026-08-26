@@ -9,6 +9,17 @@ function syncBodyOverflow() {
   document.body.style.overflow = scrollLockCount > 0 ? "hidden" : "";
 }
 
+// Vite HMR로 이 모듈이 교체되면 scrollLockCount는 0으로 리셋되지만, 이전 모듈이
+// 이미 "hidden"으로 설정해 둔 document.body.style.overflow는 그대로 남아 스크롤이
+// 계속 잠긴 것처럼 보일 수 있다. 교체 직전에 강제로 풀어준다 (개발 환경 전용).
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    if (typeof document !== "undefined") {
+      document.body.style.overflow = "";
+    }
+  });
+}
+
 /** 여러 레이어가 겹쳐도 마지막이 닫힐 때만 본문 스크롤이 풀리도록 카운트한다. */
 export function useBodyScrollLock(locked: boolean): void {
   useEffect(() => {
