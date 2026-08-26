@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary";
 import Header from "@/components/Layout/Header/Header";
@@ -26,6 +26,8 @@ function MainOutlet() {
  */
 export default function Layout() {
   const { pathname } = useLocation();
+  const mainRef = useRef<HTMLElement>(null);
+  const skipFocusRef = useRef(true);
 
   useLenisScroll({ enabled: isLenisRoute(pathname) });
 
@@ -33,6 +35,16 @@ export default function Layout() {
     if (!import.meta.env.DEV) return;
     void import("@/bootstrapAxe").then(({ bootstrapAxe }) => bootstrapAxe());
   }, []);
+
+  // 라우트 변경 시 본문(main)으로 포커스 이동 — 스크린 리더·키보드 사용자가 새 페이지의
+  // 시작점을 바로 인지할 수 있도록 함. 최초 마운트(첫 페이지 로드)에는 옮기지 않음.
+  useEffect(() => {
+    if (skipFocusRef.current) {
+      skipFocusRef.current = false;
+      return;
+    }
+    mainRef.current?.focus();
+  }, [pathname]);
 
   return (
     <div className="layout-container">
@@ -46,7 +58,7 @@ export default function Layout() {
 
       <ApiErrorBar />
 
-      <main id="main-content" className="layout-main" tabIndex={-1}>
+      <main id="main-content" className="layout-main" tabIndex={-1} ref={mainRef}>
         <MainOutlet />
       </main>
 
