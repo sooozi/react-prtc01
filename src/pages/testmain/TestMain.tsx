@@ -113,14 +113,20 @@ function DigitRoller({
   delay?: number;
   cycles?: number;
 }) {
-  const ref = useRef<HTMLSpanElement>(null);
+  const boxRef = useRef<HTMLSpanElement>(null);
+  const stripRef = useRef<HTMLSpanElement>(null);
   const settleOffset = getDigitSettleOffset(digit, cycles);
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el || reducedMotion) return;
+    const box = boxRef.current;
+    if (!box || reducedMotion) return;
+
+    // rAF 틱마다 React state를 거치지 않고 strip의 transform을 직접 써서 리렌더를 피함
+    const setTransform = (value: number) => {
+      const stripEl = stripRef.current;
+      if (stripEl) stripEl.style.transform = `translate3d(0, calc(-1 * ${value} * 1lh), 0)`;
+    };
 
     let rafId = 0;
     let timeoutId = 0;
@@ -138,12 +144,12 @@ function DigitRoller({
           const tick = (now: number) => {
             if (cancelled) return;
             const progress = Math.min((now - start) / durationMs, 1);
-            setOffset(easeOutCubic(progress) * settleOffset);
+            setTransform(easeOutCubic(progress) * settleOffset);
 
             if (progress < 1) {
               rafId = requestAnimationFrame(tick);
             } else {
-              setOffset(settleOffset);
+              setTransform(settleOffset);
             }
           };
 
@@ -159,7 +165,7 @@ function DigitRoller({
       { threshold: 0.35, rootMargin: "0px 0px -8% 0px" },
     );
 
-    io.observe(el);
+    io.observe(box);
     return () => {
       cancelled = true;
       io.disconnect();
@@ -169,13 +175,14 @@ function DigitRoller({
   }, [delay, durationMs, settleOffset, reducedMotion]);
 
   const strip = buildDigitStrip(cycles);
-  const renderedOffset = reducedMotion ? settleOffset : offset;
+  const initialOffset = reducedMotion ? settleOffset : 0;
 
   return (
-    <span className="testmain-stat__digit" ref={ref}>
+    <span className="testmain-stat__digit" ref={boxRef}>
       <span
+        ref={stripRef}
         className="testmain-stat__digit-strip"
-        style={{ transform: `translate3d(0, calc(-1 * ${renderedOffset} * 1lh), 0)` }}
+        style={{ transform: `translate3d(0, calc(-1 * ${initialOffset} * 1lh), 0)` }}
       >
         {strip.map((value, index) => (
           <span key={index} className="testmain-stat__digit-cell">
