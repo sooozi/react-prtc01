@@ -8,7 +8,6 @@ export const ALLOWED_ATTACHMENT_EXTENSIONS = [
   "avif",
   "bmp",
   "ico",
-  "svg",
 ] as const;
 
 // 허용 확장자 타입 (다른 코드에서 확장자를 다룰 때 타입으로 오타/누락을 막고 자동완성을 받기 위해 사용)
@@ -18,9 +17,9 @@ export type AllowedAttachmentExtension = (typeof ALLOWED_ATTACHMENT_EXTENSIONS)[
 const ALLOWED_EXTENSION_SET = new Set<string>(ALLOWED_ATTACHMENT_EXTENSIONS);
 
 // 파일 선택창: image/* 대신 jpg, png처럼 허용 확장자만 accept에 넣음
-export const ATTACHMENT_FILE_INPUT_ACCEPT = ALLOWED_ATTACHMENT_EXTENSIONS.map((ext) => `.${ext}`).join(
-  ",",
-);
+export const ATTACHMENT_FILE_INPUT_ACCEPT = ALLOWED_ATTACHMENT_EXTENSIONS.map(
+  (ext) => `.${ext}`,
+).join(",");
 
 // 허용 확장자에 해당하는 MIME 타입
 const ALLOWED_MIME_SET = new Set<string>([
@@ -30,7 +29,6 @@ const ALLOWED_MIME_SET = new Set<string>([
   "image/webp",
   "image/avif",
   "image/bmp",
-  "image/svg+xml",
   "image/x-icon",
   "image/vnd.microsoft.icon",
 ]);
@@ -96,7 +94,8 @@ function hasDangerousExtensionSegment(fileName: string): boolean {
   const lower = fileName.trim().toLowerCase(); // 파일명 소문자로 변환
   const parts = lower.split("."); // 파일명을 . 기준으로 분리
   if (parts.length < 2) return false; // 파일명에 .이 없거나 하나 => 실행·설치 파일 확장자 검사 필요 없음
-  for (let i = 1; i < parts.length; i++) { // 파일명 중간에 있는 확장자 검사
+  for (let i = 1; i < parts.length; i++) {
+    // 파일명 중간에 있는 확장자 검사
     if (DANGEROUS_EXTENSIONS_IN_NAME.has(parts[i]!)) return true;
   }
   return false;
