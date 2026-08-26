@@ -18,25 +18,19 @@
   border: 1px solid transparent;
   cursor: pointer;
   @include v.transition-channels(
-    (
-      color,
-      background,
-      border-color,
-      box-shadow,
-      transform,
-      opacity,
-    ),
+    (color, background, border-color, box-shadow, transform, opacity),
     normal,
     default
   );
   white-space: nowrap;
 
-  &:disabled {
+  &:disabled,
+  &[aria-disabled="true"] {
     cursor: not-allowed;
     opacity: 0.7;
   }
 
-  &:active:not(:disabled) {
+  &:active:not(:disabled):not([aria-disabled="true"]) {
     transform: scale(0.98);
   }
 
@@ -74,7 +68,7 @@
   background: var(--color-primary);
   @include sh.primary-rest;
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled):not([aria-disabled="true"]) {
     color: var(--color-text-on-primary);
     background: var(--color-primary-hover);
     @include sh.primary-hover;
@@ -91,7 +85,7 @@
   background: var(--color-card);
   border: 1px solid var(--color-border);
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled):not([aria-disabled="true"]) {
     border-color: var(--color-primary);
     color: var(--color-primary);
   }
@@ -102,7 +96,7 @@
   background: var(--color-error);
   @include sh.danger-rest;
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled):not([aria-disabled="true"]) {
     color: var(--color-text-on-primary);
     background: var(--color-error-dark);
     @include sh.danger-hover;
@@ -118,7 +112,7 @@
   background: var(--color-surface-inverse);
   @include sh.surface-inverse-rest;
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled):not([aria-disabled="true"]) {
     color: var(--color-primary-hover);
     @include sh.surface-inverse-hover;
   }
@@ -129,7 +123,7 @@
   background: transparent;
   border: 2px solid color-mix(in srgb, var(--color-surface-inverse) 50%, transparent);
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled):not([aria-disabled="true"]) {
     border-color: var(--color-surface-inverse);
     background: color-mix(in srgb, var(--color-surface-inverse) 10%, transparent);
     color: var(--color-text-on-primary);
@@ -141,7 +135,7 @@
   background: var(--color-card);
   border: 2px solid var(--color-primary);
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled):not([aria-disabled="true"]) {
     background: var(--color-primary);
     color: var(--color-text-on-primary);
   }
@@ -171,7 +165,7 @@
   border: 1px solid transparent;
   @include sh.none;
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled):not([aria-disabled="true"]) {
     background: transparent;
     color: inherit;
   }

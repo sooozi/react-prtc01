@@ -14,17 +14,12 @@ import {
   MAX_ATTACHMENT_FILENAME_LENGTH,
   PageHeader,
   RichTextEditor,
+  sanitizeQuillHtml,
 } from "@/components";
 import type { ImageFileUnifiedRow } from "@/components";
 import { formDescribedBy } from "@/lib/a11y/formDescribedBy";
-import {
-  listReturnPathFromFromQuery,
-  postDetailPath,
-} from "@/lib/post/postDetailFromQuery";
-import {
-  clearPostFormFieldError,
-  type PostFormFieldErrors,
-} from "@/lib/post/postFormFieldErrors";
+import { listReturnPathFromFromQuery, postDetailPath } from "@/lib/post/postDetailFromQuery";
+import { clearPostFormFieldError, type PostFormFieldErrors } from "@/lib/post/postFormFieldErrors";
 import "@/pages/post/detail/Detail.scss";
 import "@/pages/post/update/Update.scss";
 
@@ -71,7 +66,8 @@ export default function Update() {
           getPostFiles(postNumber).catch(() => [] as PostAttachmentItem[]), // 기존 첨부 목록
         ]);
         if (cancelled) return;
-        if (data == null) { // 게시글 상세 조회 실패
+        if (data == null) {
+          // 게시글 상세 조회 실패
           setPost(null);
           setTitle("");
           setContent("");
@@ -89,7 +85,7 @@ export default function Update() {
               fileId: f.fileId,
               name: f.fileName,
               ...(f.fileSize != null ? { sizeBytes: f.fileSize } : {}),
-            }))
+            })),
           );
         }
       } finally {
@@ -116,15 +112,13 @@ export default function Update() {
       return;
     }
     // 첨부 파일 허용 여부 검사
-    if (
-      editAttachmentRows.some((r) => r.kind === "local" && !isAllowedAttachmentFile(r.file))
-    ) {
+    if (editAttachmentRows.some((r) => r.kind === "local" && !isAllowedAttachmentFile(r.file))) {
       setFieldErrors({ attach: ATTACHMENT_ALLOWLIST_FORM_ERROR });
       return;
     }
     if (
       editAttachmentRows.some(
-        (r) => r.kind === "local" && !isAttachmentFileNameWithinLimit(r.file.name)
+        (r) => r.kind === "local" && !isAttachmentFileNameWithinLimit(r.file.name),
       )
     ) {
       setFieldErrors({
@@ -154,9 +148,10 @@ export default function Update() {
             ? [] // 기존 첨부 목록이 있으면 빈 배열
             : undefined;
 
-      const ok = await updatePost(postNumber, { // 게시글 수정 요청 
+      const ok = await updatePost(postNumber, {
+        // 게시글 수정 요청
         title: title.trim(),
-        content,
+        content: sanitizeQuillHtml(content),
         addAttachFiles: newFiles.length > 0 ? newFiles : undefined, // 새로 추가한 첨부 파일 파일 목록
         deleteFileIdList: deleteFileIdList.length > 0 ? deleteFileIdList : undefined, // 삭제할 파일 ID 목록
         attachFileOrderList, // 첨부 파일 순서 목록
@@ -253,7 +248,11 @@ export default function Update() {
                 )}
               />
               {fieldErrors.title ? (
-                <p id={FIELD_IDS.titleError} className="post-form-field-error error-message" role="alert">
+                <p
+                  id={FIELD_IDS.titleError}
+                  className="post-form-field-error error-message"
+                  role="alert"
+                >
                   {fieldErrors.title}
                 </p>
               ) : null}
@@ -265,9 +264,7 @@ export default function Update() {
               <RichTextEditor
                 id="update-content"
                 labelledBy="update-content-label"
-                describedBy={formDescribedBy(
-                  fieldErrors.content && FIELD_IDS.contentError,
-                )}
+                describedBy={formDescribedBy(fieldErrors.content && FIELD_IDS.contentError)}
                 invalid={!!fieldErrors.content}
                 value={content}
                 onChange={(value) => {
@@ -277,7 +274,11 @@ export default function Update() {
                 placeholder="내용"
               />
               {fieldErrors.content ? (
-                <p id={FIELD_IDS.contentError} className="post-form-field-error error-message" role="alert">
+                <p
+                  id={FIELD_IDS.contentError}
+                  className="post-form-field-error error-message"
+                  role="alert"
+                >
                   {fieldErrors.content}
                 </p>
               ) : null}
@@ -287,9 +288,7 @@ export default function Update() {
               className="post-form-group post-form-group--stacked"
               role="group"
               aria-labelledby="post-update-attach-heading"
-              aria-describedby={formDescribedBy(
-                fieldErrors.attach && FIELD_IDS.attachError,
-              )}
+              aria-describedby={formDescribedBy(fieldErrors.attach && FIELD_IDS.attachError)}
             >
               <h2 className="post-form-label" id="post-update-attach-heading">
                 첨부파일
@@ -304,7 +303,11 @@ export default function Update() {
                 }}
               />
               {fieldErrors.attach ? (
-                <p id={FIELD_IDS.attachError} className="post-form-field-error error-message" role="alert">
+                <p
+                  id={FIELD_IDS.attachError}
+                  className="post-form-field-error error-message"
+                  role="alert"
+                >
                   {fieldErrors.attach}
                 </p>
               ) : null}

@@ -12,13 +12,11 @@ import {
   MAX_ATTACHMENT_FILENAME_LENGTH,
   PageHeader,
   RichTextEditor,
+  sanitizeQuillHtml,
 } from "@/components";
 import type { FileWithId } from "@/components";
 import { formDescribedBy } from "@/lib/a11y/formDescribedBy";
-import {
-  clearPostFormFieldError,
-  type PostFormFieldErrors,
-} from "@/lib/post/postFormFieldErrors";
+import { clearPostFormFieldError, type PostFormFieldErrors } from "@/lib/post/postFormFieldErrors";
 import "@/pages/post/write/Write.scss";
 
 const FIELD_IDS = {
@@ -66,12 +64,10 @@ export default function Write() {
       const files = itemsToFiles(attachFileItems);
       const res = await createPost({
         title: title.trim(),
-        content,
+        content: sanitizeQuillHtml(content),
         attachFiles: files.length > 0 ? files : undefined,
         attachFileOrderList:
-          files.length > 0
-            ? attachFileItems.map((item) => item.file.name)
-            : undefined,
+          files.length > 0 ? attachFileItems.map((item) => item.file.name) : undefined,
       });
       if (res) {
         navigate("/post/list", { replace: true });
@@ -90,7 +86,11 @@ export default function Write() {
         variant="centered"
       />
 
-      <form className="board-write-form" onSubmit={handleSubmit} aria-labelledby="post-write-form-heading">
+      <form
+        className="board-write-form"
+        onSubmit={handleSubmit}
+        aria-labelledby="post-write-form-heading"
+      >
         <h2 id="post-write-form-heading" className="visually-hidden">
           게시글 입력
         </h2>
@@ -122,7 +122,11 @@ export default function Write() {
             )}
           />
           {fieldErrors.title ? (
-            <p id={FIELD_IDS.titleError} className="post-form-field-error error-message" role="alert">
+            <p
+              id={FIELD_IDS.titleError}
+              className="post-form-field-error error-message"
+              role="alert"
+            >
               {fieldErrors.title}
             </p>
           ) : null}
@@ -135,9 +139,7 @@ export default function Write() {
           <RichTextEditor
             id="post-content"
             labelledBy="post-content-label"
-            describedBy={formDescribedBy(
-              fieldErrors.content && FIELD_IDS.contentError,
-            )}
+            describedBy={formDescribedBy(fieldErrors.content && FIELD_IDS.contentError)}
             invalid={!!fieldErrors.content}
             value={content}
             onChange={(value) => {
@@ -147,7 +149,11 @@ export default function Write() {
             placeholder="내용을 입력하세요"
           />
           {fieldErrors.content ? (
-            <p id={FIELD_IDS.contentError} className="post-form-field-error error-message" role="alert">
+            <p
+              id={FIELD_IDS.contentError}
+              className="post-form-field-error error-message"
+              role="alert"
+            >
               {fieldErrors.content}
             </p>
           ) : null}
@@ -157,9 +163,7 @@ export default function Write() {
           className="post-form-group post-form-group--stacked"
           role="group"
           aria-labelledby="post-attach-heading"
-          aria-describedby={formDescribedBy(
-            fieldErrors.attach && FIELD_IDS.attachError,
-          )}
+          aria-describedby={formDescribedBy(fieldErrors.attach && FIELD_IDS.attachError)}
         >
           <h2 className="post-form-label" id="post-attach-heading">
             첨부파일
@@ -174,7 +178,11 @@ export default function Write() {
             fileInputRef={fileInputRef}
           />
           {fieldErrors.attach ? (
-            <p id={FIELD_IDS.attachError} className="post-form-field-error error-message" role="alert">
+            <p
+              id={FIELD_IDS.attachError}
+              className="post-form-field-error error-message"
+              role="alert"
+            >
               {fieldErrors.attach}
             </p>
           ) : null}

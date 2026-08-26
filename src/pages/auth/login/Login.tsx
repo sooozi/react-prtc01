@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate, type Location } from "react-router-dom";
+import { Link, useLocation, useNavigate, type Location } from "react-router-dom";
 import { loginSchema, type LoginFormValues } from "@/schemas/auth";
 import { consumeLoginRedirectSession } from "@/api/auth/loginRedirectSession";
 import { ApiError } from "@/api/http";
@@ -229,9 +229,9 @@ export default function Login() {
 
         <div className="login-footer">
           <span>계정이 없으신가요?</span>
-          <a href="/auth/signup" className="signup-link">
+          <Link to="/auth/signup" className="signup-link">
             회원가입
-          </a>
+          </Link>
         </div>
       </div>
     </div>

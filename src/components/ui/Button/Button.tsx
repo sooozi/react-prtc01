@@ -49,27 +49,45 @@ function getClassNames(variant: ButtonVariant, size: ButtonSize, className?: str
 
 const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(function Button(
   { variant = "primary", size = "md", className, children, disabled, ...rest },
-  ref
+  ref,
 ) {
   const classNames = getClassNames(variant, size, className);
 
   if ("to" in rest && rest.to !== undefined) {
-    const { to, ...linkRest } = rest;
+    const { to, onClick, ...linkRest } = rest;
     return (
-      <Link to={to} className={classNames} ref={ref as React.Ref<HTMLAnchorElement>} {...linkRest}>
+      <Link
+        to={to}
+        className={classNames}
+        ref={ref as React.Ref<HTMLAnchorElement>}
+        aria-disabled={disabled}
+        tabIndex={disabled ? -1 : undefined}
+        onClick={
+          disabled
+            ? (e) => e.preventDefault()
+            : (onClick as React.MouseEventHandler<HTMLAnchorElement> | undefined)
+        }
+        {...linkRest}
+      >
         {children}
       </Link>
     );
   }
 
   if ("href" in rest && rest.href !== undefined) {
-    const { href, ...anchorRest } = rest;
+    const { href, onClick, ...anchorRest } = rest;
     return (
       <a
         href={href}
         className={classNames}
         ref={ref as React.Ref<HTMLAnchorElement>}
         aria-disabled={disabled}
+        tabIndex={disabled ? -1 : undefined}
+        onClick={
+          disabled
+            ? (e) => e.preventDefault()
+            : (onClick as React.MouseEventHandler<HTMLAnchorElement> | undefined)
+        }
         {...anchorRest}
       >
         {children}

@@ -11,9 +11,9 @@ import "@/styles/lenis.scss";
 
 /** main 안 페이지 영역 — 경로 변경 시 Error Boundary 상태 초기화 */
 function MainOutlet() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   return (
-    <ErrorBoundary resetKey={pathname}>
+    <ErrorBoundary resetKey={pathname + search}>
       <Outlet />
     </ErrorBoundary>
   );

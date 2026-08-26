@@ -20,6 +20,7 @@ export {
   isQuillContentEmpty,
   PostHtmlContent,
   RichTextEditor,
+  sanitizeQuillHtml,
 } from "@/components/RichTextEditor";
 export type { RichTextEditorProps } from "@/components/RichTextEditor";
 export { default as Badge } from "@/components/ui/Badge/Badge";
