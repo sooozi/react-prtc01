@@ -3,7 +3,12 @@
 @use "@/styles/shadows" as sh;
 @use "@/styles/variables" as v;
 
-$font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, sans-serif;
+$font-family:
+  "Pretendard",
+  "Noto Sans KR",
+  -apple-system,
+  BlinkMacSystemFont,
+  sans-serif;
 $primary-color: var(--color-primary);
 $primary-dark: var(--color-primary-hover);
 $text-primary: var(--color-text);
@@ -32,13 +37,6 @@ $error-dark: var(--color-error-dark);
   @include bp.below(bp.$md) {
     padding: v.space(lg);
   }
-}
-
-/// layout-main — 좌우만 풀블리드(배경·스티키 바), 세로 패딩은 padded-page-z 유지
-@mixin layout-main-bleed-inline {
-  max-width: none;
-  margin-inline: 0;
-  padding-inline: 0;
 }
 
 %page-width-shell {

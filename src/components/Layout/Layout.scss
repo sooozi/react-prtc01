@@ -20,7 +20,7 @@
 
   &:focus {
     transform: translateY(0);
-    outline: 1px solid var(--color-focus-ring, var(--color-primary-hover));
+    outline: 1px solid var(--color-primary-hover);
     outline-offset: 2px;
   }
 }

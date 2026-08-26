@@ -7,14 +7,6 @@
   display: contents;
 }
 
-.testmain-br-desktop {
-  display: none;
-
-  @include bp.above(bp.$md) {
-    display: inline;
-  }
-}
-
 .visually-hidden {
   @extend %visually-hidden;
 }

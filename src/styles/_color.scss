@@ -1,7 +1,13 @@
 @use "variables" as v;
 
 :root {
-  font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-family:
+    "Pretendard",
+    "Noto Sans KR",
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    sans-serif;
   line-height: 1.5;
   font-weight: v.fw(regular);
   font-synthesis: none;
@@ -23,23 +29,19 @@
   /* WCAG AA 본문 4.5:1+ on #fff (기존 #94a3b8 ≈ 2.56:1) — 힌트·보조 문구용 */
   --color-text-muted: #64748b;
 
-  
   --color-bg: #ffffff;
-  
+
   --color-bg-body: var(--color-bg);
   --color-bg-subtle: #f8fafc;
   --color-bg-subtle-2: #f1f5f9;
 
-  
   --color-card: var(--color-bg);
   --color-card-border: var(--color-border-light);
   --color-surface-elevated: #f9fafb;
 
-  
   --color-border: #e2e8f0;
   --color-border-light: rgba(226, 232, 240, 0.8);
 
-  
   /* WCAG AA 링크·본문색 4.5:1+ on #fff (기존 #6366f1 ≈ 4.47:1) */
   --color-primary: #5254d9;
   --color-primary-hover: #6366f1;
@@ -49,20 +51,17 @@
   --color-primary-shadow: rgba(99, 102, 241, 0.3);
   --color-secondary-muted: rgba(91, 33, 182, 0.08);
 
-  
   --color-button-bg: var(--color-bg-subtle);
   --color-button-text: var(--color-text);
   --color-button-border-hover: var(--color-primary);
   --color-button-bg-hover: #eef2ff;
 
-  
   --color-input-bg: #f2f4f6;
   --color-input-border: #e5e8eb;
   --color-input-focus-bg: var(--color-bg);
   /* placeholder on --color-input-bg (#f2f4f6) ≈ 5.5:1 */
   --color-input-placeholder: #576474;
 
-  
   --color-success-100: #66dd83;
   --color-success-500: #00c781;
   --color-success-600: #00b374;
@@ -73,7 +72,6 @@
 
   --color-warning-100: #ffd688;
   --color-warning-500: #ffb838;
-  --color-warning-300: #e6a832;
   --color-warning: var(--color-warning-500);
 
   --color-danger-100: #ff8c8c;
@@ -85,25 +83,20 @@
   --color-error-border: color-mix(in srgb, var(--color-danger-500) 35%, transparent);
   --color-info: #6366f1;
 
-  
   --color-header-bg: rgba(255, 255, 255, 0.85);
   --color-header-border: rgba(0, 0, 0, 0.06);
 
-  
   --color-table-header-bg: var(--color-bg-subtle);
   --color-table-row-hover: var(--color-bg-subtle);
   --color-table-cell-border: var(--color-bg-subtle-2);
 
-  
   --color-shadow-sm: rgba(0, 0, 0, 0.04);
   --color-shadow-md: rgba(0, 0, 0, 0.06);
   --color-shadow-card: rgba(0, 0, 0, 0.05);
 
-  
   --decoration-primary: rgba(99, 102, 241, 0.06);
   --decoration-secondary: rgba(139, 92, 246, 0.045);
 
-  
   --color-overlay-scrim: rgba(15, 23, 42, 0.45);
   --color-toast-bg: #1e293b;
   --color-toast-text: #ffffff;
@@ -174,7 +167,6 @@
 
   --color-warning-100: #ffe0a3;
   --color-warning-500: #ffc04d;
-  --color-warning-300: #e6a832;
   --color-warning: var(--color-warning-500);
 
   --color-danger-100: #ffa3a3;
