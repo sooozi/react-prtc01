@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { HomeMarquee } from "@/pages/home/HomeMarquee";
 import { COLOR_SCHEME_GRID, SPACING_SCALE } from "@/pages/style-guide/styleGuideTokens";
 import { TestMainHeroDemo } from "@/pages/testmain/TestMainHeroDemo";
@@ -114,15 +115,12 @@ function DigitRoller({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const settleOffset = getDigitSettleOffset(digit, cycles);
-  const [offset, setOffset] = useState(() => {
-    if (typeof window === "undefined") return 0;
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? settleOffset : 0;
-  });
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!el || reducedMotion) return;
 
     let rafId = 0;
     let timeoutId = 0;
@@ -168,15 +166,16 @@ function DigitRoller({
       cancelAnimationFrame(rafId);
       window.clearTimeout(timeoutId);
     };
-  }, [delay, durationMs, settleOffset]);
+  }, [delay, durationMs, settleOffset, reducedMotion]);
 
   const strip = buildDigitStrip(cycles);
+  const renderedOffset = reducedMotion ? settleOffset : offset;
 
   return (
     <span className="testmain-stat__digit" ref={ref}>
       <span
         className="testmain-stat__digit-strip"
-        style={{ transform: `translate3d(0, calc(-1 * ${offset} * 1lh), 0)` }}
+        style={{ transform: `translate3d(0, calc(-1 * ${renderedOffset} * 1lh), 0)` }}
       >
         {strip.map((value, index) => (
           <span key={index} className="testmain-stat__digit-cell">
@@ -533,6 +532,7 @@ export default function TestMain() {
   const navigate = useNavigate();
   const pageRef = useRef<HTMLDivElement>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -545,9 +545,8 @@ export default function TestMain() {
     const nodes = root.querySelectorAll<HTMLElement>(
       "[data-testmain-reveal], [data-testmain-reveal-title], [data-testmain-reveal-desc]",
     );
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (reduced) {
+    if (reducedMotion) {
       nodes.forEach((el) => el.classList.add("testmain-reveal--visible"));
       return;
     }
@@ -565,7 +564,7 @@ export default function TestMain() {
 
     nodes.forEach((n) => io.observe(n));
     return () => io.disconnect();
-  }, []);
+  }, [reducedMotion]);
 
   return (
     <div className="testmain-page" ref={pageRef}>

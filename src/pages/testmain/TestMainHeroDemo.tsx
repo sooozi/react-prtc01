@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import Home from "@/pages/home/Home";
 import "@/pages/testmain/TestMainHeroDemo.scss";
 
@@ -8,13 +9,12 @@ const END_PAUSE_MS = 1000;
 
 export function TestMainHeroDemo() {
   const viewportRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
-
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
+    if (reducedMotion) return;
 
     let rafId = 0;
     let pauseUntil = performance.now() + START_DELAY_MS;
@@ -65,7 +65,7 @@ export function TestMainHeroDemo() {
       cancelAnimationFrame(rafId);
       ro.disconnect();
     };
-  }, []);
+  }, [reducedMotion]);
 
   return (
     <div className="testmain-hero-demo">
