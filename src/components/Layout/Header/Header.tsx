@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNo
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components";
 import { useBodyScrollLock, useFloatingLayer } from "@/hooks/useFloatingLayer";
+import { useLocalStorageValue } from "@/hooks/useLocalStorageValue";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { getTabbableElements } from "@/utils/tabbable";
 import "@/components/Layout/Header/Header.scss";
@@ -31,7 +32,7 @@ function DrawerNavIcon({ children }: { children: ReactNode }) {
 export default function Header() {
   const isMobileDrawerLayout = useMediaQuery("(max-width: 767px)");
   const navigate = useNavigate();
-  const userName = localStorage.getItem("userName");
+  const userName = useLocalStorageValue("userName");
   const [theme, setTheme] = useState<"light" | "dark">(
     () => (document.documentElement.getAttribute("data-theme") as "light" | "dark") || "light",
   );
