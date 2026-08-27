@@ -1075,29 +1075,11 @@
   overflow: hidden;
   @include sg-surface-card(p16);
 
-  &[data-theme="dark"] {
-    color-scheme: dark;
-    --color-text: #f8fafc;
-    --color-text-heading: #e2e8f0;
-    --color-text-secondary: #94a3b8;
-    --color-text-muted: #94a3b8;
-    --color-bg: #0f172a;
-    --color-bg-subtle: #1e293b;
-    --color-bg-subtle-2: #334155;
-    --color-card: #1e293b;
-    --color-card-border: rgba(51, 65, 85, 0.8);
-    --color-border: #334155;
-    --color-border-light: rgba(51, 65, 85, 0.8);
-    --color-primary: #818cf8;
-    --color-primary-hover: #a78bfa;
-    --color-primary-muted: rgba(129, 140, 248, 0.15);
-    --color-input-bg: #1e293b;
-    --color-input-border: #334155;
-    --color-input-focus-bg: #0f172a;
-    --color-input-placeholder: #94a3b8;
-    --color-text-on-primary: #ffffff;
-    --color-shadow-sm: rgba(0, 0, 0, 0.2);
-  }
+  // 다크 값은 여기서 직접 선언하지 않음 — _color.scss의 `[data-theme="dark"]`가
+  // (:root 한정이 아닌) 속성 선택자라서, 이 패널의 data-theme="dark"에도 그대로
+  // 적용됨. 예전엔 여기서 값을 손으로 복제해 뒀는데, 실제 토큰과 어긋난 값
+  // (--color-input-border, --color-input-focus-bg)이 더 높은 명시도로 덮어써서
+  // 미리보기가 실제 다크 모드와 다르게 보이는 상태였음.
 }
 
 .sg-theme-panel__inner {
